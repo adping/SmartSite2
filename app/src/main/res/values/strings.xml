@@ -1,0 +1,226 @@
+<resources>
+    <string name="app_name">智慧工地</string>
+
+
+    <!--          main   start            -->
+    <string name="title_main">光谷中心城智慧工地</string>
+    <string name="idtxthint">账户</string>
+    <string name="pwdtxthint">密码</string>
+    <string name="loginbtntext">登录</string>
+    <string name="login_btn_text">视宇登录</string>
+    <string name="forgot_pwd">忘记密码？</string>
+    <string name="loading">正在登录</string>
+    <string name="res_code">设备编号:</string>
+    <string name="res_type">类型:</string>
+    <string name="res_name">资源名称:</string>
+    <string name="is_online">是否在线:</string>
+    <string name="camera_type_1">固定摄像机</string>
+    <string name="camera_type_2">云台摄像机</string>
+    <string name="camera_type_3">高清固定摄像机</string>
+    <string name="camera_type_4">高清云台摄像机</string>
+    <string name="camera_type_5">车载摄像机</string>
+    <string name="camera_type_6">不可控标清摄像机</string>
+    <string name="camera_type_7">不可控高清摄像机</string>
+    <string name="realtime_video">实时视频</string>
+    <string name="historical_monitoring">历史监控</string>
+    <string name="snapshot_record">抓拍记录</string>
+    <string name="data_pick_dialog_error_msg">请选择起始时间!</string>
+    <string name="data_pick_dialog_error_msg2">起始时间大于结束时间,请重新输入.</string>
+    <string name="camera_online">在线</string>
+    <string name="camera_offline">离线</string>
+    <string name="video_surveillance">视频监控</string>
+    <string name="video_historical_monitoring">历史监控</string>
+    <string name="video_sreach">查询</string>
+    <string name="video_start">播放</string>
+    <string name="begin_data">开始日期:</string>
+    <string name="end_data">结束日期:</string>
+    <string name="alert_data_title">设置历史监控起始和结束时间</string>
+    <string name="chose_date_title">请选择时间段播放</string>
+    <string name="date_start_title">开始</string>
+    <string name="date_end_title">结束</string>
+    <string name="zoom_tele">放大</string>
+    <string name="zoom_tele_stop">放大停止</string>
+    <string name="zoom_wide">缩小</string>
+    <string name="zoom_wide_stop">缩小停止</string>
+
+    <string name="title">请选择时间</string>
+    <string name="commit">确定</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+
+    <string name="select_date">选择日期</string>
+    <string name="current_date">当前日期</string>
+    <string name="select_time">选择时间</string>
+    <string name="current_time">当前时间</string>
+    <!--          main   end            -->
+
+
+    <!--          map   start            -->
+    <string name="map_title">地图</string>
+    <string name="map_back">back</string>
+    <!--          map   end            -->
+
+
+    <!--          msg   start            -->
+    <string name="msg">消息</string>
+    <string name="frag_msg_vcr">视频监控消息</string>
+    <string name="frag_msg_environment_watch">环境监控消息</string>
+    <string name="frag_msg_synergy">三方协同消息</string>
+    <string name="vcr_error">%1$d设备损坏!</string>
+    <string name="vcr_need_repair">%1$d设备需要维护</string>
+    <string name="device">设备</string>
+    <string name="environ_need_repair">%1$d需要维护!</string>
+    <string name="environ_pm_exceeded">%1$d设备检测到PM超标!</string>
+    <string name="send_report">您已发送一份巡查报告</string>
+    <string name="receive_report">您收到%s的回访报告</string>
+    <string name="device_error_location">%1$d设备损坏！地址：%2$s</string>
+    <string name="device_need_repair_loation">%1$s设备需要维护 地址：%2$s</string>
+    <string name="pm_exceeded_location">%1$s设备检测到PM超标！！地址：%2$s</string>
+    <string name="location">地址：%1$s</string>
+    <string name="inspect_report_title">巡查报告</string>
+    <string name="check_report_title">验收报告</string>
+    <string name="view">查看</string>
+    <string name="reply">回复</string>
+    <string name="revisit">回访</string>
+    <string name="check">验收</string>
+    <string name="unread_msg_title">未读消息</string>
+    <!--添加回访报告页-->
+    <string name="report_address">地址：%1$s</string>
+    <string name="add_report">新增巡查报告</string>
+    <string name="report_name">发布人：%1$s</string>
+    <string name="report_stats">状态：%1$s</string>
+    <string name="dealing">处理中</string>
+    <string name="rechecked">已回访</string>
+    <string name="vcr_msg">视频监控消息</string>
+    <string name="environ_msg">环境监控消息</string>
+    <string name="synergy_msg">三方协同消息</string>
+    <string name="add_inspect_report">巡查报告提交</string>
+    <string name="inspect_report_address">巡查地点</string>
+    <string name="inspect_report_address_read">巡查地点：</string>
+    <string name="inspect_report_time">巡查时间</string>
+    <string name="inspect_report_time_read">巡查时间：</string>
+    <string name="inspect_report_company">巡察单位</string>
+    <string name="inspect_report_company_read">巡察单位：</string>
+    <string name="inspect_report_check_people">巡查人员</string>
+    <string name="inspect_report_check_people_read">巡查人员：</string>
+    <string name="inspect_report_report_people">报告人员</string>
+    <string name="inspect_report_reply_people">回复人员</string>
+    <string name="inspect_report_build_company">建设单位</string>
+    <string name="inspect_report_build_company_read">建设单位：</string>
+    <string name="inspect_report_build_time">报告时间</string>
+    <string name="inspect_report_construction_company">施工单位</string>
+    <string name="inspect_report_construction_company_read">施工单位：</string>
+    <string name="inspect_report_supervision_company">监理单位</string>
+    <string name="inspect_report_supervision_company_read">监理单位：</string>
+    <string name="inspect_report_message">报告内容</string>
+    <string name="report_revisit_time">回访时间</string>
+    <string name="report_revisit_time_temp">回访时间：</string>
+    <string name="inspect_report_description">问题描述</string>
+    <string name="inspect_report_is_need_recheck">是否回访</string>
+    <string name="yes">是</string>
+    <string name="inspect_report_status">报告状态</string>
+    <string name="inspect_report_status_read">报告状态：</string>
+    <string name="inspect_report_types">报告类型</string>
+    <string name="inspect_report_types_read">报告类型：</string>
+    <string name="no">否</string>
+    <string name="pls_choose">请选择</string>
+    <string name="begin_time">开始时间</string>
+    <string name="enter_time">填写时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="inpsect_report_name">报告名称</string>
+    <string name="pls_enter_msg">请输入内容</string>
+    <!-- 查看巡查报告-->
+    <string name="read_report_title">查看巡查报告</string>
+
+    <string name="inspect_report_sub_attach">提交附件：</string>
+    <string name="inspect_report_view_attach">查看附件：</string>
+    <string name="submit">提交</string>
+    <string name="cancel">取消</string>
+    <string name="inspect_report_reply">回复巡查报告</string>
+    <string name="inspect_report_reply_time">回复时间：</string>
+    <string name="inspect_report_reply_msg">回复内容：</string>
+    <!-- 回访巡查报告-->
+    <string name="inspect_report_recheck">回访巡查报告</string>
+    <string name="inspect_report_recheck_time">回访时间</string>
+    <string name="inspect_report_recheck_people">回访人员</string>
+    <string name="inspect_report_recheck_msg">回访内容</string>
+    <string name="inspect_report_recheck_des">回访内容描述</string>
+    <string name="inspect_report_recheck_is_need_recheck">是否继续回访</string>
+    <string name="inspect_report_recheck_next_recheck_time">下次回访时间</string>
+    <string name="inspect_report_recheck_report_people">报告人员</string>
+    <string name="inspect_report_recheck_report_time">报告时间</string>
+    <!--验收报告验收页-->
+    <string name="check_report_submit_title">验收报告</string>
+    <string name="check_report_address">巡查地点</string>
+    <string name="check_report_time">回访时间</string>
+    <string name="check_report_report_name">报告人员</string>
+    <string name="check_report_report_company">报告单位</string>
+    <string name="check_report_build_company">建筑单位</string>
+    <string name="check_report_construction_company">施工单位</string>
+    <string name="check_report_supervision_company">监理单位</string>
+    <string name="check_report_report_report_time">报告时间</string>
+    <string name="check_report_des">问题描述</string>
+    <string name="check_report_is_need_recheck">是否回访</string>
+    <string name="check_report_recheck_time">查看附件</string>
+    <!--          msg   end            -->
+
+
+    <!--          system   start            -->
+    <string name="user_name">用户名</string>
+    <string name="individual_center">个人中心</string>
+    <string name="about_us">关于我们</string>
+    <string name="log_off">退出</string>
+    <string name="set_user_photo">设置用户头像</string>
+    <string name="user_photo">头像</string>
+    <string name="user_acoount">账户</string>
+    <string name="user_pwd">密码</string>
+    <string name="user_autograph">签名</string>
+    <string name="user_company">公司</string>
+    <string name="user_phoneNum">电话</string>
+    <string name="user_sex">性别</string>
+    <string name="user_role">角色</string>
+    <string name="user_full_name">姓名</string>
+    <string name="sex_male">男</string>
+    <string name="sex_female">女</string>
+    <string name="ok">确认</string>
+    <string name="cancle">放弃</string>
+    <string name="save">保存</string>
+    <string name="frag_msg_vcr_des_temp">120965设备损坏</string>
+    <string name="des_visit_problem">回访问题描述：</string>
+    <string name="opinion_feedback">意见反馈</string>
+    <string name="settings">设置</string>
+    <string name="album">相册</string>
+    <string name="camera">拍照</string>
+    <string name="feedback_hint_text">我们需要您的宝贵意见</string>
+    <string name="feedback_submit">提交</string>
+    <string name="settings_push_msg_switch">接收推送通知</string>
+    <string name="settings_go_score">去评分</string>
+    <string name="settings_cleanup_cache">清除缓存</string>
+    <string name="user_company_1">湖北易瑞有限公司</string>
+    <string name="user_company_2">武汉紫晖苑有限公司</string>
+    <string name="user_company_3">湖北中地有限公司</string>
+    <string name="settings_push_msg_switch_off">接收推送通知开关关闭中</string>
+    <string name="settings_push_msg_switch_on">接收推送通知开关开启中</string>
+    <string name="clean_cache">已完成清空缓存操作</string>
+    <string name="select_date_time">请选择日期时间</string>
+    <string name="select_date_quash">取消</string>
+    <!--          system   end            -->
+
+
+    <!--         极光推送字符串后期删掉            -->
+    <string name="hello">Hello World, JPush!</string>
+    <string name="tag_hint">Tag can be number, alphabet, underscore, Chinese. Use , to split many tags.</string>
+    <string name="alias_hint">Alias can be number, alphabet, underscore, Chinese.</string>
+    <string name="style_hint">style should be number</string>
+    <string name="error_style_empty">style cannot be empty</string>
+    <string name="error_alias_empty">alias cannot be empty</string>
+    <string name="error_tag_empty">tag cannot be empty</string>
+    <string name="error_tag_gs_empty">Invalid format</string>
+    <string name="error_network">Failed to init due to network exception.</string>
+    <string name="logining">Running in background. Please see log.</string>
+    <string name="setting_su">Succeed to set</string>
+    <!--        极光推送字符串后期删掉             -->
+</resources>
