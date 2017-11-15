@@ -27,6 +27,9 @@ import com.isoftstone.smartsite.common.widget.AlertView;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
+import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity;
+import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
+import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -153,6 +156,10 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            /**Intent intent = new Intent();
+            intent.setClass(mContext, ManualPhotographyActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);*/
         }
 
     }

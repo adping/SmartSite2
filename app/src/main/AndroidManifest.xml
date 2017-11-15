@@ -291,9 +291,12 @@
             android:name=".model.system.ui.OpinionFeedbackActivity"
             android:launchMode="singleTask"></activity>
 
-        <activity
-            android:name=".model.system.ui.SettingsActivity"
+        <activity android:name=".model.system.ui.SettingsActivity"
             android:launchMode="singleTask"></activity>
+
+        <activity android:name=".model.dirtcar.activity.ManualPhotographyActivity"
+            android:launchMode="singleTask"></activity>
+
         <!--zhangyinfu end-->
 
         <!--zhangwei begin-->
