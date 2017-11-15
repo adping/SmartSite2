@@ -77,7 +77,6 @@ public class UserUtils {
 		FileInputStream in = null;
 		ArrayList<User> users = new ArrayList<User>();
 		try {
-
 			in = context.openFileInput(FILENAME);
 			BufferedReader reader = new BufferedReader(
 					new InputStreamReader(in));
@@ -96,7 +95,7 @@ public class UserUtils {
 			}
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {

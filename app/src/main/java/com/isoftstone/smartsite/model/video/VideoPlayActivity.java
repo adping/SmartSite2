@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnLoginListener;
@@ -72,6 +74,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private boolean isNormalShow = true;//true 标识正常显示, false 标识反向显示
     private Button mZoomTeleView;
     private Button mZoomWideView;
+    private boolean isZoomTeleTouched = false;
+    private boolean isZoomWideTouched = false;
+
 
 
     @Override
@@ -112,10 +117,43 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mChangePositionView.setOnClickListener(this);
         mZoomTeleView = (Button) findViewById(R.id.zoom_tele);
         mZoomWideView = (Button) findViewById(R.id.zoom_wide);
-        mZoomTeleView.setOnClickListener(this);
-        mZoomTeleView.setVisibility(View.GONE);
-        mZoomWideView.setOnClickListener(this);
-        mZoomWideView.setVisibility(View.GONE);
+        LinearLayout zoomLayout = (LinearLayout) findViewById(R.id.zoom_layout);
+
+        //mZoomTeleView.setOnClickListener(this);
+        mZoomTeleView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (!isZoomTeleTouched) {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELE);
+                        isZoomTeleTouched = true;
+                    }
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELESTOP);
+                    isZoomTeleTouched = false;
+                }
+                return  true;
+            }
+        });
+        //mZoomWideView.setOnClickListener(this);
+        mZoomWideView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (!isZoomWideTouched) {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDE);
+                        isZoomWideTouched = true;
+                    }
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDESTOP);
+                    isZoomWideTouched = false;
+                }
+                return  true;
+            }
+        });
+
 
 
         /*获取Intent中的Bundle对象*/
@@ -132,9 +170,11 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             //初始化摇杆控件
             mRoundMenuView.setVisibility(View.VISIBLE);
             initRoundMenuView();
+            zoomLayout.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG,"--------------zyf----GONE---");
             mRoundMenuView.setVisibility(View.GONE);
+            zoomLayout.setVisibility(View.GONE);
         }
         //startLive(mCameraCode);
     }
@@ -169,6 +209,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                         //收流线程启动
                         mRecvStreamThread = new RecvStreamThread(mPlayer, playSession);
                         mRecvStreamThread.start();
+                        Log.i(TAG,"--------------zyf----mRecvStreamThread---");
                     }else{
                         Toast.makeText(VideoPlayActivity.this,errorDesc,Toast.LENGTH_SHORT).show();
                     }
@@ -181,8 +222,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             StartLiveParam p = new StartLiveParam();
             p.setCameraCode(cameraCode);
             p.setUseSecondStream(true); //使用辅流
-            p.setBitrate(32 * 8);   //64KB的码率
-            p.setFramerate(12);     //25帧率
+            p.setBitrate(64* 8);   //32KB的码率
+            p.setFramerate(15);     //15帧率
             p.setResolution(2);     //4CIF分辨率
 
             //启动实况
@@ -475,10 +516,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.capture_view:
-                //boolean sdCardExist = Environment.getExternalStorageState().equals("mounted");
-                //ToastUtils.showShort("sdCardExist ? " + sdCardExist);
                 //抓拍图片，返回路径
-                String path = mPlayer.snatch(null);
+                String path = mPlayer.snatch(FilesUtils.getSnatchPath(mCameraCode));
                 if (null != path) {
                     Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
                 }
@@ -539,7 +578,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private   double nLenStart = 0;
+    /*private   double nLenStart = 0;
     public boolean onTouchEvent(MotionEvent event) {
 
         int nCnt = event.getPointerCount();
@@ -604,6 +643,6 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             }
         }
         return super.onTouchEvent(event);
-    }
+    }*/
 
 }

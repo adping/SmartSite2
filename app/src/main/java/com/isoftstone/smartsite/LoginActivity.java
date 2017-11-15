@@ -440,6 +440,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				 }
 				 isLogin_1 = false;
 				mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+				mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 			 }
 
 	}

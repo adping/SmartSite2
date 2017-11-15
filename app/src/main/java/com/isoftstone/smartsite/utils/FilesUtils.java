@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
+import java.util.Date;
 
 /**
  * Created by yanyongjun on 2017/11/6.
@@ -31,7 +32,7 @@ public class FilesUtils {
 //        }
 //        return res;
 //    }
-
+    public static final String SNATCH_PATH = "/isoftstone/media/snatch/";
 
     public static Intent getOpenIntent(Context context,File file,String filePath){
         String end=file.getName().substring(file.getName().lastIndexOf(".") + 1,file.getName().length()).toLowerCase();
@@ -347,4 +348,34 @@ public class FilesUtils {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
+
+
+    public static String getSnatchPath(String devicesCoding) {
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState().equals("mounted");
+        if(!sdCardExist) {
+            return "";
+        } else {
+            sdDir = Environment.getExternalStorageDirectory();
+            String path = sdDir.toString();
+            path = path + SNATCH_PATH + devicesCoding +  "/";
+            Date dt = new Date();
+            int year = dt.getYear() + 1900;
+            int month = dt.getMonth() + 1;
+            String txt_month = month < 10?"0" + String.valueOf(month):String.valueOf(month);
+            int day = dt.getDate();
+            String txt_day = day < 10?"0" + String.valueOf(day):String.valueOf(day);
+            path = path + year + txt_month + txt_day;
+            path = path + "/";
+            File dstDir = new File(path);
+            if(!dstDir.exists()) {
+                dstDir.mkdirs();
+            }
+
+            path = path + dt.getTime() + ".jpg";
+            Log.d("ImosPlayer", path);
+            return path;
+        }
+    }
+
 }

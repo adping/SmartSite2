@@ -34,7 +34,40 @@ import okhttp3.Response;
 public class ReportOperation {
     private static  String TAG = "ReportOperation";
 
-    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, String status){
+    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, String status,String departmentId){
+        ArrayList<PatrolBean> list = null;
+        String funName = "getPatrolList";
+        FormBody body = new FormBody.Builder()
+                .add("status", "" + status)
+                .add("size", "" + 500)
+                .add("creator.departmentId", departmentId == null ? "" : departmentId)
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+
+                String content = new JSONObject(responsebody).getString("content");
+                list = HttpPost.stringToList(content,PatrolBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    public static ArrayList<PatrolBean> getCheckReportList(String strurl, OkHttpClient mClient, String status){
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()

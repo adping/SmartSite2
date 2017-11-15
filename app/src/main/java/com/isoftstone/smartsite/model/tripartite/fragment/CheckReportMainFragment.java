@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -9,12 +10,17 @@ import android.widget.ListView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by yanyongjun on 2017/10/16.
@@ -31,7 +37,7 @@ public class CheckReportMainFragment extends BaseFragment {
     private TripartiteActivity mActivity = null;
     private ListView mListView = null;
     private ArrayList<ReportData> mDatas = new ArrayList<>();
-    private HttpPost mHttpPost = null;
+    private HttpPost mHttpPost = new HttpPost();
     private String mAccountName = "";
     private BaseAdapter mAdapter = null;
 
@@ -47,42 +53,7 @@ public class CheckReportMainFragment extends BaseFragment {
     }
 
     public void onDataSetChanged() {
-        mDatas.clear();
-        //TODO 这个地方不应该是addAll，应该是巡查人员是我的人
-        Log.e(TAG, "onDataSetChanged");
-        if(!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()){
-            return;
-        }else{
-            LogUtils.i(TAG,"hash patrol_accept");
-        }
 
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    mDatas.clear();
-                    if (mAccountName == null || mAccountName.equals("")) {
-                        mAccountName = mHttpPost.mLoginBean.getmName();
-                    }
-                    ArrayList<ReportData> sourceData = mActivity.getDatas();
-                    for (ReportData temp : sourceData) {
-                        if (temp.isExaminer(mAccountName)){
-                            mDatas.add(temp);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
     }
 
     private void init() {
@@ -90,5 +61,45 @@ public class CheckReportMainFragment extends BaseFragment {
         mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
         mAdapter = new CheckReportAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        new QueryMsgTask().execute();
+        super.onResume();
+    }
+
+    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            ArrayList<PatrolBean> msgs = mHttpPost.getCheckReportList("");
+
+            Collections.sort(msgs, new Comparator<PatrolBean>() {
+                @Override
+                public int compare(PatrolBean o1, PatrolBean o2) {
+                    try {
+                        Date date1 = MsgData.format5.parse(o1.getDate());
+                        Date date2 = MsgData.format5.parse(o2.getDate());
+                        return date2.compareTo(date1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+            mDatas.clear();
+            for (PatrolBean temp : msgs) {
+                ReportData reportData = new ReportData(temp);
+                Log.e(TAG, "reportData:" + reportData);
+                mDatas.add(reportData);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

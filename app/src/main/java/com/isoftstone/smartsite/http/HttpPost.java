@@ -223,7 +223,17 @@ public class HttpPost {
      获取巡查报告列表  测试数据 1
      */
     public ArrayList<PatrolBean>  getPatrolReportList(String status){
-        return  ReportOperation.getPatrolReportList(PATROL_LIST,mClient,status);
+        String departmentId = "";
+        if(mLoginBean != null && mLoginBean.getmUserBean() != null){
+            departmentId = mLoginBean.getmUserBean().getDepartmentId();
+        }
+        return  ReportOperation.getPatrolReportList(PATROL_LIST,mClient,status,departmentId);
+    }
+    /*
+    获取验收报告列表
+     */
+    public ArrayList<PatrolBean> getCheckReportList(String status){
+        return  ReportOperation.getCheckReportList(PATROL_LIST,mClient,status);
     }
 
     /*

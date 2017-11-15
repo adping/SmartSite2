@@ -17,6 +17,7 @@ import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.DataQueryBean;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.http.MobileHomeBean;
 import com.isoftstone.smartsite.http.WeatherLiveBean;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
@@ -25,6 +26,7 @@ import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 

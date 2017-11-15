@@ -90,20 +90,22 @@
         android:id="@+id/zoom_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/round_menu_layout"
-        android:layout_alignLeft="@id/round_menu_layout"
-        android:layout_alignStart="@id/round_menu_layout"
-        android:layout_marginBottom="22dp">
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:gravity="center">
         <Button
             android:id="@+id/zoom_tele"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zoom_tele"/>
+            android:background="@drawable/enlarge"/>
 
         <Button
             android:id="@+id/zoom_wide"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zoom_wide"/>
+            android:background="@drawable/lessen"/>
     </LinearLayout>
 </RelativeLayout>
