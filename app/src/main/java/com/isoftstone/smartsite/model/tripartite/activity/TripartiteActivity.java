@@ -274,7 +274,9 @@ public class TripartiteActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
             ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("");
-
+            if(msgs == null){
+                return "";
+            }
             Collections.sort(msgs, new Comparator<PatrolBean>() {
                 @Override
                 public int compare(PatrolBean o1, PatrolBean o2) {

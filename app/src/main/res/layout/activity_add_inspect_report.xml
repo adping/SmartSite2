@@ -52,9 +52,9 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:text="@string/save"
-                android:visibility="invisible"
                 android:textColor="@color/title_save"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="invisible" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
@@ -90,7 +90,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
                     android:src="@drawable/droparrow"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/edit_address"
@@ -100,18 +100,20 @@
                     android:background="@null"
                     android:gravity="right|center_vertical"
                     android:textColor="@color/des_text_color"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
+
                 <EditText
-                    style="@style/add_report_edittext"
-                    android:id="@+id/address_edittext"/>
+                    android:id="@+id/address_edittext"
+                    style="@style/add_report_edittext" />
 
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
+                android:layout_height="1dp"
+                android:paddingLeft="16dp"
+                android:background="@color/white"
+                android:src="@color/app_background" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -132,49 +134,44 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
+                android:layout_height="1dp"
+                android:paddingLeft="16dp"
+                android:background="@color/white"
+                android:src="@color/app_background" />
 
             <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="54dp"-->
-                <!--android:background="@color/white"-->
-                <!--android:paddingLeft="16dp"-->
-                <!--android:paddingRight="16dp">-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="54dp"-->
+            <!--android:background="@color/white"-->
+            <!--android:paddingLeft="16dp"-->
+            <!--android:paddingRight="16dp">-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/lab_status"-->
-                    <!--style="@style/add_report_lab"-->
-                    <!--android:text="@string/inspect_report_status" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/lab_status"-->
+            <!--style="@style/add_report_lab"-->
+            <!--android:text="@string/inspect_report_status" />-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/img_status_down"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:src="@drawable/droparrow" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/img_status_down"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:src="@drawable/droparrow" />-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/spinner_report_status"-->
-                    <!--style="@style/add_report_spinner"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_toLeftOf="@id/img_status_down"-->
-                    <!--android:background="@null"-->
-                    <!--android:gravity="right|center_vertical"-->
-                    <!--android:onClick="onSpinnerReportAddressClicked"-->
-                    <!--android:text="请选择"-->
-                    <!--android:textColor="@color/des_text_color" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/spinner_report_status"-->
+            <!--style="@style/add_report_spinner"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_toLeftOf="@id/img_status_down"-->
+            <!--android:background="@null"-->
+            <!--android:gravity="right|center_vertical"-->
+            <!--android:onClick="onSpinnerReportAddressClicked"-->
+            <!--android:text="请选择"-->
+            <!--android:textColor="@color/des_text_color" />-->
 
             <!--</RelativeLayout>-->
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -230,9 +227,10 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
+                android:layout_height="1dp"
+                android:paddingLeft="16dp"
+                android:background="@color/white"
+                android:src="@color/app_background" />
 
             <!-- 施工单位，默认不显示-->
             <RelativeLayout
@@ -254,9 +252,10 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
+                android:layout_height="1dp"
+                android:paddingLeft="16dp"
+                android:background="@color/white"
+                android:src="@color/app_background" />>
 
             <!-- 监理单位，默认不显示-->
             <RelativeLayout
