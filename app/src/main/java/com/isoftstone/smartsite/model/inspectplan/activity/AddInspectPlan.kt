@@ -1,18 +1,23 @@
 package com.isoftstone.smartsite.model.inspectplan.activity
 
+import android.app.Activity
 import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.SimpleAdapter
+import com.amap.api.mapcore.util.id
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
 import com.isoftstone.smartsite.model.inspectplan.adapter.AddressAdapter
 import com.isoftstone.smartsite.model.inspectplan.adapter.PeopleAdapter
+import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper
+import com.isoftstone.smartsite.utils.FilesUtils
 import com.isoftstone.smartsite.utils.ToastUtils
 
 /**
@@ -60,13 +65,64 @@ open class AddInspectPlan : BaseActivity() {
         mGridViewAttach = findViewById(R.id.grid_view) as GridView
         mAttachList.add(R.drawable.attachment)
         mGridViewAttach?.adapter = mAttachAdapter
-//        mGridViewAttach?.setOnItemClickListener(AdapterView.OnItemClickListener(fun onItemClick(parent:AdapterView<>, view: View,pos:Int,id:Long ){
-//
-//        }))
+        mGridViewAttach?.setOnItemClickListener({ parent, view, pos, id ->
+            if (pos == mAttachList.size - 1) {
+                var i = Intent(Intent.ACTION_GET_CONTENT)
+                i.setType("*/*")
+                startActivityForResult(i, 0)
+            }
+        })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                val uri = data?.getData()
+                Log.e(TAG, "yanlog uri:" + uri!!)
+                if ("file".equals(uri.scheme, ignoreCase = true)) {//使用第三方应用打开
+                    //Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
+                    addAttach(uri.path, uri.toString())
+                    return
+                }
+                val path = FilesUtils.getPath(this, uri)
+                //Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
+                addAttach(path, uri.toString())
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
 
-//    public void initGridView() {
+    }
+
+    //add files
+    fun addAttach(path: String, uri: String) {
+        Log.e(TAG, "yanlog remove begin size:" + mAttachList.size);
+        var formatPath = FilesUtils.getFormatString(path);
+        Log.e(TAG, "yanlog remove begin size at0:" + mAttachList.get(0));
+        mAttachList.removeAt(mAttachList.size - 1);
+        //mFilesPath.add(path);
+        if (TripartiteActivity.mImageList.contains(formatPath)) {
+            mAttachList.add(uri);
+        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
+            mAttachList.add(TripartiteActivity.mAttach.get(".xls") ?: 0);
+        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
+            mAttachList.add(TripartiteActivity.mAttach.get(".doc") ?: 0);
+        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
+            mAttachList.add(TripartiteActivity.mAttach.get(".pdf") ?: 0);
+        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
+            mAttachList.add(TripartiteActivity.mAttach.get(".ppt") ?: 0);
+        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
+            mAttachList.add(TripartiteActivity.mAttach.get(".video") ?: 0);
+        } else {
+            mAttachList.add(TripartiteActivity.mAttach.get(".doc") ?: 0);
+        }
+
+        mAttachList.add(R.drawable.attachment);
+        Log.e(TAG, "yanlog remove end size:" + mAttachList.size);
+        Log.e(TAG, "yanlog mData at 0:" + mAttachList.get(0));
+        mAttachAdapter?.notifyDataSetChanged();
+    }
+
+    //    public void initGridView() {
 //        mAttachView = (GridView) getView().findViewById(R.id.grid_view);
 //
 //        mData = new ArrayList<Object>();

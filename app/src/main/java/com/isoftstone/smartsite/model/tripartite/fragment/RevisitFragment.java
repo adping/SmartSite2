@@ -307,24 +307,6 @@ public class RevisitFragment extends BaseFragment {
         mBeginTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                        mBeginTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-//                        mBeginDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-//                        mBeginTime.setTextColor(mRes.getColor(R.color.main_text_color));
-//                        if (mBeginDate != null && mEndDate != null) {
-//                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
-//                        }
-//                    }
-//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
-                //dialog.show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-//                builder.setView(view);
-//                AlertDialog dialog = builder.create();
-//                initTimePicker(dialog, view, mBeginTime, mLabTime);
-//                dialog.show();
                 showDatePickerDialog(mBeginTime, mLabTime);
             }
 
@@ -333,24 +315,6 @@ public class RevisitFragment extends BaseFragment {
         mEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                        mEndTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-//                        mEndDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-//                        mEndTime.setTextColor(mRes.getColor(R.color.main_text_color));
-//                        if (mBeginDate != null && mEndDate != null) {
-//                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
-//                        }
-//                    }
-//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
-//                dialog.show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-//                builder.setView(view);
-//                AlertDialog dialog = builder.create();
-//                initTimePicker(dialog, view, mEndTime, mLabTime);
-//                dialog.show();
                 showDatePickerDialog(mEndTime, mLabTime);
             }
 
@@ -359,26 +323,6 @@ public class RevisitFragment extends BaseFragment {
         mEditRevisitTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                final Calendar c = Calendar.getInstance();*/
-//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-////                        mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-////                        mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
-////                        mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-////                        mRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
-//
-//                    }
-//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
-//
-//                dialog.show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-//                builder.setView(view);
-//                AlertDialog dialog = builder.create();
-//                initTimePicker(dialog, view, mEditRevisitTime, mRevisitTime);
-//                dialog.show();
-
                 showDatePickerDialog(mEditRevisitTime, mRevisitTime);
             }
 
@@ -574,25 +518,20 @@ public class RevisitFragment extends BaseFragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
-//            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             Log.e(TAG, "yanlog addReport");
             try {
                 int id = -1;
                 if (mIsAddReport) {
                     PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
-                    //mRevisitData.setPatrol(reponse);
                     PatrolBean temp = new PatrolBean();
                     temp.setId(reponse.getId());
                     id = reponse.getId();
                     mRevisitData.setPatrol(temp);
-                    //mRevisitData.setCreator(reponse.getCreator());
                 } else {
                     PatrolBean temp = new PatrolBean();
                     temp.setId(mReportData.getId());
                     mRevisitData.setPatrol(temp);
                     id = mReportData.getId();
-                    //mRevisitData.setPatrol(mReportData);
-                    //mRevisitData.setCreator(mReportData.getCreator());
 
                 }
                 mRevisitData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
