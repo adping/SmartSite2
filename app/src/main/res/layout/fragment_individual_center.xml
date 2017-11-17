@@ -56,7 +56,7 @@
                     app:srcCompat="@drawable/litarrow" />
 
                 <com.isoftstone.smartsite.model.system.ui.CircleImageView
-                    android:id="@+id/head_iv"
+                    android:id="@+id/head_iv_new"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_toLeftOf="@id/litarrow_iv"

@@ -2,12 +2,16 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +36,12 @@ import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
+import com.isoftstone.smartsite.model.video.bean.AlbumInfo;
+import com.isoftstone.smartsite.model.video.bean.PhotoInfo;
+import com.isoftstone.smartsite.model.video.bean.PhotoList;
+import com.isoftstone.smartsite.model.video.utils.ThumbnailsUtil;
+import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.model.video.SnapPicturesActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnQueryResourceListener;
@@ -47,6 +57,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,6 +68,10 @@ import java.util.List;
 public class VideoMonitoringActivity extends Activity implements VideoMonitorAdapter.AdapterViewOnClickListener,View.OnClickListener{
     private static final String TAG = "VideoMonitoringActivity";
     public HttpPost mHttpPost = new HttpPost();
+	
+    private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
+    private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
+
     private ListView mListView = null;
     private Context mContext;
     private DevicesBean mDevicesBean;
@@ -153,13 +168,17 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             startRePlayListActivity();
         } else {
             //打开系统相册浏览照片  
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
+            /**Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity(intent);*/
             /**Intent intent = new Intent();
             intent.setClass(mContext, ManualPhotographyActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);*/
+			
+			mListImageInfo.clear();
+            mlistPhotoInfo.clear();
+            new ImageAsyncTask().execute();
         }
 
     }
@@ -233,4 +252,100 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             break;
         }
     }
+
+    private class ImageAsyncTask extends AsyncTask<Void, Void, Object> {
+        @Override
+        protected Object doInBackground(Void... params) {
+            //获取缩略图
+            ThumbnailsUtil.clear();
+            ContentResolver sContentResolver = mContext.getContentResolver();
+            String[] projection = { MediaStore.Images.Thumbnails._ID, MediaStore.Images.Thumbnails.IMAGE_ID, MediaStore.Images.Thumbnails.DATA };
+            Cursor cur = sContentResolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projection, null, null, null);
+
+            if (cur!=null&&cur.moveToFirst()) {
+                int image_id;
+                String image_path;
+                int image_idColumn = cur.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+                int dataColumn = cur.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+                do {
+                    image_id = cur.getInt(image_idColumn);
+                    image_path = cur.getString(dataColumn);
+                    ThumbnailsUtil.put(image_id, "file://"+image_path);
+                } while (cur.moveToNext());
+            }
+            //获取原图
+            Cursor cursor = sContentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "date_modified DESC");
+            String _path="_data";
+            String _album="bucket_display_name";
+            HashMap<String,AlbumInfo> myhash = new HashMap<String, AlbumInfo>();
+            AlbumInfo albumInfo = null;
+            PhotoInfo photoInfo = null;
+            if (cursor!=null&&cursor.moveToFirst())
+            {
+                do{
+                    int index = 0;
+                    int _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String path = cursor.getString(cursor.getColumnIndex(_path));
+                    String album = cursor.getString(cursor.getColumnIndex(_album));
+                    List<PhotoInfo> stringList = new ArrayList<PhotoInfo>();
+                    photoInfo = new PhotoInfo();
+                    if(myhash.containsKey(album)){
+                        albumInfo = myhash.remove(album);
+                        if(mListImageInfo.contains(albumInfo)) {
+                            index = mListImageInfo.indexOf(albumInfo);
+                        }
+                        photoInfo.setImage_id(_id);
+                        photoInfo.setPath_file("file://"+path);
+                        photoInfo.setPath_absolute(path);
+                        albumInfo.getList().add(photoInfo);
+                        mListImageInfo.set(index, albumInfo);
+                        myhash.put(album, albumInfo);
+                        //Log.i("zyf", albumInfo.toString() + "\n" + album);
+                    }else{
+                        albumInfo = new AlbumInfo();
+                        stringList.clear();
+                        photoInfo.setImage_id(_id);
+                        photoInfo.setPath_file("file://"+path);
+                        photoInfo.setPath_absolute(path);
+                        stringList.add(photoInfo);
+                        albumInfo.setImage_id(_id);
+                        albumInfo.setPath_file("file://"+path);
+                        albumInfo.setPath_absolute(path);
+                        albumInfo.setName_album(album);
+                        albumInfo.setList(stringList);
+                        mListImageInfo.add(albumInfo);
+                        myhash.put(album, albumInfo);
+                        //Log.i("zyf", albumInfo.toString() + "\n" + album);
+                    }
+                }while (cursor.moveToNext());
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Object result) {
+            super.onPostExecute(result);
+            //Log.i("zzz", FilesUtils.SNATCH_PATH + mDevicesBean.getDeviceCoding() + "/");
+            for (int i=0; i<mListImageInfo.size(); i++) {
+                if (mListImageInfo.get(i).getPath_absolute().contains(FilesUtils.SNATCH_PATH + mDevicesBean.getDeviceCoding() + "/")) {
+                    mlistPhotoInfo.addAll(mListImageInfo.get(i).getList());
+                }
+            }
+
+            if (mlistPhotoInfo.size() <= 0 ) {
+                ToastUtils.showShort(getText(R.string.snatch_photo_size_0_toast).toString());
+                return;
+            } else {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                PhotoList photo = new PhotoList();
+                photo.setList(mlistPhotoInfo);
+                bundle.putSerializable("list", photo);
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClass(mContext, SnapPicturesActivity.class);
+                mContext.startActivity(intent);
+            }
+        }
+    }
+
 }

@@ -142,7 +142,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mPermissionsChecker = new PermissionsChecker(getActivity().getApplicationContext());
 
         picPath = Environment.getExternalStorageDirectory() + "/smartsite/";
-        mHeadImageView = (ImageView) rootView.findViewById(R.id.head_iv);
+        mHeadImageView = (ImageView) rootView.findViewById(R.id.head_iv_new);
         mUserNameView = (EditText) rootView.findViewById(R.id.user_name);
         mUserName = (ImageView) rootView.findViewById(R.id.img_edit_2);
         mUserRoleView = (TextView) rootView.findViewById(R.id.user_role);
@@ -191,6 +191,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                         Bundle extras = intent.getExtras();
                         mHeadBitmap = extras.getParcelable("data");
                         mHeadImageView.setImageBitmap(mHeadBitmap);
+                        mHeadImageView.invalidate();
                         if (mHeadBitmap != null) {
                             setPicToView(mHeadBitmap);//保存在SD卡中
                         }
@@ -400,7 +401,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                         if (null != mUploadHeadBitmap) {
                             toUploadHeadFile(mUploadHeadBitmap);
                         }
-                        updateUserInfo(getUpdateUserBean());
+
+                        UserBean userBean = mHttpPost.getLoginUser();
+                        if (userBean != null) {
+                            updateUserInfo(getUpdateUserBean(userBean.getImageData()));
+                        } else {
+                            updateUserInfo(getUpdateUserBean(null));
+                        }
                     }
                 }.start();
             case R.id.btn_back:
@@ -510,13 +517,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mHttpPost.userUpdate(userBean);
     }
 
-    private UserBean getUpdateUserBean() {
+    private UserBean getUpdateUserBean(String imageData) {
         UserBean userBean = new UserBean();
 
         userBean.setId(mUserId);
         //userBean.setAccount("admin");
         //userBean.setPassword("bmeB4000");
-        //userBean.setImageData("upload\\admin920.png");
+        if (null != imageData) {
+            userBean.setImageData(imageData);
+        }
         //userBean.setFax("123");
         //userBean.setEmail("123@qq.com");
         //userBean.setCreateTime("2017-10-31T18:35:29.000+0800");

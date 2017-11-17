@@ -25,6 +25,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 
 /**
@@ -50,6 +51,7 @@ public class SystemFragment extends BaseFragment{
 
     private static final  int HANDLER_GET_USER_INFO = 1;
     private Handler mHandler = null;
+    private TextView mAppVersionView;
 
     @Override
     protected int getLayoutRes() {
@@ -81,14 +83,8 @@ public class SystemFragment extends BaseFragment{
         registerLinearLayoutOnClickListener();
         mCurrentFrame = SystemFragment.this;
 
-        new Thread(){
-            @Override
-            public void run() {
-                UserBean userBean = mHttpPost.getLoginUser();
-                MyThread myThread = new MyThread(userBean);
-                mHandler.post(myThread);
-            }
-        }.start();
+        mAppVersionView = (TextView) rootView.findViewById(R.id.app_version);
+        mAppVersionView.setText("Version " + Utils.getAppVersionName(getActivity().getPackageManager(), getActivity().getPackageName()));
     }
 
     private void registerLinearLayoutOnClickListener() {
@@ -151,6 +147,15 @@ public class SystemFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
+
+        new Thread(){
+            @Override
+            public void run() {
+                UserBean userBean = mHttpPost.getLoginUser();
+                MyThread myThread = new MyThread(userBean);
+                mHandler.post(myThread);
+            }
+        }.start();
     }
 
     @Override
@@ -200,9 +205,10 @@ public class SystemFragment extends BaseFragment{
         //    mHeadImageView.setImageResource(R.drawable.default_head);
         //}
         String urlString = mHttpPost.getFileUrl(userBean.getImageData());
-        //ToastUtils.showShort("urlString = " + urlString);
+        //ToastUtils.showShort("system urlString = " + urlString);
         //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
         ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
+        mHeadImageView.invalidate();
     }
 
     class MyThread implements Runnable {

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +34,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.MediaScanner;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnLoginListener;
@@ -43,6 +46,8 @@ import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.parameter.PtzCommandParam;
 import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.thread.RecvStreamThread;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by gone on 2017/10/17.
@@ -422,7 +427,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ToastUtils.showShort("onClick the centre of a circle");
+                        //ToastUtils.showShort(" ");
                         ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ALLSTOP);
                     }
                 }, new View.OnTouchListener() {
@@ -520,6 +525,16 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 String path = mPlayer.snatch(FilesUtils.getSnatchPath(mCameraCode));
                 if (null != path) {
                     Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
+
+                    /**try {
+                        MediaStore.Images.Media.insertImage(getContentResolver(), filePath, fileName, null);
+                    } catch (FileNotFoundException e) {
+                        Log.d("zzz", "FileNotFoundException : "   +  e.getMessage());
+                        e.printStackTrace();
+                    }*/
+                    String filePaths = path.substring(0, path.lastIndexOf("/") -1);
+                    String mineType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("jpg");
+                    MediaScanner.getInstace().scanFile(mContext, new MediaScanner.ScanFile(filePaths,mineType));
                 }
                 break;
             case R.id.iv_back:
@@ -559,9 +574,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     class surfaceCallback implements SurfaceHolder.Callback {
 
         public void surfaceCreated(SurfaceHolder holder) {
-            Log.d(TAG, "===== surfaceCreated =====");
+            Log.i(TAG, "===== surfaceCreated =====");
             if (null != mPlayer && !mPlayer.AVIsPlaying()) {
-                startLive(mCameraCode);
+               // startLive(mCameraCode);
             }
         }
 
@@ -573,8 +588,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
-            Log.d(TAG, "===== surfaceDestroyed =====");
-            stopLive();
+            Log.i(TAG, "===== surfaceDestroyed =====");
+            //stopLive();
         }
     }
 
