@@ -165,8 +165,7 @@ public class SplashActivity extends BaseActivity{
 
     private void showToUpdateVersionDialog(){
         if(updateVersionDialog == null){
-            //if(androidType != 1){
-            if(true){
+            if(androidType != 1){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("版本更新检查");
                 builder.setMessage("发现新版本，是否更新？");
