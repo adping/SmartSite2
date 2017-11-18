@@ -98,6 +98,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		}
 		mHttpPost = new HttpPost();
 		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
+		Test.otTest(mJpushId);
 	}
 
 
@@ -290,125 +291,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		     // 启动登录
 			 LoginBean loginBean = null;
 			 loginBean = mHttpPost.login(mIdString,mPwdString,jpushId);
-             /*
-             String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
-             Log.i("test",day);
-             */
-			/*
-			int size = mHttpPost.getWeatherConditionDay("29","2017-10").size();
-			Log.i("test",size+" size ");
-			*/
 
-
-			/*
-			mHttpPost.onePMDevicesDataList("[1,2]","0","2017-10-01 00:00:00","2017-10-11 00:00:00");
-			 */
-
-
-			/*
-			int size = mHttpPost.getOneDevicesHistoryData("1").size();
-			Log.i("test",size+" getOneDevicesHistoryData size ");
-			*/
-
-
-			/*
-			int size =  mHttpPost.onePMDevices24Data("2","2017-10-10 10:10:10").size();
-            Log.i("test",size+" size ");
-            */
-
-			/*
-			int size = mHttpPost.getDevices("","","","").size();
-			Log.i("test",size+" size ");
-             */
-
-
-			/*
-			mHttpPost.readMessage("7");
-			int size = mHttpPost.getMessage("","","","1").size();
-			Log.i("test",size+" size ");
-			*/
-
-            /*
-            String str = mHttpPost.getWeatherLive("47","2017-10").getDataTrend().get(1).getPm10();
-			Log.i("test","getWeatherLive  ---------"+str);
-			*/
-
-
-			/*
-			PatrolBean bean = new PatrolBean();
-			bean.setAddress("武汉大软件元");
-			bean.setCompany("wuanhan  wxa");
-            mHttpPost.addPatrolReport(bean);
-            */
-
-
-            /*
-            String address = mHttpPost.getPatrolReport("76").getAddress();
-			Log.i("test","address  ---------"+address);
-			*/
-
-
-
-			/*ReportBean bean = new ReportBean();
-			bean.setName("我是一个");
-            bean.setContent("<p>一切正常-----------------</p>");
-			bean.setCreator("我是一个");
-			bean.setDate("2017-10-30 14:22:44");
-			PatrolBean patrol = new PatrolBean();
-			patrol.setId(27);
-			bean.setPatrol(patrol);
-			bean.setCategory(2);
-			bean.setPatrolUser("马化腾马化腾");
-			bean.setPatrolDateEnd("2017-10-30 14:23");
-			bean.setPatrolDateStart("2017-10-29 14:23");
-			mHttpPost.addPatrolVisit(bean);*/
-
-
-			//mHttpPost.getPatrolReportList(3);
-
-
-
-
-
-			/*
-			mHttpPost.getMobileHomeData();
-			 */
-
-			//mHttpPost.imageUpload("/storage/emulated/0/test.png",39);
-			//mHttpPost.reportFileUpload("/storage/emulated/0/k.log",39);
-
-            /*UserBean user_1 = new UserBean();
-			user_1.setId(1l);
-			user_1.setAccount("admin");
-			user_1.setPassword("bmeB4000");
-			user_1.setName("isoftstone");
-
-			mHttpPost.userUpdate(user_1);
-            */
-
-			/*String name = mHttpPost.getLoginUser().getName();
-			Log.i("test","name  ---------"+name);
-            */
-
-			//mHttpPost.downloadUserImage("img\\logo.png");
-			//mHttpPost.downloadReportFile(1,"img\\logo.png");
-
-			/*Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/test.png");
-			mHttpPost.userImageUpload(bitmap,Bitmap.CompressFormat.PNG);
-            */
-
-			//mHttpPost.getDictionaryList("zh",2);
-
-			/*ArrayList<String> addresslist = mHttpPost.getPatrolAddress();
-			for (String str:addresslist){
-				Log.i("Test",str);
-			}*/
-
-
-			/*ArrayList<DictionaryBean> list = mHttpPost.getDictionaryList("zh");
-			for (DictionaryBean str:list){
-				Log.i("Test",str.getContent()+" "+str.getValue());
-			}*/
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = false;
 				UserBean userBean = mHttpPost.getLoginUser();

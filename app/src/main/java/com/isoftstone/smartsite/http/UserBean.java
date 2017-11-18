@@ -28,6 +28,7 @@ public class UserBean {
     //roles	Set<Role>	关联的角色
     //archs	Set<Arch>	关联的区域
 
+
     private Permission mPermission = null;//用户权限信息
 
     public Permission getmPermission() {

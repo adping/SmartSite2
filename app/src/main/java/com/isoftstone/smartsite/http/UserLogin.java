@@ -5,6 +5,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONArray;
@@ -266,5 +267,32 @@ public class UserLogin {
         }
 
         return installBean;
-}
+    }
+
+    public  static  void feedback(String strurl, OkHttpClient mClient,long userId,String content){
+        String funName = "feedback";
+        try {
+            JSONObject object = new JSONObject();
+            object.put("userId", userId);
+            object.put("content", content);
+            RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .post(body)
+                    .addHeader("X-Requested-With", "XMLHttpRequest")
+                    .build();
+            Response response = null;
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.isSuccessful()) {
+                String responsebody = response.body().string();
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
