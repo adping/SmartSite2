@@ -54,7 +54,7 @@ public class SnapPicturesActivity extends Activity {
 		PhotoList photoGrid = (PhotoList) bundle.getSerializable("list");
 		list = new ArrayList<PhotoInfo>();
 		list.addAll(photoGrid.getList());
-		photoAdapter=new PhotoGridAdapter(this,list);
+		photoAdapter = new PhotoGridAdapter(this,list);
 
 		gridView.setAdapter(photoAdapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
