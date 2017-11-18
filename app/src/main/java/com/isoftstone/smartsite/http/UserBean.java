@@ -9,14 +9,14 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 public class UserBean {
 
     private  BaseUserBean loginUser;  //用户信息；
-    private Permission mPermission = null;//用户权限信息
+    private Permission privilegeCode = null;//用户权限信息
 
     public Permission getmPermission() {
-        return mPermission;
+        return privilegeCode;
     }
 
     public void setmPermission(Permission mPermission) {
-        this.mPermission = mPermission;
+        this.privilegeCode = mPermission;
     }
 
     public BaseUserBean getLoginUser() {
