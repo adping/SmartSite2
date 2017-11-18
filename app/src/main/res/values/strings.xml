@@ -211,6 +211,10 @@
     <string name="select_date_quash">取消</string>
     <!--          system   end            -->
 
+    <!--           insectplan begin       -->
+    <string name="approval_pending_inspect_plans_title">待审批巡查计划</string>
+
+    <!--           insectplan end       -->
 
     <!--         极光推送字符串后期删掉            -->
     <string name="hello">Hello World, JPush!</string>

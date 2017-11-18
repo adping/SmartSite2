@@ -336,6 +336,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     @Override
                     public void onStartReplayResult(long errorCode, String errorDesc, String playSession) {
                         //设播放会话给Player
+                        if (mPlayer == null) {
+                            return;
+                        }
                         mPlayer.setPlaySession(playSession);
 
                         //先停掉已有的播放
@@ -650,6 +653,18 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
             Log.d(TAG, "===== surfaceDestroyed =====");
+            //停止收流线程
+            if (mRecvStreamThread != null) {
+                mRecvStreamThread.interrupt();
+                mRecvStreamThread = null;
+            }
+
+            if(mPlayer != null && mPlayer.AVIsPlaying()) {
+                //停止播放解码
+                mPlayer.AVStopPlay();
+                mPlayer.AVFinalize();
+                mPlayer = null;
+            }
         }
     }
 

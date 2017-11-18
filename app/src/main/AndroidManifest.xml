@@ -276,7 +276,14 @@
         <activity android:name=".model.system.ui.SettingsActivity"
             android:launchMode="singleTask"></activity>
 
+        <!--  人工拍照界面 -->
         <activity android:name=".model.dirtcar.activity.ManualPhotographyActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
+
+        <!--  待审批巡查计划列表 -->
+        <activity android:name=".model.inspectplan.activity.ApprovalPendingInspectPlansActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
 
         <activity android:name=".model.video.VideoPlayActivity"

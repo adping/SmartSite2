@@ -12,7 +12,7 @@ import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 
 /**
- *
+ * Created by zhangyinfu on 2017/11/16.
  */
 
 public class ManualPhotographyActivity extends Activity {
