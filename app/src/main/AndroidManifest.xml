@@ -214,24 +214,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
 
-        <activity
-            android:name=".model.video.VideoPlayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-
-        <activity
-            android:name=".model.video.VideoRePlayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".model.video.VideoRePlayListActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
-
         <!--  guowei -->
         <activity
             android:name=".MainActivity"
@@ -294,8 +276,40 @@
         <activity android:name=".model.system.ui.SettingsActivity"
             android:launchMode="singleTask"></activity>
 
+        <!--  人工拍照界面 -->
         <activity android:name=".model.dirtcar.activity.ManualPhotographyActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
+
+        <!--  待审批巡查计划列表 -->
+        <activity android:name=".model.inspectplan.activity.ApprovalPendingInspectPlansActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
+
+        <activity android:name=".model.video.VideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+
+        <activity android:name=".model.video.VideoRePlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".model.video.VideoRePlayListActivity" android:configChanges="orientation|keyboardHidden|screenSize" android:launchMode="singleTask"/>
+
+        <activity android:name=".model.video.SnapPicturesActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.isoftstone.smartsite.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!--zhangyinfu end-->
 

@@ -8,4 +8,6 @@
         name="external_storage_root"
         path="isoftstone"
         ></external-path>
+
+    <external-path path="isoftstone/" name="camera_photos" />
 </paths>

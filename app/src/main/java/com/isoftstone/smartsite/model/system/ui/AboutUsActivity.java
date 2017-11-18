@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.utils.Utils;
 
 /**
  * 关于我们界面
@@ -30,12 +31,17 @@ import com.isoftstone.smartsite.R;
  */
 public class AboutUsActivity extends Activity implements View.OnClickListener{
 
+    private TextView mAppVersionView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
         initToolbar();
+
+        mAppVersionView = (TextView) findViewById(R.id.app_version);
+        mAppVersionView.setText("Version " + Utils.getAppVersionName(this.getPackageManager(), this.getPackageName()));
     }
 
     private void initToolbar(){

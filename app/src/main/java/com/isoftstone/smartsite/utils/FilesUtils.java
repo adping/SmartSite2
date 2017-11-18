@@ -365,15 +365,15 @@ public class FilesUtils {
             String txt_month = month < 10?"0" + String.valueOf(month):String.valueOf(month);
             int day = dt.getDate();
             String txt_day = day < 10?"0" + String.valueOf(day):String.valueOf(day);
-            path = path + year + txt_month + txt_day;
+            //path = path + year + txt_month + txt_day;
             path = path + "/";
             File dstDir = new File(path);
             if(!dstDir.exists()) {
                 dstDir.mkdirs();
             }
 
-            path = path + dt.getTime() + ".jpg";
-            Log.d("ImosPlayer", path);
+            path = path + year + txt_month + txt_day + "_" + dt.getTime() + ".jpg";
+
             return path;
         }
     }

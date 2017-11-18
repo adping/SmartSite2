@@ -20,6 +20,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.http.MobileHomeBean;
 import com.isoftstone.smartsite.http.WeatherLiveBean;
+import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
@@ -57,6 +58,7 @@ public class MainFragment extends BaseFragment{
     private View mVideoMonitoring = null; //视频监控
     private View mAirMonitoring = null;                //环境监测
     private View mThirdPartReport = null;             //三方协同按钮
+    private View mInspectPlan = null;             //巡查计划
     private LinearLayout mVideoMonitoringMsg = null;    //未查看消息点击区域
     private LinearLayout mAirMonitoringMsg = null;      //待处理报告点击区域
     private LinearLayout mUnCheckMsg = null;            //视频监控设备
@@ -156,6 +158,14 @@ public class MainFragment extends BaseFragment{
         wuran_number = (TextView) rootView.findViewById(R.id.wuran_number);
         shidu_textview = (TextView) rootView.findViewById(R.id.shidu_textview);
         fengxiang_textview = (TextView) rootView.findViewById(R.id.fengxiang_textview);
+
+        mInspectPlan = rootView.findViewById(R.id.button_6);
+        mInspectPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterInspectPlan();
+            }
+        });
     }
 
 
@@ -286,6 +296,12 @@ public class MainFragment extends BaseFragment{
     private void enterAirMonitoring(){
         //进入环境监控
         Intent intent = new Intent(getActivity(),AirMonitoringActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    private void enterInspectPlan() {
+        //进入巡查计划
+        Intent intent = new Intent(getActivity(),ApprovalPendingInspectPlansActivity.class);
         getActivity().startActivity(intent);
     }
 

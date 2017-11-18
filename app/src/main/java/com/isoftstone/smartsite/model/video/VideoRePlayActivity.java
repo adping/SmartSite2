@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +32,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.MediaScanner;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.uniview.airimos.Player;
@@ -334,6 +336,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     @Override
                     public void onStartReplayResult(long errorCode, String errorDesc, String playSession) {
                         //设播放会话给Player
+                        if (mPlayer == null) {
+                            return;
+                        }
                         mPlayer.setPlaySession(playSession);
 
                         //先停掉已有的播放
@@ -354,7 +359,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         mSurfaceView.setBackground(null);
                         mSurfaceView.setOnTouchListener(null);
                         changeState(PLAY);
-                        mPlaySeekbarPortLayout.setVisibility(View.VISIBLE);
+
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                            mPlaySeekbarPortLayout.setVisibility(View.GONE);
+                        } else {
+                            mPlaySeekbarPortLayout.setVisibility(View.VISIBLE);
+                        }
                         mPortStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.video_stop));
                         mLandStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.video_stop));
 
@@ -492,6 +502,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 String path = mPlayer.snatch(FilesUtils.getSnatchPath(mResCode));
                 if (null != path) {
                     Toast.makeText(VideoRePlayActivity.this, path, Toast.LENGTH_SHORT).show();
+
+                    String filePaths = path.substring(0, path.lastIndexOf("/") -1);
+                    String mineType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("jpg");
+                    MediaScanner.getInstace().scanFile(mContext, new MediaScanner.ScanFile(filePaths,mineType));
                 }
                 break;
             case R.id.show_full_screen_view:
@@ -639,6 +653,18 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
             Log.d(TAG, "===== surfaceDestroyed =====");
+            //停止收流线程
+            if (mRecvStreamThread != null) {
+                mRecvStreamThread.interrupt();
+                mRecvStreamThread = null;
+            }
+
+            if(mPlayer != null && mPlayer.AVIsPlaying()) {
+                //停止播放解码
+                mPlayer.AVStopPlay();
+                mPlayer.AVFinalize();
+                mPlayer = null;
+            }
         }
     }
 

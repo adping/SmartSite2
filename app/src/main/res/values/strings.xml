@@ -55,6 +55,8 @@
     <string name="current_date">当前日期</string>
     <string name="select_time">选择时间</string>
     <string name="current_time">当前时间</string>
+
+    <string name="snatch_photo_size_0_toast">当前移动设备不存在此设备的相关抓拍记录信息</string>
     <!--          main   end            -->
 
 
@@ -209,6 +211,10 @@
     <string name="select_date_quash">取消</string>
     <!--          system   end            -->
 
+    <!--           insectplan begin       -->
+    <string name="approval_pending_inspect_plans_title">待审批巡查计划</string>
+
+    <!--           insectplan end       -->
 
     <!--         极光推送字符串后期删掉            -->
     <string name="hello">Hello World, JPush!</string>
