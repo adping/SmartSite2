@@ -2,6 +2,10 @@ package com.isoftstone.smartsite;
 
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
+import com.isoftstone.smartsite.http.user.SimpleUserBean;
 
 /**
  * Created by gone on 2017/11/18.
@@ -174,14 +178,16 @@ public class Test {
               */
 
 
-              mHttpPost.getLoginUser();
-              EvidencePhotoBean evidencePhotoBean = new EvidencePhotoBean();
-              evidencePhotoBean.setAddr("weilaijie");
+              /*mHttpPost.getLoginUser();
+              UpdatePhotoInfoBean evidencePhotoBean = new UpdatePhotoInfoBean();
+              evidencePhotoBean.setAddr("湖北武汉");
               evidencePhotoBean.setLicence("鄂AV785B");
-              evidencePhotoBean.setPhotoSrc("upload/track/images/20171118/20171118110831567.png,upload/track/images/20171118/2017111811083164.png");
-              evidencePhotoBean.setSmallPhotoSrc("upload/track/images/20171118/20171118110831567.png,upload/track/images/20171118/2017111811083164.png");
+              evidencePhotoBean.setPhotoSrc("upload/track/images/20171117/20171117143934776.jpg");
               evidencePhotoBean.setTakePhotoTime("2017-11-18 11:11:11");
-              mHttpPost.addPhoto(evidencePhotoBean);
+              SimpleUserBean simpleUserBean = new SimpleUserBean();
+              simpleUserBean.setId(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+              evidencePhotoBean.setTakePhoroUser(simpleUserBean);
+              mHttpPost.addPhoto(evidencePhotoBean);*/
 
 
               /*
@@ -199,9 +205,13 @@ public class Test {
               */
 
 
-              /*PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
-              patrolPlanBean.setStart("2017-11-19 00:00");
-              patrolPlanBean.setEndDate("2017-11-25 23:59");
+              /*mHttpPost.getLoginUser();
+              PatrolPlanCommitBean patrolPlanBean = new PatrolPlanCommitBean();
+              patrolPlanBean.setTaskTimeStart("2017-11-19 00:00");
+              patrolPlanBean.setTaskTimeEnd("2017-11-25 23:59");
+              SimpleUserBean simpleUserBean = new SimpleUserBean();
+              simpleUserBean.setId(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+              patrolPlanBean.setCreator(simpleUserBean);
               mHttpPost.patrolPlanCommit(patrolPlanBean);*/
 
               /*PatrolTaskBeanPage patrolTaskBeanPage = mHttpPost.getPatrolTaskList(1,"","","","",new PageableBean());

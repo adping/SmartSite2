@@ -116,18 +116,11 @@ public class PatrolPlanOperation {
         }
     }
 
-    public static  void   patrolPlanCommit(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
-        String funName = "planRefuse";
+    public static  void   patrolPlanCommit(String strurl, OkHttpClient mClient, PatrolPlanCommitBean patrolPlanCommitBean){
+        String funName = "patrolPlanCommit";
         try {
-            /*
-
-             */
-            String str = "{\"creator\":{\"id\":1},\"taskTimeStart\":\"2017-11-16 17:48\",\"taskTimeEnd\":\"2017-11-17 17:48\"}";
-            JSONObject object = new JSONObject();
-            object.put("taskTimeStart", patrolPlanBean.getStart());
-            object.put("taskTimeEnd", patrolPlanBean.getEndDate());
-            //RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
-            RequestBody body = RequestBody.create(HttpPost.JSON, str);
+            Gson gson = new Gson();
+            RequestBody body = RequestBody.create(HttpPost.JSON, gson.toJson(patrolPlanCommitBean));
             Request request = new Request.Builder()
                     .url(strurl)
                     .post(body)
@@ -142,8 +135,6 @@ public class PatrolPlanOperation {
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

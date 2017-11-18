@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.http.patrolplan;
 
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 /**
  * Created by gone on 2017/11/16.
@@ -13,7 +14,7 @@ public class PatrolPlanBean {
     private long id;          //主键
     private  int status;      //状态  1	已创建，待提交  2	已提交，待审批  3	已通过  4	已打回
     private String title;     //标题
-    private UserBean creator;//用户
+    private BaseUserBean creator;//用户
     private int weekOfYear;  //一年的第几周
     private String start;    //开始时间
     private String endDate;  //结束时间
@@ -44,11 +45,11 @@ public class PatrolPlanBean {
         this.title = title;
     }
 
-    public UserBean getCreator() {
+    public BaseUserBean getCreator() {
         return creator;
     }
 
-    public void setCreator(UserBean creator) {
+    public void setCreator(BaseUserBean creator) {
         this.creator = creator;
     }
 

@@ -17,9 +17,11 @@ import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
 import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
 import com.isoftstone.smartsite.http.muckcar.MuckCarOperation;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanOperation;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
@@ -518,8 +520,8 @@ public class HttpPost {
     /*
 
      */
-    public EvidencePhotoBean addPhoto(EvidencePhotoBean evidencePhotoBean) {
-        return MuckCarOperation.addPhoto(TRACK_ADD_PHOTO, mClient, evidencePhotoBean);
+    public EvidencePhotoBean addPhoto(UpdatePhotoInfoBean updatePhotoInfoBean) {
+        return MuckCarOperation.addPhoto(TRACK_ADD_PHOTO, mClient, updatePhotoInfoBean);
     }
 
     /*
@@ -563,8 +565,8 @@ public class HttpPost {
     /*
     计划提交，目前存在问题
      */
-    public void patrolPlanCommit(PatrolPlanBean patrolPlanBean) {
-        PatrolPlanOperation.patrolPlanCommit(PATROL_PLAN_COMMIT, mClient, patrolPlanBean);
+    public void patrolPlanCommit(PatrolPlanCommitBean patrolPlanCommitBean) {
+        PatrolPlanOperation.patrolPlanCommit(PATROL_PLAN_COMMIT, mClient, patrolPlanCommitBean);
     }
 
     /*

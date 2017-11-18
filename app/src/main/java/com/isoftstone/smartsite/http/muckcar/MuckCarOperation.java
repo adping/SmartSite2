@@ -391,12 +391,13 @@ public class MuckCarOperation {
     }
 
 
-    public  static EvidencePhotoBean  addPhoto(String strurl, OkHttpClient mClient, EvidencePhotoBean evidencePhotoBean){
+    public  static EvidencePhotoBean  addPhoto(String strurl, OkHttpClient mClient, UpdatePhotoInfoBean updatePhotoInfoBean){
         EvidencePhotoBean evidencePhoto = null;
         String funName = "addPhoto";
         try {
             Gson gson = new Gson();
-            RequestBody body = RequestBody.create(HttpPost.JSON, gson.toJson(evidencePhotoBean));
+            JSONObject user = new JSONObject();
+            RequestBody body = RequestBody.create(HttpPost.JSON, gson.toJson(updatePhotoInfoBean));
             Request request = new Request.Builder()
                     .url(strurl)
                     .post(body)
