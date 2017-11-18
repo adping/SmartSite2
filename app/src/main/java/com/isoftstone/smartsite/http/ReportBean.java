@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http;
 
+import com.isoftstone.smartsite.http.user.BaseUserBean;
+
 import java.util.ArrayList;
 
 /**
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 public class ReportBean {
     private int id;           //	主键
     private int category; //1:回访,2:回复,3:验收
-    private UserBean creator;//创建人，即报告人
+    private BaseUserBean creator;//创建人，即报告人
     private String date;	//date(yyyy-MM-dd HH:mm:ss)	创建时间
     private String content;//	string	内容
     private int status;//	状态，参考Patrol状态说明
@@ -56,11 +58,11 @@ public class ReportBean {
         this.category = category;
     }
 
-    public UserBean getCreator() {
+    public BaseUserBean getCreator() {
         return creator;
     }
 
-    public void setCreator(UserBean creator) {
+    public void setCreator(BaseUserBean creator) {
         this.creator = creator;
     }
 

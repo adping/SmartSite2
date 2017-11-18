@@ -31,6 +31,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
@@ -245,7 +246,7 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                     reportData.setCategory(mAddReportActivity.mTypes);
                     //
-                    UserBean user = new UserBean();
+                    BaseUserBean user = new BaseUserBean();
                     reportData.setCreator(user);
                     //TODO type?
                     boolean visit = mRadioYes.isChecked();
@@ -280,8 +281,8 @@ public class RevisitFragment extends BaseFragment {
                 reportBean.setName(reportName);
                 reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                 reportBean.setVisit(visit);
-                UserBean userBean = new UserBean();
-                userBean.getLoginUser().setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+                BaseUserBean userBean = new BaseUserBean();
+                userBean.setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
                 reportData.setCreator(userBean);
                 reportBean.setCreator(userBean);
 

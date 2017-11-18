@@ -34,6 +34,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import java.io.File;
@@ -512,19 +513,19 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         }
     }
 
-    private void updateUserInfo(UserBean userBean) {
+    private void updateUserInfo(BaseUserBean userBean) {
         Log.i("zyf","updateUserInfo--->" + userBean.toString());
         mHttpPost.userUpdate(userBean);
     }
 
-    private UserBean getUpdateUserBean(String imageData) {
-        UserBean userBean = new UserBean();
+    private BaseUserBean getUpdateUserBean(String imageData) {
+        BaseUserBean userBean = new BaseUserBean();
 
-        userBean.getLoginUser().setId(mUserId);
+        userBean.setId(mUserId);
         //userBean.setAccount("admin");
         //userBean.setPassword("bmeB4000");
         if (null != imageData) {
-            userBean.getLoginUser().setImageData(imageData);
+            userBean.setImageData(imageData);
         }
         //userBean.setFax("123");
         //userBean.setEmail("123@qq.com");
@@ -532,11 +533,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //userBean.setAccountType(1);
 
         if (null !=  mUserNameView.getText()) {
-            userBean.getLoginUser().setName(mUserNameView.getText().toString());
+            userBean.setName(mUserNameView.getText().toString());
         }
         if (null !=  mUserSexView.getText()) {
             try {
-                userBean.getLoginUser().setSex(Integer.parseInt(mUserSexView.getText().toString()));
+                userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
             }catch (Exception e) {
                 Log.i(TAG, "throws an excption : " + e.getMessage());
             }
@@ -550,13 +551,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //    userBean.setPassword("bmeB4000");
         //}
         if (null !=  mUserPhoneNumView.getText()) {
-            userBean.getLoginUser().setTelephone(mUserPhoneNumView.getText().toString());
+            userBean.setTelephone(mUserPhoneNumView.getText().toString());
         }
         if (null !=  mUserCompanyView.getText()) {
-           userBean.getLoginUser().setDepartmentId(mUserCompanyView.getText().toString());
+           userBean.setDepartmentId(mUserCompanyView.getText().toString());
         }
         if (null !=  mUserAutographView.getText()) {
-            userBean.getLoginUser().setDescription(mUserAutographView.getText().toString());
+            userBean.setDescription(mUserAutographView.getText().toString());
         }
         return userBean;
     }

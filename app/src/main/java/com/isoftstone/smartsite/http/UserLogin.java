@@ -124,8 +124,7 @@ public class UserLogin {
     }
 
     public static UserBean getLoginUserById(String strurl, OkHttpClient mClient){
-        UserBean userBeanReturn = null;
-        UserBean.Permission permission = null;
+        UserBean userBeanReturn = new UserBean();
         String funName = "getLoginUserById";
         try {
             Request request = new Request.Builder()
@@ -139,7 +138,8 @@ public class UserLogin {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
                 Gson gson = new Gson();
-                userBeanReturn = gson.fromJson(responsebody,UserBean.class);
+                BaseUserBean user = gson.fromJson(responsebody,BaseUserBean.class);
+                userBeanReturn.setLoginUser(user);
                 userBeanReturn.setmPermission(HttpPost.mLoginBean.getmUserBean().getmPermission());
             }
         } catch (IOException e) {
@@ -148,7 +148,7 @@ public class UserLogin {
         return userBeanReturn;
     }
 
-    public static  void  userUpdate(String strurl, OkHttpClient mClient,UserBean userBean){
+    public static  void  userUpdate(String strurl, OkHttpClient mClient,BaseUserBean userBean){
 
         String funName = "userUpdate";
         try {

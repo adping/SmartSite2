@@ -30,6 +30,7 @@ import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
@@ -250,8 +251,8 @@ public class CheckFragment extends BaseFragment {
             reportBean.setVisit(mRadioYes.isChecked());
         }
         reportBean.setCategory(3);
-        UserBean userBean = new UserBean();
-        userBean.getLoginUser().setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+        BaseUserBean userBean = new BaseUserBean();
+        userBean.setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
         Log.e(TAG,"yanlog checkid:"+mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId()+" checkName:"+mHttpPost.mLoginBean.getmUserBean().getLoginUser().getAccount());
         reportBean.setCreator(userBean);
         return reportBean;

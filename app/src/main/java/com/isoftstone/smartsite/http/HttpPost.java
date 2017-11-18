@@ -356,7 +356,7 @@ public class HttpPost {
     }
 
     //更改用户信息
-    public void userUpdate(UserBean userBean) {
+    public void userUpdate(BaseUserBean userBean) {
         UserLogin.userUpdate(USER_UPDATE, mClient, userBean);
     }
 

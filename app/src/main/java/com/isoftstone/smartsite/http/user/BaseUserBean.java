@@ -188,4 +188,30 @@ public class BaseUserBean {
     public void setRegisterId(String registerId) {
         this.registerId = registerId;
     }
+
+    @Override
+    public String toString() {
+        return "BaseUserBean{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", imageData='" + imageData + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", fax='" + fax + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
+                ", departmentId='" + departmentId + '\'' +
+                ", employeeCode='" + employeeCode + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", creator=" + creator +
+                ", accountType=" + accountType +
+                ", resetPwd=" + resetPwd +
+                ", locked=" + locked +
+                ", delFlag=" + delFlag +
+                ", sex=" + sex +
+                ", registerId='" + registerId + '\'' +
+                '}';
+    }
 }

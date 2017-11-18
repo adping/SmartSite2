@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http;
 
+import com.isoftstone.smartsite.http.user.BaseUserBean;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 
 public class PatrolBean {
     private int id;	//	主键
-    private UserBean creator;//	创建人
+    private BaseUserBean creator;//	创建人
     private  int status;//	状态
     private String date;//	date(yyyy-MM-dd HH:mm:ss)	创建时间
     private String  address; //巡查地点
@@ -37,11 +39,11 @@ public class PatrolBean {
         this.id = id;
     }
 
-    public UserBean getCreator() {
+    public BaseUserBean getCreator() {
         return creator;
     }
 
-    public void setCreator(UserBean creator) {
+    public void setCreator(BaseUserBean creator) {
         this.creator = creator;
     }
 
