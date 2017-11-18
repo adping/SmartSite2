@@ -127,7 +127,7 @@ public class ReplyReportFragment extends BaseFragment {
         reportBean.setCategory(2);
         reportBean.setStatus(mActivity.getReportData().getStatus());
         UserBean userBean = new UserBean();
-        userBean.setId(mHttpPost.mLoginBean.getmUserBean().getId());
+        userBean.getLoginUser().setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
         tempBean.setCreator(userBean);
         return reportBean;
     }

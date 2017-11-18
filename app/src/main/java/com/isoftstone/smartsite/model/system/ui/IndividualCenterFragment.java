@@ -404,7 +404,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
 
                         UserBean userBean = mHttpPost.getLoginUser();
                         if (userBean != null) {
-                            updateUserInfo(getUpdateUserBean(userBean.getImageData()));
+                            updateUserInfo(getUpdateUserBean(userBean.getLoginUser().getImageData()));
                         } else {
                             updateUserInfo(getUpdateUserBean(null));
                         }
@@ -478,15 +478,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         if (null == userBean) {
             return;
         }
-        mUserId = userBean.getId();
-        mUserNameView.setText(userBean.getName());
-        mUserRoleView.setText(userBean.getEmployeeCode());
-        mUserSexView.setText(userBean.getSex() + "");
-        mUserAccountView.setText(userBean.getAccount());
-        mUserPwdView.setText(userBean.getPassword());
-        mUserPhoneNumView.setText(userBean.getTelephone());
-        mUserCompanyView.setText(userBean.getDepartmentId());
-        mUserAutographView.setText(userBean.getDescription());
+        mUserId = userBean.getLoginUser().getId();
+        mUserNameView.setText(userBean.getLoginUser().getName());
+        mUserRoleView.setText(userBean.getLoginUser().getEmployeeCode());
+        mUserSexView.setText(userBean.getLoginUser().getSex() + "");
+        mUserAccountView.setText(userBean.getLoginUser().getAccount());
+        mUserPwdView.setText(userBean.getLoginUser().getPassword());
+        mUserPhoneNumView.setText(userBean.getLoginUser().getTelephone());
+        mUserCompanyView.setText(userBean.getLoginUser().getDepartmentId());
+        mUserAutographView.setText(userBean.getLoginUser().getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
 
         /**Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
@@ -496,7 +496,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             mHeadImageView.setImageResource(R.drawable.default_head);
         }*/
 
-        String urlString = mHttpPost.getFileUrl(userBean.getImageData());
+        String urlString = mHttpPost.getFileUrl(userBean.getLoginUser().getImageData());
         //ToastUtils.showShort("urlString = " + urlString);
         //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
         ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
@@ -520,11 +520,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private UserBean getUpdateUserBean(String imageData) {
         UserBean userBean = new UserBean();
 
-        userBean.setId(mUserId);
+        userBean.getLoginUser().setId(mUserId);
         //userBean.setAccount("admin");
         //userBean.setPassword("bmeB4000");
         if (null != imageData) {
-            userBean.setImageData(imageData);
+            userBean.getLoginUser().setImageData(imageData);
         }
         //userBean.setFax("123");
         //userBean.setEmail("123@qq.com");
@@ -532,11 +532,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //userBean.setAccountType(1);
 
         if (null !=  mUserNameView.getText()) {
-            userBean.setName(mUserNameView.getText().toString());
+            userBean.getLoginUser().setName(mUserNameView.getText().toString());
         }
         if (null !=  mUserSexView.getText()) {
             try {
-                userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
+                userBean.getLoginUser().setSex(Integer.parseInt(mUserSexView.getText().toString()));
             }catch (Exception e) {
                 Log.i(TAG, "throws an excption : " + e.getMessage());
             }
@@ -550,13 +550,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //    userBean.setPassword("bmeB4000");
         //}
         if (null !=  mUserPhoneNumView.getText()) {
-            userBean.setTelephone(mUserPhoneNumView.getText().toString());
+            userBean.getLoginUser().setTelephone(mUserPhoneNumView.getText().toString());
         }
         if (null !=  mUserCompanyView.getText()) {
-           userBean.setDepartmentId(mUserCompanyView.getText().toString());
+           userBean.getLoginUser().setDepartmentId(mUserCompanyView.getText().toString());
         }
         if (null !=  mUserAutographView.getText()) {
-            userBean.setDescription(mUserAutographView.getText().toString());
+            userBean.getLoginUser().setDescription(mUserAutographView.getText().toString());
         }
         return userBean;
     }

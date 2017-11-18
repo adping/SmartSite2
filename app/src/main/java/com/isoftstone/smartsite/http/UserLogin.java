@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONArray;
@@ -92,7 +93,7 @@ public class UserLogin {
     }
 
 
-    public static UserBean getLoginUser(String strurl, OkHttpClient mClient,UserBean userBean){
+    public static UserBean getLoginUser(String strurl, OkHttpClient mClient,BaseUserBean userBean){
         UserBean userBeanReturn = null;
         UserBean.Permission permission = null;
         String funName = "getLoginUser";
@@ -112,11 +113,7 @@ public class UserLogin {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
                 JSONObject object = new JSONObject(responsebody);
-                String loginUser = object.getString("loginUser");
-                String privilegeCode = object.getString("privilegeCode");
-                userBeanReturn = gson.fromJson(loginUser,UserBean.class);
-                permission = gson.fromJson(privilegeCode,UserBean.Permission.class);
-                userBeanReturn.setmPermission(permission);
+                userBeanReturn = gson.fromJson(responsebody,UserBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();

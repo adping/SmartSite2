@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.http.muckcar;
 
 import android.support.constraint.solver.Goal;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -401,8 +402,6 @@ public class MuckCarOperation {
                     .post(body)
                     .addHeader("X-Requested-With", "XMLHttpRequest")
                     .build();
-            String test = gson.toJson(evidencePhotoBean);
-            LogUtils.i(TAG, funName + " test  " + test);
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());

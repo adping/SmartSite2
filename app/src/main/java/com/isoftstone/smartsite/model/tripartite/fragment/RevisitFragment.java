@@ -281,7 +281,7 @@ public class RevisitFragment extends BaseFragment {
                 reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                 reportBean.setVisit(visit);
                 UserBean userBean = new UserBean();
-                userBean.setId(mHttpPost.mLoginBean.getmUserBean().getId());
+                userBean.getLoginUser().setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
                 reportData.setCreator(userBean);
                 reportBean.setCreator(userBean);
 

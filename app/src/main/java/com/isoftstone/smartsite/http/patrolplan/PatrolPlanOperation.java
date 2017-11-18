@@ -119,10 +119,15 @@ public class PatrolPlanOperation {
     public static  void   patrolPlanCommit(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
         String funName = "planRefuse";
         try {
+            /*
+
+             */
+            String str = "{\"creator\":{\"id\":1},\"taskTimeStart\":\"2017-11-16 17:48\",\"taskTimeEnd\":\"2017-11-17 17:48\"}";
             JSONObject object = new JSONObject();
             object.put("taskTimeStart", patrolPlanBean.getStart());
             object.put("taskTimeEnd", patrolPlanBean.getEndDate());
-            RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
+            //RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
+            RequestBody body = RequestBody.create(HttpPost.JSON, str);
             Request request = new Request.Builder()
                     .url(strurl)
                     .post(body)

@@ -28,6 +28,7 @@ import com.isoftstone.smartsite.http.patroluser.PatrolUserOperation;
 import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.http.taskcenter.TaskCenterOperation;
 import com.isoftstone.smartsite.http.taskcenter.TaskNumberBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
@@ -261,7 +262,7 @@ public class HttpPost {
     public ArrayList<PatrolBean> getPatrolReportList(String status) {
         String departmentId = "";
         if (mLoginBean != null && mLoginBean.getmUserBean() != null) {
-            departmentId = mLoginBean.getmUserBean().getDepartmentId();
+            departmentId = mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
         }
         return ReportOperation.getPatrolReportList(PATROL_LIST, mClient, status, departmentId);
     }
@@ -340,9 +341,9 @@ public class HttpPost {
         UserBean userBean = null;
         if (mLoginBean != null) {
             if (mLoginBean.getmUserBean() != null) {
-                userBean = UserLogin.getLoginUserById(GET_LOGIN_USER_BYID + mLoginBean.getmUserBean().getId(), mClient);
+                userBean = UserLogin.getLoginUserById(GET_LOGIN_USER_BYID + mLoginBean.getmUserBean().getLoginUser().getId(), mClient);
             } else {
-                UserBean user = new UserBean();
+                BaseUserBean user = new BaseUserBean();
                 user.setAccount(mLoginBean.getmName());
                 user.setPassword(mLoginBean.getmPassword());
                 userBean = UserLogin.getLoginUser(GET_LOGIN_USER, mClient, user);

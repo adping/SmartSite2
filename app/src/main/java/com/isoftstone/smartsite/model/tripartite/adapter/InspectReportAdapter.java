@@ -75,7 +75,7 @@ public class InspectReportAdapter extends BaseAdapter {
                 ReportData reportData = mDatas.get(position);
                 time.setText(MsgData.format3.format(reportData.getFormatDate()));
                 title.setText(reportData.getAddress());
-                name.setText(reportData.getCreator().getName());
+                name.setText(reportData.getCreator().getLoginUser().getName());
                 company.setText(reportData.getCompany());
                 int status = reportData.getStatus();
                 if (status >= 1) {

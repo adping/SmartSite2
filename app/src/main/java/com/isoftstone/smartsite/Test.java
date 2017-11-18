@@ -1,17 +1,7 @@
 package com.isoftstone.smartsite;
 
-import android.util.Log;
-
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
-import com.isoftstone.smartsite.http.pageable.PageableBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
-import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
-import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
-import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
-
-import java.util.ArrayList;
 
 /**
  * Created by gone on 2017/11/18.
@@ -183,7 +173,7 @@ public class Test {
               mHttpPost.uploadPhotos(list);
               */
 
-              /*
+
               mHttpPost.getLoginUser();
               EvidencePhotoBean evidencePhotoBean = new EvidencePhotoBean();
               evidencePhotoBean.setAddr("weilaijie");
@@ -191,9 +181,8 @@ public class Test {
               evidencePhotoBean.setPhotoSrc("upload/track/images/20171118/20171118110831567.png,upload/track/images/20171118/2017111811083164.png");
               evidencePhotoBean.setSmallPhotoSrc("upload/track/images/20171118/20171118110831567.png,upload/track/images/20171118/2017111811083164.png");
               evidencePhotoBean.setTakePhotoTime("2017-11-18 11:11:11");
-              evidencePhotoBean.setTakePhoroUser(HttpPost.mLoginBean.getmUserBean());
               mHttpPost.addPhoto(evidencePhotoBean);
-              */
+
 
               /*
               ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();

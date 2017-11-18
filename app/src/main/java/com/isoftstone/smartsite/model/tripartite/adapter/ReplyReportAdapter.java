@@ -61,7 +61,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             return;
         }
         mData = data.getPatrolBean().getReports();
-        mReportCreator = data.getPatrolBean().getCreator().getName();
+        mReportCreator = data.getPatrolBean().getCreator().getLoginUser().getName();
         mReportData = data.getPatrolBean();
     }
 
@@ -88,7 +88,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             return;
         }
         mData = replyReportData.getPatrolBean().getReports();
-        mReportCreator = replyReportData.getPatrolBean().getCreator().getName();
+        mReportCreator = replyReportData.getPatrolBean().getCreator().getLoginUser().getName();
         mReportData = replyReportData.getPatrolBean();
         super.notifyDataSetChanged();
     }
@@ -141,7 +141,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         time.setText(date);
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getLoginUser().getAccount());
 
         TextView checkpeople = (TextView) v.findViewById(R.id.inspect_report_check_people_read);
         checkpeople.setText(data.getPatrolUser());
@@ -195,7 +195,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         msg.setText(data.getContent());
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getLoginUser().getAccount());
 
         GridView gridView = (GridView) v.findViewById(R.id.grid_view);
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.linear_grid_view);
@@ -219,7 +219,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getLoginUser().getAccount());
 
         time.setText(date);
         ImageView img = (ImageView) v.findViewById(R.id.img_status);

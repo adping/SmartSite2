@@ -251,8 +251,8 @@ public class CheckFragment extends BaseFragment {
         }
         reportBean.setCategory(3);
         UserBean userBean = new UserBean();
-        userBean.setId(mHttpPost.mLoginBean.getmUserBean().getId());
-        Log.e(TAG,"yanlog checkid:"+mHttpPost.mLoginBean.getmUserBean().getId()+" checkName:"+mHttpPost.mLoginBean.getmUserBean().getAccount());
+        userBean.getLoginUser().setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+        Log.e(TAG,"yanlog checkid:"+mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId()+" checkName:"+mHttpPost.mLoginBean.getmUserBean().getLoginUser().getAccount());
         reportBean.setCreator(userBean);
         return reportBean;
     }

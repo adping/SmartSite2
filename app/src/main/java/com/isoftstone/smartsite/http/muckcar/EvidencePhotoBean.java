@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.http.muckcar;
 
-import com.isoftstone.smartsite.User;
-import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 /**
  * Created by gone on 2017/11/16.
@@ -17,7 +16,7 @@ public class EvidencePhotoBean {
     private String smallPhotoSrc; //
     private String addr;
     private String speed;
-    private UserBean takePhoroUser;
+    private BaseUserBean takePhoroUser;
 
     public String getLicence() {
         return licence;
@@ -67,11 +66,11 @@ public class EvidencePhotoBean {
         this.speed = speed;
     }
 
-    public UserBean getTakePhoroUser() {
+    public BaseUserBean getTakePhoroUser() {
         return takePhoroUser;
     }
 
-    public void setTakePhoroUser(UserBean takePhoroUser) {
+    public void setTakePhoroUser(BaseUserBean takePhoroUser) {
         this.takePhoroUser = takePhoroUser;
     }
 
