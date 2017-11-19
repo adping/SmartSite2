@@ -25,9 +25,13 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Text;
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.model.map.adapter.MapTaskDetailRecyclerViewAdapter;
+import com.isoftstone.smartsite.utils.LogUtils;
 
 import static com.amap.api.maps.model.MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER;
 
@@ -56,6 +60,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private PopupWindow mPopWindow;
     private ImageView iv_start_task;
     private View content_parent;
+    private LoadingDailog loadingDailog;
+    private HttpPost httpPost;
+    private PatrolTaskBean patrolTaskBean;
 
     @Override
     protected int getLayoutRes() {
@@ -66,8 +73,13 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     protected void afterCreated(Bundle savedInstanceState) {
         initToolBar();
         iv_status = (ImageView) findViewById(R.id.iv_status);
+        httpPost = new HttpPost();
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
+        initLoadingDialog();
+
+        getData();
+
         initRecyclerView();
         initPopWindow();
         initMarkers();
@@ -81,6 +93,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         ImageButton btn = (ImageButton) findViewById(R.id.btn_icon);
         btn.setImageResource(R.drawable.search);
         btn.setOnClickListener(this);
+        btn.setVisibility(View.GONE);
         TextView title = (TextView) findViewById(R.id.toolbar_title);
         title.setText("任务详情");
     }
@@ -124,6 +137,24 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             aMap.animateCamera(update);
         }
 
+    }
+
+    private void initLoadingDialog(){
+        loadingDailog = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(true)
+                .setCancelOutside(true).create();
+    }
+
+    private void getData(){
+        loadingDailog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                patrolTaskBean= httpPost.patrolTaskFindOne(64);
+                LogUtils.e(TAG,patrolTaskBean.toString());
+            }
+        }).start();
     }
 
     private void initRecyclerView(){

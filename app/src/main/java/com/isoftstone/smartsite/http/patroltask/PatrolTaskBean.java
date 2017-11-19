@@ -143,4 +143,24 @@ public class PatrolTaskBean implements Serializable{
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
+    @Override
+    public String toString() {
+        return "PatrolTaskBean{" +
+                "taskId=" + taskId +
+                ", taskName='" + taskName + '\'' +
+                ", users=" + users +
+                ", patrolPositions=" + patrolPositions +
+                ", taskTimeStart='" + taskTimeStart + '\'' +
+                ", taskTimeEnd='" + taskTimeEnd + '\'' +
+                ", taskStart='" + taskStart + '\'' +
+                ", taskEnd='" + taskEnd + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", taskType=" + taskType +
+                ", creator=" + creator +
+                ", planStatus=" + planStatus +
+                ", taskContent='" + taskContent + '\'' +
+                ", createTime='" + createTime + '\'' +
+                '}';
+    }
 }

@@ -319,7 +319,7 @@ public class MainFragment extends BaseFragment{
 
     private void enterConstructionMonitor(){
         //进入施工监控
-        Intent intent = new Intent(getActivity(),ConstructionMonitorMapActivity.class);
+        Intent intent = new Intent(getActivity(),ConstructionMontitoringMapActivity.class);
         getActivity().startActivity(intent);
     }
 
