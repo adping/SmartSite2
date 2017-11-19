@@ -373,7 +373,7 @@ public class FilesUtils {
             }
 
             path = path + year + txt_month + txt_day + "_" + dt.getTime() + ".jpg";
-
+            //Log.d("zzz", "AAAAAAAAAAAAAAAAA      " + dstDir.getAbsolutePath());
             return path;
         }
     }

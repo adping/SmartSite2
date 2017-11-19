@@ -59,26 +59,28 @@ public class ReadReportFrag extends BaseFragment {
     }
 
     private void initViewData() {
-        mLabAddress.setText(mData.getAddress());
-        mLabCompany.setText(mData.getCompany());
-        int status = mData.getStatus();
-        if (status > 1) {
-            status--;
-        }
-        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
+        if(mData != null){
+            mLabAddress.setText(mData.getAddress());
+            mLabCompany.setText(mData.getCompany());
+            int status = mData.getStatus();
+            if (status > 1) {
+                status--;
+            }
+            mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
 
-        mBuildCompany.setText(mData.getDevelopmentCompany());
-        mCosCompany.setText(mData.getConstructionCompany());
-        mSupCompany.setText(mData.getSupervisionCompany());
-        if (mData.isVisit()) {
-            mLabVisit.setText(mData.getVisitDate());
-        }
+            mBuildCompany.setText(mData.getDevelopmentCompany());
+            mCosCompany.setText(mData.getConstructionCompany());
+            mSupCompany.setText(mData.getSupervisionCompany());
+            if (mData.isVisit()) {
+                mLabVisit.setText(mData.getVisitDate());
+            }
 
-        try {
-            int category = Integer.parseInt(mData.getCategory());
-            mLabTypes.setText(mTypesList.get(category -1));
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                int category = Integer.parseInt(mData.getCategory());
+                mLabTypes.setText(mTypesList.get(category -1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -92,8 +94,10 @@ public class ReadReportFrag extends BaseFragment {
         protected String doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-            for (DictionaryBean temp : tempLists) {
-                mTypesList.add(temp.getContent());
+            if(tempLists != null){
+                for (DictionaryBean temp : tempLists) {
+                    mTypesList.add(temp.getContent());
+                }
             }
             return null;
         }

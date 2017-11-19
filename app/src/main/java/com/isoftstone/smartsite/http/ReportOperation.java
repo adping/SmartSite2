@@ -333,7 +333,7 @@ public class ReportOperation {
         }
     }
 
-    public static  void downloadfile(String downloadUrl,String storagePath,String imageName){
+    public static long downloadfile(String downloadUrl,String storagePath,String imageName){
         //创建下载任务,downloadUrl就是下载链接
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
         //指定下载路径和下载文件名
@@ -342,7 +342,7 @@ public class ReportOperation {
         //获取下载管理器
         DownloadManager downloadManager= (DownloadManager) App.getAppContext().getSystemService(Context.DOWNLOAD_SERVICE);
          //将下载任务加入下载队列，否则不会进行下载
-        downloadManager.enqueue(request);
+        return downloadManager.enqueue(request);
     }
 
 
@@ -352,6 +352,7 @@ public class ReportOperation {
         FormBody body = new FormBody.Builder()
                 .add("lang", lang)
                 .add("category","patrol.category")
+
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)

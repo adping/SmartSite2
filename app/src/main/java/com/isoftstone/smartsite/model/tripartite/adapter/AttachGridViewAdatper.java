@@ -78,10 +78,15 @@ public class AttachGridViewAdatper extends BaseAdapter {
     public void setAllPath(ArrayList<String> path){
         mAllPath = path;
     }
+
+    /**
+     */
     public ArrayList<String> getAllPath(){
         return mAllPath;
     }
 
+    /**
+     */
     public ArrayList<Object> getAllData(){
         return mDatas;
     }

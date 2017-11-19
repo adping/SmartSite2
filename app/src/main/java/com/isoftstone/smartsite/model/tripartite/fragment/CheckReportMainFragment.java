@@ -73,25 +73,26 @@ public class CheckReportMainFragment extends BaseFragment {
         @Override
         protected String doInBackground(String... params) {
             ArrayList<PatrolBean> msgs = mHttpPost.getCheckReportList("");
-
-            Collections.sort(msgs, new Comparator<PatrolBean>() {
-                @Override
-                public int compare(PatrolBean o1, PatrolBean o2) {
-                    try {
-                        Date date1 = MsgData.format5.parse(o1.getDate());
-                        Date date2 = MsgData.format5.parse(o2.getDate());
-                        return date2.compareTo(date1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            if(msgs != null){
+                Collections.sort(msgs, new Comparator<PatrolBean>() {
+                    @Override
+                    public int compare(PatrolBean o1, PatrolBean o2) {
+                        try {
+                            Date date1 = MsgData.format5.parse(o1.getDate());
+                            Date date2 = MsgData.format5.parse(o2.getDate());
+                            return date2.compareTo(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
                     }
-                    return 0;
+                });
+                mDatas.clear();
+                for (PatrolBean temp : msgs) {
+                    ReportData reportData = new ReportData(temp);
+                    Log.e(TAG, "reportData:" + reportData);
+                    mDatas.add(reportData);
                 }
-            });
-            mDatas.clear();
-            for (PatrolBean temp : msgs) {
-                ReportData reportData = new ReportData(temp);
-                Log.e(TAG, "reportData:" + reportData);
-                mDatas.add(reportData);
             }
             return null;
         }

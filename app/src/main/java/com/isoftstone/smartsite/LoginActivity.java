@@ -8,17 +8,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,17 +31,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
+import com.isoftstone.smartsite.http.CompanyBean;
 import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.service.KeepaliveService;
-import android.Manifest;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -76,6 +73,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	private ImageView mIdImageView = null;
 	private ImageView mPwdImageView = null;
     private String mJpushId;
+    private ImageView passwd_checkbox = null;
+    private LinearLayout check_layout = null;
+    private boolean isChecked  = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,8 +97,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			//mHandler.sendMessage(message);
 		}
 		mHttpPost = new HttpPost();
+		HttpPost.mLoginBean = null;
 		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
-		Test.otTest(mJpushId);
 	}
 
 
@@ -135,6 +135,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	}
 
 	private void initView() {
+		passwd_checkbox = (ImageView) findViewById(R.id.passwd_checkbox);
+		check_layout = (LinearLayout) findViewById(R.id.check_layout);
 		mIdView = (View) findViewById(R.id.view_1);
 		mPwdView = (View) findViewById(R.id.view_2);
 		mIdImageView = (ImageView) findViewById(R.id.imageView_1);
@@ -178,6 +180,27 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				}
 			}
 		});
+
+		check_layout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(isChecked){
+					passwd_checkbox.setImageResource(R.drawable.checkbox);
+					isChecked = false;
+				}else {
+					passwd_checkbox.setImageResource(R.drawable.checkbox_select);
+					isChecked = true;
+				}
+				SharedPreferencesUtils.updateSavePasswd(LoginActivity.this,isChecked);
+			}
+		});
+		//设置是否记住密码图标
+		isChecked = SharedPreferencesUtils.getSavePasswd(this);
+		if(isChecked){
+			passwd_checkbox.setImageResource(R.drawable.checkbox_select);
+		}else{
+			passwd_checkbox.setImageResource(R.drawable.checkbox);
+		}
 	}
 
 	/* 初始化正在登录对话框 */
@@ -194,12 +217,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		if (mLoginingDlg != null)
 			mLoginingDlg.show();
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
 
 	/* 关闭正在登录对话框 */
 	private void closeLoginingDlg() {
@@ -235,11 +252,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	@Override
 	public void onPause() {
 		super.onPause();
-		try {
-			UserUtils.saveUserList(LoginActivity.this, mUsers);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private Handler mHandler = new Handler() {
@@ -291,40 +303,30 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		     // 启动登录
 			 LoginBean loginBean = null;
 			 loginBean = mHttpPost.login(mIdString,mPwdString,jpushId);
-
 			if(loginBean.isLoginSuccess()){
-				 boolean mIsSave = false;
 				UserBean userBean = mHttpPost.getLoginUser();
 				HttpPost.mLoginBean.setmUserBean(userBean);
 				 try {
 					 Log.i(TAG, "保存用户列表");
-					 /*for (User user : mUsers) { // 判断本地文档是否有此ID用户
-						 if (user.getId().equals(mIdString)) {
-							 mIsSave = false;
-							 break;
-						 }
-					 }*/
-				//if (mIsSave) { // 将新用户加入users
-				//	User user = new User(mIdString, mPwdString);
-				//	mUsers.add(user);
-				//}
 					 mUsers.clear();
 					 User user = new User(mIdString, mPwdString);
 					 mUsers.add(user);
-					 UserUtils.saveUserList(getBaseContext(),mUsers);
+					 if(isChecked){
+						 UserUtils.saveUserList(getBaseContext(),mUsers);
+					 }
 				 } catch (Exception e) {
 					 e.printStackTrace();
 				 }
 				 isLogin_1 = true;
-			 }else{
+			}else{
 				 mLoginResult = loginBean.getmErrorInfo();
 				 if(mLoginResult == null){
 					 mLoginResult = "登录失败";
 				 }
 				 isLogin_1 = false;
-				mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
-				mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-			 }
+				 mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+				 mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+			}
 
 	}
 
@@ -341,10 +343,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
         }else{
             isLogin_2 = false;
             mLoginResult = "登录失败：与后台服务连接异常";
-            mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-            Message message = new Message();
-            message.what = HANDLER_LOGIN_END;
-            mHandler.sendMessage(message);
+			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+            mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+
         }
 	}
 	/**
@@ -367,12 +368,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			isLogin_2 = false;
 			HttpPost.mVideoIsLogin = false;
 			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-
-
 		}
-		Message message = new Message();
-		message.what = HANDLER_LOGIN_END;
-		mHandler.sendMessage(message);
+		mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
 	}
 
 	//启动保活服务

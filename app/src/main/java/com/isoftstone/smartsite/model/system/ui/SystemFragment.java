@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
+import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.utils.Utils;
 
@@ -83,8 +84,6 @@ public class SystemFragment extends BaseFragment{
         registerLinearLayoutOnClickListener();
         mCurrentFrame = SystemFragment.this;
 
-        mAppVersionView = (TextView) rootView.findViewById(R.id.app_version);
-        mAppVersionView.setText("Version " + Utils.getAppVersionName(getActivity().getPackageManager(), getActivity().getPackageName()));
     }
 
     private void registerLinearLayoutOnClickListener() {
@@ -111,7 +110,11 @@ public class SystemFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 try {
-                    UserUtils.clearUserList(getActivity().getBaseContext());
+                    boolean isSave = SharedPreferencesUtils.getSavePasswd(getActivity());
+                    if(!isSave){
+                        //退出时清掉密码
+                        UserUtils.clearUserList(getContext());
+                    }
                     Intent intent = new Intent();
                     intent.setClass(getActivity().getBaseContext(), LoginActivity.class);
                     getActivity().startActivity(intent);

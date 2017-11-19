@@ -116,6 +116,28 @@
             android:text="@string/loginbtntext"
             android:textColor="#FFFFFF"
             android:textSize="19sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/check_layout"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/passwd_checkbox"
+                    android:src="@drawable/checkbox_select"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:text="记住用户名和密码"/>
+        </LinearLayout>
     </LinearLayout>
 
 
