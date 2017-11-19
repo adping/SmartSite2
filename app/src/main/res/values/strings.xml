@@ -155,7 +155,7 @@
     <string name="inspect_report_recheck_report_people">报告人员</string>
     <string name="inspect_report_recheck_report_time">报告时间</string>
     <!--验收报告验收页-->
-    <string name="check_report_submit_title">验收报告</string>
+    <string name="check_report_submit_title">报告验收</string>
     <string name="check_report_address">巡查地点</string>
     <string name="check_report_time">回访时间</string>
     <string name="check_report_report_name">报告人员</string>

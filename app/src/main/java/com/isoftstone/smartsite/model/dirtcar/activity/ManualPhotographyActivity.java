@@ -49,13 +49,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private ManualPhotographyAdapter mAdapter;
 	ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 	private Context mContext;
-	private Bitmap mHeadBitmap;//²Ã¼ôºóµÃÍ¼Æ¬
+	private Bitmap mHeadBitmap;//è£å‰ªåå¾—å›¾ç‰‡
 
-	/* ÇëÇóÊ¶±ğÂë Ñ¡ÔñÍ¼¿â*/
+	/* è¯·æ±‚è¯†åˆ«ç  é€‰æ‹©å›¾åº“*/
 	private static final int IMAGE_REQUEST_CODE = 1;
-	/* ÇëÇóÊ¶±ğÂë ÕÕÏà»ú*/
+	/* è¯·æ±‚è¯†åˆ«ç  ç…§ç›¸æœº*/
 	private static final int CAMERA_REQUEST_CODE = 2;
-	/* ÇëÇóÊ¶±ğÂë ²Ã¼ô*/
+	/* è¯·æ±‚è¯†åˆ«ç  è£å‰ª*/
 	private static final int RESULECODE = 3;
 
 	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
@@ -71,7 +71,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 						public void run() {
 							//mListDate =  mHttpPost.getDevices("1","","","");
 							for (int i=0; i < 3; i++) {
-								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "ÀîÏòË«" + i , "2017-11-1" + i, "¹â¹ÈÎåÂ·ºÍ¹â¹ÈÁùÂ·½»»ã³ö", photoSrc, "ºş±±âùÈğÓĞÏŞ¹«Ë¾" + i);
+								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "æå‘åŒ" + i , "2017-11-1" + i, "å…‰è°·äº”è·¯å’Œå…‰è°·å…­è·¯äº¤æ±‡å‡º", photoSrc, "æ¹–åŒ—æ€¡ç‘æœ‰é™å…¬å¸" + i);
 								mListDate.add(manualPhotographyBean);
 							}
 							mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_END);
@@ -259,23 +259,23 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		}
 	}
 
-	// ´Ó±¾µØÏà²áÑ¡È¡Í¼Æ¬×÷ÎªÍ·Ïñ
+	// ä»æœ¬åœ°ç›¸å†Œé€‰å–å›¾ç‰‡ä½œä¸ºå¤´åƒ
 	private void choseHeadImageFromGallery() {
 
 		Intent intentFromGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		// ÉèÖÃÎÄ¼şÀàĞÍ
+		// è®¾ç½®æ–‡ä»¶ç±»å‹
 		intentFromGallery.setType("image/*");
 		startActivityForResult(intentFromGallery, IMAGE_REQUEST_CODE);
 	}
 
-	// Æô¶¯ÊÖ»úÏà»úÅÄÉãÕÕÆ¬×÷ÎªÍ·Ïñ
+	// å¯åŠ¨æ‰‹æœºç›¸æœºæ‹æ‘„ç…§ç‰‡ä½œä¸ºå¤´åƒ
 	private void choseHeadImageFromCameraCapture() {
 
 		if (PhoneInfoUtils.hasSdcard()) {
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
 					SystemFragment.HEAD_IMAGE_NAME)));
-			startActivityForResult(intent, CAMERA_REQUEST_CODE);//²ÉÓÃForResult´ò¿ª
+			startActivityForResult(intent, CAMERA_REQUEST_CODE);//é‡‡ç”¨ForResultæ‰“å¼€
 		}
 	}
 
@@ -285,15 +285,15 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 		if (resultCode != Activity.RESULT_CANCELED) {
 			switch (requestCode) {
-				// Èç¹ûÊÇÖ±½Ó´ÓÏà²á»ñÈ¡
+				// å¦‚æœæ˜¯ç›´æ¥ä»ç›¸å†Œè·å–
 				case IMAGE_REQUEST_CODE:
-					cropPhoto(intent.getData());//²Ã¼ôÍ¼Æ¬
+					cropPhoto(intent.getData());//è£å‰ªå›¾ç‰‡
 					break;
-				// Èç¹ûÊÇµ÷ÓÃÏà»úÅÄÕÕÊ±
+				// å¦‚æœæ˜¯è°ƒç”¨ç›¸æœºæ‹ç…§æ—¶
 				case CAMERA_REQUEST_CODE:
 					File temp = new File(Environment.getExternalStorageDirectory()
 							+ "/" + SystemFragment.HEAD_IMAGE_NAME);
-					cropPhoto(Uri.fromFile(temp));//²Ã¼ôÍ¼Æ¬
+					cropPhoto(Uri.fromFile(temp));//è£å‰ªå›¾ç‰‡
 					break;
 				case RESULECODE:
 					if (intent != null) {
@@ -310,18 +310,18 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	}
 
 	/**
-	 * ²Ã¼ôÍ¼Æ¬
+	 * è£å‰ªå›¾ç‰‡
 	 *
-	 * @param uri ÕÕÆ¬µÄurlµØÖ·
+	 * @param uri ç…§ç‰‡çš„urlåœ°å€
 	 */
 	public void cropPhoto(Uri uri) {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		// aspectX aspectY ÊÇ¿í¸ßµÄ±ÈÀı
+		// aspectX aspectY æ˜¯å®½é«˜çš„æ¯”ä¾‹
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		// outputX outputY ÊÇ²Ã¼ôÍ¼Æ¬¿í¸ß
+		// outputX outputY æ˜¯è£å‰ªå›¾ç‰‡å®½é«˜
 		intent.putExtra("outputX", 150);
 		intent.putExtra("outputY", 150);
 		intent.putExtra("return-data", true);

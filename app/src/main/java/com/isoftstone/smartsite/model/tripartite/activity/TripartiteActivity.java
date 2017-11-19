@@ -165,24 +165,32 @@ public class TripartiteActivity extends BaseActivity {
      * 当没有巡查报告
      */
     private void hideFrag() {
-        if (mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT() && mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
-            return;
-        }
-        LinearLayout linearSwitch = (LinearLayout) findViewById(R.id.linear_switch);
-        LinearLayout linearSwtichImg = (LinearLayout)findViewById(R.id.linear_switch_img);
-        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()) {
-            linearSwitch.setVisibility(View.GONE);
-            linearSwtichImg.setVisibility(View.GONE);
-            mFragList.remove(1);
-            mPagerAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(0);
-        }
-        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
-            linearSwitch.setVisibility(View.GONE);
-            linearSwtichImg.setVisibility(View.GONE);
-            mFragList.remove(0);
-            mPagerAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(0);
+        try {
+            if (mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT() && mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
+                return;
+            }
+            LinearLayout linearSwitch = (LinearLayout) findViewById(R.id.linear_switch);
+            LinearLayout linearSwtichImg = (LinearLayout) findViewById(R.id.linear_switch_img);
+            if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()) {
+                linearSwitch.setVisibility(View.GONE);
+                linearSwtichImg.setVisibility(View.GONE);
+                mFragList.remove(1);
+                mPagerAdapter.notifyDataSetChanged();
+                mViewPager.setCurrentItem(0);
+            }
+            if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
+                linearSwitch.setVisibility(View.GONE);
+                linearSwtichImg.setVisibility(View.GONE);
+                mFragList.remove(0);
+                mPagerAdapter.notifyDataSetChanged();
+                mViewPager.setCurrentItem(0);
+
+                //hide the add report button
+                View v = findViewById(R.id.btn_add);
+                v.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -320,8 +320,8 @@ public class HttpPost {
     }
 
 
-    //下载报告图片，需要传入id和服务器获取的到路径
-    public void downloadReportFile(int id, String filename) {
+    //下载报告图片，需要传入id和服务器获取的到路径,返回值是下载的id
+    public long downloadReportFile(int id,String filename){
 
         String url = getFileUrl(filename);
         String name = getFileName(filename);
@@ -331,9 +331,8 @@ public class HttpPost {
         if (!file.exists()) {
             file.mkdirs();
         }
-        if (file.exists())
-            Log.i("Test", "url  " + url + "  storagePath  " + storagePath + " name " + name + "   " + getReportPath(id, filename));
-        ReportOperation.downloadfile(url, storagePath, name);
+        if (file.exists())Log.i("Test","url  "+url+"  storagePath  "+storagePath+" name "+name+"   "+getReportPath(id,filename));
+        return ReportOperation.downloadfile(url,storagePath,name);
     }
 
     /*
@@ -443,6 +442,10 @@ public class HttpPost {
      */
     public InstallBean getSystemConifg() {
         return UserLogin.getSystemConifg(GET_SYSTEM_CONFIG, mClient);
+    }
+
+    public  ArrayList<CompanyBean> getCompanyList(String lang){
+        return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
     }
 
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {

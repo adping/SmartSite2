@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.CompanyBean;
 import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;
@@ -67,6 +68,8 @@ public class AddReportActivity extends BaseActivity {
     public ArrayList<String> mTypesList = new ArrayList<>();
     public boolean isSettedAddress = false;
 
+    String mCompanyName = "";
+
 
     @Override
     protected int getLayoutRes() {
@@ -90,7 +93,7 @@ public class AddReportActivity extends BaseActivity {
 
         initView();
         initListener();
-        restoreData();
+        //restoreData();
         new QueryReportTypeTask().execute();
     }
 
@@ -105,13 +108,48 @@ public class AddReportActivity extends BaseActivity {
         mConsCompany = (TextView) findViewById(R.id.lab_cons_company);
         mSuperCompany = (TextView) findViewById(R.id.lab_super_company);
 
-        mEditCompany = (EditText) findViewById(R.id.edit_company);
         mEditBuildCompany = (EditText) findViewById(R.id.edit_build_company);
         mEditConsCompany = (EditText) findViewById(R.id.edit_cons_company);
         mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
         mTypesEditor.setTextColor(getResources().getColor(R.color.des_text_color));
         mEditAddress.setTextColor(getResources().getColor(R.color.des_text_color));
         mRevisitFrag = (RevisitFragment) getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
+        initCompany();
+    }
+
+    private void initCompany() {
+        try {
+            mEditCompany = (EditText) findViewById(R.id.edit_company);
+            mEditCompany.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s != null && s.length() != 0) {
+                        mCompany.setCompoundDrawables(mWattingChanged, null, null, null);
+                    } else {
+                        mCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            String departId = mHttpPost.mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
+            Log.e(TAG, "yanlog departId:" + departId);
+            if (departId != null) {
+                //mEditCompany.setText(departId);
+            }
+            mEditCompany.setOnClickListener(null);
+            mEditCompany.setClickable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveData() {
@@ -211,26 +249,6 @@ public class AddReportActivity extends BaseActivity {
             }
         });
 
-        mEditCompany.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s != null && s.length() != 0) {
-                    mCompany.setCompoundDrawables(mWattingChanged, null, null, null);
-                } else {
-                    mCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
         mEditBuildCompany.addTextChangedListener(new TextWatcher() {
             @Override
@@ -335,12 +353,34 @@ public class AddReportActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
-            mAddressList = mHttpPost.getPatrolAddress();
-            ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-            for (DictionaryBean temp : tempLists) {
-                mTypesList.add(temp.getContent());
+            try {
+                mAddressList = mHttpPost.getPatrolAddress();
+                ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
+                for (DictionaryBean temp : tempLists) {
+                    mTypesList.add(temp.getContent());
+                }
+
+                ArrayList<CompanyBean> companyList = mHttpPost.getCompanyList("zh");
+                String myid = mHttpPost.mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
+                for (int i = 0 ; i < companyList.size(); i++){
+                    String value = companyList.get(i).getValue();
+                    if(value != null && value.equals(myid+"")){
+                        mCompanyName = companyList.get(i).getContent();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (mCompanyName != null) {
+                mEditCompany.setText(mCompanyName);
+            }
+            super.onPostExecute(s);
         }
     }
 
