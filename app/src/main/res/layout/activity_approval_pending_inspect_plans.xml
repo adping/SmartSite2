@@ -5,7 +5,7 @@
     android:background="@color/app_background"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toorbar_no_icon"></include>
+    <include layout="@layout/layout_toolbar_no_icon"></include>
 
     <ListView
         android:id="@+id/list_view"

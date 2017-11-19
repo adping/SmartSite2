@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -264,6 +265,36 @@ public class UserLogin {
         }
 
         return installBean;
+    }
+
+
+    public static ArrayList<CompanyBean> getCompanyList(String strurl, OkHttpClient mClient, String lang){
+        String funName = "getCompanyList";
+        ArrayList<CompanyBean> list = null;
+        FormBody body = new FormBody.Builder()
+                .add("lang", lang)
+                .add("category","user.department")
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                String rawRecords = new JSONObject(responsebody).getString("rawRecords");
+                list = HttpPost.stringToList(rawRecords,CompanyBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public  static  void feedback(String strurl, OkHttpClient mClient,long userId,String content){

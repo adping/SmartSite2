@@ -1,17 +1,12 @@
 package com.isoftstone.smartsite;
 
-import java.util.ArrayList;
-
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +14,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,19 +27,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
-import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
-import com.isoftstone.smartsite.http.PatrolBean;
-import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.http.UserBean;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.service.KeepaliveService;
-import android.Manifest;
+
+import java.util.ArrayList;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -197,9 +188,25 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	@Override
 	protected void onResume() {
+		checkPermission();
 		super.onResume();
 	}
 
+	/**
+	 * 检查权限
+	 */
+	private void checkPermission() {
+		if (Build.VERSION.SDK_INT >= 23) {
+			int checkPermission = ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+			int camera = ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.CAMERA);
+			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+				ActivityCompat.requestPermissions(LoginActivity.this, new String[]{
+						Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA
+				}, 0);
+				return;
+			}
+		}
+	}
 
 	/* 关闭正在登录对话框 */
 	private void closeLoginingDlg() {

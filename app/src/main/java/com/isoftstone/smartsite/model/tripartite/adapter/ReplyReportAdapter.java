@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.adapter;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -16,9 +17,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.autonavi.amap.mapcore.FileUtil;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
@@ -33,6 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by yanyongjun on 2017/10/29.
@@ -49,6 +54,7 @@ public class ReplyReportAdapter extends BaseAdapter {
     private HttpPost mHttpPost = new HttpPost();
     private Handler mHandler = new Handler();
     private AttachContentObserver mObserver = new AttachContentObserver();
+    private DownloadManager mDownloadManager = null;
 
 
     public ReplyReportAdapter(Context context, ReplyReportData data) {
@@ -56,8 +62,9 @@ public class ReplyReportAdapter extends BaseAdapter {
         replyReportData = data;
         mContext.getContentResolver().registerContentObserver(Uri.parse("content://downloads/my_downloads"), true,
                 mObserver);
+        mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         if (data.getPatrolBean() == null) {
-            Log.e(TAG,"yanlog data.getPatrolBean == null,return");
+            Log.e(TAG, "yanlog data.getPatrolBean == null,return");
             return;
         }
         mData = data.getPatrolBean().getReports();
@@ -245,10 +252,10 @@ public class ReplyReportAdapter extends BaseAdapter {
             return;
         }
         final ArrayList<Object> datas = new ArrayList<Object>();
-        final ArrayList<String> path = data.getReportFiles();
+        final ArrayList<String> relativePath = data.getReportFiles();
         // if (farent != null) {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
-        switch (path.size()) {
+        switch (relativePath.size()) {
             case 1:
                 gridView.setNumColumns(1);
                 params.width = 160;
@@ -269,7 +276,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         gridView.setLayoutParams(params);
         // }
 
-        for (String temp : path) {
+        for (String temp : relativePath) {
             String formatPath = FilesUtils.getFormatString(temp);
             if (TripartiteActivity.mImageList.contains(formatPath)) {
                 String filePath = mHttpPost.getReportPath(data.getId(), temp);
@@ -294,9 +301,9 @@ public class ReplyReportAdapter extends BaseAdapter {
             }
         }
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        final AttachGridViewAdatper attachAdapter = new AttachGridViewAdatper(mContext, datas, true);
+        final AttachGridViewAdatper attachAdapter = new AttachGridViewAdatper(mContext, datas);
         gridView.setAdapter(attachAdapter);
-        attachAdapter.setAllPath(path);
+        attachAdapter.setAllPath(relativePath);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -306,15 +313,21 @@ public class ReplyReportAdapter extends BaseAdapter {
                     @Override
                     protected String doInBackground(Void... voids) {
                         try {
-                            String localPath = mHttpPost.getReportPath(data.getId(), path.get(position));
-                            if (new File(localPath).exists()) {
-                                Intent intent = FilesUtils.getOpenIntent(mContext,new File(localPath),localPath);
+                            String absPath = mHttpPost.getReportPath(data.getId(), relativePath.get(position));
+                            if (new File(absPath).exists()) {
+                                Intent intent = FilesUtils.getOpenIntent(mContext, new File(absPath), absPath);
                                 mContext.startActivity(intent);
-                                return localPath;
+                                return absPath;
                             } else {
-                                mObserver.addPath(localPath, attachAdapter,path.get(position));
-                                mHttpPost.downloadReportFile(data.getId(), path.get(position));
-                                return localPath;
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "开始下载附件", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                long id = mHttpPost.downloadReportFile(data.getId(), relativePath.get(position));
+                                mObserver.addPath(id, attachAdapter, relativePath.get(position));
+                                return absPath;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -367,60 +380,56 @@ public class ReplyReportAdapter extends BaseAdapter {
     }
 
     public class AttachContentObserver extends ContentObserver {
-        HashMap<String, AttachGridViewAdatper> mMap = new HashMap<>();
-        HashMap<String,String> mPath = new HashMap<>();
+        HashMap<Long, AttachGridViewAdatper> mMap = new HashMap<>();
+        HashMap<Long, String> mPath = new HashMap<>();
 
         public AttachContentObserver() {
             super(mHandler);
         }
 
-        public synchronized void addPath(String path, AttachGridViewAdatper adapter,String oPath) {
-            mMap.put(path, adapter);
-            mPath.put(path,oPath);
+        /**
+         * @param downloadId 绝对路径
+         * @param adapter
+         * @param oPath      相对路径
+         */
+        public synchronized void addPath(Long downloadId, AttachGridViewAdatper adapter, String oPath) {
+            mMap.put(downloadId, adapter);
+            mPath.put(downloadId, oPath);
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            Log.e(TAG, "yanlog uri file change");
+            try {
+                Log.e(TAG, "yanlog onChange:" + uri);
+                List<String> list = uri.getPathSegments();
+                Long uriId = Long.parseLong(list.get(list.size() - 1));
+                if (mDownloadManager.getUriForDownloadedFile(uriId) != null) {
+                    ArrayList<Object> allData = mMap.get(uriId).getAllData();
+                    ArrayList<String> allPath = mMap.get(uriId).getAllPath();
+                    for (int i = 0; i < allPath.size(); i++) {
+                        String relativePath = allPath.get(i);
+                        String formatStr = FilesUtils.getFormatString(relativePath);
+                        if (relativePath.equals(mPath.get(uriId))) {
+                            if (TripartiteActivity.mImageList.contains(formatStr)) {
+                                allData.remove(i);
+                                allData.add(i, uri.toString());
+                                mMap.get(uriId).notifyDataSetChanged();
+                            }
+                            ToastUtils.showShort("下载完成");
+                            break;
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             super.onChange(selfChange, uri);
         }
 
         @Override
         public void onChange(boolean selfChange) {
-            Log.e(TAG, "yanlog onChange");
             super.onChange(selfChange);
-            synchronized (AttachContentObserver.this) {
-                Iterator<String> iterator = mMap.keySet().iterator();
-                while (iterator.hasNext()) {
-                    String path = iterator.next();
-                    final AttachGridViewAdatper adapter = mMap.get(path);
-                    ArrayList<String> allPath = adapter.getAllPath();
-                    ArrayList<Object> allData = adapter.getAllData();
-                    if (new File(path).exists()) {
-                        String oPath = mPath.get(path);
-                        Log.e(TAG,"yanlog allPathsize:"+allPath.size());
-                        Log.e(TAG,"yanlog oPath:"+oPath);
-                        for (int i = 0; i < allPath.size(); i++) {
-                            Log.e(TAG,"yanlog i:"+i+" curPath:"+allPath.get(i));
-                            String formatPath = FilesUtils.getFormatString(oPath);
-                            if (TripartiteActivity.mImageList.contains(formatPath) && allPath.get(i).equals(oPath)) {
-                                allData.remove(i);
-                                allData.add(i, path);
-                                break;
-                            }
-                        }
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                            }
-                        },1000);
-                        mMap.remove(path);
-                        ToastUtils.showShort("下载完成");
-                    }
-                }
-
-            }
         }
     }
 }

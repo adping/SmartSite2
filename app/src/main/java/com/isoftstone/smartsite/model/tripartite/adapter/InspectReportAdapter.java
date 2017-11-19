@@ -110,25 +110,18 @@ public class InspectReportAdapter extends BaseAdapter {
                 View btnRevisit = view.findViewById(R.id.linear_revisit_report);
                 TextView labRevisit = (TextView)view.findViewById(R.id.lab_revisit);
 
-                if (reportData.getStatus() != ReportData.STATUS_WAITTING_CHECK) {
-                    btnRevisit.setClickable(true);
-                    btnRevisit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mContext, RevistReportActivity.class);
-                            intent.putExtra("_id", mDatas.get(position).getId());
-                            mContext.startActivity(intent);
-                        }
-                    });
+                btnRevisit.setClickable(true);
+                btnRevisit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, RevistReportActivity.class);
+                        intent.putExtra("_id", mDatas.get(position).getId());
+                        mContext.startActivity(intent);
+                    }
+                });
 
-                    labRevisit.setTextColor(mRes.getColor(R.color.mainColor));
-                    labRevisit.setCompoundDrawables(mRevisitBitmap,null,null,null);
-                } else {
-                    btnRevisit.setClickable(false);
-
-                    labRevisit.setTextColor(mRes.getColor(R.color.des_text_color));
-                    labRevisit.setCompoundDrawables(mRevisitGray,null,null,null);
-                }
+                labRevisit.setTextColor(mRes.getColor(R.color.mainColor));
+                labRevisit.setCompoundDrawables(mRevisitBitmap, null, null, null);
 
             } catch (Exception e) {
                 e.printStackTrace();
