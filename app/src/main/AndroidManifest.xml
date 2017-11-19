@@ -338,6 +338,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".model.dirtcar.activity.UpdatePhotoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.isoftstone.smartsite.fileprovider"
