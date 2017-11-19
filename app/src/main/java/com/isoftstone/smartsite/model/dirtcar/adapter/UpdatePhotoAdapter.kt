@@ -26,7 +26,7 @@ open class UpdatePhotoAdapter(context: Context, uriList: ArrayList<Uri>) : BaseA
         var v = if (convertView != null) convertView else {
             LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null)
         }
-        var imageView = v.findViewById<ImageView>(R.id.image)
+        var imageView = v.findViewById(R.id.image) as ImageView
         Log.e(TAG, "getView position:" + position + " size:" + mUriList.size)
         if (position == mUriList.size) {
             ImageUtils.loadFromRes(mContext as?Activity, R.drawable.attachment, imageView)
