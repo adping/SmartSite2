@@ -26,9 +26,9 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
         var v = if (convertView != null) convertView else {
             LayoutInflater.from(mContext).inflate(R.layout.grid_item_show_all_photo, null)
         }
-        var imageView = v.findViewById<ImageView>(R.id.image)
-        var imgMask = v.findViewById<ImageView>(R.id.img_mask)
-        var checkBox = v.findViewById<CheckBox>(R.id.check_box)
+        var imageView = v.findViewById(R.id.image) as ImageView
+        var imgMask = v.findViewById(R.id.img_mask) as ImageView
+        var checkBox = v.findViewById(R.id.check_box) as CheckBox
         var selectImg = mPathList.get(position)
         if (selectImg.stats) {
             imgMask.visibility = View.VISIBLE
