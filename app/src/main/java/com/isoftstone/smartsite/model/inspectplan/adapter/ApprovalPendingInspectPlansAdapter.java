@@ -1,16 +1,20 @@
 package com.isoftstone.smartsite.model.inspectplan.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
+import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 
 import java.util.ArrayList;
@@ -56,6 +60,7 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 			viewHolder.mLabTimeView = (TextView)convertView.findViewById(R.id.lab_time);
 			viewHolder.mLabNameView = (TextView)convertView.findViewById(R.id.lab_name);
 			viewHolder.mLabcompanView = (TextView)convertView.findViewById(R.id.lab_company);
+			viewHolder.mPlanApprovalView = (LinearLayout) convertView.findViewById(R.id.plan_approval_layout);
 
 			convertView.setTag(viewHolder);
 		} else {
@@ -70,7 +75,19 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 		viewHolder.mLabNameView.setText(inspectPlanBean.getUserName());
 		viewHolder.mLabcompanView.setText(inspectPlanBean.getUserCompany());
 
+		viewHolder.mPlanApprovalView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				enterOtherView();
+			}
+		});
+
 		return convertView;
+	}
+
+	private void enterOtherView() {
+		Intent intent = new Intent(mContext, ManualPhotographyActivity.class);
+		mContext.startActivity(intent);
 	}
 
 	static class ViewHolder {
@@ -79,16 +96,17 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 		TextView mLabTimeView;
 		TextView mLabNameView;
 		TextView mLabcompanView;
+		LinearLayout mPlanApprovalView;
 	}
 
 	private Drawable getStatusDictionariesToDrawable(int status) {
 		Drawable statusDrawable = null;
 		if (status == 0) {
-			statusDrawable  = mContext.getDrawable(R.drawable.inspect_plan_approval_pending);
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
 		} else if (status == 1) {
-			statusDrawable  = mContext.getDrawable(R.drawable.inspect_plan_passed);
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_passed,null);
 		} else if (status == 2) {
-			statusDrawable  = mContext.getDrawable(R.drawable.inspect_plan_failed);
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_failed,null);
 		}
 		return statusDrawable;
 	}

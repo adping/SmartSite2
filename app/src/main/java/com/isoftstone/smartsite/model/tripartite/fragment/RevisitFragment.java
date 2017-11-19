@@ -233,7 +233,7 @@ public class RevisitFragment extends BaseFragment {
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
+                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(developmentCompany)
                             || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;

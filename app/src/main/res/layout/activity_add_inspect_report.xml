@@ -129,6 +129,7 @@
 
                 <EditText
                     android:id="@+id/edit_company"
+                    android:focusable="false"
                     style="@style/add_report_edittext" />
             </RelativeLayout>
 

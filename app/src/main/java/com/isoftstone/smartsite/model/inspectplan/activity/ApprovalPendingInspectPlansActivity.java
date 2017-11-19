@@ -26,7 +26,7 @@ import java.util.Date;
 public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView mListView = null;
-    private ArrayList<InspectPlanBean> listData = new ArrayList<InspectPlanBean>();
+    private ArrayList<InspectPlanBean> mListData = new ArrayList<InspectPlanBean>();
 
     private static final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START = 1;
     private static  final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END = 2;
@@ -51,7 +51,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                                 inspectPlanBean.setTaskStatus(i);
                                 inspectPlanBean.setAddress("东湖高新地i点" + i);
 
-                                listData.add(inspectPlanBean);
+                                mListData.add(inspectPlanBean);
                             }
                             mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END);
                         }
@@ -68,8 +68,8 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     };
 
     private void setListViewData() {
-        if( listData != null ){
-            ApprovalPendingInspectPlansAdapter adapter = new ApprovalPendingInspectPlansAdapter(ApprovalPendingInspectPlansActivity.this, listData);
+        if( mListData != null ){
+            ApprovalPendingInspectPlansAdapter adapter = new ApprovalPendingInspectPlansAdapter(ApprovalPendingInspectPlansActivity.this, mListData);
             mListView.setAdapter(adapter);
         }
     }
