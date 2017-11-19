@@ -32,6 +32,7 @@ public class DateUtils {
     public final static SimpleDateFormat format_dd = new SimpleDateFormat("dd");
     public final static SimpleDateFormat format_hour= new SimpleDateFormat("HH");
     public final static SimpleDateFormat format_min= new SimpleDateFormat("mm");
+    public final static SimpleDateFormat format_file_name = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
 
     public static String checkDataTime(String dataTime, boolean isBeginValue) {

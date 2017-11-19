@@ -145,6 +145,17 @@ public class FilesUtils {
         return intent;
     }
 
+    //Android获取一个用于打开图片文件的intent
+    public static Intent getImageFileIntent( Context context,Uri uri ) {
+
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(uri, "image/*");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return intent;
+    }
+
     //Android获取一个用于打开PPT文件的intent
     public static Intent getPptFileIntent( Context context,String param){
 
