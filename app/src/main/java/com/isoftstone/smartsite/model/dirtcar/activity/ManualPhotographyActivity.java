@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class ManualPhotographyActivity extends BaseActivity  implements View.OnClickListener {
 
-	protected static final String TAG = "ListViewPerformaceActivity";
+	protected static final String TAG = "ManualPhotographyActivity";
 	/** Called when the activity is first created. */
 	private ListView mListView;
 	private ManualPhotographyAdapter mAdapter;
@@ -231,7 +231,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				ManualPhotographyActivity.this.finish();
 				break;
 			case R.id.btn_icon:
-				new ActionSheetDialog(ManualPhotographyActivity.this)
+				/**new ActionSheetDialog(ManualPhotographyActivity.this)
 						.builder(false)
 						.setCancelable(true)
 						.setCanceledOnTouchOutside(true)
@@ -252,7 +252,9 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 									public void onClick(int which) {
 										choseHeadImageFromCameraCapture();
 									}
-								}).show();
+								}).show();*/
+
+				enterOtherActivity();
 				break;
 			default:
 				break;
@@ -328,5 +330,9 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		startActivityForResult(intent, RESULECODE);
 	}
 
-
+	private void enterOtherActivity() {
+		Intent intent = new Intent(mContext, CameraDetailsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		mContext.startActivity(intent);
+	}
 }

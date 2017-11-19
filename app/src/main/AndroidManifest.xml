@@ -286,6 +286,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
 
+        <!--  摄像头详情 -->
+        <activity android:name=".model.dirtcar.activity.CameraDetailsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
+
         <activity android:name=".model.video.VideoPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"

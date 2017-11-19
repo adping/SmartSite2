@@ -7,7 +7,7 @@
     android:background="@color/app_background"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toorbar_no_icon"></include>
+    <include layout="@layout/layout_toolbar_no_icon"></include>
 
     <RelativeLayout
         android:background="@drawable/msg_item_press_bg"
