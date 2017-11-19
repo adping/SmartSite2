@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.http.patroltask;
 
 import com.isoftstone.smartsite.http.UserBean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,10 @@ import java.util.ArrayList;
 /*
 巡查任务
  */
-public class PatrolTaskBean {
+public class PatrolTaskBean implements Serializable{
+
+    private static final long serialVersionUID = 0x0004L;
+
     private long taskId;	//任务ID
     private String taskName;//任务名称
     private ArrayList<UserBean>  users; //巡查人员

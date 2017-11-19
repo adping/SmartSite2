@@ -76,10 +76,10 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:layout_height="210dp"
-            android:horizontalSpacing="2dp"
+            android:horizontalSpacing="10dp"
             android:listSelector="#00ffffff"
             android:numColumns="3"
-            android:verticalSpacing="2dp"
+            android:verticalSpacing="10dp"
             android:layout_below="@id/head_relative_layout">
 
         </GridView>

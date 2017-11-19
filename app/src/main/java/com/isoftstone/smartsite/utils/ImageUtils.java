@@ -156,6 +156,10 @@ public class ImageUtils {
         Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImageView);
     }
 
+    public static void loadImageViewDiskCacheResult(Context mContext, String path, ImageView mImageView) {
+        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.RESULT).into(mImageView);
+    }
+
     public static void loadImageViewAnim(Context mContext, String path, int anim, ImageView mImageView) {
         Glide.with(mContext).load(path).animate(anim).into(mImageView);
     }

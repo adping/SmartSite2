@@ -213,6 +213,8 @@
 
     <!--           insectplan begin       -->
     <string name="approval_pending_inspect_plans_title">待审批巡查计划</string>
+    <string name="camera_details_title">摄像头详情</string>
+    <string name="shooting_time_txt">拍摄时间:</string>
 
     <!--           insectplan end       -->
 

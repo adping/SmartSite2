@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Created by yanyongjun on 2017/11/6.
+ * 附件界面的Adapter
  */
 
 public class AttachGridViewAdatper extends BaseAdapter {
@@ -70,7 +71,6 @@ public class AttachGridViewAdatper extends BaseAdapter {
             } else {
                 ImageUtils.loadImage(imgView, str);
             }
-
         }
         return convertView;
     }

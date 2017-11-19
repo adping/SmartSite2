@@ -2,11 +2,15 @@ package com.isoftstone.smartsite.http;
 
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/1.
  */
 
-public class UserBean {
+public class UserBean implements Serializable{
+
+    private static final long serialVersionUID = 0x0005L;
 
     private  BaseUserBean loginUser;  //用户信息；
     private Permission privilegeCode = null;//用户权限信息
@@ -27,7 +31,10 @@ public class UserBean {
         this.loginUser = loginUser;
     }
 
-    public  static class Permission{
+    public  static class Permission implements Serializable{
+
+        private static final long serialVersionUID = 0x0007L;
+
         private boolean B_USER_ADD = false;
         private boolean B_PATROL_ACCEPT = false;
         private boolean B_ARCH_ADD = false;

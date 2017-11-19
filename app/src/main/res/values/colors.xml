@@ -10,6 +10,7 @@
     <color name="thirdColor">#81d9c9</color>
 
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <!-- app的背景颜色-->
     <color name="app_background">#f5f5f5</color>
     <color name="tab_text_normal">#212121</color>
@@ -72,7 +73,7 @@
     <color name="map_banner_text_color">#424242</color>
     <color name="map_item_normal">#feffff</color>
     <color name="map_item_press">#dddee0</color>
-    <color name="common_press">#11000000</color>
+    <color name="common_press">#22000000</color>
     <!-- map   end -->
 
     <!--msg   start -->

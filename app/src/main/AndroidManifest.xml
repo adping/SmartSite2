@@ -294,6 +294,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
 
+        <!--  摄像头详情 -->
+        <activity android:name=".model.dirtcar.activity.CameraDetailsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
+
         <activity android:name=".model.video.VideoPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
@@ -348,6 +353,45 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity
+            android:name=".model.dirtcar.activity.UpdatePhotoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".model.dirtcar.activity.SelectImageActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity android:name=".model.map.ui.ConstructionMonitorMapActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".model.map.ui.MapTaskDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.ConstructionMonitorListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.ConstructionMontitoringMapActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.MapTrackHistoryActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

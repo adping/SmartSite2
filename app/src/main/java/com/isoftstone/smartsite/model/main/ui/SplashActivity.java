@@ -1,25 +1,17 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import com.isoftstone.smartsite.LoginActivity;
 import com.isoftstone.smartsite.R;
@@ -28,19 +20,13 @@ import com.isoftstone.smartsite.common.AppManager;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.InstallBean;
 import com.isoftstone.smartsite.model.map.service.DownloadAPKService;
-import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.NetworkUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
-
-import java.io.File;
-
-import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 
 /**
  * Created by zw on 2017/11/9.
  */
 
-public class SplashActivity extends BaseActivity{
+public class SplashActivity extends BaseActivity {
 
     private static final int GO_TO_LOGIN = 0x0001;
     private static final int SHOW_UPDATE_APP_DIALOG = 0x0002;
@@ -50,11 +36,11 @@ public class SplashActivity extends BaseActivity{
     private String apk_version = "";
 
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GO_TO_LOGIN:
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -96,13 +82,13 @@ public class SplashActivity extends BaseActivity{
             @Override
             public void run() {
                 InstallBean installBean = mHttppost.getSystemConifg();
-                if(installBean != null){
+                if (installBean != null) {
                     String versionName = installBean.getAndroid_version();
                     apk_url = installBean.getAndroid_url();
                     //apk_url = "http://download.sj.qq.com/upload/connAssitantDownload/upload/MobileAssistant_1.apk";
                     androidType = installBean.getAndroid_type();
                     apk_version = installBean.getAndroid_version();
-                    if(getAppVersionName() != null && !getAppVersionName().equals(versionName)){
+                    if (getAppVersionName() != null && !getAppVersionName().equals(versionName)) {
                         mHandler.removeMessages(GO_TO_LOGIN);
                         mHandler.sendEmptyMessage(SHOW_UPDATE_APP_DIALOG);
                     }
@@ -127,18 +113,18 @@ public class SplashActivity extends BaseActivity{
         }
     }
 
-    private void checkeNetWork(){
-        if(!NetworkUtils.isConnected()){
+    private void checkeNetWork() {
+        if (!NetworkUtils.isConnected()) {
             showToConnectNetworkDialog();
-        }else {
+        } else {
             new Thread(checkRunnable).start();
-            mHandler.sendEmptyMessageDelayed(GO_TO_LOGIN,3000);
+            mHandler.sendEmptyMessageDelayed(GO_TO_LOGIN, 3000);
 
         }
     }
 
-    private void showToConnectNetworkDialog(){
-        if(connectNetworkDialog == null){
+    private void showToConnectNetworkDialog() {
+        if (connectNetworkDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("网络连接检查");
             builder.setMessage("网络没有连接，是否去连接网络？");
@@ -163,10 +149,10 @@ public class SplashActivity extends BaseActivity{
         connectNetworkDialog.show();
     }
 
-    private void showToUpdateVersionDialog(){
-        if(updateVersionDialog == null){
+    private void showToUpdateVersionDialog() {
+        if (updateVersionDialog == null) {
             //if(androidType != 1){
-            if(true){
+            if (true) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("版本更新检查");
                 builder.setMessage("发现新版本，是否更新？");
@@ -181,8 +167,8 @@ public class SplashActivity extends BaseActivity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(SplashActivity.this, DownloadAPKService.class);
-                        intent.putExtra("apk_url",apk_url);
-                        intent.putExtra("apk_version",apk_version);
+                        intent.putExtra("apk_url", apk_url);
+                        intent.putExtra("apk_version", apk_version);
                         startService(intent);
                     }
                 });
@@ -196,8 +182,8 @@ public class SplashActivity extends BaseActivity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(SplashActivity.this, DownloadAPKService.class);
-                        intent.putExtra("apk_url",apk_url);
-                        intent.putExtra("apk_version",apk_version);
+                        intent.putExtra("apk_url", apk_url);
+                        intent.putExtra("apk_version", apk_version);
                         startService(intent);
                     }
                 });
@@ -232,10 +218,6 @@ public class SplashActivity extends BaseActivity{
         }
         return versionName;
     }
-
-
-
-
 
 
 }

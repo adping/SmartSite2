@@ -535,7 +535,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        mMapView.onDestroy();
     }
 
     private boolean isFirstIn = true;

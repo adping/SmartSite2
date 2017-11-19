@@ -11,6 +11,8 @@ import com.isoftstone.smartsite.http.UserBean;
  */
 public class PatrolPositionBean {
 
+    private static final long serialVersionUID = 0x0008L;
+
     private long id;  //主键
     private String position;    //巡查任务地点名
     private Double longitude;		//巡查任务经度
