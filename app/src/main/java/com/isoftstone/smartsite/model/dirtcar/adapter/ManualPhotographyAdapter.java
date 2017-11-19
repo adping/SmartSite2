@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class ManualPhotographyAdapter extends BaseAdapter{
 
-	private static final String TAG = "LoaderAdapter";
+	private static final String TAG = "ManualPhotographyAdapter";
     ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 
 

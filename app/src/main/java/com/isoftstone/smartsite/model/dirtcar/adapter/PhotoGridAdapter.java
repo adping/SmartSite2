@@ -9,16 +9,11 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
-import com.isoftstone.smartsite.model.video.bean.PhotoInfo;
-import com.isoftstone.smartsite.model.video.imgaware.RotateImageViewAware;
-import com.isoftstone.smartsite.model.video.utils.ThumbnailsUtil;
-import com.isoftstone.smartsite.model.video.utils.UniversalImageLoadTool;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PhotoGridAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -27,6 +22,18 @@ public class PhotoGridAdapter extends BaseAdapter {
 	private int mWidth;
 	private ImageLoader mImageLoader;
 	private Context mContext;
+
+	/**public PhotoGridAdapter(Context context, ArrayList<String> data, Activity activity){
+		mContext = context;
+		this.mListData = data;
+		mImageLoader = new ImageLoader(context);
+
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		mWidth = dm.widthPixels/3;
+		mInflater = LayoutInflater.from(context);
+	}*/
+
 
 	public PhotoGridAdapter(Context context, ArrayList<String> data, ImageLoader imageLoader){
 		mContext = context;
@@ -41,6 +48,12 @@ public class PhotoGridAdapter extends BaseAdapter {
 		((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		mWidth = dm.widthPixels/3;
 		mInflater = LayoutInflater.from(context);
+
+		ToastUtils.showShort("PhotoGridAdapter.....   mListData.size : " + mListData.size());
+	}
+
+	public ImageLoader getImageLoader( ) {
+		return mImageLoader;
 	}
 
 	@Override
