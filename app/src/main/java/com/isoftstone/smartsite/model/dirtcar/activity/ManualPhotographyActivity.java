@@ -49,13 +49,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private ManualPhotographyAdapter mAdapter;
 	ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 	private Context mContext;
-	private Bitmap mHeadBitmap;//²Ã¼ôºóµÃÍ¼Æ¬
+	private Bitmap mHeadBitmap;//è£å‰ªåå¾—å›¾ç‰‡
 
-	/* ÇëÇóÊ¶±ğÂë Ñ¡ÔñÍ¼¿â*/
+	/* è¯·æ±‚è¯†åˆ«ç  é€‰æ‹©å›¾åº“*/
 	private static final int IMAGE_REQUEST_CODE = 1;
-	/* ÇëÇóÊ¶±ğÂë ÕÕÏà»ú*/
+	/* è¯·æ±‚è¯†åˆ«ç  ç…§ç›¸æœº*/
 	private static final int CAMERA_REQUEST_CODE = 2;
-	/* ÇëÇóÊ¶±ğÂë ²Ã¼ô*/
+	/* è¯·æ±‚è¯†åˆ«ç  è£å‰ª*/
 	private static final int RESULECODE = 3;
 
 	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
@@ -71,7 +71,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 						public void run() {
 							//mListDate =  mHttpPost.getDevices("1","","","");
 							for (int i=0; i < 3; i++) {
-								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "ÀîÏòË«" + i , "2017-11-1" + i, "¹â¹ÈÎåÂ·ºÍ¹â¹ÈÁùÂ·½»»ã³ö", photoSrc, "ºş±±âùÈğÓĞÏŞ¹«Ë¾" + i);
+								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "æå‘åŒ" + i , "2017-11-1" + i, "å…‰è°·äº”è·¯å’Œå…‰è°·å…­è·¯äº¤æ±‡å‡º", photoSrc, "æ¹–åŒ—æ€¡ç‘æœ‰é™å…¬å¸" + i);
 								mListDate.add(manualPhotographyBean);
 							}
 							mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_END);
@@ -120,24 +120,24 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
 			switch (scrollState) {
-			case OnScrollListener.SCROLL_STATE_FLING:
-				mAdapter.setFlagBusy(true);
-				break;
-			case OnScrollListener.SCROLL_STATE_IDLE:
-				mAdapter.setFlagBusy(false);
-				break;
-			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-				mAdapter.setFlagBusy(false);
-				break;
-			default:
-				break;
+				case OnScrollListener.SCROLL_STATE_FLING:
+					mAdapter.setFlagBusy(true);
+					break;
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					mAdapter.setFlagBusy(false);
+					break;
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					mAdapter.setFlagBusy(false);
+					break;
+				default:
+					break;
 			}
 			mAdapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount) {
+							 int visibleItemCount, int totalItemCount) {
 
 		}
 	};
@@ -162,56 +162,56 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	private static final String photoSrc = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=7c603a9f41935d8051e35cdbce4fe154&imgtype=0&src=http%3A%2F%2Fc11.eoemarket.com%2Fapp0%2F119%2F119986%2Fscreen%2F1985845.png,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg";
 	private static final String[] URLS = {
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"http://lh5.ggpht.com/_Z6tbBnE-swM/TB0CryLkiLI/AAAAAAAAVSo/n6B78hsDUz4/s144-c/_DSC3454.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=7c603a9f41935d8051e35cdbce4fe154&imgtype=0&src=http%3A%2F%2Fc11.eoemarket.com%2Fapp0%2F119%2F119986%2Fscreen%2F1985845.png",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"http://lh3.ggpht.com/_lLj6go_T1CQ/TCD8PW09KBI/AAAAAAAAQdc/AqmOJ7eg5ig/s144-c/Juvenile%20Gannet%20despute.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"http://lh4.ggpht.com/_TPlturzdSE8/TBv4ugH60PI/AAAAAAAAMsI/p2pqG85Ghhs/s144-c/_MG_3963.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"http://lh6.ggpht.com/_iFt5VZDjxkY/TB9rQyWnJ4I/AAAAAAAADpU/lP2iStizJz0/s144-c/DSCF1014.JPG",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=73764b4c20269a0b05c886bf7e6b06a5&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Flarge%2F877a91aajw1f9wfi75j7oj20fk078wfw.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh6.ggpht.com/_a29lGRJwo0E/TBqOK_tUKmI/AAAAAAAAVbw/UloKpjsKP3c/s144-c/31012332.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh3.ggpht.com/_iVnqmIBYi4Y/TCaOH6rRl1I/AAAAAAAA1qg/qeMerYQ6DYo/s144-c/Kwiat_100626_0016.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh5.ggpht.com/_JTI0xxNrKFA/TBsKQ9uOGNI/AAAAAAAChQg/z8Exh32VVTA/s144-c/CRW_0015-composite.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh4.ggpht.com/_L7i4Tra_XRY/TBtxjScXLqI/AAAAAAAAE5o/ue15HuP8eWw/s144-c/opera%20house%20II.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh6.ggpht.com/_iGI-XCxGLew/S-iYQWBEG-I/AAAAAAAACB8/JuFti4elptE/s144-c/norvig-polar-bear.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh4.ggpht.com/_loGyjar4MMI/S-InQvd_3hI/AAAAAAAADIw/dHvCFWfyHxQ/s144-c/Rainbokeh.jpg",
-		"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
-		"http://lh5.ggpht.com/_6_dLVKawGJA/SMwq86HlAqI/AAAAAAAAG5U/q1gDNkmE5hI/s144-c/mobius-glow.jpg",
-		"http://lh3.ggpht.com/_QFsB_q7HFlo/TCItc19Jw3I/AAAAAAAAFs4/nPfiz5VGENk/s144-c/4551649039_852be0a952_o.jpg",
-		"http://lh6.ggpht.com/_TQY-Nm7P7Jc/TBpjA0ks2MI/AAAAAAAABcI/J6ViH98_poM/s144-c/IMG_6517.jpg",
-		"http://lh3.ggpht.com/_rfAz5DWHZYs/S9cLAeKuueI/AAAAAAAAeYU/E19G8DOlJRo/s144-c/DSC_4397_8_9_tonemapped2.jpg",
-		"http://lh4.ggpht.com/_TQY-Nm7P7Jc/TBpi6rKfFII/AAAAAAAABbg/79FOc0Dbq0c/s144-c/david_lee_sakura.jpg",
-		"http://lh3.ggpht.com/_TQY-Nm7P7Jc/TBpi8EJ4eDI/AAAAAAAABb0/AZ8Cw1GCaIs/s144-c/Hokkaido%20Swans.jpg",
-		"http://lh3.ggpht.com/_1aZMSFkxSJI/TCIjB6od89I/AAAAAAAACHM/CLWrkH0ziII/s144-c/079.jpg",
-		"http://lh5.ggpht.com/_loGyjar4MMI/S-InWuHkR9I/AAAAAAAADJE/wD-XdmF7yUQ/s144-c/Colorado%20River%20Sunset.jpg",
-		"http://lh3.ggpht.com/_0YSlK3HfZDQ/TCExCG1Zc3I/AAAAAAAAX1w/9oCH47V6uIQ/s144-c/3138923889_a7fa89cf94_o.jpg",
-		"http://lh6.ggpht.com/_K29ox9DWiaM/TAXe4Fi0xTI/AAAAAAAAVIY/zZA2Qqt2HG0/s144-c/IMG_7100.JPG",
-		"http://lh6.ggpht.com/_0YSlK3HfZDQ/TCEx16nJqpI/AAAAAAAAX1c/R5Vkzb8l7yo/s144-c/4235400281_34d87a1e0a_o.jpg",
-		"http://lh4.ggpht.com/_8zSk3OGcpP4/TBsOVXXnkTI/AAAAAAAAAEo/0AwEmuqvboo/s144-c/yosemite_forrest.jpg",
-		"http://lh4.ggpht.com/_6_dLVKawGJA/SLZToqXXVrI/AAAAAAAAG5k/7fPSz_ldN9w/s144-c/coastal-1.jpg",
-		"http://lh4.ggpht.com/_WW8gsdKXVXI/TBpVr9i6BxI/AAAAAAABhNg/KC8aAJ0wVyk/s144-c/IMG_6233_1_2-2.jpg",
-		"http://lh3.ggpht.com/_loGyjar4MMI/S-InS0tJJSI/AAAAAAAADHU/E8GQJ_qII58/s144-c/Windmills.jpg",
-		"http://lh4.ggpht.com/_loGyjar4MMI/S-InbXaME3I/AAAAAAAADHo/4gNYkbxemFM/s144-c/Frantic.jpg",
-		"http://lh5.ggpht.com/_loGyjar4MMI/S-InKAviXzI/AAAAAAAADHA/NkyP5Gge8eQ/s144-c/Rice%20Fields.jpg",
-		"http://lh3.ggpht.com/_loGyjar4MMI/S-InZA8YsZI/AAAAAAAADH8/csssVxalPcc/s144-c/Seahorse.jpg",
-		"http://lh3.ggpht.com/_syQa1hJRWGY/TBwkCHcq6aI/AAAAAAABBEg/R5KU1WWq59E/s144-c/Antelope.JPG",
-		"http://lh5.ggpht.com/_MoEPoevCLZc/S9fHzNgdKDI/AAAAAAAADwE/UAno6j5StAs/s144-c/c84_7083.jpg",
-		"http://lh4.ggpht.com/_DJGvVWd7IEc/TBpRsGjdAyI/AAAAAAAAFNw/rdvyRDgUD8A/s144-c/Free.jpg",
-		"http://lh6.ggpht.com/_iO97DXC99NY/TBwq3_kmp9I/AAAAAAABcz0/apq1ffo_MZo/s144-c/IMG_0682_cp.jpg",
-		"http://lh4.ggpht.com/_7V85eCJY_fg/TBpXudG4_PI/AAAAAAAAPEE/8cHJ7G84TkM/s144-c/20100530_120257_0273-Edit-2.jpg" };
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"http://lh5.ggpht.com/_Z6tbBnE-swM/TB0CryLkiLI/AAAAAAAAVSo/n6B78hsDUz4/s144-c/_DSC3454.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=7c603a9f41935d8051e35cdbce4fe154&imgtype=0&src=http%3A%2F%2Fc11.eoemarket.com%2Fapp0%2F119%2F119986%2Fscreen%2F1985845.png",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"http://lh3.ggpht.com/_lLj6go_T1CQ/TCD8PW09KBI/AAAAAAAAQdc/AqmOJ7eg5ig/s144-c/Juvenile%20Gannet%20despute.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"http://lh4.ggpht.com/_TPlturzdSE8/TBv4ugH60PI/AAAAAAAAMsI/p2pqG85Ghhs/s144-c/_MG_3963.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"http://lh6.ggpht.com/_iFt5VZDjxkY/TB9rQyWnJ4I/AAAAAAAADpU/lP2iStizJz0/s144-c/DSCF1014.JPG",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=73764b4c20269a0b05c886bf7e6b06a5&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Flarge%2F877a91aajw1f9wfi75j7oj20fk078wfw.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh6.ggpht.com/_a29lGRJwo0E/TBqOK_tUKmI/AAAAAAAAVbw/UloKpjsKP3c/s144-c/31012332.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh3.ggpht.com/_iVnqmIBYi4Y/TCaOH6rRl1I/AAAAAAAA1qg/qeMerYQ6DYo/s144-c/Kwiat_100626_0016.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh5.ggpht.com/_JTI0xxNrKFA/TBsKQ9uOGNI/AAAAAAAChQg/z8Exh32VVTA/s144-c/CRW_0015-composite.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh4.ggpht.com/_L7i4Tra_XRY/TBtxjScXLqI/AAAAAAAAE5o/ue15HuP8eWw/s144-c/opera%20house%20II.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh6.ggpht.com/_iGI-XCxGLew/S-iYQWBEG-I/AAAAAAAACB8/JuFti4elptE/s144-c/norvig-polar-bear.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh4.ggpht.com/_loGyjar4MMI/S-InQvd_3hI/AAAAAAAADIw/dHvCFWfyHxQ/s144-c/Rainbokeh.jpg",
+			"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861320&di=424a50518b20bf79b5d6322c2a08ff0d&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa5c27d1ed21b0ef40f4513b3dfc451da80cb3ea9.jpg",
+			"http://lh5.ggpht.com/_6_dLVKawGJA/SMwq86HlAqI/AAAAAAAAG5U/q1gDNkmE5hI/s144-c/mobius-glow.jpg",
+			"http://lh3.ggpht.com/_QFsB_q7HFlo/TCItc19Jw3I/AAAAAAAAFs4/nPfiz5VGENk/s144-c/4551649039_852be0a952_o.jpg",
+			"http://lh6.ggpht.com/_TQY-Nm7P7Jc/TBpjA0ks2MI/AAAAAAAABcI/J6ViH98_poM/s144-c/IMG_6517.jpg",
+			"http://lh3.ggpht.com/_rfAz5DWHZYs/S9cLAeKuueI/AAAAAAAAeYU/E19G8DOlJRo/s144-c/DSC_4397_8_9_tonemapped2.jpg",
+			"http://lh4.ggpht.com/_TQY-Nm7P7Jc/TBpi6rKfFII/AAAAAAAABbg/79FOc0Dbq0c/s144-c/david_lee_sakura.jpg",
+			"http://lh3.ggpht.com/_TQY-Nm7P7Jc/TBpi8EJ4eDI/AAAAAAAABb0/AZ8Cw1GCaIs/s144-c/Hokkaido%20Swans.jpg",
+			"http://lh3.ggpht.com/_1aZMSFkxSJI/TCIjB6od89I/AAAAAAAACHM/CLWrkH0ziII/s144-c/079.jpg",
+			"http://lh5.ggpht.com/_loGyjar4MMI/S-InWuHkR9I/AAAAAAAADJE/wD-XdmF7yUQ/s144-c/Colorado%20River%20Sunset.jpg",
+			"http://lh3.ggpht.com/_0YSlK3HfZDQ/TCExCG1Zc3I/AAAAAAAAX1w/9oCH47V6uIQ/s144-c/3138923889_a7fa89cf94_o.jpg",
+			"http://lh6.ggpht.com/_K29ox9DWiaM/TAXe4Fi0xTI/AAAAAAAAVIY/zZA2Qqt2HG0/s144-c/IMG_7100.JPG",
+			"http://lh6.ggpht.com/_0YSlK3HfZDQ/TCEx16nJqpI/AAAAAAAAX1c/R5Vkzb8l7yo/s144-c/4235400281_34d87a1e0a_o.jpg",
+			"http://lh4.ggpht.com/_8zSk3OGcpP4/TBsOVXXnkTI/AAAAAAAAAEo/0AwEmuqvboo/s144-c/yosemite_forrest.jpg",
+			"http://lh4.ggpht.com/_6_dLVKawGJA/SLZToqXXVrI/AAAAAAAAG5k/7fPSz_ldN9w/s144-c/coastal-1.jpg",
+			"http://lh4.ggpht.com/_WW8gsdKXVXI/TBpVr9i6BxI/AAAAAAABhNg/KC8aAJ0wVyk/s144-c/IMG_6233_1_2-2.jpg",
+			"http://lh3.ggpht.com/_loGyjar4MMI/S-InS0tJJSI/AAAAAAAADHU/E8GQJ_qII58/s144-c/Windmills.jpg",
+			"http://lh4.ggpht.com/_loGyjar4MMI/S-InbXaME3I/AAAAAAAADHo/4gNYkbxemFM/s144-c/Frantic.jpg",
+			"http://lh5.ggpht.com/_loGyjar4MMI/S-InKAviXzI/AAAAAAAADHA/NkyP5Gge8eQ/s144-c/Rice%20Fields.jpg",
+			"http://lh3.ggpht.com/_loGyjar4MMI/S-InZA8YsZI/AAAAAAAADH8/csssVxalPcc/s144-c/Seahorse.jpg",
+			"http://lh3.ggpht.com/_syQa1hJRWGY/TBwkCHcq6aI/AAAAAAABBEg/R5KU1WWq59E/s144-c/Antelope.JPG",
+			"http://lh5.ggpht.com/_MoEPoevCLZc/S9fHzNgdKDI/AAAAAAAADwE/UAno6j5StAs/s144-c/c84_7083.jpg",
+			"http://lh4.ggpht.com/_DJGvVWd7IEc/TBpRsGjdAyI/AAAAAAAAFNw/rdvyRDgUD8A/s144-c/Free.jpg",
+			"http://lh6.ggpht.com/_iO97DXC99NY/TBwq3_kmp9I/AAAAAAABcz0/apq1ffo_MZo/s144-c/IMG_0682_cp.jpg",
+			"http://lh4.ggpht.com/_7V85eCJY_fg/TBpXudG4_PI/AAAAAAAAPEE/8cHJ7G84TkM/s144-c/20100530_120257_0273-Edit-2.jpg" };
 
 	private void initToolbar(){
 		TextView tv_title = (TextView) findViewById(R.id.toolbar_title);
@@ -259,23 +259,23 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		}
 	}
 
-	// ´Ó±¾µØÏà²áÑ¡È¡Í¼Æ¬×÷ÎªÍ·Ïñ
+	// ä»æœ¬åœ°ç›¸å†Œé€‰å–å›¾ç‰‡ä½œä¸ºå¤´åƒ
 	private void choseHeadImageFromGallery() {
 
 		Intent intentFromGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		// ÉèÖÃÎÄ¼şÀàĞÍ
+		// è®¾ç½®æ–‡ä»¶ç±»å‹
 		intentFromGallery.setType("image/*");
 		startActivityForResult(intentFromGallery, IMAGE_REQUEST_CODE);
 	}
 
-	// Æô¶¯ÊÖ»úÏà»úÅÄÉãÕÕÆ¬×÷ÎªÍ·Ïñ
+	// å¯åŠ¨æ‰‹æœºç›¸æœºæ‹æ‘„ç…§ç‰‡ä½œä¸ºå¤´åƒ
 	private void choseHeadImageFromCameraCapture() {
 
 		if (PhoneInfoUtils.hasSdcard()) {
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
 					SystemFragment.HEAD_IMAGE_NAME)));
-			startActivityForResult(intent, CAMERA_REQUEST_CODE);//²ÉÓÃForResult´ò¿ª
+			startActivityForResult(intent, CAMERA_REQUEST_CODE);//é‡‡ç”¨ForResultæ‰“å¼€
 		}
 	}
 
@@ -285,15 +285,15 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 		if (resultCode != Activity.RESULT_CANCELED) {
 			switch (requestCode) {
-				// Èç¹ûÊÇÖ±½Ó´ÓÏà²á»ñÈ¡
+				// å¦‚æœæ˜¯ç›´æ¥ä»ç›¸å†Œè·å–
 				case IMAGE_REQUEST_CODE:
-					cropPhoto(intent.getData());//²Ã¼ôÍ¼Æ¬
+					cropPhoto(intent.getData());//è£å‰ªå›¾ç‰‡
 					break;
-				// Èç¹ûÊÇµ÷ÓÃÏà»úÅÄÕÕÊ±
+				// å¦‚æœæ˜¯è°ƒç”¨ç›¸æœºæ‹ç…§æ—¶
 				case CAMERA_REQUEST_CODE:
 					File temp = new File(Environment.getExternalStorageDirectory()
 							+ "/" + SystemFragment.HEAD_IMAGE_NAME);
-					cropPhoto(Uri.fromFile(temp));//²Ã¼ôÍ¼Æ¬
+					cropPhoto(Uri.fromFile(temp));//è£å‰ªå›¾ç‰‡
 					break;
 				case RESULECODE:
 					if (intent != null) {
@@ -310,18 +310,18 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	}
 
 	/**
-	 * ²Ã¼ôÍ¼Æ¬
+	 * è£å‰ªå›¾ç‰‡
 	 *
-	 * @param uri ÕÕÆ¬µÄurlµØÖ·
+	 * @param uri ç…§ç‰‡çš„urlåœ°å€
 	 */
 	public void cropPhoto(Uri uri) {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		// aspectX aspectY ÊÇ¿í¸ßµÄ±ÈÀı
+		// aspectX aspectY æ˜¯å®½é«˜çš„æ¯”ä¾‹
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		// outputX outputY ÊÇ²Ã¼ôÍ¼Æ¬¿í¸ß
+		// outputX outputY æ˜¯è£å‰ªå›¾ç‰‡å®½é«˜
 		intent.putExtra("outputX", 150);
 		intent.putExtra("outputY", 150);
 		intent.putExtra("return-data", true);

@@ -338,6 +338,29 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".model.map.ui.ConstructionMonitorMapActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".model.map.ui.MapTaskDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.ConstructionMonitorListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.ConstructionMontitoringMapActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".model.map.ui.MapTrackHistoryActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.isoftstone.smartsite.fileprovider"

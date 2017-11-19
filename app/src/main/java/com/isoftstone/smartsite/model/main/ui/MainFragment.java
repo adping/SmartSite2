@@ -21,6 +21,9 @@ import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.http.MobileHomeBean;
 import com.isoftstone.smartsite.http.WeatherLiveBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
+import com.isoftstone.smartsite.model.map.ui.MapTrackHistoryActivity;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
@@ -74,6 +77,7 @@ public class MainFragment extends BaseFragment{
     public static final  int HANDLER_GET_HOME_DATA_START = 1;
     public static final  int HANDLER_GET_HOME_DATA_END = 2;
     private MobileHomeBean mMobileHomeBean = null;
+    private View mConstructionMonitor;
 
     @Override
     protected int getLayoutRes() {
@@ -164,6 +168,14 @@ public class MainFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 enterInspectPlan();
+            }
+        });
+
+        mConstructionMonitor = rootView.findViewById(R.id.button_8);
+        mConstructionMonitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterConstructionMonitor();
             }
         });
     }
@@ -302,6 +314,12 @@ public class MainFragment extends BaseFragment{
     private void enterInspectPlan() {
         //进入巡查计划
         Intent intent = new Intent(getActivity(),ApprovalPendingInspectPlansActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    private void enterConstructionMonitor(){
+        //进入施工监控
+        Intent intent = new Intent(getActivity(),ConstructionMonitorMapActivity.class);
         getActivity().startActivity(intent);
     }
 

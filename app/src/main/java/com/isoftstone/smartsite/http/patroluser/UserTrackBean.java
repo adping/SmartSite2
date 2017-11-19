@@ -3,6 +3,8 @@ package com.isoftstone.smartsite.http.patroluser;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.UserBean;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/16.
  */
@@ -10,7 +12,9 @@ import com.isoftstone.smartsite.http.UserBean;
 /*
 人员轨迹实体
  */
-public class UserTrackBean {
+public class UserTrackBean implements Serializable{
+
+    private static final long serialVersionUID = 0x0003L;
 
     private long id;//		主键
     private int userId;  //用户id
@@ -83,5 +87,19 @@ public class UserTrackBean {
 
     public void setPatrolTask(PatrolTaskBean patrolTask) {
         this.patrolTask = patrolTask;
+    }
+
+    @Override
+    public String toString() {
+        return "UserTrackBean{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", taskId=" + taskId +
+                ", updateTime='" + updateTime + '\'' +
+                ", user=" + user +
+                ", patrolTask=" + patrolTask +
+                '}';
     }
 }

@@ -1,10 +1,14 @@
 package com.isoftstone.smartsite.http.user;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/18.
  */
 
-public class BaseUserBean {
+public class BaseUserBean implements Serializable{
+    private static final long serialVersionUID = 0x0006L;
+
     public Long id;       //	用户ID
     public String account; //用户账号
     public String name;     //用户名称
