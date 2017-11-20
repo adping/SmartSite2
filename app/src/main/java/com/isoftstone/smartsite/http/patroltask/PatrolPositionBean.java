@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http.patroltask;
 
+import android.graphics.Bitmap;
+
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
@@ -21,6 +23,8 @@ public class PatrolPositionBean {
     private int status;     //	巡查地点巡查状态
     private BaseUserBean user;	//	巡查点实际巡查人
     private String executionTime;     //	巡查点巡查时间
+
+    public Bitmap bitmap; //头像
 
     public long getId() {
         return id;
@@ -77,4 +81,5 @@ public class PatrolPositionBean {
     public void setExecutionTime(String executionTime) {
         this.executionTime = executionTime;
     }
+
 }

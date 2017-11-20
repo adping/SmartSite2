@@ -38,7 +38,8 @@ public class MapTaskDetailRecyclerViewAdapter extends RecyclerView.Adapter<MapTa
         this.userBeans = beans;
     }
 
-    public void setDatas(List<BaseUserBean> datas){
+    public void setDatas(List<BaseUserBean> datas,int position){
+        this.currentPosition = position;
         this.userBeans = datas;
         notifyDataSetChanged();
     }
