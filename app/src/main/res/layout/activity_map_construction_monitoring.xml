@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <include layout="@layout/layout_toolbar_one_icon"></include>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="68dp"

@@ -91,7 +91,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(manager);
-        recyclerViewAdapter = new MapTaskDetailRecyclerViewAdapter(this);
+        recyclerViewAdapter = new MapTaskDetailRecyclerViewAdapter(this,null);
         recyclerViewAdapter.setItemClickListener(new MapTaskDetailRecyclerViewAdapter.onMapTaskItemClickListener() {
             @Override
             public void onItemClick(View view) {

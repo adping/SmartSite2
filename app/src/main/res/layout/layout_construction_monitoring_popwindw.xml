@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/working"/>
+                    android:src="@drawable/yiwancheng"/>
 
 
                 <TextView
@@ -121,7 +121,7 @@
                     android:background="@drawable/shape_start_task"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/kaishizhixing"
+                    android:src="@drawable/xunchawancheng"
                     />
 
             </FrameLayout>

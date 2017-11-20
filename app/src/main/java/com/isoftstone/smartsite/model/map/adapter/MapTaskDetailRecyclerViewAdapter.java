@@ -8,8 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.DensityUtils;
+import com.isoftstone.smartsite.utils.ImageUtils;
+import com.isoftstone.smartsite.utils.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -22,9 +31,16 @@ public class MapTaskDetailRecyclerViewAdapter extends RecyclerView.Adapter<MapTa
     private Context mContext;
     private onMapTaskItemClickListener mItemClickListener;
     private int currentPosition = 0;
+    private List<BaseUserBean> userBeans;
 
-    public MapTaskDetailRecyclerViewAdapter(Context context){
+    public MapTaskDetailRecyclerViewAdapter(Context context,List<BaseUserBean> beans){
         this.mContext = context;
+        this.userBeans = beans;
+    }
+
+    public void setDatas(List<BaseUserBean> datas){
+        this.userBeans = datas;
+        notifyDataSetChanged();
     }
 
     public void setItemClickListener(onMapTaskItemClickListener listener){
@@ -54,12 +70,16 @@ public class MapTaskDetailRecyclerViewAdapter extends RecyclerView.Adapter<MapTa
         } else{
             holder.civ.setBorderColor(Color.TRANSPARENT);
         }
-        holder.tv.setText("测试" + position);
+        if(userBeans.get(position).imageData != null){
+            String url = HttpPost.URL + "/" + userBeans.get(position).imageData;
+            ImageUtils.loadImage(holder.civ,url);
+        }
+        holder.tv.setText(userBeans.get(position).name);
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return userBeans == null ? 0 : userBeans.size();
     }
 
     @Override
