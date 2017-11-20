@@ -34,6 +34,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -108,6 +109,7 @@ public class HttpPost {
     private String UPDATE_TASK_END = URL + "/patrolTask/executeTask"; //巡查任务开始
     private String UPDATE_PATROL_POSITION_STATUS = URL + "/patrolTask/updatePatrolPositionStatus"; //巡查点完成接口
     private String USER_TRACK = URL + "/userTrack";  //上报巡查点位
+    private String GET_LOCALUSER_ALL = URL + "/localUser/findUserAll";  //获取巡查人员列表
     private String QUERYPENDING_PLAN = URL + "/message/queryPendingPlan"; //查询待处理消息数量
     private String FEEDBACK = URL + "/feedback";//用户反馈
     public static boolean mVideoIsLogin = false;
@@ -353,6 +355,13 @@ public class HttpPost {
         }
         mLoginBean.setmUserBean(userBean);
         return userBean;
+    }
+
+    /*
+    获取用户信息通过用户ID
+     */
+    public BaseUserBean  getUserById(long userid){
+        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient,userid);
     }
 
     //更改用户信息
@@ -640,5 +649,12 @@ public class HttpPost {
      */
     public  void feedback(long userId, String content) {
          UserLogin.feedback(FEEDBACK,mClient,userId,content);
+    }
+
+    /*
+    获取巡查人员列表
+     */
+    public ArrayList<BaseUserBean> findUserAll(){
+        return  PatrolTaskOperation.findUserAll(GET_LOCALUSER_ALL,mClient);
     }
 }

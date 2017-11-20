@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.CameraDetailsAdapter;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.adapter.PhotoGridAdapter;
@@ -46,6 +49,7 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 	private ArrayList<String> mListDate = new ArrayList<String>();
 	private Context mContext;
 	private ListView mPhotoGridView;
+	private HttpPost mHttpPost;
 
 
 	private static final int  HANDLER_CAMERA_DETAILS_START = 1;
@@ -59,7 +63,14 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 					Thread thread = new Thread(){
 						@Override
 						public void run() {
-							//mListDate =  mHttpPost.getDevices("1","","","");
+							//mListDate =  mHttpPost.getDevices("1","","",""); getPhontoList
+							ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getPhontoList("鄂A46F52","video","2017-11-17","");
+							Log.i("zzz","CCCCCCCCC   arrayList = " + arrayList);
+							if (arrayList != null) {
+								for (int i=0; i< arrayList.size(); i++) {
+									Log.i("zzz","arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+								}
+							}
 							mListDate.add(photoSrc);
 							mHandler.sendEmptyMessage(HANDLER_CAMERA_DETAILS_END);
 						}
@@ -92,6 +103,7 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 
 	private void initView() {
 		mContext = getApplicationContext();
+		mHttpPost = new HttpPost();
 		mHandler.sendEmptyMessage(HANDLER_CAMERA_DETAILS_START);
 	}
 

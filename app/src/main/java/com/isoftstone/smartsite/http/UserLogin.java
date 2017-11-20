@@ -149,6 +149,29 @@ public class UserLogin {
         return userBeanReturn;
     }
 
+    public static BaseUserBean getUserById(String strurl, OkHttpClient mClient,long id){
+        BaseUserBean userBeanReturn = null;
+        String funName = "getUserById";
+        try {
+            Request request = new Request.Builder()
+                    .url(strurl+id)
+                    .get()
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                userBeanReturn = gson.fromJson(responsebody,BaseUserBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return userBeanReturn;
+    }
+
     public static  void  userUpdate(String strurl, OkHttpClient mClient,BaseUserBean userBean){
 
         String funName = "userUpdate";

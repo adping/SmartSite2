@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -21,6 +22,9 @@ import android.widget.TextView;
 import org.apache.http.Header;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
@@ -49,6 +53,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private ManualPhotographyAdapter mAdapter;
 	ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 	private Context mContext;
+	private HttpPost mHttpPost;
 	private Bitmap mHeadBitmap;//裁剪后得图片
 
 	/* 请求识别码 选择图库*/
@@ -69,7 +74,16 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 					Thread thread = new Thread(){
 						@Override
 						public void run() {
-							//mListDate =  mHttpPost.getDevices("1","","","");
+							//mListDate =  mHttpPost.getDevices("1","","","");getEvidencePhotoList
+							PageableBean pageableBean = new PageableBean();
+							ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList("鄂AV785B",pageableBean).getContent();
+							Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList);
+							if (arrayList != null) {
+								for (int i=0; i< arrayList.size(); i++) {
+									Log.i("zzz","arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+								}
+
+							}
 							for (int i=0; i < 3; i++) {
 								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "李向双" + i , "2017-11-1" + i, "光谷五路和光谷六路交汇出", photoSrc, "湖北怡瑞有限公司" + i);
 								mListDate.add(manualPhotographyBean);
@@ -105,6 +119,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	private void initView() {
 		mContext = getApplicationContext();
+		mHttpPost = new HttpPost();
 		mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_START);
 	}
 

@@ -72,7 +72,7 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 
 		viewHolder.mLabTitleView.setText(inspectPlanBean.getTaskName());
 		viewHolder.mLabStatusView.setImageDrawable(getStatusDictionariesToDrawable(inspectPlanBean.getTaskStatus()));
-		viewHolder.mLabTimeView.setText(inspectPlanBean.getTaskTimeStart().toString());
+		viewHolder.mLabTimeView.setText(inspectPlanBean.getTaskTimeEnd().toString());
 		viewHolder.mLabNameView.setText(inspectPlanBean.getUserName());
 		viewHolder.mLabcompanView.setText(inspectPlanBean.getUserCompany());
 
@@ -87,7 +87,8 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	}
 
 	private void enterOtherView() {
-		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+		//Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+		Intent intent = new Intent(mContext, ManualPhotographyActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}
@@ -103,11 +104,13 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 
 	private Drawable getStatusDictionariesToDrawable(int status) {
 		Drawable statusDrawable = null;
-		if (status == 0) {
-			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
-		} else if (status == 1) {
-			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_passed,null);
+		if (status == 1) {
+			//statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
 		} else if (status == 2) {
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
+		} else if (status == 3) {
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_passed,null);
+		} else if (status == 4) {
 			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_failed,null);
 		}
 		return statusDrawable;

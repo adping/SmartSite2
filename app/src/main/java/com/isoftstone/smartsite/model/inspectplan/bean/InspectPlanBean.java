@@ -7,12 +7,13 @@ import java.util.Date;
  */
 
 public class InspectPlanBean {
-    private int userId;//根据userId查询任务
+    private long userId;//根据userId查询任务
     private String taskName;//任务名称
     private String address;//巡查点名称
-    private Date taskTimeStart;//开始时间
-    private Date taskTimeEnd;//结束时间
-    private int taskStatus;//巡查任务状态(未执行:0、正在执行：1、已执行:2、已延期:3)
+    private String taskTimeStart;//开始时间
+    private String taskTimeEnd;//结束时间
+    private String taskCreateTime;//创建时间
+    private int taskStatus;//巡查任务状态(1	已创建，待提交  2	已提交，待审批  3	已通过  4	已打回)
     private String users;//任务巡查人员
     private String patrolPositions;//任务巡查点位
     private String userName;//用户名称
@@ -22,7 +23,7 @@ public class InspectPlanBean {
 
     }
 
-    public InspectPlanBean(int userId, String taskName, String address, Date taskTimeStart, Date taskTimeEnd, int taskStatus) {
+    public InspectPlanBean(int userId, String taskName, String address, String taskTimeStart, String taskTimeEnd, int taskStatus) {
         this.userId = userId;
         this.taskName = taskName;
         this.address = address;
@@ -31,11 +32,11 @@ public class InspectPlanBean {
         this.taskStatus = taskStatus;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -55,19 +56,19 @@ public class InspectPlanBean {
         this.address = address;
     }
 
-    public Date getTaskTimeStart() {
+    public String getTaskTimeStart() {
         return taskTimeStart;
     }
 
-    public void setTaskTimeStart(Date taskTimeStart) {
+    public void setTaskTimeStart(String taskTimeStart) {
         this.taskTimeStart = taskTimeStart;
     }
 
-    public Date getTaskTimeEnd() {
+    public String getTaskTimeEnd() {
         return taskTimeEnd;
     }
 
-    public void setTaskTimeEnd(Date taskTimeEnd) {
+    public void setTaskTimeEnd(String taskTimeEnd) {
         this.taskTimeEnd = taskTimeEnd;
     }
 
@@ -93,6 +94,14 @@ public class InspectPlanBean {
 
     public void setUserCompany(String userCompany) {
         this.userCompany = userCompany;
+    }
+
+    public String getTaskCreateTime() {
+        return taskCreateTime;
+    }
+
+    public void setTaskCreateTime(String taskCreateTime) {
+        this.taskCreateTime = taskCreateTime;
     }
 
     @Override
