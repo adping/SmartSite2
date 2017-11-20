@@ -1,16 +1,11 @@
 package com.isoftstone.smartsite.model.inspectplan.activity
 
 import android.app.Activity
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.BaseAdapter
 import android.widget.GridView
-import android.widget.SimpleAdapter
-import com.amap.api.mapcore.util.id
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
 import com.isoftstone.smartsite.model.inspectplan.adapter.AddressAdapter
@@ -18,7 +13,6 @@ import com.isoftstone.smartsite.model.inspectplan.adapter.PeopleAdapter
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper
 import com.isoftstone.smartsite.utils.FilesUtils
-import com.isoftstone.smartsite.utils.ToastUtils
 
 /**
  * Created by yanyongjun on 2017/11/15.
@@ -44,19 +38,19 @@ open class AddInspectPlan : BaseActivity() {
     override fun afterCreated(savedInstanceState: Bundle?) {
         mAdapterAddress = AddressAdapter(this, mAddressList)
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
-        mAttachAdapter = AttachGridViewAdatper(this, mAttachList)
+        //mAttachAdapter = AttachGridViewAdatper(this, mAttachList)
 
         initAddressGridView()
         initPeopleGridView()
-        initAttachGridView()
+        //initAttachGridView()
     }
 
-    fun initAddressGridView() {
+    fun initPeopleGridView() {
         mGridViewPeople = findViewById(R.id.grid_view_people) as GridView
         mGridViewPeople?.adapter = mAdapterPeople
     }
 
-    fun initPeopleGridView() {
+    fun initAddressGridView() {
         mGridViewAddress = findViewById(R.id.grid_view_address) as GridView
         mGridViewAddress?.adapter = mAdapterAddress
     }
@@ -121,6 +115,11 @@ open class AddInspectPlan : BaseActivity() {
         Log.e(TAG, "yanlog mData at 0:" + mAttachList.get(0));
         mAttachAdapter?.notifyDataSetChanged();
     }
+
+    fun onClick_submit(v:View){
+        //TODO
+    }
+
 
     //    public void initGridView() {
 //        mAttachView = (GridView) getView().findViewById(R.id.grid_view);

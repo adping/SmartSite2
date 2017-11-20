@@ -48,10 +48,11 @@
             <ImageView
                 android:id="@+id/img_edit_report"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/white"
                 android:layout_below="@id/edit_report_msg"
                 android:layout_marginBottom="16dp"
-                android:src="@drawable/shape_listview_year_bg" />
+                android:src="@color/dividing_line" />
 
             <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                 android:id="@+id/grid_view"
