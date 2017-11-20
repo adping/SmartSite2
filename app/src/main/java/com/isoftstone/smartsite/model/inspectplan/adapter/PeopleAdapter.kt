@@ -29,6 +29,6 @@ open class PeopleAdapter(context: Context, list: ArrayList<String>) : BaseAdapte
     }
 
     override fun getCount(): Int {
-        return 1
+        return 3
     }
 }

@@ -48,10 +48,10 @@
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/btn_back_press_bg"
                 android:gravity="center"
-                android:onClick="onBtnSaveClick"
+                android:onClick="onClick_submit"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="@string/save"
+                android:text="提交"
                 android:textColor="@color/title_save"
                 android:textSize="12sp"
                 android:visibility="visible" />
@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="16dp"
-                    android:src="@color/app_background" />
+                    android:src="@color/dividing_line" />
 
                 <!--<ImageView-->
                 <!--android:layout_width="match_parent"-->
@@ -145,8 +145,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/droparrow" />
+                        android:layout_marginLeft="11dp"
+                        android:src="@drawable/jiahao" />
 
                     <TextView
                         android:id="@+id/lab_address_choose_right"
@@ -163,13 +163,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="16dp"
-                    android:src="@color/app_background" />
+                    android:src="@color/dividing_line" />
 
                 <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                     android:id="@+id/grid_view_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="38dp"
+                    android:numColumns="auto_fit"
                     android:layout_marginRight="16dp"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
             </LinearLayout>
 
@@ -199,8 +200,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/droparrow" />
+                        android:layout_marginLeft="11dp"
+                        android:src="@drawable/jiahao" />
 
                     <TextView
                         android:id="@+id/lab_people_right"
@@ -217,12 +218,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="16dp"
-                    android:src="@color/app_background" />
+                    android:src="@color/dividing_line" />
 
                 <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                     android:id="@+id/grid_view_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:numColumns="8"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
             </LinearLayout>
@@ -231,32 +233,53 @@
                 layout="@layout/view_input_inspect_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"></include>
 
-            <include
-                layout="@layout/view_input_report_msg"
+            <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/lab_report_msg"
+                    style="@style/add_report_lab"
+                    android:text="任务内容" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"></include>
-            <!--<fragment-->
-            <!--android:id="@+id/frag_reply_inspect_report"-->
-            <!--android:name="com.isoftstone.smartsite.model.tripartite.fragment.RevisitFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"></fragment>-->
-            <Button
-                android:id="@+id/btn_add_report_submit"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/selector_submit_bg"
-                android:elevation="0dp"
-                android:text="@string/submit"
-                android:textColor="@color/white"
-                android:textSize="16sp"></Button>
+                android:background="@color/white"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#f9f9f9"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp">
+
+                    <EditText
+                        android:id="@+id/edit_report_msg"
+                        android:layout_width="match_parent"
+                        android:layout_height="116dp"
+                        android:layout_alignParentTop="true"
+                        android:background="@null"
+                        android:gravity="top|left"
+                        android:hint="@string/pls_enter_msg"
+                        android:inputType="textMultiLine"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
