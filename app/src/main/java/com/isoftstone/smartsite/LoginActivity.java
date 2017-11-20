@@ -267,13 +267,13 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						public void run() {
 							loggin(mIdString,mPwdString,mJpushId);
 							if(isLogin_1){
-								logginVideo();
-								/*Intent intent = new Intent();
+								//logginVideo();
+								Intent intent = new Intent();
 								intent.setClass(LoginActivity.this,MainActivity.class);
 								LoginActivity.this.startActivity(intent);
 								mLoginResult = "登录成功";
 								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								finish();*/
+								finish();
 							}
 
 						}
