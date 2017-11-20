@@ -13,7 +13,7 @@ public class InspectPlanBean {
     private String taskTimeStart;//开始时间
     private String taskTimeEnd;//结束时间
     private String taskCreateTime;//创建时间
-    private int taskStatus;//巡查任务状态(未执行:0、正在执行：1、已执行:2、已延期:3)
+    private int taskStatus;//巡查任务状态(1	已创建，待提交  2	已提交，待审批  3	已通过  4	已打回)
     private String users;//任务巡查人员
     private String patrolPositions;//任务巡查点位
     private String userName;//用户名称

@@ -104,11 +104,13 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 
 	private Drawable getStatusDictionariesToDrawable(int status) {
 		Drawable statusDrawable = null;
-		if (status == 0) {
-			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
-		} else if (status == 1) {
-			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_passed,null);
+		if (status == 1) {
+			//statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
 		} else if (status == 2) {
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_approval_pending,null);
+		} else if (status == 3) {
+			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_passed,null);
+		} else if (status == 4) {
 			statusDrawable  = mContext.getResources().getDrawable(R.drawable.inspect_plan_failed,null);
 		}
 		return statusDrawable;
