@@ -51,7 +51,7 @@
                 android:onClick="onClick_submit"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="@string/save"
+                android:text="提交"
                 android:textColor="@color/title_save"
                 android:textSize="12sp" />
 
