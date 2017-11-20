@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.http.patroluser;
 
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 import java.io.Serializable;
 
@@ -22,7 +23,7 @@ public class UserTrackBean implements Serializable{
     private double latitude;	//人员轨迹纬度
     private long taskId;     //巡查任务Id
     private String updateTime;  //接收轨迹的时间
-    private UserBean  user;  	//用户返回数据中封装用户信息
+    private BaseUserBean user;  	//用户返回数据中封装用户信息
     private PatrolTaskBean patrolTask;		//用于返回巡查当前用户的任务
 
     public long getId() {
@@ -73,11 +74,11 @@ public class UserTrackBean implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public UserBean getUser() {
+    public BaseUserBean getUser() {
         return user;
     }
 
-    public void setUser(UserBean user) {
+    public void setUser(BaseUserBean user) {
         this.user = user;
     }
 

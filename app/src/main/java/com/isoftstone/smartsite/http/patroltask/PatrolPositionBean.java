@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.http.patroltask;
 
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 /**
  * Created by gone on 2017/11/16.
@@ -18,7 +19,7 @@ public class PatrolPositionBean {
     private Double longitude;		//巡查任务经度
     private Double latitude;		//巡查任务纬度
     private int status;     //	巡查地点巡查状态
-    private UserBean user;	//	巡查点实际巡查人
+    private BaseUserBean user;	//	巡查点实际巡查人
     private String executionTime;     //	巡查点巡查时间
 
     public long getId() {
@@ -61,11 +62,11 @@ public class PatrolPositionBean {
         this.status = status;
     }
 
-    public UserBean getUser() {
+    public BaseUserBean getUser() {
         return user;
     }
 
-    public void setUser(UserBean user) {
+    public void setUser(BaseUserBean user) {
         this.user = user;
     }
 

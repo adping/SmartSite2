@@ -99,6 +99,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		mHttpPost = new HttpPost();
 		HttpPost.mLoginBean = null;
 		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
+		Test.otTest(mJpushId);
 	}
 
 
