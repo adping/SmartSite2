@@ -221,7 +221,11 @@
         <!--  guowei -->
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
-
+        </activity>
+        <!-- 巡查计划审批  -->
+        <activity
+            android:name=".model.inspectplan.activity.PatrolPlanActivity"
+            android:screenOrientation="portrait">
         </activity>
         <!--yanyongjun begin-->
         <activity
