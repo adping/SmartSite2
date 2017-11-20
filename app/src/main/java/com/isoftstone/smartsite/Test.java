@@ -235,6 +235,8 @@ public class Test {
 
               //mHttpPost.feedback(1,"ceshi");
 
+              mHttpPost.findUserAll();
+
           }
       }.start();
     }

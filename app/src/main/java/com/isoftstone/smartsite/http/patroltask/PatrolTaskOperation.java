@@ -2,16 +2,19 @@ package com.isoftstone.smartsite.http.patroltask;
 
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
 import com.isoftstone.smartsite.http.pageable.PageBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -234,5 +237,29 @@ public class PatrolTaskOperation {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public  static ArrayList<BaseUserBean> findUserAll(String strurl, OkHttpClient mClient){
+        String funName = "findUserAll";
+        ArrayList<BaseUserBean> list = null;
+        try {
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .get()
+                    .addHeader("X-Requested-With", "XMLHttpRequest")
+                    .build();
+            Response response = null;
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.isSuccessful()) {
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                list = HttpPost.stringToList(responsebody,BaseUserBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  list;
     }
 }
