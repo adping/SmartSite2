@@ -6,12 +6,15 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.GridView
+import android.widget.TextView
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
 import com.isoftstone.smartsite.model.dirtcar.Data.SelectImage
 import com.isoftstone.smartsite.model.dirtcar.adapter.SelectImageAdapter
 import java.io.File
 import java.util.*
+import kotlin.collections.HashSet
+
 
 /**
  * Created by yanyongjun on 2017/11/19.
@@ -20,18 +23,49 @@ open class SelectImageActivity : BaseActivity() {
     var mGridView: GridView? = null
     var mAdapter: SelectImageAdapter? = null
     var mDataList = ArrayList<SelectImage>()
-    var mRootDir = ArrayList<String>()
+    var mRootDir = HashSet<String>()
+    var mLabSelectedNum: TextView? = null
+    var mSelectPaths = HashSet<String>() //选中图片的保存路径
+
+    var mSelectedNum: Int = 0
+    var mListener = object : SelectImage.OnStatusChangeListener {
+        override fun onChange(status: Boolean, path: String) {
+            if (status) {
+                mSelectedNum++
+                mSelectPaths.add(path)
+            } else {
+                mSelectedNum--
+                mSelectPaths.remove(path)
+            }
+            if (mSelectedNum <= 0) {
+                mSelectedNum = 0
+                mLabSelectedNum?.setText("提交")
+            }
+            if (mSelectedNum > 0) {
+                mLabSelectedNum?.setText("提交（$mSelectedNum）")
+            }
+        }
+    }
 
     init {
         mRootDir.add(Environment.getExternalStorageDirectory().toString() + "/isoftstone/Camera")
         var sd1 = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera")
-        var sd2 = File("/storage/3864-6330/DCIM/Camera/")
-        Log.e(TAG, "sync image dir sd2:" + sd2.toString())
-        if (sd1.exists()) {
-            mRootDir.add(sd1.toString())
+        var sdfather = File(Environment.getExternalStorageDirectory().toString() + "/../..")
+        var pathList = sdfather.list()
+        if (pathList != null) {
+            for (temp in pathList) {
+                var file = File(sdfather.canonicalPath + "/" + temp)
+                if (!(file.name.equals("..") || file.name.equals("."))) {
+                    var filetemp = File(file.canonicalPath + "/DCIM/Camera/")
+                    if (filetemp.exists()) {
+                        mRootDir.add(filetemp.canonicalPath)
+                    }
+                }
+            }
         }
-        if (sd2.exists()) {
-            mRootDir.add(sd2.toString())
+
+        if (sd1.exists()) {
+            mRootDir.add(sd1.canonicalPath)
         }
 
         for (temp in mRootDir) {
@@ -39,11 +73,13 @@ open class SelectImageActivity : BaseActivity() {
         }
     }
 
+
     override fun getLayoutRes(): Int {
         return R.layout.activity_select_image
     }
 
     override fun afterCreated(savedInstanceState: Bundle?) {
+        mLabSelectedNum = findViewById(R.id.btn_submit) as TextView
         initGridView()
     }
 
@@ -72,7 +108,7 @@ open class SelectImageActivity : BaseActivity() {
                     }
                     if (curFile.isFile && (curFile.path.endsWith(".jpg") || curFile.path.endsWith(".jpeg") || curFile.path.endsWith(".png") ||
                             curFile.path.endsWith(".JPG") || curFile.path.endsWith(".JPEG") || curFile.path.endsWith(".PNG"))) {
-                        mDataList.add(SelectImage(curFile.canonicalPath, false))
+                        mDataList.add(SelectImage(curFile.canonicalPath, false, mListener))
                     } else if (curFile.isDirectory) {
                         var files = curFile.listFiles()
                         for (file in files) {

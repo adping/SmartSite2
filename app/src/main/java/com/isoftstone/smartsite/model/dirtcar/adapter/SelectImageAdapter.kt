@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.model.dirtcar.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,7 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
         var imgMask = v.findViewById(R.id.img_mask) as ImageView
         var checkBox = v.findViewById(R.id.check_box) as CheckBox
         var selectImg = mPathList.get(position)
-        if (selectImg.stats) {
+        if (selectImg.mStatus) {
             imgMask.visibility = View.VISIBLE
             checkBox.isChecked = true
         } else {
@@ -41,11 +40,11 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
         checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
                 imgMask.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
-                selectImg.stats = isChecked
+                selectImg.mStatus = isChecked
             }
         })
 
-        ImageUtils.loadImageViewDiskCacheResult(mContext, selectImg.path, imageView)
+        ImageUtils.loadImageViewDiskCacheResult(mContext, selectImg.mPath, imageView)
         return v
     }
 
@@ -58,7 +57,6 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
     }
 
     override fun getCount(): Int {
-        Log.e(TAG, "yanlog getcount:" + mPathList.size)
         return mPathList.size
     }
 }
