@@ -72,7 +72,7 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 
 		viewHolder.mLabTitleView.setText(inspectPlanBean.getTaskName());
 		viewHolder.mLabStatusView.setImageDrawable(getStatusDictionariesToDrawable(inspectPlanBean.getTaskStatus()));
-		viewHolder.mLabTimeView.setText(inspectPlanBean.getTaskTimeStart().toString());
+		viewHolder.mLabTimeView.setText(inspectPlanBean.getTaskTimeEnd().toString());
 		viewHolder.mLabNameView.setText(inspectPlanBean.getUserName());
 		viewHolder.mLabcompanView.setText(inspectPlanBean.getUserCompany());
 
@@ -87,7 +87,8 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	}
 
 	private void enterOtherView() {
-		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+		//Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+		Intent intent = new Intent(mContext, ManualPhotographyActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}

@@ -81,4 +81,18 @@ public class EvidencePhotoBean {
     public void setSmallPhotoSrc(String smallPhotoSrc) {
         this.smallPhotoSrc = smallPhotoSrc;
     }
+
+    @Override
+    public String toString() {
+        return "EvidencePhotoBean{" +
+                "licence='" + licence + '\'' +
+                ", takePhotoTime='" + takePhotoTime + '\'' +
+                ", uploadPeople='" + uploadPeople + '\'' +
+                ", photoSrc='" + photoSrc + '\'' +
+                ", smallPhotoSrc='" + smallPhotoSrc + '\'' +
+                ", addr='" + addr + '\'' +
+                ", speed='" + speed + '\'' +
+                ", takePhoroUser=" + takePhoroUser +
+                '}';
+    }
 }
