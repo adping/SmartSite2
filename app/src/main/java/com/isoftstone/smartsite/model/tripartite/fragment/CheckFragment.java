@@ -203,9 +203,11 @@ public class CheckFragment extends BaseFragment {
 
     public void notifyDataSetChanged() {
         mReportData = mActivity.getReportData();
-        if (mReportData.isVisit()) {
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_is_report);
-            linearLayout.setVisibility(View.GONE);
+        if(mReportData != null){
+            if (mReportData.isVisit()) {
+                LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_is_report);
+                linearLayout.setVisibility(View.GONE);
+            }
         }
     }
 

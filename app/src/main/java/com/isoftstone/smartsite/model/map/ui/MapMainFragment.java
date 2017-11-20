@@ -1,15 +1,20 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTabHost;
@@ -53,11 +58,20 @@ import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
 import com.isoftstone.smartsite.model.main.ui.PMHistoryInfoActivity;
+import com.isoftstone.smartsite.model.main.ui.VideoMonitoringActivity;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
+import com.isoftstone.smartsite.model.system.ui.PermissionsActivity;
+import com.isoftstone.smartsite.model.system.ui.PermissionsChecker;
+import com.isoftstone.smartsite.model.video.SnapPicturesActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
+import com.isoftstone.smartsite.model.video.bean.AlbumInfo;
+import com.isoftstone.smartsite.model.video.bean.PhotoInfo;
+import com.isoftstone.smartsite.model.video.bean.PhotoList;
+import com.isoftstone.smartsite.model.video.utils.ThumbnailsUtil;
 import com.isoftstone.smartsite.utils.DensityUtils;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -65,6 +79,7 @@ import com.isoftstone.smartsite.utils.ToastUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_0;
@@ -771,9 +786,14 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 break;
             case R.id.gallery:
                 //打开系统相册浏览照片  
-                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent2);
+                PermissionsChecker mPermissionsChecker = new PermissionsChecker(mContext);
+                if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
+                    PermissionsActivity.startActivityForResult(getActivity(), REQUEST_CODE, PERMISSIONS);
+                }else {
+                    mListImageInfo.clear();
+                    mlistPhotoInfo.clear();
+                    new ImageAsyncTask().execute();
+                }
                 break;
 
             case R.id.btn_back:
@@ -793,5 +813,106 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         List<LatLng> latLngs = MapUtils.getAroundLatlons();
         Polyline polyline = mAMap.addPolyline(new PolylineOptions().
                 addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
+    }
+
+    private static final int REQUEST_CODE = 100; // 权限检查请求码
+    static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
+    private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
+    private class ImageAsyncTask extends AsyncTask<Void, Void, Object> {
+        @Override
+        protected Object doInBackground(Void... params) {
+            //获取缩略图
+            ThumbnailsUtil.clear();
+            ContentResolver sContentResolver = mContext.getContentResolver();
+            String[] projection = { MediaStore.Images.Thumbnails._ID, MediaStore.Images.Thumbnails.IMAGE_ID, MediaStore.Images.Thumbnails.DATA };
+            Cursor cur = sContentResolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projection, null, null, null);
+
+            if (cur!=null&&cur.moveToFirst()) {
+                int image_id;
+                String image_path;
+                int image_idColumn = cur.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+                int dataColumn = cur.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+                do {
+                    image_id = cur.getInt(image_idColumn);
+                    image_path = cur.getString(dataColumn);
+                    ThumbnailsUtil.put(image_id, "file://"+image_path);
+                } while (cur.moveToNext());
+            }
+            //获取原图
+            Cursor cursor = sContentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, "date_modified DESC");
+            String _path="_data";
+            String _album="bucket_display_name";
+            HashMap<String,AlbumInfo> myhash = new HashMap<String, AlbumInfo>();
+            AlbumInfo albumInfo = null;
+            PhotoInfo photoInfo = null;
+            if (cursor!=null&&cursor.moveToFirst())
+            {
+                do{
+                    int index = 0;
+                    int _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String path = cursor.getString(cursor.getColumnIndex(_path));
+                    String album = cursor.getString(cursor.getColumnIndex(_album));
+                    List<PhotoInfo> stringList = new ArrayList<PhotoInfo>();
+                    photoInfo = new PhotoInfo();
+                    if(myhash.containsKey(album)){
+                        albumInfo = myhash.remove(album);
+                        if(mListImageInfo.contains(albumInfo)) {
+                            index = mListImageInfo.indexOf(albumInfo);
+                        }
+                        photoInfo.setImage_id(_id);
+                        photoInfo.setPath_file("file://"+path);
+                        photoInfo.setPath_absolute(path);
+                        albumInfo.getList().add(photoInfo);
+                        mListImageInfo.set(index, albumInfo);
+                        myhash.put(album, albumInfo);
+                        //Log.i("zyf", albumInfo.toString() + "\n" + album);
+                    }else{
+                        albumInfo = new AlbumInfo();
+                        stringList.clear();
+                        photoInfo.setImage_id(_id);
+                        photoInfo.setPath_file("file://"+path);
+                        photoInfo.setPath_absolute(path);
+                        stringList.add(photoInfo);
+                        albumInfo.setImage_id(_id);
+                        albumInfo.setPath_file("file://"+path);
+                        albumInfo.setPath_absolute(path);
+                        albumInfo.setName_album(album);
+                        albumInfo.setList(stringList);
+                        mListImageInfo.add(albumInfo);
+                        myhash.put(album, albumInfo);
+                        //Log.i("zyf", albumInfo.toString() + "\n" + album);
+                    }
+                }while (cursor.moveToNext());
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Object result) {
+            super.onPostExecute(result);
+            //Log.i("zzz", FilesUtils.SNATCH_PATH + mDevicesBean.getDeviceCoding() + "/");
+            for (int i=0; i<mListImageInfo.size(); i++) {
+                if (mListImageInfo.get(i).getPath_absolute().contains(FilesUtils.SNATCH_PATH + currentVideoBean.getDeviceCoding() + "/")) {
+                    mlistPhotoInfo.addAll(mListImageInfo.get(i).getList());
+                }
+            }
+
+            if (mlistPhotoInfo.size() <= 0 ) {
+                ToastUtils.showShort(getText(R.string.snatch_photo_size_0_toast).toString());
+                return;
+            } else {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                PhotoList photo = new PhotoList();
+                photo.setList(mlistPhotoInfo);
+                bundle.putSerializable("list", photo);
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClass(mContext, SnapPicturesActivity.class);
+                mContext.startActivity(intent);
+            }
+        }
     }
 }
