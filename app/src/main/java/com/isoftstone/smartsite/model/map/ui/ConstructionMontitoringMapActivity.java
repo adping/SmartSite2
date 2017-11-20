@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
@@ -70,6 +72,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private final int INIT_DATA = 0x0002;
     private final int UPDATE_USER_GUIJI = 0x0003;
     private final int NO_GUI_JI = 0x0004;
+    private final int FINISH_TASK_POSITION = 0x0005;
 
     private MapView mapView;
     private AMap aMap;
@@ -78,10 +81,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private RecyclerView rv;
 
     private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
-    private LatLng startLatlon = new LatLng(30.490513,114.467518);
-    private LatLng latLng2 = new LatLng(30.489206,114.474417);
-    private LatLng endLatlon = new LatLng(30.483978,114.470968);
-    private LatLng startLatlon1 = new LatLng(30.486654,114.482969);
+
     private TextView tv_task_name;
     private ImageView iv_task_status;
     private TextView tv_time;
@@ -99,7 +99,10 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private ArrayList<UserTrackBean> currentUserTrackBeans;
 
     private BaseUserBean currentUserBean;
-//    private long loginUseId = HttpPost.mLoginBean.getmUserBean().getLoginUser().getId();
+    private PatrolPositionBean currentPatorPositionBean;
+    private Location currentLocation;
+
+    private long loginUseId = HttpPost.mLoginBean.getmUserBean().getLoginUser().getId();
 //upload/xuncha187.png
     private Handler mHandler = new Handler(){
         @Override
@@ -120,16 +123,24 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     addAndRemoveUserGuiJi();
                     break;
                 case NO_GUI_JI:
-                    ToastUtils.showLong("没有获取到轨迹！");
+                    loadingDailog.dismiss();
+                    ToastUtils.showShort("没有获取到轨迹！");
                     if(polyline != null){
                         polyline.remove();
                     }
+                    break;
+                case FINISH_TASK_POSITION:
+                    getData();
                     break;
             }
         }
     };
     private Polyline polyline;
-    private List<Marker> markers;
+    private List<Marker> touXiangMarkers;
+    private List<Marker> doneMarkers;
+    private List<Marker> notDoneMarkers;
+    private Marker currentClickMarker;
+    private Marker roundMarker;
 
     @Override
     protected int getLayoutRes() {
@@ -141,7 +152,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         initToolBar();
         iv_status = (ImageView) findViewById(R.id.iv_status);
         httpPost = new HttpPost();
-        markers = new ArrayList<>();
+        touXiangMarkers = new ArrayList<>();
+        doneMarkers = new ArrayList<>();
+        notDoneMarkers = new ArrayList<>();
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
         initLoadingDialog();
@@ -233,29 +246,46 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     }
 
     private void updateRecyclerView(){
-        recyclerViewAdapter.setDatas(userBeans);
         if(currentUserBean == null){
             currentUserBean = userBeans.get(0);
         }
+        int position = userBeans.indexOf(currentUserBean);
+        recyclerViewAdapter.setDatas(userBeans,position);
     }
 
     private void updateTaskPoints(){
         if(patrolPositionBeans == null) return;
+
+        for (int i = 0; i < doneMarkers.size(); i++) {
+            doneMarkers.get(i).remove();
+        }
+        doneMarkers.clear();
+
+        for (int i = 0; i < notDoneMarkers.size(); i++) {
+            notDoneMarkers.get(i).remove();
+        }
+        notDoneMarkers.clear();
+
+        for (int i = 0; i < touXiangMarkers.size(); i++) {
+            touXiangMarkers.get(i).remove();
+        }
+        touXiangMarkers.clear();
 
         for (int i = 0; i < patrolPositionBeans.size(); i++) {
             PatrolPositionBean bean = patrolPositionBeans.get(i);
             LatLng latLng = new LatLng(bean.getLatitude(),bean.getLongitude());
             //0未巡查  1已巡查
             if(bean.getStatus() == 0){
-                addNotDoneRound(latLng);
+                addNotDoneRound(bean,latLng);
             } else if(bean.getStatus() == 1){
-                addDoneRound(latLng);
+                addDoneRound(bean,latLng);
                 addMarker(bean,latLng);
             }
 
         }
     }
 
+    private List<Bitmap> bitmaps = new ArrayList<>();
     private void addMarker(final PatrolPositionBean bean, LatLng latLng){
         BaseUserBean baseUserBean = bean.getUser();
 
@@ -284,8 +314,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
                 Marker marker = aMap.addMarker(markerOption);
                 marker.setAnchor(0.5f,1f);
+                bean.bitmap = resource;
                 marker.setObject(bean);
-                markers.add(marker);
+                touXiangMarkers.add(marker);
             }
         };
 
@@ -301,6 +332,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         long userId = currentUserBean.getId();
         int intUserId = (int) userId;
         bean.setUserId(intUserId);
+        loadingDailog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -374,9 +406,13 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         mPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                /*if(roundMarker != null){
+                if(roundMarker != null){
                     roundMarker.remove();
-                }*/
+                }
+                if(currentClickMarker != null){
+                    currentClickMarker.setVisible(true);
+                    currentClickMarker = null;
+                }
             }
         });
     }
@@ -398,7 +434,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         startMarker.setAnchor(0.5f,1f);
     }
 
-    private void addDoneRound(LatLng latLng){
+    private void addDoneRound(PatrolPositionBean bean,LatLng latLng){
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
         markerOption.visible(true);
@@ -410,11 +446,14 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOption.setFlat(true);//设置marker平贴地图效果
 
-        Marker startMarker = aMap.addMarker(markerOption);
-        startMarker.setAnchor(0.5f,0.5f);
+        Marker marker = aMap.addMarker(markerOption);
+        marker.setAnchor(0.5f,0.5f);
+        marker.setClickable(false);
+//        marker.setObject(bean);
+        doneMarkers.add(marker);
     }
 
-    private void addNotDoneRound(LatLng latLng){
+    private void addNotDoneRound(PatrolPositionBean bean,LatLng latLng){
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
         markerOption.visible(true);
@@ -426,15 +465,17 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOption.setFlat(true);//设置marker平贴地图效果
 
-        Marker startMarker = aMap.addMarker(markerOption);
-        startMarker.setAnchor(0.5f,0.5f);
+        Marker marker = aMap.addMarker(markerOption);
+        marker.setAnchor(0.5f,0.5f);
+        marker.setObject(bean);
+        notDoneMarkers.add(marker);
     }
 
     private void initNowLocation(){
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.myLocationType(LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-        myLocationStyle.interval(3000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.interval(30000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //        aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
@@ -442,7 +483,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                updateNowLocation(location);
+                currentLocation = location;
+//                updateNowLocation(location);
             }
         });
     }
@@ -451,11 +493,11 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_back:
-                this.finish();
+                onBackPressed();
                 break;
 
             case R.id.iv_start_task:
-
+                checkTaskPointOrUpdateTaskPoint();
                 break;
             case R.id.iv_dismiss:
                 mPopWindow.dismiss();
@@ -474,6 +516,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 iv_task_status.setImageResource(R.drawable.weiwancheng);
                 tv_time.setText("");
             } else if(bean.getStatus() == 1){
+                currentClickMarker = marker;
                 iv_start_task.setVisibility(View.GONE);
                 content_parent.setVisibility(View.VISIBLE);
                 iv_task_status.setImageResource(R.drawable.yiwancheng);
@@ -485,9 +528,39 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 tv_person.setText(bean.getUser().name);
                 tv_address.setText(bean.getUser().address);
             }
+            if(currentClickMarker != null){
+                currentClickMarker.setVisible(false);
+            }
+            addAndRemoveRoundMarker(new LatLng(bean.getLatitude(),bean.getLongitude()),bean.bitmap);
+            mPopWindow.showAtLocation(mapView, Gravity.BOTTOM,0, DensityUtils.dip2px(this,-8));
         }
-        mPopWindow.showAtLocation(mapView, Gravity.BOTTOM,0, DensityUtils.dip2px(this,-8));
+
         return true;
+    }
+
+    private void addAndRemoveRoundMarker(LatLng latLng,Bitmap bitmap){
+        MarkerOptions markerOption1 = new MarkerOptions();
+
+        markerOption1.position(latLng);
+
+        markerOption1.visible(true);
+
+        markerOption1.draggable(false);//设置Marker可拖动
+        View centerView = LayoutInflater.from(this).inflate(R.layout.layout_map_task_backround,null);
+        CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
+        civ.setVisibility(View.VISIBLE);
+        if(bitmap != null){
+            civ.setImageBitmap(bitmap);
+        }
+
+        markerOption1.icon(BitmapDescriptorFactory.fromView(centerView));
+
+        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+        markerOption1.setFlat(true);//设置marker平贴地图效果
+
+        roundMarker = aMap.addMarker(markerOption1);
+        roundMarker.setAnchor(0.5f,0.5f);
+
     }
 
 
@@ -495,13 +568,35 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private void updateNowLocation(Location location){
         final double lat = location.getLatitude();
         final double lon = location.getLongitude();
-        LogUtils.e("zw","lat : " + lat);
-        /*new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 httpPost.userTrack(loginUseId,patrolTaskBean.getTaskId(),lon,lat);
             }
-        }).start();*/
+        }).start();
+    }
+
+    //检查是否在附近以及完成任务
+    private void checkTaskPointOrUpdateTaskPoint(){
+        if(currentUserBean.getId() != loginUseId){
+            ToastUtils.showLong("请先切换到自己再完成任务！");
+            return;
+        }
+        LatLng positionLatlng = new LatLng(currentPatorPositionBean.getLatitude(),currentPatorPositionBean.getLongitude());
+        LatLng userLatlng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        float distance = AMapUtils.calculateLineDistance(positionLatlng,userLatlng);
+        if(distance > 100){
+            ToastUtils.showShort("您距离任务点的距离为" +distance + ",请在100米以内执行此操作！");
+            return;
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    httpPost.updatePatrolPositionStatus(loginUseId,currentPatorPositionBean.getPosition());
+                    mHandler.sendEmptyMessage(FINISH_TASK_POSITION);
+                }
+            }).start();
+        }
     }
 
  /*   public Bitmap setGeniusIcon(String url) {
@@ -521,4 +616,15 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         return bitmap;
     }*/
 
+    long currentTime;
+    @Override
+    public void onBackPressed() {
+        double lastTime = currentTime;
+        currentTime = System.currentTimeMillis();
+        if(currentTime - lastTime < 3000){
+            super.onBackPressed();
+        } else {
+            ToastUtils.showLong("退出此界面将不会再获取您的实时位置！若要退出，请再点击一次！");
+        }
+    }
 }

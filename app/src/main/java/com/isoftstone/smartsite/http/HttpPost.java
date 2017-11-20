@@ -587,7 +587,7 @@ public class HttpPost {
     /*
     获取巡查任务列表
      */
-    public PatrolTaskBeanPage getPatrolTaskList(int userId, String taskName, String address, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
+    public PatrolTaskBeanPage getPatrolTaskList(Long userId, String taskName, String address, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
         return PatrolTaskOperation.getPatrolTaskList(GET_PATROLTASK_LIST, mClient, userId, taskName, address, taskTimeStart, taskTimeEnd, pageableBean);
     }
 

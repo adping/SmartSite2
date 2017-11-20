@@ -30,7 +30,7 @@ public class PatrolTaskOperation {
 
     private static String TAG = "PatrolTaskOperation";
 
-    public static  PatrolTaskBeanPage getPatrolTaskList(String strurl, OkHttpClient mClient, int userId, String taskName,String address,String taskTimeStart,String taskTimeEnd,PageableBean pageableBean){
+    public static  PatrolTaskBeanPage getPatrolTaskList(String strurl, OkHttpClient mClient, long userId, String taskName,String address,String taskTimeStart,String taskTimeEnd,PageableBean pageableBean){
         PatrolTaskBeanPage patrolTaskBeanPage = null;
         String funName = "getPatrolTaskList";
         try {
