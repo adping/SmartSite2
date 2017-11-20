@@ -48,15 +48,6 @@ public class NewKeepAliveService extends KeepAliveService implements OnLoginList
     public void keepAliveFailure(String error) {
         HttpPost.mVideoIsLogin = false;
         Log.e("eee"," keepAlive Failure " + error);
-        /*if (mActivity instanceof  LoginActivity){
-            ((LoginActivity)mActivity).logginVideo();
-        }*/
-        /*
-        Toast.makeText(this, "保活失败，请重新登录...",Toast.LENGTH_SHORT).show();
-        Intent toLogin = new Intent(this, LoginActivity.class);
-        toLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(toLogin);
-        */
         LoginParam params = new LoginParam();
         LoginBean loginBean = mHttpPost.mLoginBean;
         if(loginBean != null){

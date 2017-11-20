@@ -15,6 +15,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
+import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	}
 
 	private void enterOtherView() {
-		Intent intent = new Intent(mContext, ManualPhotographyActivity.class);
+		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}

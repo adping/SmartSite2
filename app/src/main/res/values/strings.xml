@@ -83,7 +83,7 @@
     <string name="pm_exceeded_location">%1$s设备检测到PM超标！！地址：%2$s</string>
     <string name="location">地址：%1$s</string>
     <string name="inspect_report_title">巡查报告</string>
-    <string name="check_report_title">验收报告</string>
+    <string name="check_report_title">报告验收</string>
     <string name="view">查看</string>
     <string name="reply">回复</string>
     <string name="revisit">回访</string>
@@ -154,7 +154,7 @@
     <string name="inspect_report_recheck_next_recheck_time">下次回访时间</string>
     <string name="inspect_report_recheck_report_people">报告人员</string>
     <string name="inspect_report_recheck_report_time">报告时间</string>
-    <!--验收报告验收页-->
+    <!--报告验收 验收页-->
     <string name="check_report_submit_title">报告验收</string>
     <string name="check_report_address">巡查地点</string>
     <string name="check_report_time">回访时间</string>

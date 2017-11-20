@@ -653,18 +653,6 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
             Log.d(TAG, "===== surfaceDestroyed =====");
-            //停止收流线程
-            if (mRecvStreamThread != null) {
-                mRecvStreamThread.interrupt();
-                mRecvStreamThread = null;
-            }
-
-            if(mPlayer != null && mPlayer.AVIsPlaying()) {
-                //停止播放解码
-                mPlayer.AVStopPlay();
-                mPlayer.AVFinalize();
-                mPlayer = null;
-            }
         }
     }
 

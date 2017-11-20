@@ -352,6 +352,7 @@ public class ReportOperation {
         FormBody body = new FormBody.Builder()
                 .add("lang", lang)
                 .add("category","patrol.category")
+
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)

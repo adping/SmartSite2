@@ -46,8 +46,8 @@ public class LoginBean {
         switch (mErrorCode){
             case 1: mErrorInfo = "验证码超时";break;
             case 2: mErrorInfo = "验证码不正确";break;
-            case 3: mErrorInfo = "用户不存在";break;
-            case 4: mErrorInfo = "密码错误";break;
+            case 3: mErrorInfo = "用户名或密码错误";break;
+            case 4: mErrorInfo = "用户名或密码错误";break;
             case 5: mErrorInfo = "用户已锁定";break;
             case 6: mErrorInfo = "密码过期";break;
             case 7: mErrorInfo = "未知错误";break;

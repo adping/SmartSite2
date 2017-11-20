@@ -80,7 +80,7 @@ public class HttpPost {
     private String ADD_REPORT = URL + "/report";            //新增巡查报告回复 回访  验收
     private String IMAGE_UPLOAD = URL + "/report/attach/mobile";  //图片上传
     private String DICTIONARY_LIST = URL + "/dictionary/list";   //获取报告类型
-    private String GET_PATROL_ADDRESS = URL + "/mcFlow/getDayFlow";//获取巡查报告地点
+    private String GET_PATROL_ADDRESS  = URL+"/patrol/addresses";//获取巡查报告地点
 
 
     private String GET_CAR_DAY_FLOW = URL + "/mcFlow/getDayFlow";     //路段渣土车的日流量查询
@@ -320,8 +320,8 @@ public class HttpPost {
     }
 
 
-    //下载报告图片，需要传入id和服务器获取的到路径,返回值是下载的id
-    public long downloadReportFile(int id,String filename){
+    //下载报告图片，需要传入id和服务器获取的到路径
+    public long downloadReportFile(int id, String filename) {
 
         String url = getFileUrl(filename);
         String name = getFileName(filename);
@@ -331,8 +331,9 @@ public class HttpPost {
         if (!file.exists()) {
             file.mkdirs();
         }
-        if (file.exists())Log.i("Test","url  "+url+"  storagePath  "+storagePath+" name "+name+"   "+getReportPath(id,filename));
-        return ReportOperation.downloadfile(url,storagePath,name);
+        if (file.exists())
+            Log.i("Test", "url  " + url + "  storagePath  " + storagePath + " name " + name + "   " + getReportPath(id, filename));
+        return ReportOperation.downloadfile(url, storagePath, name);
     }
 
     /*
@@ -410,7 +411,6 @@ public class HttpPost {
 
         String sdpath = Environment.getExternalStorageDirectory().getPath();
         String storagePath = sdpath + "/isoftstone/" + mLoginBean.getmName() + "/report/" + id + "/" + getFileName(imageName);
-        ;
         return storagePath;
     }
 
@@ -444,10 +444,13 @@ public class HttpPost {
         return UserLogin.getSystemConifg(GET_SYSTEM_CONFIG, mClient);
     }
 
+    /*
+    获取公司列表
+     */
     public  ArrayList<CompanyBean> getCompanyList(String lang){
         return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
-    }
-
+	}
+	
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
     }

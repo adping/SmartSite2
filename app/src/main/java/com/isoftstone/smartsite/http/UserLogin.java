@@ -267,7 +267,6 @@ public class UserLogin {
         return installBean;
     }
 
-
     public static ArrayList<CompanyBean> getCompanyList(String strurl, OkHttpClient mClient, String lang){
         String funName = "getCompanyList";
         ArrayList<CompanyBean> list = null;
@@ -296,7 +295,7 @@ public class UserLogin {
         }
         return list;
     }
-
+	
     public  static  void feedback(String strurl, OkHttpClient mClient,long userId,String content){
         String funName = "feedback";
         try {

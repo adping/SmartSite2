@@ -70,23 +70,25 @@ public class VcrActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
             ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", "2");
-            if (isDebug) {
-                insertDebugData(msgs);
-            }
-            Collections.sort(msgs, new Comparator<MessageBean>() {
-                @Override
-                public int compare(MessageBean o1, MessageBean o2) {
-                    try {
-                        Date date1 = MsgData.format5.parse(o1.getUpdateTime());
-                        Date date2 = MsgData.format5.parse(o2.getUpdateTime());
-                        return date2.compareTo(date1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
+            if(msgs != null){
+                if (isDebug) {
+                    insertDebugData(msgs);
                 }
-            });
-            MsgUtils.toMsgData(mDatas, msgs);
+                Collections.sort(msgs, new Comparator<MessageBean>() {
+                    @Override
+                    public int compare(MessageBean o1, MessageBean o2) {
+                        try {
+                            Date date1 = MsgData.format5.parse(o1.getUpdateTime());
+                            Date date2 = MsgData.format5.parse(o2.getUpdateTime());
+                            return date2.compareTo(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
+                    }
+                });
+                MsgUtils.toMsgData(mDatas, msgs);
+            }
             return null;
         }
 
