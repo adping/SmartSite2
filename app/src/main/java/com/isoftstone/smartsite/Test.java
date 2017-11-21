@@ -235,7 +235,16 @@ public class Test {
 
               //mHttpPost.feedback(1,"ceshi");
 
-              mHttpPost.findUserAll();
+              //mHttpPost.findUserAll();
+
+              //mHttpPost.getCompanyNameByid(1);
+
+              //mHttpPost.getPatrolReportData("2017-11");
+              //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
+              //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
+              //String[] id = {"1","2"};
+              //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
+              //mHttpPost.getDepartmentReport("2017-11",id);
 
           }
       }.start();

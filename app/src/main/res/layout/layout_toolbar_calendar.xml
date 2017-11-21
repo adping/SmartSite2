@@ -31,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="标题"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
             <ImageView
@@ -40,7 +39,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@+id/toolbar_title"
                 android:layout_centerVertical="true"
-                android:src="@drawable/bigarrow"/>
+                android:src="@drawable/zhankai"/>
 
             <ImageButton
                 android:id="@+id/btn_icon"

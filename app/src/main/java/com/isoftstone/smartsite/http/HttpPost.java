@@ -19,6 +19,11 @@ import com.isoftstone.smartsite.http.muckcar.MuckCarOperation;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentsMonthTasks;
+import com.isoftstone.smartsite.http.patrolinfo.PatrolInfoOperation;
+import com.isoftstone.smartsite.http.patrolinfo.ReportDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.UserTaskCountBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
@@ -112,6 +117,13 @@ public class HttpPost {
     private String GET_LOCALUSER_ALL = URL + "/localUser/findUserAll";  //获取巡查人员列表
     private String QUERYPENDING_PLAN = URL + "/message/queryPendingPlan"; //查询待处理消息数量
     private String FEEDBACK = URL + "/feedback";//用户反馈
+
+
+    private String GET_PATROL_REPORT_DATA = URL + "/patrolReport/getPatrolReportData";//单位月度任务排名
+    private String GET_DEPARTMENT_USER_TASK_DATA = URL + "/patrolReport/getDepartmentUserTaskData";//单位月度任务排名
+    private String GET_DEPARTMENT_MONTH_DAT = URL + "/patrolReport/getDepartmentMonthData";//单位月度任务排名
+    private String GET_DEPARTMENTS_MONTH_TASKS = URL + "/patrolReport/getDepartmentsMonthTasks";//单位月度任务排名
+    private String GET_DEPARTMENT_REPORT = URL + "/patrolReport/getDepartmentReport";//单位月度任务排名
     public static boolean mVideoIsLogin = false;
 
 
@@ -460,6 +472,9 @@ public class HttpPost {
         return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
 	}
 
+	/*
+	通过公司id获取公司名称   对应用户为部门id
+	 */
 	public  String  getCompanyNameByid(int id){
         String companyName = null;
         ArrayList<CompanyBean>  list = UserLogin.getCompanyList(DICTIONARY_LIST,mClient,"zh");
@@ -671,4 +686,40 @@ public class HttpPost {
     public ArrayList<BaseUserBean> findUserAll(){
         return  PatrolTaskOperation.findUserAll(GET_LOCALUSER_ALL,mClient);
     }
+
+
+    /*
+    单位月度任务排名   时间字段不可以空  格式为：yyyy-mm
+     */
+    public  ArrayList<ReportDataBean> getPatrolReportData(String time) {
+         return PatrolInfoOperation.getPatrolReportData(GET_PATROL_REPORT_DATA,mClient,time);
+    }
+
+    /*
+    单位人员月度任务量排名  连个字段都不可以空  时间格式为：yyyy-mm
+     */
+    public  ArrayList<UserTaskCountBean> getDepartmentUserTaskData(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentUserTaskData(GET_DEPARTMENT_USER_TASK_DATA,mClient,time,departmentId);
+    }
+
+    /*
+    单位月度任务曲线
+     */
+    public  DepartmentMonthDataBean getDepartmentMonthDat(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentMonthDat(GET_DEPARTMENT_MONTH_DAT,mClient,time,departmentId);
+    }
+
+    /*
+   单位月度总任务量对比
+     */
+    public  DepartmentsMonthTasks getDepartmentsMonthTasks(String time, String[] departmentIds){
+        return PatrolInfoOperation.getDepartmentsMonthTasks(GET_DEPARTMENTS_MONTH_TASKS,mClient,time,departmentIds);
+    }
+    /*
+    单位月度回访报告量对比
+     */
+    public  DepartmentsMonthTasks getDepartmentReport(String time,String[] departmentIds) {
+        return PatrolInfoOperation.getDepartmentReport(GET_DEPARTMENT_REPORT,mClient,time,departmentIds);
+    }
+
 }

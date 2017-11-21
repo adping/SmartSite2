@@ -68,7 +68,7 @@ public class PatrolPlanActivity extends BaseActivity{
                 }
                     break;
                 case HANDLER_GET_WEEK_END:{
-
+                    loadingData();
                     closeDlg();
                 }
                     break;
@@ -112,15 +112,15 @@ public class PatrolPlanActivity extends BaseActivity{
                     case  MotionEvent.ACTION_DOWN:{
                           float X = event.getX();
                           if(X > touchX){
-                              //上一周
-                              today = Sunday.minusDays(1);
+                              //下一周
+                              today = Saturday.plusDays(2);
                               loadingDate(today);
                               mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
                           }
 
                           if(X < touchX){
-                              //下一周
-                              today = Saturday.plusDays(2);
+                              //上一周
+                              today = Sunday.minusDays(1);
                               loadingDate(today);
                               mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
                           }
@@ -156,6 +156,9 @@ public class PatrolPlanActivity extends BaseActivity{
         });
     }
 
+    /*
+    加载时间
+     */
     private void loadingDate(LocalDate date){
         //获取时间
         int dayOfWeek = date.getDayOfWeek(); //获取今天是周几
@@ -173,5 +176,16 @@ public class PatrolPlanActivity extends BaseActivity{
         day_4.setText(Thursday.getDayOfMonth()+"");
         day_5.setText(Friday.getDayOfMonth()+"");
         day_6.setText(Saturday.getDayOfMonth()+"");
+        mTitleTextView.setText(Sunday.toString());
+    }
+
+    /*
+    加载数据
+     */
+    private void loadingData(){
+        //设置计划状态
+        days.setBackgroundResource(R.drawable.shenpitongguo_bg);
+        //
+
     }
 }
