@@ -73,6 +73,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private final int UPDATE_USER_GUIJI = 0x0003;
     private final int NO_GUI_JI = 0x0004;
     private final int FINISH_TASK_POSITION = 0x0005;
+    private final int FINISH_TASK = 0x0006;
 
     private MapView mapView;
     private AMap aMap;
@@ -132,6 +133,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 case FINISH_TASK_POSITION:
                     getData();
                     break;
+                case FINISH_TASK:
+                    ToastUtils.showShort("恭喜，任务已完成！");
+                    break;
             }
         }
     };
@@ -151,6 +155,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     protected void afterCreated(Bundle savedInstanceState) {
         initToolBar();
         iv_status = (ImageView) findViewById(R.id.iv_status);
+        iv_status.setOnClickListener(this);
         httpPost = new HttpPost();
         touXiangMarkers = new ArrayList<>();
         doneMarkers = new ArrayList<>();
@@ -254,7 +259,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     }
 
     private void updateTaskPoints(){
-        if(patrolPositionBeans == null) return;
+
 
         for (int i = 0; i < doneMarkers.size(); i++) {
             doneMarkers.get(i).remove();
@@ -502,6 +507,22 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             case R.id.iv_dismiss:
                 mPopWindow.dismiss();
                 break;
+            //检查任务是否完成
+            case R.id.iv_status:
+                for (int i = 0; i < patrolPositionBeans.size(); i++) {
+                    if(patrolPositionBeans.get(i).getStatus() == 0){
+                        ToastUtils.showShort("还有巡查点任务未完成，请先完成再执行此操作！");
+                        return;
+                    }
+                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        httpPost.executeTask(patrolTaskBean.getTaskId(),patrolTaskBean.getTaskName());
+                        mHandler.sendEmptyMessage(FINISH_TASK);
+                    }
+                }).start();
+                break;
         }
     }
 
@@ -509,6 +530,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     public boolean onMarkerClick(Marker marker) {
         if(marker.getObject() != null){
             PatrolPositionBean bean = (PatrolPositionBean) marker.getObject();
+            currentPatorPositionBean = bean;
             tv_task_name.setText(bean.getPosition());
             if(bean.getStatus() == 0){
                 iv_start_task.setVisibility(View.VISIBLE);
@@ -548,8 +570,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         markerOption1.draggable(false);//设置Marker可拖动
         View centerView = LayoutInflater.from(this).inflate(R.layout.layout_map_task_backround,null);
         CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
-        civ.setVisibility(View.VISIBLE);
+
         if(bitmap != null){
+            civ.setVisibility(View.VISIBLE);
             civ.setImageBitmap(bitmap);
         }
 
@@ -586,7 +609,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         LatLng userLatlng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
         float distance = AMapUtils.calculateLineDistance(positionLatlng,userLatlng);
         if(distance > 100){
-            ToastUtils.showShort("您距离任务点的距离为" +distance + ",请在100米以内执行此操作！");
+            ToastUtils.showShort("您距离任务点的距离为" +(int)distance + "米,请在100米以内执行此操作！");
             return;
         } else {
             new Thread(new Runnable() {

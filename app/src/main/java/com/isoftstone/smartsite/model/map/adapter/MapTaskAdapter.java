@@ -8,6 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.patroltask.PatrolPositionBean;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
+
+import java.util.List;
 
 /**
  * Created by zw on 2017/11/19.
@@ -16,15 +20,22 @@ import com.isoftstone.smartsite.R;
 public class MapTaskAdapter extends BaseAdapter{
 
     private Context mContext;
+    private List<PatrolTaskBean> beans;
 
 
-    public MapTaskAdapter(Context context){
+    public MapTaskAdapter(Context context, List<PatrolTaskBean> data){
         this.mContext = context;
+        this.beans = data;
+    }
+
+    public void setDatas(List<PatrolTaskBean> data){
+        this.beans = data;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return beans == null ? 0 : beans.size();
     }
 
     @Override
@@ -43,7 +54,7 @@ public class MapTaskAdapter extends BaseAdapter{
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_task_item,parent,false);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.tv_task_name);
-        tv.setText("这是测试任务 : " + position);
+        tv.setText(beans.get(position).getTaskName());
 
         return convertView;
     }

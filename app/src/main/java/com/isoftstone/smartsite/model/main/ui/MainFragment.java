@@ -23,6 +23,7 @@ import com.isoftstone.smartsite.http.WeatherLiveBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
+import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity;
 import com.isoftstone.smartsite.model.map.ui.MapTrackHistoryActivity;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
@@ -319,7 +320,7 @@ public class MainFragment extends BaseFragment{
 
     private void enterConstructionMonitor(){
         //进入施工监控
-        Intent intent = new Intent(getActivity(),ConstructionMontitoringMapActivity.class);
+        Intent intent = new Intent(getActivity(),MapSearchTaskPositionActivity.class);
         getActivity().startActivity(intent);
     }
 

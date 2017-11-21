@@ -52,7 +52,7 @@ public class ConstructionMonitorListActivity extends BaseActivity implements Vie
 
     private void initListView(){
         lv = (ListView) findViewById(R.id.lv);
-        ConstructionMonitorListAdapter listAdapter = new ConstructionMonitorListAdapter(this);
+        ConstructionMonitorListAdapter listAdapter = new ConstructionMonitorListAdapter(this,userTrackBeans);
         lv.setAdapter(listAdapter);
     }
 

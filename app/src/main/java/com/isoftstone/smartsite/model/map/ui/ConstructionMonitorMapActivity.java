@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.map.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,9 +29,15 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.android.tu.loadingdialog.LoadingDailog;
+import com.bumptech.glide.BitmapTypeRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.patroltask.PatrolPositionBean;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.model.map.adapter.MapTaskAdapter;
 import com.isoftstone.smartsite.utils.DensityUtils;
@@ -77,17 +84,18 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
                 case INIT_VIEW:
                     loadingDailog.dismiss();
                     hasData = true;
-//                    initMarkers();
-//                    initPopWindow();
-                    LogUtils.e("TAG",".. " + userTrackBeans.size());
-                    for (int i=0;i<userTrackBeans.size();i++){
-                        LogUtils.e(TAG,userTrackBeans.get(i).toString());
-                    }
+                    initMarkers();
                     break;
             }
         }
     };
     private LoadingDailog loadingDailog;
+    private ListView lv;
+    private MapTaskAdapter taskAdapter;
+    private TextView tv_no_task;
+    private List<PatrolPositionBean> currentPatrolPositionBeans;
+
+    private List<PatrolTaskBean> patrolTaskBeans = new ArrayList<>();
 
     @Override
     protected int getLayoutRes() {
@@ -101,6 +109,8 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
         initLoadingDialog();
+        initPopWindow();
+
         getData();
 
     }
@@ -143,9 +153,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserTrackBean bean = new UserTrackBean();
-                bean.setId(64);
-                userTrackBeans = httpPost.findByUserIdAndTaskId(bean);
+                userTrackBeans = httpPost.getUserTrack();
                 if(userTrackBeans == null || userTrackBeans.size() == 0){
                     mHandler.sendEmptyMessage(NO_DATA);
                 }else {
@@ -156,41 +164,60 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
     }
 
     private void initMarkers(){
-        MarkerOptions markerOption = new MarkerOptions();
-        markerOption.position(aotiLatLon);
-        markerOption.visible(true);
+        for (int i = 0; i < userTrackBeans.size(); i++) {
+            final UserTrackBean bean = userTrackBeans.get(i);
 
-        markerOption.draggable(false);//设置Marker可拖动
+            final MarkerOptions markerOption = new MarkerOptions();
+            markerOption.position(new LatLng(bean.getLatitude(),bean.getLongitude()));
+            markerOption.visible(true);
 
-        View centerView = LayoutInflater.from(this).inflate(R.layout.layout_map_corner_marker,null);
-        CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
-        civ.setImageResource(R.drawable.test);
-        markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+            markerOption.draggable(false);//设置Marker可拖动
 
-        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-        markerOption.setFlat(true);//设置marker平贴地图效果
+            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+            markerOption.setFlat(true);//设置marker平贴地图效果
 
+            String url = HttpPost.URL + "/" + bean.getUser().imageData;
 
-        Marker marker = aMap.addMarker(markerOption);
-        marker.setAnchor(0.5f,0.5f);
-//        marker.setObject(device);
+            BitmapTypeRequest<String> bitmapTypeRequest = Glide.with(getApplicationContext()).load(url)
+                    .asBitmap();
+
+            SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    View centerView = LayoutInflater.from(ConstructionMonitorMapActivity.this).inflate(R.layout.layout_map_corner_marker,null);
+                    CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
+                    civ.setImageBitmap(resource);
+                    markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+                    Marker marker = aMap.addMarker(markerOption);
+                    marker.setAnchor(0.5f,0.5f);
+                    marker.setObject(bean);
+                }
+            };
+
+            bitmapTypeRequest.into(simpleTarget);
+        }
     }
 
     private void initPopWindow(){
         View popRootView = LayoutInflater.from(this).inflate(R.layout.layout_map_task,null);
+        tv_no_task = (TextView) popRootView.findViewById(R.id.tv_no_task);
         popRootView.findViewById(R.id.iv_dismiss).setOnClickListener(this);
         tv_person = (TextView) popRootView.findViewById(R.id.tv_person);
         iv_status = (ImageView) popRootView.findViewById(R.id.iv_status);
         tv_company = (TextView) popRootView.findViewById(R.id.tv_company);
-        ListView lv = (ListView) popRootView.findViewById(R.id.lv);
+        lv = (ListView) popRootView.findViewById(R.id.lv);
         lv.setDivider(new ColorDrawable(Color.parseColor("#eeeeee")));
         lv.setDividerHeight(2);
-        MapTaskAdapter taskAdapter = new MapTaskAdapter(this);
+        taskAdapter = new MapTaskAdapter(this,null);
         lv.setAdapter(taskAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(ConstructionMonitorMapActivity.this,MapTaskDetailActivity.class));
+                UserTrackBean bean = userTrackBeans.get(position);
+                Intent intent = new Intent(ConstructionMonitorMapActivity.this,MapTaskDetailActivity.class);
+                intent.putExtra("data",bean);
+                startActivity(intent);
+                mPopWindow.dismiss();
             }
         });
 
@@ -255,7 +282,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         mapView.onSaveInstanceState(outState);
     }
 
-    private boolean isFirstIn = true;
+    /*private boolean isFirstIn = true;
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -263,13 +290,12 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
             showPopWindow();
             isFirstIn = false;
         }
-    }
+    }*/
 
     private void showPopWindow(){
         if(mPopWindow != null){
             mPopWindow.showAtLocation(mapView, Gravity.BOTTOM,0, DensityUtils.dip2px(this,-8));
         }
-
     }
 
     @Override
@@ -296,8 +322,28 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        initLocation(aotiLatLon);
-        addAndRemoveRoundMarker(aotiLatLon);
+        if(marker.getObject() != null){
+            UserTrackBean bean = (UserTrackBean) marker.getObject();
+            PatrolTaskBean taskBean = bean.getPatrolTask();
+            tv_person.setText(bean.getUser().name);
+            tv_company.setText(bean.getUser().address);
+            currentPatrolPositionBeans = bean.getPatrolTask().getPatrolPositions();
+            if(taskBean == null ){
+                lv.setVisibility(View.INVISIBLE);
+                tv_no_task.setVisibility(View.VISIBLE);
+            } else {
+                lv.setVisibility(View.VISIBLE);
+                tv_no_task.setVisibility(View.GONE);
+                patrolTaskBeans.clear();
+                patrolTaskBeans.add(taskBean);
+                taskAdapter.setDatas(patrolTaskBeans);
+            }
+
+            LatLng latLng = new LatLng(bean.getLatitude(),bean.getLongitude());
+            initLocation(latLng);
+            addAndRemoveRoundMarker(latLng);
+            showPopWindow();
+        }
 
         return true;
     }
