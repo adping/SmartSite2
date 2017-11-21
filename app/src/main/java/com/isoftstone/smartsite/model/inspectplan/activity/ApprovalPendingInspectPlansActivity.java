@@ -29,7 +29,7 @@ import java.util.Date;
  */
 
 public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener{
-    private static final String TAG = "ApprovalPendingInspectPlans";
+    private static final String TAG = "zzz_InspectPlans";
     private ListView mListView = null;
     private ArrayList<InspectPlanBean> mListData = new ArrayList<InspectPlanBean>();
     private HttpPost mHttpPost;
@@ -61,14 +61,14 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                                         inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
                                         inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
                                         inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
-                                        inspectPlanBean.setUserCompany(arrayList.get(i).getCreator().getDepartmentId());
+                                        inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
                                         inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());
                                         //inspectPlanBean.setAddress(arrayList.get(i));
                                         mListData.add(inspectPlanBean);
                                     }
                                 }
                             } catch (Exception e) {
-                                Log.e("TAG","e : " + e.getMessage());
+                                Log.e(TAG,"e : " + e.getMessage());
                             }
 
                             /**for (int i = 0; i < 3; i++) {
