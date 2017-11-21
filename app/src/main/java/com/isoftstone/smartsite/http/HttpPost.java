@@ -459,6 +459,20 @@ public class HttpPost {
     public  ArrayList<CompanyBean> getCompanyList(String lang){
         return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
 	}
+
+	public  String  getCompanyNameByid(int id){
+        String companyName = null;
+        ArrayList<CompanyBean>  list = UserLogin.getCompanyList(DICTIONARY_LIST,mClient,"zh");
+        if(list != null){
+            for (int i = 0 ; i < list.size() ; i ++){
+                CompanyBean companyBean = list.get(i);
+                if(companyBean.getValue().equals(id+"")){
+                    companyName = companyBean.getContent();
+                }
+            }
+        }
+        return  companyName;
+    }
 	
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
