@@ -43,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/user_name"
+                    android:layout_gravity="left"
                     android:textColor="@color/main_text_color"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -51,6 +52,7 @@
                     android:id="@+id/lab_task_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="left"
                     android:textColor="@color/main_text_color"
                     android:text="2017-11-18"
                     android:textSize="12sp"/>
