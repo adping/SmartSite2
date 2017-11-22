@@ -54,17 +54,6 @@ public class MapTestFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final HttpPost mHttpPost = new HttpPost();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<DevicesBean> list = mHttpPost.getDevices("","","","");
-                LogUtils.d(TAG,list);
-            }
-        }).start();
-
-
 
 
 
@@ -72,7 +61,6 @@ public class MapTestFragment extends BaseFragment {
     }
 
     private void initView(Bundle savedInstanceState) {
-
 
 
     }

@@ -1,10 +1,15 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -16,23 +21,27 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by zw on 2017/11/21.
  */
 
 public class MapSearchTaskPositionActivity extends BaseActivity implements View.OnClickListener, AMap.OnMarkerClickListener, AMap.OnMapClickListener {
+
+    public static final int RESULT_SAVE = 0x0001;
 
     private MapView mapView;
     private AMap aMap;
@@ -43,6 +52,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
     private List<String> latLngsName = new ArrayList<>();
     private List<Marker> markers = new ArrayList<>();
     private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
+    private Marker deleteMarker;
 
     @Override
     protected int getLayoutRes() {
@@ -53,9 +63,23 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
     protected void afterCreated(Bundle savedInstanceState) {
         initToolBar();
         et = (EditText) findViewById(R.id.et);
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    et.setCursorVisible(false);
+                    savePosition();
+                }
+                return false;
+            }
+        });
+        et.setOnClickListener(this);
+
+
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
     }
+
 
     private void initToolBar(){
         findViewById(R.id.btn_back).setOnClickListener(this);
@@ -115,12 +139,16 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
                 onBackPressed();
                 break;
             case R.id.btn_icon_right:
-                savePosition();
+                saveAllPosition();
+                break;
+            case R.id.et:
+                et.setCursorVisible(true);
                 break;
         }
     }
 
     private void savePosition(){
+
         if(currentMarker == null){
             ToastUtils.showShort("没有获取到坐标！");
             return;
@@ -157,14 +185,49 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
     }
 
+    private void saveAllPosition(){
+        Gson gson = new Gson();
+        String latLngsJson = gson.toJson(latLngs);
+        String latLngsNameJson = gson.toJson(latLngsName);
+//        ArrayList<LatLng> list = gson.fromJson(latLngsJson,new TypeToken<ArrayList<LatLng>>(){}.getType());
+        Intent intent = new Intent();
+        intent.putExtra("latLngsJson",latLngsJson);
+        intent.putExtra("latLngsNameJson",latLngsNameJson);
+        LogUtils.e(TAG,latLngsNameJson);
+        setResult(RESULT_SAVE,intent);
+        this.finish();
+    }
+
+    private int clickPosition = 0;
     @Override
     public boolean onMarkerClick(Marker marker) {
+        if(marker.equals(deleteMarker)){
+            deleteMarker.remove();
+            Marker marker1 = markers.get(clickPosition);
+            markers.remove(clickPosition);
+            latLngs.remove(clickPosition);
+            latLngsName.remove(clickPosition);
+            marker1.remove();
+            deleteMarker = null;
+        } else if(markers.indexOf(marker) != -1){
+            clickPosition = markers.indexOf(marker);
+            LatLng latLng = (LatLng) marker.getObject();
+            marker.setVisible(false);
+            addDeleteMarker(latLng);
+        }
+
         return true;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
         currentLatLng = latLng;
+        if(deleteMarker != null){
+            deleteMarker.remove();
+        }
+        if(markers.size() != 0 && markers.get(clickPosition) != null && !markers.get(clickPosition).isVisible()){
+            markers.get(clickPosition).setVisible(true);
+        }
         addMarker(latLng);
     }
 
@@ -189,6 +252,26 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
         currentMarker = aMap.addMarker(markerOption);
         currentMarker.setAnchor(0.5f,0.5f);
-        LogUtils.e(TAG,"...");
+        currentMarker.setObject(latLng);
+    }
+
+
+    private void addDeleteMarker(LatLng latLng){
+        MarkerOptions markerOption = new MarkerOptions();
+
+        markerOption.position(latLng);
+
+        markerOption.visible(true);
+
+        markerOption.draggable(false);//设置Marker可拖动
+
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_map_search_marker_delete,null);
+        markerOption.icon(BitmapDescriptorFactory.fromView(contentView));
+
+        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+        markerOption.setFlat(true);//设置marker平贴地图效果
+
+        deleteMarker = aMap.addMarker(markerOption);
+        deleteMarker.setAnchor(0.5f,0.5f);
     }
 }

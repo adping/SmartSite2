@@ -146,6 +146,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private Marker currentClickMarker;
     private Marker roundMarker;
 
+    private int taskId;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_map_construction_monitoring;
@@ -153,6 +155,10 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        taskId = getIntent().getIntExtra("taskId",taskId);
+        if(taskId == 0){
+            ToastUtils.showLong("没有获取到任务信息！");
+        }
         initToolBar();
         iv_status = (ImageView) findViewById(R.id.iv_status);
         iv_status.setOnClickListener(this);
