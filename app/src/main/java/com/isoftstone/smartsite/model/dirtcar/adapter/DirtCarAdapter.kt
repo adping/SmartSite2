@@ -46,6 +46,7 @@ open class DirtCarAdapter(context: Context, datas: ArrayList<BayonetGrabInfoBean
         relativeAddress.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 ToastUtils.showShort("历史轨迹1")
+                //跳转到MapTrackHistoryActivity，参数传licence就行了,intent.putExtra("licence",licence);
             }
         })
 

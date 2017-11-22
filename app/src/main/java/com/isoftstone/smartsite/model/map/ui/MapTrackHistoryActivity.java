@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +90,8 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private float zoom = 14f;
     private LoadingDailog loadingDailog;
 
+    private String licence;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_map_track_history;
@@ -96,6 +99,10 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        licence = getIntent().getStringExtra("licence");
+        if(TextUtils.isEmpty(licence)){
+            ToastUtils.showLong("没有获取到渣土车信息！");
+        }
         httpPost = new HttpPost();
         getNowDate();
         initToolBar();
@@ -186,7 +193,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mapMarkersVoBeans = httpPost.getMapMarkers("鄂AV785B",currentDate);
+                mapMarkersVoBeans = httpPost.getMapMarkers(licence,currentDate);
                 if(mapMarkersVoBeans == null || mapMarkersVoBeans.size() == 0){
                     mHandler.sendEmptyMessage(NO_DATA);
                 }else{
