@@ -22,7 +22,7 @@ public class Utils {
                 return null;
             }
         } catch (Exception e) {
-            return null;
+            return "";
         }
         return versionName;
     }

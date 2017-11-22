@@ -84,4 +84,18 @@ public class PatrolPlanBean {
     public void setDate(String date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "PatrolPlanBean{" +
+                "id=" + id +
+                ", status=" + status +
+                ", title='" + title + '\'' +
+                ", creator=" + creator +
+                ", weekOfYear=" + weekOfYear +
+                ", start='" + start + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }

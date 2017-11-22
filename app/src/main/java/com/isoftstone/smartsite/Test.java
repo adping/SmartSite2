@@ -5,7 +5,10 @@ import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
+import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.http.user.SimpleUserBean;
+
+import java.util.ArrayList;
 
 /**
  * Created by gone on 2017/11/18.
@@ -190,10 +193,10 @@ public class Test {
               mHttpPost.addPhoto(evidencePhotoBean);*/
 
 
-              /*
-              ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();
-              mHttpPost.findByUserIdAndTaskId(list.get(0));
-              */
+
+              //ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();
+              //mHttpPost.findByUserIdAndTaskId(list.get(0));
+
 
               /*
               PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
@@ -231,6 +234,17 @@ public class Test {
               //mHttpPost.queryPendingPlan();
 
               //mHttpPost.feedback(1,"ceshi");
+
+              //mHttpPost.findUserAll();
+
+              //mHttpPost.getCompanyNameByid(1);
+
+              //mHttpPost.getPatrolReportData("2017-11");
+              //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
+              //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
+              //String[] id = {"1","2"};
+              //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
+              //mHttpPost.getDepartmentReport("2017-11",id);
 
           }
       }.start();

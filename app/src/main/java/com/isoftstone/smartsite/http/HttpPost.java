@@ -19,6 +19,11 @@ import com.isoftstone.smartsite.http.muckcar.MuckCarOperation;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentsMonthTasks;
+import com.isoftstone.smartsite.http.patrolinfo.PatrolInfoOperation;
+import com.isoftstone.smartsite.http.patrolinfo.ReportDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.UserTaskCountBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
@@ -34,6 +39,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -80,7 +86,7 @@ public class HttpPost {
     private String ADD_REPORT = URL + "/report";            //新增巡查报告回复 回访  验收
     private String IMAGE_UPLOAD = URL + "/report/attach/mobile";  //图片上传
     private String DICTIONARY_LIST = URL + "/dictionary/list";   //获取报告类型
-    private String GET_PATROL_ADDRESS = URL + "/mcFlow/getDayFlow";//获取巡查报告地点
+    private String GET_PATROL_ADDRESS  = URL+"/patrol/addresses";//获取巡查报告地点
 
 
     private String GET_CAR_DAY_FLOW = URL + "/mcFlow/getDayFlow";     //路段渣土车的日流量查询
@@ -108,8 +114,16 @@ public class HttpPost {
     private String UPDATE_TASK_END = URL + "/patrolTask/executeTask"; //巡查任务开始
     private String UPDATE_PATROL_POSITION_STATUS = URL + "/patrolTask/updatePatrolPositionStatus"; //巡查点完成接口
     private String USER_TRACK = URL + "/userTrack";  //上报巡查点位
+    private String GET_LOCALUSER_ALL = URL + "/localUser/findUserAll";  //获取巡查人员列表
     private String QUERYPENDING_PLAN = URL + "/message/queryPendingPlan"; //查询待处理消息数量
     private String FEEDBACK = URL + "/feedback";//用户反馈
+
+
+    private String GET_PATROL_REPORT_DATA = URL + "/patrolReport/getPatrolReportData";//单位月度任务排名
+    private String GET_DEPARTMENT_USER_TASK_DATA = URL + "/patrolReport/getDepartmentUserTaskData";//单位月度任务排名
+    private String GET_DEPARTMENT_MONTH_DAT = URL + "/patrolReport/getDepartmentMonthData";//单位月度任务排名
+    private String GET_DEPARTMENTS_MONTH_TASKS = URL + "/patrolReport/getDepartmentsMonthTasks";//单位月度任务排名
+    private String GET_DEPARTMENT_REPORT = URL + "/patrolReport/getDepartmentReport";//单位月度任务排名
     public static boolean mVideoIsLogin = false;
 
 
@@ -320,8 +334,8 @@ public class HttpPost {
     }
 
 
-    //下载报告图片，需要传入id和服务器获取的到路径,返回值是下载的id
-    public long downloadReportFile(int id,String filename){
+    //下载报告图片，需要传入id和服务器获取的到路径
+    public long downloadReportFile(int id, String filename) {
 
         String url = getFileUrl(filename);
         String name = getFileName(filename);
@@ -331,8 +345,9 @@ public class HttpPost {
         if (!file.exists()) {
             file.mkdirs();
         }
-        if (file.exists())Log.i("Test","url  "+url+"  storagePath  "+storagePath+" name "+name+"   "+getReportPath(id,filename));
-        return ReportOperation.downloadfile(url,storagePath,name);
+        if (file.exists())
+            Log.i("Test", "url  " + url + "  storagePath  " + storagePath + " name " + name + "   " + getReportPath(id, filename));
+        return ReportOperation.downloadfile(url, storagePath, name);
     }
 
     /*
@@ -352,6 +367,13 @@ public class HttpPost {
         }
         mLoginBean.setmUserBean(userBean);
         return userBean;
+    }
+
+    /*
+    获取用户信息通过用户ID
+     */
+    public BaseUserBean  getUserById(long userid){
+        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient,userid);
     }
 
     //更改用户信息
@@ -410,7 +432,6 @@ public class HttpPost {
 
         String sdpath = Environment.getExternalStorageDirectory().getPath();
         String storagePath = sdpath + "/isoftstone/" + mLoginBean.getmName() + "/report/" + id + "/" + getFileName(imageName);
-        ;
         return storagePath;
     }
 
@@ -444,10 +465,30 @@ public class HttpPost {
         return UserLogin.getSystemConifg(GET_SYSTEM_CONFIG, mClient);
     }
 
+    /*
+    获取公司列表
+     */
     public  ArrayList<CompanyBean> getCompanyList(String lang){
         return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
-    }
+	}
 
+	/*
+	通过公司id获取公司名称   对应用户为部门id
+	 */
+	public  String  getCompanyNameByid(int id){
+        String companyName = null;
+        ArrayList<CompanyBean>  list = UserLogin.getCompanyList(DICTIONARY_LIST,mClient,"zh");
+        if(list != null){
+            for (int i = 0 ; i < list.size() ; i ++){
+                CompanyBean companyBean = list.get(i);
+                if(companyBean.getValue().equals(id+"")){
+                    companyName = companyBean.getContent();
+                }
+            }
+        }
+        return  companyName;
+    }
+	
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
     }
@@ -575,7 +616,7 @@ public class HttpPost {
     /*
     获取巡查任务列表
      */
-    public PatrolTaskBeanPage getPatrolTaskList(int userId, String taskName, String address, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
+    public PatrolTaskBeanPage getPatrolTaskList(Long userId, String taskName, String address, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
         return PatrolTaskOperation.getPatrolTaskList(GET_PATROLTASK_LIST, mClient, userId, taskName, address, taskTimeStart, taskTimeEnd, pageableBean);
     }
 
@@ -638,4 +679,47 @@ public class HttpPost {
     public  void feedback(long userId, String content) {
          UserLogin.feedback(FEEDBACK,mClient,userId,content);
     }
+
+    /*
+    获取巡查人员列表
+     */
+    public ArrayList<BaseUserBean> findUserAll(){
+        return  PatrolTaskOperation.findUserAll(GET_LOCALUSER_ALL,mClient);
+    }
+
+
+    /*
+    单位月度任务排名   时间字段不可以空  格式为：yyyy-mm
+     */
+    public  ArrayList<ReportDataBean> getPatrolReportData(String time) {
+         return PatrolInfoOperation.getPatrolReportData(GET_PATROL_REPORT_DATA,mClient,time);
+    }
+
+    /*
+    单位人员月度任务量排名  连个字段都不可以空  时间格式为：yyyy-mm
+     */
+    public  ArrayList<UserTaskCountBean> getDepartmentUserTaskData(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentUserTaskData(GET_DEPARTMENT_USER_TASK_DATA,mClient,time,departmentId);
+    }
+
+    /*
+    单位月度任务曲线
+     */
+    public  DepartmentMonthDataBean getDepartmentMonthDat(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentMonthDat(GET_DEPARTMENT_MONTH_DAT,mClient,time,departmentId);
+    }
+
+    /*
+   单位月度总任务量对比
+     */
+    public  DepartmentsMonthTasks getDepartmentsMonthTasks(String time, String[] departmentIds){
+        return PatrolInfoOperation.getDepartmentsMonthTasks(GET_DEPARTMENTS_MONTH_TASKS,mClient,time,departmentIds);
+    }
+    /*
+    单位月度回访报告量对比
+     */
+    public  DepartmentsMonthTasks getDepartmentReport(String time,String[] departmentIds) {
+        return PatrolInfoOperation.getDepartmentReport(GET_DEPARTMENT_REPORT,mClient,time,departmentIds);
+    }
+
 }

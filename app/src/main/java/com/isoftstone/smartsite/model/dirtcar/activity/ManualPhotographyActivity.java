@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -21,6 +22,10 @@ import android.widget.TextView;
 import org.apache.http.Header;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
@@ -43,12 +48,13 @@ import java.util.Date;
 
 public class ManualPhotographyActivity extends BaseActivity  implements View.OnClickListener {
 
-	protected static final String TAG = "ListViewPerformaceActivity";
+	protected static final String TAG = "zzz_ManualPhotography";
 	/** Called when the activity is first created. */
 	private ListView mListView;
 	private ManualPhotographyAdapter mAdapter;
 	ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 	private Context mContext;
+	private HttpPost mHttpPost;
 	private Bitmap mHeadBitmap;//裁剪后得图片
 
 	/* 请求识别码 选择图库*/
@@ -69,11 +75,46 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 					Thread thread = new Thread(){
 						@Override
 						public void run() {
-							//mListDate =  mHttpPost.getDevices("1","","","");
-							for (int i=0; i < 3; i++) {
+							//mListDate =  mHttpPost.getDevices("1","","","");getEvidencePhotoList
+							try {
+								PageableBean pageableBean = new PageableBean();
+								ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList("鄂AV785B",pageableBean).getContent();
+								//Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList);
+								if (arrayList != null) {
+									for (int i=0; i< arrayList.size(); i++) {
+										String urlStr = arrayList.get(i).getSmallPhotoSrc();
+										StringBuffer stringBuffer = new StringBuffer();
+										if (urlStr != null) {
+											String[] urlsStr = urlStr.split(",");
+											for (int j=0; j<urlsStr.length; j++) {
+												if (j == urlsStr.length -1) {
+													stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]));
+												} else {
+													stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]) + ",");
+												}
+											}
+										}
+										Log.i("zzz","BBBBBBBB  arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+										Log.i("zzz","BBBBBBBB  stringBuffer = " + stringBuffer.toString());
+										BaseUserBean  baseUserBean = arrayList.get(i).getTakePhoroUser();
+										ManualPhotographyBean manualPhotographyBean = null;
+										if (baseUserBean != null) {
+											manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  mHttpPost.getFileUrl(arrayList.get(i).getTakePhoroUser().getImageData()), arrayList.get(i).getTakePhoroUser().getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getTakePhoroUser().getDepartmentId())));
+										} else {
+											manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  null, null, arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  null);
+										}
+										mListDate.add(manualPhotographyBean);
+									}
+
+								}
+							} catch (Exception e) {
+								Log.e(TAG,"e : " + e.getMessage());
+							}
+
+							/**for (int i=0; i < 3; i++) {
 								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "李向双" + i , "2017-11-1" + i, "光谷五路和光谷六路交汇出", photoSrc, "湖北怡瑞有限公司" + i);
 								mListDate.add(manualPhotographyBean);
-							}
+							}*/
 							mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_END);
 						}
 					};
@@ -105,6 +146,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	private void initView() {
 		mContext = getApplicationContext();
+		mHttpPost = new HttpPost();
 		mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_START);
 	}
 
@@ -231,7 +273,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				ManualPhotographyActivity.this.finish();
 				break;
 			case R.id.btn_icon:
-				new ActionSheetDialog(ManualPhotographyActivity.this)
+				/**new ActionSheetDialog(ManualPhotographyActivity.this)
 						.builder(false)
 						.setCancelable(true)
 						.setCanceledOnTouchOutside(true)
@@ -252,7 +294,9 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 									public void onClick(int which) {
 										choseHeadImageFromCameraCapture();
 									}
-								}).show();
+								}).show();*/
+
+				enterOtherActivity();
 				break;
 			default:
 				break;
@@ -328,5 +372,9 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		startActivityForResult(intent, RESULECODE);
 	}
 
-
+	private void enterOtherActivity() {
+		Intent intent = new Intent(mContext, CameraDetailsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		mContext.startActivity(intent);
+	}
 }

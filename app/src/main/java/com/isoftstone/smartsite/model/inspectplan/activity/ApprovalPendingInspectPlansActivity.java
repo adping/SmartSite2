@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.inspectplan.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -11,6 +12,10 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspectPlansAdapter;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.system.ui.OpinionFeedbackActivity;
@@ -24,9 +29,10 @@ import java.util.Date;
  */
 
 public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener{
-
+    private static final String TAG = "zzz_InspectPlans";
     private ListView mListView = null;
     private ArrayList<InspectPlanBean> mListData = new ArrayList<InspectPlanBean>();
+    private HttpPost mHttpPost;
 
     private static final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START = 1;
     private static  final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END = 2;
@@ -39,20 +45,45 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
-                            //listData =  mHttpPost.getDevices("1","","","");
-                            for (int i = 0; i < 3; i++) {
+                            //listData =  mHttpPost.getDevices("1","","","");getPlanPaging
+                            try {
+                                PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
+                                PageableBean pageableBean = new PageableBean();
+                                PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean);
+                                ArrayList<PatrolPlanBean> arrayList = patrolPlanBeanPage.getContent();
+                                Log.i("zzz","AAAAAAAAAAAAAAAAAAAAA     arrayList = " + arrayList);
+                                if (arrayList != null) {
+                                    for (int i=0; i< arrayList.size(); i++) {
+                                        Log.i("zzz","arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+                                        InspectPlanBean inspectPlanBean = new InspectPlanBean();
+                                        inspectPlanBean.setUserId(arrayList.get(i).getId());
+                                        inspectPlanBean.setTaskName(arrayList.get(i).getTitle());
+                                        inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
+                                        inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
+                                        inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
+                                        inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
+                                        inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());
+                                        //inspectPlanBean.setAddress(arrayList.get(i));
+                                        mListData.add(inspectPlanBean);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG,"e : " + e.getMessage());
+                            }
+
+                            /**for (int i = 0; i < 3; i++) {
                                 InspectPlanBean inspectPlanBean = new InspectPlanBean();
                                 inspectPlanBean.setUserId(i);
                                 inspectPlanBean.setTaskName("东湖高新巡查报告");
-                                inspectPlanBean.setTaskTimeStart(new Date());
-                                inspectPlanBean.setTaskTimeEnd(new Date());
+                                inspectPlanBean.setTaskTimeStart("2017-11-20");
+                                inspectPlanBean.setTaskTimeEnd("2017-11-20");
                                 inspectPlanBean.setUserName("李程辉" + i);
                                 inspectPlanBean.setUserCompany("湖北怡瑞有限公司" + i);
                                 inspectPlanBean.setTaskStatus(i);
                                 inspectPlanBean.setAddress("东湖高新地i点" + i);
 
                                 mListData.add(inspectPlanBean);
-                            }
+                            }*/
                             mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END);
                         }
                     };
@@ -86,6 +117,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     }
 
     private void initView() {
+        mHttpPost = new HttpPost();
         mListView = (ListView) findViewById(R.id.list_view);
         mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START);
     }

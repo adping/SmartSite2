@@ -113,4 +113,22 @@ public class MapMarkersVoBean {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public String toString() {
+        return "MapMarkersVoBean{" +
+                "licence='" + licence + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", addr='" + addr + '\'' +
+                ", speed=" + speed +
+                ", imgList='" + imgList + '\'' +
+                ", installTime='" + installTime + '\'' +
+                ", deviceCoding='" + deviceCoding + '\'' +
+                ", deviceId=" + deviceId +
+                ", deviceName='" + deviceName + '\'' +
+                ", deviceStatus=" + deviceStatus +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

@@ -1,10 +1,13 @@
 package com.isoftstone.smartsite.http.user;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/18.
  */
 
-public class BaseUserBean {
+public class BaseUserBean implements Serializable{
+    private static final long serialVersionUID = 0x0006L;
     public Long id;       //	用户ID
     public String account; //用户账号
     public String name;     //用户名称
@@ -25,8 +28,9 @@ public class BaseUserBean {
     public int delFlag;//	删除标记
     public int sex	;//	    性别（0：男，1：女）
     public String registerId;//	极光推送Id
-    //roles	Set<Role>	关联的角色
-    //archs	Set<Arch>	关联的区域
+    //public String roles;	//Set<Role>	关联的角色
+    //public String archs;	//Set<Arch>	关联的区域
+
 
 
     public Long getId() {

@@ -7,7 +7,7 @@
     android:background="@color/app_background"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toorbar_no_icon"></include>
+    <include layout="@layout/layout_toolbar_no_icon"></include>
 
     <ImageView
         android:layout_marginTop="90dp"
@@ -33,8 +33,7 @@
         android:layout_marginTop="12dp"
         android:textSize="12sp"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/main_text_color"
-        android:text="Version 1.3.0"/>
+        android:textColor="@color/main_text_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
