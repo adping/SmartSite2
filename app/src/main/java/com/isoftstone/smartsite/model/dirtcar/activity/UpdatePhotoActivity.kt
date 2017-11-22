@@ -45,6 +45,9 @@ open class UpdatePhotoActivity : BaseActivity() {
     val SP_KEY_DRAFT_IMAGE = "draft_camera_image_"
     val SP_KEY_LOCATION = "camera_location"
     var mAddress: String = ""
+    public val TARGET = "target_flag"
+    public val FLAG_TARGET_CAMERA = 1
+    public val FLAG_TARGET_GALLARY = 2
 
     override fun getLayoutRes(): Int {
         return R.layout.activity_update_photo
@@ -53,9 +56,13 @@ open class UpdatePhotoActivity : BaseActivity() {
     override fun afterCreated(savedInstanceState: Bundle?) {
         initGridView()
         initLocationLab()
-        read_sp()
-        if (!SPUtils.getBoolean(SP_KEY_HAS_DRAFT, false)) {
+        //read_sp()
+        //if (!SPUtils.getBoolean(SP_KEY_HAS_DRAFT, false)) {
+        var flag = intent.getIntExtra("target_flag", 1)
+        if (flag == 1) {
             startCamera()
+        } else {
+            startGallary()
         }
     }
 
@@ -72,7 +79,7 @@ open class UpdatePhotoActivity : BaseActivity() {
         mGridViewAdapter?.notifyDataSetChanged()
     }
 
-    fun onClick_submit(v:View){
+    fun onClick_submit(v: View) {
         //TODO
     }
 
@@ -87,14 +94,14 @@ open class UpdatePhotoActivity : BaseActivity() {
             SPUtils.saveString(SP_KEY_DRAFT_IMAGE + i, mUriList.get(i).toString())
         }
         SPUtils.saveString(SP_KEY_LOCATION, mAddress)
-        SPUtils.saveBoolean(SP_KEY_HAS_DRAFT,true)
+        SPUtils.saveBoolean(SP_KEY_HAS_DRAFT, true)
 //        if(!TextUtils.isEmpty(address)){
 //            mAddress = address
 //        }
     }
 
     override fun onStop() {
-        save()
+        //save()
         super.onStop()
     }
 
@@ -126,6 +133,11 @@ open class UpdatePhotoActivity : BaseActivity() {
             mUriImage = uri
         }
         startActivityForResult(i, 0)
+    }
+
+    fun startGallary() {
+        var i = Intent(this, SelectImageActivity::class.java)
+        startActivityForResult(i, 1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

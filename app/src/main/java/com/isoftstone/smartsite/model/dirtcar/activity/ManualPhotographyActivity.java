@@ -278,6 +278,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 									public void onClick(int which) {
 										//choseHeadImageFromGallery();
 										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
+										i.putExtra("target_flag",1);
 										startActivity(i);
 									}
 								})
@@ -289,6 +290,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 									public void onClick(int which) {
 										//choseHeadImageFromCameraCapture();
 										Intent i = new Intent(ManualPhotographyActivity.this,SelectImageActivity.class);
+										i.putExtra("target_flag",2);
 										startActivity(i);
 									}
 								}).show();
