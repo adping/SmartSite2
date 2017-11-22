@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:paddingRight="16dp"
+    android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingTop="10dp"
-    android:background="@color/app_background"
-    android:orientation="vertical">
+    android:paddingRight="16dp"
+    android:paddingTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,35 +18,40 @@
         android:background="@color/report_item_title_bg"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
+
         <TextView
             android:id="@+id/lab_chepai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="车牌号："
-            android:textSize="12sp"
-            android:textColor="@color/des_text_color"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:text="车牌号："
+            android:textColor="@color/des_text_color"
+            android:textSize="12sp" />
+
         <TextView
-            android:id="@+id/lab_title"
+            android:id="@+id/lab_license"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/lab_chepai"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/lab_chepai"
             android:singleLine="true"
             android:text="鄂A00000"
             android:textColor="@color/main_text_color"
             android:textSize="14sp"
             android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/img_white_black_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/white_name"
-            android:background="@null"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/lab_title"
-            android:layout_centerVertical="true"/>
+            android:layout_toRightOf="@id/lab_license"
+            android:background="@null"
+            android:visibility="invisible"
+            android:src="@drawable/white_name" />
+
         <TextView
             android:id="@+id/lab_time"
             android:layout_width="wrap_content"
@@ -58,13 +63,14 @@
             android:text="2017-11-15"
             android:textColor="@color/des_text_color"
             android:textSize="12sp" />
+
         <TextView
             android:id="@+id/lab_gengtxinshijian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/lab_time"
             android:layout_centerVertical="true"
             android:layout_gravity="right"
+            android:layout_toLeftOf="@id/lab_time"
             android:layoutDirection="locale"
             android:text="更新时间："
             android:textColor="@color/des_text_color"
@@ -72,6 +78,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_address"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="@color/white"
@@ -84,10 +91,10 @@
             android:id="@+id/lab_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:drawableLeft="@drawable/dircatlist_address"
             android:drawablePadding="5dp"
             android:singleLine="true"
-            android:layout_centerVertical="true"
             android:text="东湖高新区六路"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
@@ -97,18 +104,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/dircarlist_arrow"/>
+            android:src="@drawable/dircarlist_arrow" />
         <!--<TextView-->
-            <!--android:id="@+id/lab_company"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:drawableLeft="@drawable/company"-->
-            <!--android:drawablePadding="5dp"-->
-            <!--android:singleLine="true"-->
-            <!--android:text="湖北怡瑞有限公司"-->
-            <!--android:textColor="@color/main_text_color"-->
-            <!--android:textSize="14sp" />-->
+        <!--android:id="@+id/lab_company"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:drawableLeft="@drawable/company"-->
+        <!--android:drawablePadding="5dp"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="湖北怡瑞有限公司"-->
+        <!--android:textColor="@color/main_text_color"-->
+        <!--android:textSize="14sp" />-->
 
     </RelativeLayout>
 
