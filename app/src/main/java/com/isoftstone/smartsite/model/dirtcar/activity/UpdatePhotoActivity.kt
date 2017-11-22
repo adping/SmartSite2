@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.dirtcar.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
@@ -19,10 +20,10 @@ import android.widget.TextView
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
 import com.isoftstone.smartsite.model.dirtcar.adapter.UpdatePhotoAdapter
+import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog
 import com.isoftstone.smartsite.utils.DateUtils
 import com.isoftstone.smartsite.utils.FilesUtils
 import com.isoftstone.smartsite.utils.SPUtils
-import com.isoftstone.smartsite.utils.ToastUtils
 import java.io.File
 import java.util.*
 
@@ -34,9 +35,12 @@ import java.util.*
 open class UpdatePhotoActivity : BaseActivity() {
     var mGridView: GridView? = null //照片列表
     var mGridViewAdapter: UpdatePhotoAdapter? = null
-    var mUriList: ArrayList<Uri> = ArrayList<Uri>()
+    //var mUriList: ArrayList<Uri>? = null
+    var mPathList: ArrayList<String> = ArrayList<String>()
+
     var mStoragePath = Environment.getExternalStorageDirectory().toString() + "/isoftstone/Camera";
     var mUriImage: Uri? = null
+    var mCameraImage: File? = null
     var mLabAddress: TextView? = null
     var mLocationService: LocationManager? = null
 
@@ -64,13 +68,14 @@ open class UpdatePhotoActivity : BaseActivity() {
         } else {
             startGallary()
         }
+
     }
 
     fun read_sp() {
         var num = SPUtils.getInt(SP_KEY_DRAFT_IMAGE_NUM, 0)
         for (i in 0..num - 1) {
             var uri = SPUtils.getString(SP_KEY_DRAFT_IMAGE + i, "")
-            mUriList.add(Uri.parse(uri))
+            //mUriList.add(Uri.parse(uri))
         }
         mAddress = SPUtils.getString(SP_KEY_LOCATION, "")
         if (!TextUtils.isEmpty(mAddress)) {
@@ -84,17 +89,17 @@ open class UpdatePhotoActivity : BaseActivity() {
     }
 
     fun save() {
-        if (mUriList.size == 0) {
-            ToastUtils.showShort("没有图片可以保存")
-            return
-        }
-        var num = mUriList.size
-        SPUtils.saveInt(SP_KEY_DRAFT_IMAGE_NUM, num)
-        for (i in 0..num - 1) {
-            SPUtils.saveString(SP_KEY_DRAFT_IMAGE + i, mUriList.get(i).toString())
-        }
-        SPUtils.saveString(SP_KEY_LOCATION, mAddress)
-        SPUtils.saveBoolean(SP_KEY_HAS_DRAFT, true)
+        //if (mUriList.size == 0) {
+        //   ToastUtils.showShort("没有图片可以保存")
+        //    return
+        //  }
+        // var num = mUriList.size
+//        SPUtils.saveInt(SP_KEY_DRAFT_IMAGE_NUM, num)
+//        for (i in 0..num - 1) {
+//            SPUtils.saveString(SP_KEY_DRAFT_IMAGE + i, mUriList.get(i).toString())
+//        }
+//        SPUtils.saveString(SP_KEY_LOCATION, mAddress)
+//        SPUtils.saveBoolean(SP_KEY_HAS_DRAFT, true)
 //        if(!TextUtils.isEmpty(address)){
 //            mAddress = address
 //        }
@@ -107,14 +112,33 @@ open class UpdatePhotoActivity : BaseActivity() {
 
     fun initGridView() {
         mGridView = findViewById(R.id.grid_view) as GridView
-        mGridViewAdapter = UpdatePhotoAdapter(this, mUriList)
+        mGridViewAdapter = UpdatePhotoAdapter(this, mPathList)
         mGridView?.adapter = mGridViewAdapter
 
         mGridView?.setOnItemClickListener(AdapterView.OnItemClickListener(fun(parent, v, pos, id) {
-            if (pos == mUriList.size) {
-                startCamera()
+            if (pos == mPathList.size) {
+//                startCamera()
+                ActionSheetDialog(this@UpdatePhotoActivity)
+                        .builder(false)
+                        .setCancelable(true)
+                        .setCanceledOnTouchOutside(true)
+                        .addSheetItem(this@UpdatePhotoActivity.getText(R.string.camera).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue
+                        ) {
+                            //choseHeadImageFromGallery();
+                            startCamera()
+                        }
+                        .addSheetItem(this@UpdatePhotoActivity.getText(R.string.album).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                object : ActionSheetDialog.OnSheetItemClickListener {
+
+                                    override fun onClick(which: Int) {
+                                        //choseHeadImageFromCameraCapture();
+                                        startGallary()
+                                    }
+                                }).show()
             } else {
-                val intent = FilesUtils.getImageFileIntent(this@UpdatePhotoActivity, mUriList.get(pos))
+                val intent = FilesUtils.getImageFileIntent(this@UpdatePhotoActivity, mPathList.get(pos))
                 startActivity(intent)
             }
         }))
@@ -124,33 +148,50 @@ open class UpdatePhotoActivity : BaseActivity() {
         var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         var fileName = DateUtils.format_file_name.format(Date()) + ".png"
         var path = File(mStoragePath)
-        var file = File(path, fileName)
-        mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, file.path)
+        mCameraImage = File(path, fileName)
+        mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, mCameraImage?.path)
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUriImage)
         i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         val uri = mUriImage;
         if (uri != null) {
             mUriImage = uri
         }
-        startActivityForResult(i, 0)
+        startActivityForResult(i, FLAG_TARGET_CAMERA)
     }
 
     fun startGallary() {
         var i = Intent(this, SelectImageActivity::class.java)
-        startActivityForResult(i, 1)
+        startActivityForResult(i, FLAG_TARGET_GALLARY)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.e(TAG, "onActivityResult:" + requestCode)
-        val uri = mUriImage
-        if (uri != null && isTakePicOk(uri)) {
-            mUriList.add(uri)
-            mGridViewAdapter?.notifyDataSetChanged()
-        } else {
-            Log.e(TAG, "file size == null")
+        if (requestCode == FLAG_TARGET_CAMERA) {
+            val uri = mUriImage
+            if (uri != null && isTakePicOk(uri)) {
+                //var path = FilesUtils.getPath(this, mCameraImage?.canonicalPath)
+                var path = mCameraImage?.canonicalPath
+                if (path != null) {
+                    mPathList.add(path)
+                }
+                mGridViewAdapter?.notifyDataSetChanged()
+            } else if (mPathList.size == 0) {
+                finish()
+                Log.e(TAG, "file size == null")
+            }
+            mUriImage = null
+            mCameraImage = null
+        } else if (requestCode == FLAG_TARGET_GALLARY) {
+            if (resultCode == Activity.RESULT_OK) {
+                var pathlist = data?.getSerializableExtra("data") as HashSet<String>
+                for (path in pathlist) {
+                    mPathList.add(path)
+                    mGridViewAdapter?.notifyDataSetChanged()
+                }
+            } else if (mPathList.size == 0) {
+                finish()
+            }
         }
-        mUriImage = null
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 

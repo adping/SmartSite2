@@ -11,8 +11,8 @@ import android.widget.TextView
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBean
 import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity
+import com.isoftstone.smartsite.model.map.ui.MapTrackHistoryActivity
 import com.isoftstone.smartsite.utils.DateUtils
-import com.isoftstone.smartsite.utils.ToastUtils
 
 /**
  * Created by yanyongjun on 2017/11/14.
@@ -38,14 +38,20 @@ open class DirtCarAdapter(context: Context, datas: ArrayList<BayonetGrabInfoBean
         var vHistory = v.findViewById(R.id.linear_history)
         vHistory.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                ToastUtils.showShort("历史轨迹")
+                //ToastUtils.showShort("历史轨迹")
+                var i = Intent(mContext,MapTrackHistoryActivity::class.java)
+                i.putExtra("licence",bean.licence)
+                mContext.startActivity(i)
             }
         })
 
         var relativeAddress = v.findViewById(R.id.relative_address)
         relativeAddress.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                ToastUtils.showShort("历史轨迹1")
+                //ToastUtils.showShort("历史轨迹1")
+                var i = Intent(mContext,MapTrackHistoryActivity::class.java)
+                i.putExtra("licence",bean.licence)
+                mContext.startActivity(i)
                 //跳转到MapTrackHistoryActivity，参数传licence就行了,intent.putExtra("licence",licence);
             }
         })
