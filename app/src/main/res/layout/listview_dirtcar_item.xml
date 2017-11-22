@@ -18,19 +18,35 @@
         android:background="@color/report_item_title_bg"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
-
+        <TextView
+            android:id="@+id/lab_chepai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车牌号："
+            android:textSize="12sp"
+            android:textColor="@color/des_text_color"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
         <TextView
             android:id="@+id/lab_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/lab_chepai"
             android:layout_centerVertical="true"
             android:singleLine="true"
-            android:text="东湖高新区巡查报告"
+            android:text="鄂A00000"
             android:textColor="@color/main_text_color"
             android:textSize="14sp"
             android:textStyle="bold" />
-
+        <ImageView
+            android:id="@+id/img_white_black_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/white_name"
+            android:background="@null"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/lab_title"
+            android:layout_centerVertical="true"/>
         <TextView
             android:id="@+id/lab_time"
             android:layout_width="wrap_content"
@@ -42,9 +58,20 @@
             android:text="2017-11-15"
             android:textColor="@color/des_text_color"
             android:textSize="12sp" />
+        <TextView
+            android:id="@+id/lab_gengtxinshijian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/lab_time"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:layoutDirection="locale"
+            android:text="更新时间："
+            android:textColor="@color/des_text_color"
+            android:textSize="12sp" />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="@color/white"
@@ -54,28 +81,36 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/lab_name"
+            android:id="@+id/lab_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/people"
-            android:drawablePadding="2dp"
+            android:drawableLeft="@drawable/dircatlist_address"
+            android:drawablePadding="5dp"
             android:singleLine="true"
-            android:text="李成辉"
+            android:layout_centerVertical="true"
+            android:text="东湖高新区六路"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/lab_company"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:drawableLeft="@drawable/company"
-            android:drawablePadding="2dp"
-            android:singleLine="true"
-            android:text="湖北怡瑞有限公司"
-            android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/dircarlist_arrow"/>
+        <!--<TextView-->
+            <!--android:id="@+id/lab_company"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:drawableLeft="@drawable/company"-->
+            <!--android:drawablePadding="5dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="湖北怡瑞有限公司"-->
+            <!--android:textColor="@color/main_text_color"-->
+            <!--android:textSize="14sp" />-->
+
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -127,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/acceptance"
-                android:drawablePadding="8dp"
+                android:drawablePadding="5dp"
                 android:gravity="center_vertical"
                 android:text="拍照取证"
                 android:textColor="@color/mainColor"
