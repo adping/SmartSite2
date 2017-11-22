@@ -3,7 +3,9 @@ package com.isoftstone.smartsite;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
 import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.http.user.SimpleUserBean;
@@ -15,17 +17,17 @@ import java.util.ArrayList;
  */
 
 public class Test {
-    public static  void otTest(final String jpushId){
+    public static void otTest(final String jpushId) {
         final HttpPost mHttpPost = new HttpPost();
-      new Thread(){
-          @Override
-          public void run() {
-              mHttpPost.login("admin","bmeB4000",jpushId);
+        new Thread() {
+            @Override
+            public void run() {
+                mHttpPost.login("admin", "bmeB4000", jpushId);
  /*
              String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
              Log.i("test",day);
              */
-			/*
+            /*
 			int size = mHttpPost.getWeatherConditionDay("29","2017-10").size();
 			Log.i("test",size+" size ");
 			*/
@@ -95,7 +97,7 @@ public class Test {
 			mHttpPost.addPatrolVisit(bean);*/
 
 
-              //mHttpPost.getPatrolReportList(3);
+                //mHttpPost.getPatrolReportList(3);
 
 
 
@@ -105,8 +107,8 @@ public class Test {
 			mHttpPost.getMobileHomeData();
 			 */
 
-              //mHttpPost.imageUpload("/storage/emulated/0/test.png",39);
-              //mHttpPost.reportFileUpload("/storage/emulated/0/k.log",39);
+                //mHttpPost.imageUpload("/storage/emulated/0/test.png",39);
+                //mHttpPost.reportFileUpload("/storage/emulated/0/k.log",39);
 
             /*UserBean user_1 = new UserBean();
 			user_1.setId(1l);
@@ -121,14 +123,14 @@ public class Test {
 			Log.i("test","name  ---------"+name);
             */
 
-              //mHttpPost.downloadUserImage("img\\logo.png");
-              //mHttpPost.downloadReportFile(1,"img\\logo.png");
+                //mHttpPost.downloadUserImage("img\\logo.png");
+                //mHttpPost.downloadReportFile(1,"img\\logo.png");
 
 			/*Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/test.png");
 			mHttpPost.userImageUpload(bitmap,Bitmap.CompressFormat.PNG);
             */
 
-              //mHttpPost.getDictionaryList("zh",2);
+                //mHttpPost.getDictionaryList("zh",2);
 
 			/*ArrayList<String> addresslist = mHttpPost.getPatrolAddress();
 			for (String str:addresslist){
@@ -150,7 +152,7 @@ public class Test {
 		    Long[] ar = {4l,3l};
 		    mHttpPost.getAlarmData("2017-10-17","2017-10",ar,0);
             */
-              //mHttpPost.recForMobile("鄂A0001",1);
+                //mHttpPost.recForMobile("鄂A0001",1);
 
               /*PageableBean pageableBean = new PageableBean();
               pageableBean.setPage(1+"");
@@ -161,7 +163,7 @@ public class Test {
               String test = mHttpPost.getTrackList("",pageableBean).toString();
               Log.e("test","test "+test);*/
 
-              //mHttpPost.getPhontoList("鄂A46F52","video","2017-11-17","");
+                //mHttpPost.getPhontoList("鄂A46F52","video","2017-11-17","");
 
               /*
               PageableBean pageableBean = new PageableBean();
@@ -169,9 +171,9 @@ public class Test {
               Log.e("test","test "+test);
               */
 
-              //mHttpPost.getEvidenceDateList("鄂AV785B");
+                //mHttpPost.getEvidenceDateList("鄂AV785B");
 
-              //mHttpPost.getMapMarkers("鄂AV785B","2017-11-15");
+                //mHttpPost.getMapMarkers("鄂AV785B","2017-11-15");
 
               /*
               ArrayList list = new ArrayList();
@@ -193,16 +195,17 @@ public class Test {
               mHttpPost.addPhoto(evidencePhotoBean);*/
 
 
+                //ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();
+                //mHttpPost.findByUserIdAndTaskId(list.get(0));
 
-              //ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();
-              //mHttpPost.findByUserIdAndTaskId(list.get(0));
 
 
-              /*
               PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
               PageableBean pageableBean = new PageableBean();
               PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean);
 
+
+             /*
               mHttpPost.planThrough(patrolPlanBeanPage.getContent().get(0));
               mHttpPost.planRefuse(patrolPlanBeanPage.getContent().get(0));
               */
@@ -221,32 +224,36 @@ public class Test {
               PatrolTaskBean patrolTaskBean = patrolTaskBeanPage.getContent().get(0);
               mHttpPost.patrolTaskSave(patrolTaskBean);*/
 
-              //mHttpPost.patrolTaskFindOne(64);
+            //mHttpPost.patrolTaskFindOne(64);
 
-              //mHttpPost.updateTaskStart(64,"巡查任务20171117");
+            //mHttpPost.updateTaskStart(64,"巡查任务20171117");
 
-              //mHttpPost.executeTask(64,"巡查任务20171117");
+            //mHttpPost.executeTask(64,"巡查任务20171117");
 
-              //mHttpPost.updatePatrolPositionStatus(95,"0101");
+            //mHttpPost.updatePatrolPositionStatus(95,"0101");
 
-              //mHttpPost.userTrack(1,64,114.504424,30.477807);
+            //mHttpPost.userTrack(1,64,114.504424,30.477807);
 
-              //mHttpPost.queryPendingPlan();
+            //mHttpPost.queryPendingPlan();
 
-              //mHttpPost.feedback(1,"ceshi");
+            //mHttpPost.feedback(1,"ceshi");
 
-              //mHttpPost.findUserAll();
+            //mHttpPost.findUserAll();
 
-              //mHttpPost.getCompanyNameByid(1);
+            //mHttpPost.getCompanyNameByid(1);
 
-              //mHttpPost.getPatrolReportData("2017-11");
-              //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
-              //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
-              //String[] id = {"1","2"};
-              //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
-              //mHttpPost.getDepartmentReport("2017-11",id);
+            //mHttpPost.getPatrolReportData("2017-11");
+            //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
+            //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
+            //String[] id = {"1","2"};
+            //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
+            //mHttpPost.getDepartmentReport("2017-11",id);
 
-          }
-      }.start();
+            /*PageableBean pageableBean = new PageableBean();
+            mHttpPost.getPatrolTaskListAll("", "", "", "0", "", "", "", pageableBean);
+            */
+
+            }
+        }.start();
     }
 }

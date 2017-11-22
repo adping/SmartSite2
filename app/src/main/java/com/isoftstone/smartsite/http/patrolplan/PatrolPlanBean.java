@@ -3,14 +3,16 @@ package com.isoftstone.smartsite.http.patrolplan;
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/16.
  */
 /*
 巡查计划
  */
-public class PatrolPlanBean {
-
+public class PatrolPlanBean  implements Serializable {
+    private static final long serialVersionUID = 0x0011L;
     private long id;          //主键
     private  int status;      //状态  1	已创建，待提交  2	已提交，待审批  3	已通过  4	已打回
     private String title;     //标题

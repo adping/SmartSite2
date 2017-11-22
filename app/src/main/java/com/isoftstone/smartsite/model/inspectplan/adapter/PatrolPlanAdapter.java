@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.EQIRankingBean;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringRankAdapter;
@@ -29,13 +30,13 @@ import java.util.Comparator;
 public class PatrolPlanAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private ArrayList<EQIRankingBean.AQI> mList;
+	private ArrayList<PatrolTaskBean> mList;
 
 	public PatrolPlanAdapter(Context context){
 		this.mContext = context;
 	}
 
-	public void setList(ArrayList<EQIRankingBean.AQI> list){
+	public void setList(ArrayList<PatrolTaskBean> list){
 		mList = list;
 
 	}
@@ -63,7 +64,8 @@ public class PatrolPlanAdapter extends BaseAdapter {
 		} else {
 			holder = (PatrolPlanAdapter.ViewHolder) convertView.getTag();
 		}
-
+        holder.title.setText(mList.get(position).getTaskName());
+		holder.address.setText(mList.get(position).getPlanStatus()+"");
 		return convertView;
 	}
 
