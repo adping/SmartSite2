@@ -87,8 +87,8 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	}
 
 	private void enterOtherView() {
-		//Intent intent = new Intent(mContext, PatrolPlanActivity.class);
 		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+		//Intent intent = new Intent(mContext, ManualPhotographyActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}
