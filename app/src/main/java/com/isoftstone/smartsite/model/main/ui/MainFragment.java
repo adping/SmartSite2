@@ -15,24 +15,12 @@ import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.DataQueryBean;
-import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.http.MobileHomeBean;
-import com.isoftstone.smartsite.http.WeatherLiveBean;
+import com.isoftstone.smartsite.model.dirtcar.activity.DirtCarListActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
-import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
-import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity;
-import com.isoftstone.smartsite.model.map.ui.MapTrackHistoryActivity;
-import com.isoftstone.smartsite.model.message.data.ThreePartyData;
-import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
-import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 
 /**
@@ -63,6 +51,8 @@ public class MainFragment extends BaseFragment{
     private View mAirMonitoring = null;                //环境监测
     private View mThirdPartReport = null;             //三方协同按钮
     private View mInspectPlan = null;             //巡查计划
+    private View mDircar = null;//渣土车监控
+
     private LinearLayout mVideoMonitoringMsg = null;    //未查看消息点击区域
     private LinearLayout mAirMonitoringMsg = null;      //待处理报告点击区域
     private LinearLayout mUnCheckMsg = null;            //视频监控设备
@@ -177,6 +167,15 @@ public class MainFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 enterConstructionMonitor();
+            }
+        });
+
+        // 渣土车监控
+        mDircar = rootView.findViewById(R.id.button_4);
+        mDircar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterDircar();
             }
         });
     }
@@ -303,6 +302,14 @@ public class MainFragment extends BaseFragment{
     private void enterVideoMonitoring(){
         //进入视频监控
         Intent intent = new Intent(getActivity(),VideoMonitoringActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    /**
+     * 进入渣土车监控
+     */
+    private void enterDircar(){
+        Intent intent = new Intent(getActivity(),DirtCarListActivity.class);
         getActivity().startActivity(intent);
     }
 

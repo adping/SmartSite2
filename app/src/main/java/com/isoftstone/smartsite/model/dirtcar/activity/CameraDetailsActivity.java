@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.CameraDetailsAdapter;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.adapter.PhotoGridAdapter;
@@ -67,11 +68,45 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 							ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getPhontoList("鄂A46F52","video","2017-11-17","");
 							Log.i("zzz","CCCCCCCCC   arrayList = " + arrayList);
 							if (arrayList != null) {
+								StringBuffer stringBuffer = new StringBuffer();
 								for (int i=0; i< arrayList.size(); i++) {
 									Log.i("zzz","arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+									String urlStr = arrayList.get(i).getSmallPhotoSrc();
+									if (urlStr == null) {
+										urlStr = arrayList.get(i).getPhotoSrc();
+									}
+
+									/**if (urlStr != null) {
+										String[] urlsStr = urlStr.split(",");
+										for (int j=0; j<urlsStr.length; j++) {
+											if (j == urlsStr.length -1) {
+												stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]));
+											} else {
+												stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]) + ",");
+											}
+										}
+									}*/
+
+									if (urlStr != null) {
+										if (i == arrayList.size() -1) {
+											stringBuffer.append(mHttpPost.getFileUrl(urlStr));
+										} else {
+											stringBuffer.append(mHttpPost.getFileUrl(urlStr) + ",");
+										}
+									}
+
+
+									BaseUserBean baseUserBean = arrayList.get(i).getTakePhoroUser();
+									if (baseUserBean != null) {
+
+									} else {
+
+									}
 								}
+								Log.i("zzz","CCCCCCC  stringBuffer = " + stringBuffer.toString());
+								mListDate.add(stringBuffer.toString());
 							}
-							mListDate.add(photoSrc);
+							//mListDate.add(photoSrc);
 							mHandler.sendEmptyMessage(HANDLER_CAMERA_DETAILS_END);
 						}
 					};

@@ -364,14 +364,22 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".model.dirtcar.activity.DirtCarListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".model.dirtcar.activity.SelectImageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        </activity>
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+        <activity
+            android:name=".model.dirtcar.activity.RecognizeDirtCarActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/recognize_dirtcar"
+            android:label=""
+            android:screenOrientation="portrait">
         </activity>
 
         <activity android:name=".model.map.ui.ConstructionMonitorMapActivity"
@@ -405,6 +413,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             ></activity>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"
