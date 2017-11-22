@@ -356,6 +356,10 @@
         </provider>
         <service android:name=".model.map.service.DownloadAPKService"></service>
         <!--zhangwei end-->
+
+        <activity android:name=".PatroPlanDetailsActivity"
+            android:launchMode="singleTask"></activity>
+
     </application>
 
 </manifest>
