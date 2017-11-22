@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.model.dirtcar.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
@@ -25,7 +27,7 @@ open class SelectImageActivity : BaseActivity() {
     var mDataList = ArrayList<SelectImage>()
     var mRootDir = HashSet<String>()
     var mLabSelectedNum: TextView? = null
-    var mSelectPaths = HashSet<String>() //选中图片的保存路径
+    var mSelectPaths = HashSet<String>() //选中图片的保存路径，这个应该是绝对路径
 
     var mSelectedNum: Int = 0
     var mListener = object : SelectImage.OnStatusChangeListener {
@@ -92,6 +94,14 @@ open class SelectImageActivity : BaseActivity() {
 
     fun onClick_submit(v: View) {
         //TODO
+        var i = Intent()
+        if (mSelectPaths.size > 0) {
+            i.putExtra("data", mSelectPaths)
+            setResult(Activity.RESULT_OK, i)
+        } else {
+            setResult(Activity.RESULT_CANCELED, i)
+        }
+        finish()
     }
 
     var mInitResTask = object : AsyncTask<Void, Void, Void>() {

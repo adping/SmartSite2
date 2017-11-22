@@ -270,7 +270,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 						.builder(false)
 						.setCancelable(true)
 						.setCanceledOnTouchOutside(true)
-						.addSheetItem(mContext.getText(R.string.album).toString(),
+						.addSheetItem(mContext.getText(R.string.camera).toString(),
 								ActionSheetDialog.SheetItemColor.Blue,
 								new ActionSheetDialog.OnSheetItemClickListener() {
 
@@ -282,14 +282,14 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 										startActivity(i);
 									}
 								})
-						.addSheetItem(mContext.getText(R.string.camera).toString(),
+						.addSheetItem(mContext.getText(R.string.album).toString(),
 								ActionSheetDialog.SheetItemColor.Blue,
 								new ActionSheetDialog.OnSheetItemClickListener() {
 
 									@Override
 									public void onClick(int which) {
 										//choseHeadImageFromCameraCapture();
-										Intent i = new Intent(ManualPhotographyActivity.this,SelectImageActivity.class);
+										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
 										i.putExtra("target_flag",2);
 										startActivity(i);
 									}
