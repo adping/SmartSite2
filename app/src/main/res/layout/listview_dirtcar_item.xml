@@ -93,7 +93,7 @@
 
 
         <LinearLayout
-            android:id="@+id/linear_read"
+            android:id="@+id/linear_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -116,14 +116,14 @@
             android:src="@color/dividing_line" />
 
         <LinearLayout
-            android:id="@+id/linear_check"
+            android:id="@+id/linear_camera"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/lab_check"
+                android:id="@+id/lab_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/acceptance"
