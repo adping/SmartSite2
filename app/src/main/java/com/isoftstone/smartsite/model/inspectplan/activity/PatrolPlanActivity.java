@@ -1,26 +1,21 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 
 import org.joda.time.LocalDate;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by gone on 2017/11/19.
@@ -151,7 +146,9 @@ public class PatrolPlanActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 //新增巡查任务
-                Toast.makeText(PatrolPlanActivity.this,"添加任务",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PatrolPlanActivity.this,"添加任务",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PatrolPlanActivity.this,AddInspectPlan.class);
+                startActivity(intent);
             }
         });
     }
