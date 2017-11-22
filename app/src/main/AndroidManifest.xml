@@ -364,6 +364,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".model.dirtcar.activity.DirtCarListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".model.dirtcar.activity.SelectImageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
