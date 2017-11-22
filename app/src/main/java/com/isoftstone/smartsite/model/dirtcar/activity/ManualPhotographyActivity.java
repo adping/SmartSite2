@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.http.Header;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -29,18 +28,12 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
-import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
-import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspectPlansAdapter;
-import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog;
-import com.isoftstone.smartsite.model.system.ui.PermissionsActivity;
 import com.isoftstone.smartsite.model.system.ui.PhoneInfoUtils;
 import com.isoftstone.smartsite.model.system.ui.SystemFragment;
-import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by zhangyinfu on 2017/11/16.
@@ -273,7 +266,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				ManualPhotographyActivity.this.finish();
 				break;
 			case R.id.btn_icon:
-				/**new ActionSheetDialog(ManualPhotographyActivity.this)
+				new ActionSheetDialog(ManualPhotographyActivity.this)
 						.builder(false)
 						.setCancelable(true)
 						.setCanceledOnTouchOutside(true)
@@ -283,7 +276,9 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 									@Override
 									public void onClick(int which) {
-										choseHeadImageFromGallery();
+										//choseHeadImageFromGallery();
+										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
+										startActivity(i);
 									}
 								})
 						.addSheetItem(mContext.getText(R.string.camera).toString(),
@@ -292,11 +287,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 									@Override
 									public void onClick(int which) {
-										choseHeadImageFromCameraCapture();
+										//choseHeadImageFromCameraCapture();
+										Intent i = new Intent(ManualPhotographyActivity.this,SelectImageActivity.class);
+										startActivity(i);
 									}
-								}).show();*/
+								}).show();
 
-				enterOtherActivity();
+				//enterOtherActivity();
 				break;
 			default:
 				break;
