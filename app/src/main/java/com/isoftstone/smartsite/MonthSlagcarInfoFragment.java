@@ -16,6 +16,6 @@ public class MonthSlagcarInfoFragment extends BaseFragment {
 
     @Override
     protected int getLayoutRes() {
-        return 0;
+        return R.layout.fragment_slagcar_info;
     }
 }
