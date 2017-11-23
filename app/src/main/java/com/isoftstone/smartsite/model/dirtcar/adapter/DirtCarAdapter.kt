@@ -31,6 +31,7 @@ open class DirtCarAdapter(context: Context, datas: ArrayList<BayonetGrabInfoBean
         vCamera.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 var i = Intent(mContext, ManualPhotographyActivity::class.java)
+                i.putExtra("licence",bean.licence)
                 mContext.startActivity(i)
             }
         })

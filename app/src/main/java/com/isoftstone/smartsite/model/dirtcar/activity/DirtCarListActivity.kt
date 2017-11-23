@@ -11,6 +11,7 @@ import com.isoftstone.smartsite.http.HttpPost
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBean
 import com.isoftstone.smartsite.http.pageable.PageableBean
 import com.isoftstone.smartsite.model.dirtcar.adapter.DirtCarAdapter
+import com.isoftstone.smartsite.utils.ToastUtils
 
 /**
  * Created by yanyongjun on 2017/11/14.
@@ -41,21 +42,35 @@ class DirtCarListActivity : BaseActivity() {
         //TODO
     }
     fun queryData(){
-        var query = object:AsyncTask<Void,Void,Void>(){
-            override fun doInBackground(vararg params: Void?): Void? {
+        var query = object:AsyncTask<Void,Void,Boolean>(){
+            override fun onPreExecute() {
+                this@DirtCarListActivity.showDlg("正在获取列表")
+                super.onPreExecute()
+            }
+
+            override fun doInBackground(vararg params: Void?): Boolean? {
                 var bean =PageableBean()
                 bean.setPage("0")
                 bean.setSize("100")
                 var result = mHttpPost.getTrackList("",bean)
-                Log.e(TAG,"yanlog result:"+result.toString())
+                if(result == null){
+                    return false
+                }
+                Log.e(TAG,"yanlog result:"+result)
                 mList.clear()
                 mList.addAll(result.content)
-                return null
+                return true
             }
 
-            override fun onPostExecute(result: Void?) {
+            override fun onPostExecute(result: Boolean?) {
                 super.onPostExecute(result)
-                mAdapter.notifyDataSetChanged()
+                this@DirtCarListActivity.closeDlg()
+                var temp = if(result == null) false else result
+                if(temp) {
+                    mAdapter.notifyDataSetChanged()
+                }else{
+                    ToastUtils.showLong("获取列表失败，请稍后重试")
+                }
             }
         }
         query.execute()

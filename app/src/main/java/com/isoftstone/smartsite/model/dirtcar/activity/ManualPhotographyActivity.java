@@ -60,6 +60,8 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
 	private static  final int  HANDLER_MANUAL_PHOTPGRAPHY_END = 2;
 
+	private String mLicence = "";
+
 	private Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
@@ -133,6 +135,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	@Override
 	protected void afterCreated(Bundle savedInstanceState) {
+		mLicence = getIntent().getStringExtra("licence");
 		initToolbar();
 		initView();
 	}
@@ -279,6 +282,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 										//choseHeadImageFromGallery();
 										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
 										i.putExtra("target_flag",1);
+										i.putExtra("licence",mLicence);
 										startActivity(i);
 									}
 								})
@@ -291,6 +295,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 										//choseHeadImageFromCameraCapture();
 										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
 										i.putExtra("target_flag",2);
+										i.putExtra("licence",mLicence);
 										startActivity(i);
 									}
 								}).show();

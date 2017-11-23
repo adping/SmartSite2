@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -17,15 +18,22 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.TextView
+import com.google.gson.Gson
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
+import com.isoftstone.smartsite.http.HttpPost
+import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean
+import com.isoftstone.smartsite.http.user.SimpleUserBean
 import com.isoftstone.smartsite.model.dirtcar.adapter.UpdatePhotoAdapter
+import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity
 import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog
 import com.isoftstone.smartsite.utils.DateUtils
 import com.isoftstone.smartsite.utils.FilesUtils
 import com.isoftstone.smartsite.utils.SPUtils
+import com.isoftstone.smartsite.utils.ToastUtils
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -52,6 +60,9 @@ open class UpdatePhotoActivity : BaseActivity() {
     public val TARGET = "target_flag"
     public val FLAG_TARGET_CAMERA = 1
     public val FLAG_TARGET_GALLARY = 2
+    val FLAG_TARGET_ADDRESS = 3
+    var mHttpPost = HttpPost()
+    var mLicence = "" //TODO
 
     override fun getLayoutRes(): Int {
         return R.layout.activity_update_photo
@@ -60,6 +71,7 @@ open class UpdatePhotoActivity : BaseActivity() {
     override fun afterCreated(savedInstanceState: Bundle?) {
         initGridView()
         initLocationLab()
+        mLicence = intent.getStringExtra("licence")
         //read_sp()
         //if (!SPUtils.getBoolean(SP_KEY_HAS_DRAFT, false)) {
         var flag = intent.getIntExtra("target_flag", 1)
@@ -85,7 +97,7 @@ open class UpdatePhotoActivity : BaseActivity() {
     }
 
     fun onClick_submit(v: View) {
-        //TODO
+        submit()
     }
 
     fun save() {
@@ -193,6 +205,19 @@ open class UpdatePhotoActivity : BaseActivity() {
             } else if (mPathList.size == 0) {
                 finish()
             }
+        } else if (requestCode == FLAG_TARGET_ADDRESS) {
+            var address = data?.getStringExtra("latLngsNameJson")
+            Log.e(TAG, "yanlog return address:" + address)
+            if (address != null) {
+                var gson = Gson()
+                var temp: ArrayList<String> = gson.fromJson<ArrayList<String>>(address, ArrayList::class.java)
+                if (temp != null && temp.size > 0) {
+                    mAddress = temp.get(0)
+                }
+            }
+            if (!TextUtils.isEmpty(mAddress)) {
+                mLabAddress?.setText(mAddress)
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -219,7 +244,9 @@ open class UpdatePhotoActivity : BaseActivity() {
     }
 
     fun onClick_address(v: View) {
-        mLocationService?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100L, 0.1F, mLocationListener, null)
+        var i = Intent(this, MapSearchTaskPositionActivity::class.java)
+        startActivityForResult(i, FLAG_TARGET_ADDRESS)
+        //mLocationService?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100L, 0.1F, mLocationListener, null)
     }
 
     var mLocationListener = object : LocationListener {
@@ -243,5 +270,60 @@ open class UpdatePhotoActivity : BaseActivity() {
 
         override fun onProviderDisabled(provider: String?) {
         }
+    }
+
+    fun submit() {
+        var query = object : AsyncTask<Void, Void, Boolean>() {
+            override fun onPreExecute() {
+                this@UpdatePhotoActivity.showDlg("正在提交")
+                super.onPreExecute()
+            }
+
+            override fun doInBackground(vararg params: Void?): Boolean {
+                var result = mHttpPost.uploadPhotos(mPathList)
+                Log.e(TAG, "yanlog update result:" + result)
+                if (result != null && result.startsWith("\"") && result.endsWith("\"")) {
+                    result = result.substring(1, result.length - 1)
+                }
+                var bean = UpdatePhotoInfoBean()
+                bean.licence = mLicence
+                bean.addr = "湖北武汉"
+                bean.photoSrc = result
+                bean.takePhotoTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(Date())
+                var user = SimpleUserBean()
+                //userBean.setId(mHttpPost.mLoginBean.getmUserBean().getLoginUser().getId());
+                //user.id = mHttpPost.loginUser.loginUser.id
+                user.id = HttpPost.mLoginBean.getmUserBean().loginUser.getId()
+                bean.takePhoroUser = user
+                Log.e(TAG, "yanlog updateBean:" + bean);
+                var updateResult = mHttpPost.addPhoto(bean)
+                Log.e(TAG, "yanlog updateResult:" + updateResult)
+
+
+//                mHttpPost.loginUser
+//                val evidencePhotoBean = UpdatePhotoInfoBean()
+//                evidencePhotoBean.addr = "湖北武汉"
+//                evidencePhotoBean.licence = "鄂AV785B"
+//                evidencePhotoBean.photoSrc = "upload/track/images/20171117/20171117143934776.jpg"
+//                evidencePhotoBean.takePhotoTime = "2017-11-18 11:11:11"
+//                val simpleUserBean = SimpleUserBean()
+//                simpleUserBean.id = HttpPost.mLoginBean.getmUserBean().loginUser.getId()!!
+//                evidencePhotoBean.takePhoroUser = simpleUserBean
+//                mHttpPost.addPhoto(evidencePhotoBean)
+                return updateResult != null
+            }
+
+            override fun onPostExecute(result: Boolean) {
+                this@UpdatePhotoActivity.closeDlg()
+                if (result) {
+                    ToastUtils.showShort("提交成功")
+                    finish()
+                } else {
+                    ToastUtils.showShort("上传失败，请稍后重试")
+                }
+
+            }
+        }
+        query.execute()
     }
 }

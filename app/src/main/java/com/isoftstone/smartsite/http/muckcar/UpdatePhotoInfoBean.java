@@ -52,4 +52,9 @@ public class UpdatePhotoInfoBean {
     public void setTakePhotoTime(String takePhotoTime) {
         this.takePhotoTime = takePhotoTime;
     }
+
+    @Override
+    public String toString(){
+        return "takePhoroUser:"+takePhoroUser+" licence:"+licence+" addr:"+addr +" photoSrc:"+photoSrc +" takePhotoTime:"+takePhotoTime;
+    }
 }

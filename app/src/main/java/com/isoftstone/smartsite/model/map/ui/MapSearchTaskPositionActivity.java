@@ -2,14 +2,12 @@ package com.isoftstone.smartsite.model.map.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -22,15 +20,11 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,6 +187,8 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         Intent intent = new Intent();
         intent.putExtra("latLngsJson",latLngsJson);
         intent.putExtra("latLngsNameJson",latLngsNameJson);
+        ArrayList<String> temp = gson.fromJson(latLngsNameJson,ArrayList.class);
+
         LogUtils.e(TAG,latLngsNameJson);
         setResult(RESULT_SAVE,intent);
         this.finish();
