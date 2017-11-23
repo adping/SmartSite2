@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.MainActivity;
+import com.isoftstone.smartsite.PatroPlanDetailsActivity;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.SlagcarInfoActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.DataQueryBean;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -179,6 +181,14 @@ public class MainFragment extends BaseFragment{
                 enterDircar();
             }
         });
+
+        //巡查任务
+        rootView.findViewById(R.id.button_7).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterPatrolMission();
+            }
+        });
     }
 
 
@@ -310,7 +320,8 @@ public class MainFragment extends BaseFragment{
      * 进入渣土车监控
      */
     private void enterDircar(){
-        Intent intent = new Intent(getActivity(),DirtCarListActivity.class);
+            //DirtCarListActivity
+        Intent intent = new Intent(getActivity(),SlagcarInfoActivity.class);
         getActivity().startActivity(intent);
     }
 
@@ -334,11 +345,17 @@ public class MainFragment extends BaseFragment{
 
     }
 
+    private  void enterPatrolMission(){
+        //进入巡查任务
+        Intent intent = new Intent(getActivity(),PatroPlanDetailsActivity.class);
+        getActivity().startActivity(intent);
+    }
     private void enterConstructionMonitor(){
         //进入施工监控
         Intent intent = new Intent(getActivity(),ConstructionMonitorMapActivity.class);
         getActivity().startActivity(intent);
     }
+
 
     @Override
     public void onResume() {
