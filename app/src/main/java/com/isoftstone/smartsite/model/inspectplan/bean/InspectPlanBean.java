@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.model.inspectplan.bean;
 
+import com.isoftstone.smartsite.http.user.BaseUserBean;
+
 import java.util.Date;
 
 /**
@@ -18,6 +20,7 @@ public class InspectPlanBean {
     private String patrolPositions;//任务巡查点位
     private String userName;//用户名称
     private String userCompany;//用户公司
+    private BaseUserBean baseUserBean;
 
     public InspectPlanBean() {
 
@@ -30,6 +33,14 @@ public class InspectPlanBean {
         this.taskTimeStart = taskTimeStart;
         this.taskTimeEnd = taskTimeEnd;
         this.taskStatus = taskStatus;
+    }
+
+    public BaseUserBean getBaseUserBean() {
+        return baseUserBean;
+    }
+
+    public void setBaseUserBean(BaseUserBean baseUserBean) {
+        this.baseUserBean = baseUserBean;
     }
 
     public long getUserId() {

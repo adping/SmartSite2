@@ -117,7 +117,11 @@ public class ManualPhotographyAdapter extends BaseAdapter{
 		PhotoGridAdapter photoAdapter = new PhotoGridAdapter(mActivity, photoList, mImageLoader);
 		viewHolder.mGradView.setAdapter(photoAdapter);
 
-		ImageUtils.loadImageWithPlaceHolder(mContext, viewHolder.mTakePhotoUserHeadView, manualPhotographyBean.getTakePhotoUserHeadPath(), R.drawable.default_head);
+		if (null == manualPhotographyBean.getTakePhotoUserHeadPath()) {
+			viewHolder.mTakePhotoUserHeadView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.default_head, null));
+		} else {
+			ImageUtils.loadImageWithPlaceHolder(mContext, viewHolder.mTakePhotoUserHeadView, manualPhotographyBean.getTakePhotoUserHeadPath(), R.drawable.default_head);
+		}
 
 		viewHolder.mTakePhotoUserNameView.setText(manualPhotographyBean.getTakePhotoUserName());
 		viewHolder.mTakePhotoDateView.setText(manualPhotographyBean.getTakePhotoTime());
