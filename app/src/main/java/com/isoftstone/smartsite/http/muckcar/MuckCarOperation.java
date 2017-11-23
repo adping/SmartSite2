@@ -182,11 +182,13 @@ public class MuckCarOperation {
         BayonetGrabInfoBeanPage bayonetGrabInfoBeanPage = null;
         String funName = "getUnRecList";
         try {
-            FormBody body = new FormBody.Builder()
-                    .add("licence", licence)
-                    .add("size", pageableBean.getSize())
-                    .add("page", pageableBean.getPage())
-                    .build();
+            FormBody.Builder builder = new FormBody.Builder();
+            if(!licence.equals("")){
+                builder.add("licence", licence);
+            }
+            builder.add("size", pageableBean.getSize());
+            builder.add("page", pageableBean.getPage());
+            FormBody body =builder.build();
             Request request = new Request.Builder()
                     .url(strurl)
                     .post(body)

@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite;
 
+import android.util.Log;
+
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
@@ -154,10 +156,9 @@ public class Test {
             */
                 //mHttpPost.recForMobile("鄂A0001",1);
 
-              /*PageableBean pageableBean = new PageableBean();
+              PageableBean pageableBean = new PageableBean();
               pageableBean.setPage(1+"");
-              String getUnRecList = mHttpPost.getUnRecList("",pageableBean).toString();
-              Log.e("test","getUnRecList "+getUnRecList);*/
+              mHttpPost.getUnRecList("",pageableBean);
 
               /*PageableBean pageableBean = new PageableBean();
               String test = mHttpPost.getTrackList("",pageableBean).toString();
@@ -200,9 +201,11 @@ public class Test {
 
 
 
+              /*
               PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
               PageableBean pageableBean = new PageableBean();
               PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean);
+              */
 
 
              /*

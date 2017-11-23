@@ -49,7 +49,7 @@ public class PhotoGridAdapter extends BaseAdapter {
 		mWidth = dm.widthPixels/3;
 		mInflater = LayoutInflater.from(context);
 
-		ToastUtils.showShort("PhotoGridAdapter.....   mListData.size : " + mListData.size());
+		//ToastUtils.showShort("PhotoGridAdapter.....   mListData.size : " + mListData.size());
 	}
 
 	public ImageLoader getImageLoader( ) {

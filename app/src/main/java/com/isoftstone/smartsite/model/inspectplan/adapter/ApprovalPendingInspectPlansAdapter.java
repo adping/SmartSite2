@@ -81,22 +81,22 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 		viewHolder.mPlanApprovalView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				enterOtherView();
+				enterPatrolPlan(inspectPlanBean);
 			}
 		});
 
 		return convertView;
 	}
 
-	private void enterOtherView() {
+	private void enterPatrolPlan(InspectPlanBean inspectPlanBean) {
 
 		PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
-		patrolPlanBean.setId(14);
-		patrolPlanBean.setEndDate("2017-11-18");
-		patrolPlanBean.setStart("2017-11-12");
-		patrolPlanBean.setStatus(2);
+		patrolPlanBean.setId(inspectPlanBean.getUserId());
+		patrolPlanBean.setEndDate(inspectPlanBean.getTaskTimeEnd());
+		patrolPlanBean.setStart(inspectPlanBean.getTaskTimeStart());
+		patrolPlanBean.setStatus(inspectPlanBean.getTaskStatus());
 		BaseUserBean baseUserBean = new BaseUserBean();
-		baseUserBean.setId(1l);
+		baseUserBean.setId(inspectPlanBean.getBaseUserBean().getId());
 		patrolPlanBean.setCreator(baseUserBean);
 		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -111,7 +111,7 @@ open class SelectImageActivity : BaseActivity() {
         mGridView = findViewById(R.id.grid_view) as GridView
         mAdapter = SelectImageAdapter(this, mDataList)
         mGridView?.adapter = mAdapter
-        mInitResTask.execute()
+        query()
     }
 
     fun onClick_submit(v: View) {
@@ -125,43 +125,45 @@ open class SelectImageActivity : BaseActivity() {
         }
         finish()
     }
-
-    var mInitResTask = object : AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg params: Void?): Void? {
-            mDataList.clear()
-            for (path in mRootDir) {
-                Log.e(TAG, "yanlog rootPath:" + path)
-                var stack = Stack<File>()
-                stack.push(File(path))
-                while (!stack.isEmpty()) {
-                    var curFile = stack.pop()
-                    if (!curFile.exists()) {
-                        continue
-                    }
-                    if (curFile.isFile && (curFile.path.endsWith(".jpg") || curFile.path.endsWith(".jpeg") || curFile.path.endsWith(".png") ||
-                            curFile.path.endsWith(".JPG") || curFile.path.endsWith(".JPEG") || curFile.path.endsWith(".PNG"))) {
-                        if (mSelectPaths.contains(curFile.canonicalPath)) {
-                            mDataList.add(SelectImage(curFile.canonicalPath, true, mListener))
-                        } else {
-                            mDataList.add(SelectImage(curFile.canonicalPath, false, mListener))
+    fun query() {
+        var mInitResTask = object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                mDataList.clear()
+                for (path in mRootDir) {
+                    Log.e(TAG, "yanlog rootPath:" + path)
+                    var stack = Stack<File>()
+                    stack.push(File(path))
+                    while (!stack.isEmpty()) {
+                        var curFile = stack.pop()
+                        if (!curFile.exists()) {
+                            continue
                         }
-                    } else if (curFile.isDirectory) {
-                        var files = curFile.listFiles()
-                        for (file in files) {
-                            if (!(file.name.equals(".") || file.name.equals(".."))) {
-                                stack.push(file)
+                        if (curFile.isFile && (curFile.path.endsWith(".jpg") || curFile.path.endsWith(".jpeg") || curFile.path.endsWith(".png") ||
+                                curFile.path.endsWith(".JPG") || curFile.path.endsWith(".JPEG") || curFile.path.endsWith(".PNG"))) {
+                            if (mSelectPaths.contains(curFile.canonicalPath)) {
+                                mDataList.add(SelectImage(curFile.canonicalPath, true, mListener))
+                            } else {
+                                mDataList.add(SelectImage(curFile.canonicalPath, false, mListener))
+                            }
+                        } else if (curFile.isDirectory) {
+                            var files = curFile.listFiles()
+                            for (file in files) {
+                                if (!(file.name.equals(".") || file.name.equals(".."))) {
+                                    stack.push(file)
+                                }
                             }
                         }
                     }
                 }
+                return null
             }
-            return null
-        }
 
-        override fun onPostExecute(result: Void?) {
-            mAdapter?.notifyDataSetChanged()
-            super.onPostExecute(result)
+            override fun onPostExecute(result: Void?) {
+                mAdapter?.notifyDataSetChanged()
+                super.onPostExecute(result)
+            }
         }
+        mInitResTask.execute()
     }
 
 

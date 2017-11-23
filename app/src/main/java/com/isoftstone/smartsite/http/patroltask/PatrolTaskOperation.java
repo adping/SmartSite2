@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http.patroltask;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
@@ -77,7 +79,7 @@ public class PatrolTaskOperation {
         try {
             FormBody.Builder builder = new FormBody.Builder();
             if (!userId.equals("")) {
-                builder.add("userId", userId + "");
+                builder.add("creator.id", userId + "");
             }
             if (!planId.equals("")) {
                 builder.add("planId", planId);
