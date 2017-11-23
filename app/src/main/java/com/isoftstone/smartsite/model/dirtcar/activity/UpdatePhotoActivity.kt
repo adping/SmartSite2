@@ -287,7 +287,7 @@ open class UpdatePhotoActivity : BaseActivity() {
                 }
                 var bean = UpdatePhotoInfoBean()
                 bean.licence = mLicence
-                bean.addr = "湖北武汉"
+                bean.addr = mAddress
                 bean.photoSrc = result
                 bean.takePhotoTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(Date())
                 var user = SimpleUserBean()

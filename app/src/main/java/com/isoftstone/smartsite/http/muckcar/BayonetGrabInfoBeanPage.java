@@ -39,7 +39,6 @@ public class BayonetGrabInfoBeanPage extends PageBean {
                 ", number=" + number +
                 ", numberOfElements=" + numberOfElements +
                 ", size=" + size +
-                ", content size ="  + content.size() +
                 ", totalElements=" + totalElements +
                 ", totalPages=" + totalPages +
                 '}';

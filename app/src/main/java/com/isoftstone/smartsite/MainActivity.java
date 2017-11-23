@@ -1,15 +1,15 @@
 package com.isoftstone.smartsite;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.model.dirtcar.Service.RecognizeDirtCarService;
 import com.isoftstone.smartsite.model.main.ui.MainFragment;
 import com.isoftstone.smartsite.model.map.ui.MapFragment;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
@@ -38,6 +38,15 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
         tabTitles = this.getResources().getStringArray(R.array.tab_title);
 
         initView();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i(TAG,"yanlog mainActivity OnStart");
+        Intent i = new Intent(this, RecognizeDirtCarService.class);
+        i.putExtra("sync",true);
+        startService(i);
+        super.onStart();
     }
 
     private void initView(){
@@ -71,6 +80,11 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
         if ((null != mFrame) && !mFrame.onFragmentBackPressed()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public void setCurrentTab(int index){
