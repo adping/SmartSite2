@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,7 +8,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -22,6 +25,8 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.map.adapter.MapSearchPositionInfoWindowAdapter;
+import com.isoftstone.smartsite.model.map.bean.TaskPositionBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
@@ -62,7 +67,6 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_DONE){
                     et.setCursorVisible(false);
-                    savePosition();
                 }
                 return false;
             }
@@ -77,6 +81,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
     private void initToolBar(){
         findViewById(R.id.btn_back).setOnClickListener(this);
+        findViewById(R.id.iv_add_task).setOnClickListener(this);
         TextView toolbar_title = (TextView) findViewById(R.id.toolbar_title);
         toolbar_title.setText("任务地点");
         TextView tv_save = (TextView) findViewById(R.id.btn_icon_right);
@@ -88,8 +93,8 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         mapView = (MapView) findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
-        aMap.setOnMarkerClickListener(this);
         aMap.setOnMapClickListener(this);
+        aMap.setOnMarkerClickListener(this);
     }
 
     private void initLocation(LatLng latLng){
@@ -138,6 +143,9 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             case R.id.et:
                 et.setCursorVisible(true);
                 break;
+            case R.id.iv_add_task:
+                savePosition();
+                break;
         }
     }
 
@@ -171,11 +179,20 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             }
         }
 
+
+        LatLng latLng = (LatLng) currentMarker.getObject();
+        currentMarker.remove();
+        addRealMarker(latLng,name);
         latLngs.add(currentLatLng);
         latLngsName.add(name);
         markers.add(currentMarker);
+
         currentMarker = null;
         ToastUtils.showShort("保存成功！");
+
+        //隐藏软键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
 
     }
 
@@ -197,7 +214,9 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
     private int clickPosition = 0;
     @Override
     public boolean onMarkerClick(Marker marker) {
+
         if(marker.equals(deleteMarker)){
+            LogUtils.e(TAG,"deleteMarker onMarkerClick");
             deleteMarker.remove();
             Marker marker1 = markers.get(clickPosition);
             markers.remove(clickPosition);
@@ -206,12 +225,13 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             marker1.remove();
             deleteMarker = null;
         } else if(markers.indexOf(marker) != -1){
+            LogUtils.e(TAG,"markers onMarkerClick");
             clickPosition = markers.indexOf(marker);
-            LatLng latLng = (LatLng) marker.getObject();
+            TaskPositionBean bean = (TaskPositionBean) marker.getObject();
             marker.setVisible(false);
-            addDeleteMarker(latLng);
+            addDeleteMarker(bean);
         }
-
+        LogUtils.e(TAG,"onMarkerClick");
         return true;
     }
 
@@ -225,6 +245,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             markers.get(clickPosition).setVisible(true);
         }
         addMarker(latLng);
+        LogUtils.e(TAG,"onMapClick");
     }
 
     private void addMarker(LatLng latLng){
@@ -241,7 +262,12 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
         markerOption.draggable(false);//设置Marker可拖动
 
-        markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.xuanzedidian));
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_map_task_position_marker,null);
+        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
+        tv_address.setVisibility(View.GONE);
+        ImageView iv_delete = (ImageView) contentView.findViewById(R.id.iv_delete);
+        iv_delete.setVisibility(View.GONE);
+        markerOption.icon(BitmapDescriptorFactory.fromView(contentView));
 
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOption.setFlat(true);//设置marker平贴地图效果
@@ -251,8 +277,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         currentMarker.setObject(latLng);
     }
 
-
-    private void addDeleteMarker(LatLng latLng){
+    private void addRealMarker(LatLng latLng,String address){
         MarkerOptions markerOption = new MarkerOptions();
 
         markerOption.position(latLng);
@@ -261,7 +286,42 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
         markerOption.draggable(false);//设置Marker可拖动
 
-        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_map_search_marker_delete,null);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_map_task_position_marker,null);
+        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
+        tv_address.setVisibility(View.VISIBLE);
+        tv_address.setText(address);
+        ImageView iv_delete = (ImageView) contentView.findViewById(R.id.iv_delete);
+        iv_delete.setVisibility(View.GONE);
+        contentView.setTag(latLng);
+        markerOption.icon(BitmapDescriptorFactory.fromView(contentView));
+
+
+        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+        markerOption.setFlat(true);//设置marker平贴地图效果
+
+        currentMarker = aMap.addMarker(markerOption);
+        currentMarker.setAnchor(0.5f,0.5f);
+        currentMarker.setObject(new TaskPositionBean(iv_delete,tv_address,latLng));
+    }
+
+
+    private void addDeleteMarker(TaskPositionBean bean){
+        MarkerOptions markerOption = new MarkerOptions();
+
+        markerOption.position(bean.getLatLng());
+
+        markerOption.visible(true);
+
+        markerOption.draggable(false);//设置Marker可拖动
+
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_map_task_position_marker,null);
+        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
+        tv_address.setVisibility(View.VISIBLE);
+        tv_address.setText(bean.getTextView().getText());
+        ImageView iv_delete = (ImageView) contentView.findViewById(R.id.iv_delete);
+        iv_delete.setVisibility(View.VISIBLE);
+        contentView.setTag(bean);
+
         markerOption.icon(BitmapDescriptorFactory.fromView(contentView));
 
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
@@ -270,4 +330,5 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         deleteMarker = aMap.addMarker(markerOption);
         deleteMarker.setAnchor(0.5f,0.5f);
     }
+
 }

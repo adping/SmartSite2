@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -192,6 +193,16 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
                     marker.setAnchor(0.5f,0.5f);
                     marker.setObject(bean);
                 }
+
+                @Override
+                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    super.onLoadFailed(e, errorDrawable);
+                    View centerView = LayoutInflater.from(ConstructionMonitorMapActivity.this).inflate(R.layout.layout_map_corner_marker,null);
+                    markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+                    Marker marker = aMap.addMarker(markerOption);
+                    marker.setAnchor(0.5f,0.5f);
+                    marker.setObject(bean);
+                }
             };
 
             bitmapTypeRequest.into(simpleTarget);
@@ -305,7 +316,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
                 this.finish();
                 break;
             case R.id.btn_icon:
-                if(userTrackBeans != null || userTrackBeans.size() != 0){
+                if(userTrackBeans != null && userTrackBeans.size() != 0){
                     Intent intent = new Intent(this,ConstructionMonitorListActivity.class);
                     intent.putExtra("data",userTrackBeans);
                     startActivity(intent);

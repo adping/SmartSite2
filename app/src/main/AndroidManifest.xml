@@ -413,7 +413,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             ></activity>
-
+        <activity android:name=".model.map.ui.MapTestActivity"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
