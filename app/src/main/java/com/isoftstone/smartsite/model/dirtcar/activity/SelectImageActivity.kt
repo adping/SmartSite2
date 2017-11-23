@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.model.dirtcar.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
@@ -25,17 +27,20 @@ open class SelectImageActivity : BaseActivity() {
     var mDataList = ArrayList<SelectImage>()
     var mRootDir = HashSet<String>()
     var mLabSelectedNum: TextView? = null
-    var mSelectPaths = HashSet<String>() //选中图片的保存路径
+    var mSelectPaths = HashSet<String>() //选中图片的保存路径，这个应该是绝对路径
 
     var mSelectedNum: Int = 0
     var mListener = object : SelectImage.OnStatusChangeListener {
         override fun onChange(status: Boolean, path: String) {
             if (status) {
-                mSelectedNum++
-                mSelectPaths.add(path)
+                if (mSelectPaths.add(path)) {
+                    mSelectedNum++
+                }
             } else {
-                mSelectedNum--
-                mSelectPaths.remove(path)
+                if (mSelectPaths.remove(path)) {
+                    mSelectedNum--
+                }
+
             }
             if (mSelectedNum <= 0) {
                 mSelectedNum = 0
@@ -83,7 +88,26 @@ open class SelectImageActivity : BaseActivity() {
         initGridView()
     }
 
+    fun getSelectNum(): Int {
+        return mSelectedNum
+    }
+
     fun initGridView() {
+        var list = intent.getSerializableExtra("selected_data") as ArrayList<String>
+        if (list != null) {
+            for (temp in list) {
+                mSelectPaths.add(temp)
+                mSelectedNum++
+            }
+        }
+        if (mSelectedNum <= 0) {
+            mSelectedNum = 0
+            mLabSelectedNum?.setText("提交")
+        }
+        if (mSelectedNum > 0) {
+            mLabSelectedNum?.setText("提交（$mSelectedNum）")
+        }
+
         mGridView = findViewById(R.id.grid_view) as GridView
         mAdapter = SelectImageAdapter(this, mDataList)
         mGridView?.adapter = mAdapter
@@ -92,6 +116,14 @@ open class SelectImageActivity : BaseActivity() {
 
     fun onClick_submit(v: View) {
         //TODO
+        var i = Intent()
+        if (mSelectPaths.size > 0) {
+            i.putExtra("data", mSelectPaths)
+            setResult(Activity.RESULT_OK, i)
+        } else {
+            setResult(Activity.RESULT_CANCELED, i)
+        }
+        finish()
     }
 
     var mInitResTask = object : AsyncTask<Void, Void, Void>() {
@@ -108,7 +140,11 @@ open class SelectImageActivity : BaseActivity() {
                     }
                     if (curFile.isFile && (curFile.path.endsWith(".jpg") || curFile.path.endsWith(".jpeg") || curFile.path.endsWith(".png") ||
                             curFile.path.endsWith(".JPG") || curFile.path.endsWith(".JPEG") || curFile.path.endsWith(".PNG"))) {
-                        mDataList.add(SelectImage(curFile.canonicalPath, false, mListener))
+                        if (mSelectPaths.contains(curFile.canonicalPath)) {
+                            mDataList.add(SelectImage(curFile.canonicalPath, true, mListener))
+                        } else {
+                            mDataList.add(SelectImage(curFile.canonicalPath, false, mListener))
+                        }
                     } else if (curFile.isDirectory) {
                         var files = curFile.listFiles()
                         for (file in files) {
@@ -127,4 +163,6 @@ open class SelectImageActivity : BaseActivity() {
             super.onPostExecute(result)
         }
     }
+
+
 }

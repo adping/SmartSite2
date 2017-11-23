@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.dirtcar.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.model.dirtcar.Data.SelectImage
+import com.isoftstone.smartsite.model.dirtcar.activity.SelectImageActivity
 import com.isoftstone.smartsite.utils.ImageUtils
 
 /**
@@ -21,6 +23,8 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
     var mPathList = path
     val TAG = "SelectImageAdpater"
 
+    var mActivity: SelectImageActivity = context as SelectImageActivity
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var v = if (convertView != null) convertView else {
             LayoutInflater.from(mContext).inflate(R.layout.grid_item_show_all_photo, null)
@@ -29,6 +33,7 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
         var imgMask = v.findViewById(R.id.img_mask) as ImageView
         var checkBox = v.findViewById(R.id.check_box) as CheckBox
         var selectImg = mPathList.get(position)
+        checkBox.setOnCheckedChangeListener(null)
         if (selectImg.mStatus) {
             imgMask.visibility = View.VISIBLE
             checkBox.isChecked = true
@@ -36,11 +41,20 @@ open class SelectImageAdapter(context: Context, path: ArrayList<SelectImage>) : 
             imgMask.visibility = View.INVISIBLE
             checkBox.isChecked = false
         }
-
         checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-                imgMask.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
-                selectImg.mStatus = isChecked
+                Log.e(TAG, "yanlog onCheck:" + isChecked)
+                if(isChecked) {
+                    if (mActivity.getSelectNum() < 9) {
+                        imgMask.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
+                        selectImg.mStatus = isChecked
+                    }else{
+                        buttonView?.isChecked = false
+                    }
+                }else{
+                    imgMask.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
+                    selectImg.mStatus = isChecked
+                }
             }
         })
 

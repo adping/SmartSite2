@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.http.Header;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -29,18 +28,12 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
-import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
-import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspectPlansAdapter;
-import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog;
-import com.isoftstone.smartsite.model.system.ui.PermissionsActivity;
 import com.isoftstone.smartsite.model.system.ui.PhoneInfoUtils;
 import com.isoftstone.smartsite.model.system.ui.SystemFragment;
-import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by zhangyinfu on 2017/11/16.
@@ -66,6 +59,8 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
 	private static  final int  HANDLER_MANUAL_PHOTPGRAPHY_END = 2;
+
+	private String mLicence = "";
 
 	private Handler mHandler = new Handler(){
 		@Override
@@ -140,6 +135,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 	@Override
 	protected void afterCreated(Bundle savedInstanceState) {
+		mLicence = getIntent().getStringExtra("licence");
 		initToolbar();
 		initView();
 	}
@@ -273,30 +269,38 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				ManualPhotographyActivity.this.finish();
 				break;
 			case R.id.btn_icon:
-				/**new ActionSheetDialog(ManualPhotographyActivity.this)
+				new ActionSheetDialog(ManualPhotographyActivity.this)
 						.builder(false)
 						.setCancelable(true)
 						.setCanceledOnTouchOutside(true)
-						.addSheetItem(mContext.getText(R.string.album).toString(),
-								ActionSheetDialog.SheetItemColor.Blue,
-								new ActionSheetDialog.OnSheetItemClickListener() {
-
-									@Override
-									public void onClick(int which) {
-										choseHeadImageFromGallery();
-									}
-								})
 						.addSheetItem(mContext.getText(R.string.camera).toString(),
 								ActionSheetDialog.SheetItemColor.Blue,
 								new ActionSheetDialog.OnSheetItemClickListener() {
 
 									@Override
 									public void onClick(int which) {
-										choseHeadImageFromCameraCapture();
+										//choseHeadImageFromGallery();
+										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
+										i.putExtra("target_flag",1);
+										i.putExtra("licence",mLicence);
+										startActivity(i);
 									}
-								}).show();*/
+								})
+						.addSheetItem(mContext.getText(R.string.album).toString(),
+								ActionSheetDialog.SheetItemColor.Blue,
+								new ActionSheetDialog.OnSheetItemClickListener() {
 
-				enterOtherActivity();
+									@Override
+									public void onClick(int which) {
+										//choseHeadImageFromCameraCapture();
+										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
+										i.putExtra("target_flag",2);
+										i.putExtra("licence",mLicence);
+										startActivity(i);
+									}
+								}).show();
+
+				//enterOtherActivity();
 				break;
 			default:
 				break;

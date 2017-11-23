@@ -1,10 +1,12 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
+import com.isoftstone.smartsite.model.dirtcar.activity.CameraDetailsActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -56,6 +59,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private final int UPDATE_DATA = 0x0002;
 
     private String currentDate = "";
+    private String today = "";
 
     private List<MapMarkersVoBean> mapMarkersVoBeans;
     private List<Marker> markerList = new ArrayList<>();
@@ -89,6 +93,8 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private float zoom = 14f;
     private LoadingDailog loadingDailog;
 
+    private String licence;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_map_track_history;
@@ -96,6 +102,10 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        licence = getIntent().getStringExtra("licence");
+        if(TextUtils.isEmpty(licence)){
+            ToastUtils.showLong("没有获取到渣土车信息！");
+        }
         httpPost = new HttpPost();
         getNowDate();
         initToolBar();
@@ -109,7 +119,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private void initToolBar(){
         findViewById(R.id.btn_back).setOnClickListener(this);
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("测试玩具车");
+        title.setText(licence);
     }
 
     private void initView(){
@@ -186,7 +196,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mapMarkersVoBeans = httpPost.getMapMarkers("鄂AV785B",currentDate);
+                mapMarkersVoBeans = httpPost.getMapMarkers(licence,currentDate);
                 if(mapMarkersVoBeans == null || mapMarkersVoBeans.size() == 0){
                     mHandler.sendEmptyMessage(NO_DATA);
                 }else{
@@ -308,6 +318,13 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
             case R.id.truck_next:
                 updateDate(1);
                 break;
+            case R.id.iv_look_pic:
+                //跳转到CameraDetailsActivity
+                Intent intent = new Intent(this, CameraDetailsActivity.class);
+                intent.putExtra("licence",licence);
+                intent.putExtra("date",currentDate); //时间格式为：2017-11-19
+                startActivity(intent);
+                break;
         }
     }
 
@@ -380,6 +397,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         currentDate = formatter.format(currentTime);
+        today = currentDate;
     }
 
     public void updateDate(int beforeOrNext){

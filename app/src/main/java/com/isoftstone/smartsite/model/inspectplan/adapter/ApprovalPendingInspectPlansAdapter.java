@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
@@ -87,9 +89,18 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	}
 
 	private void enterOtherView() {
-		//Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+
+		PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
+		patrolPlanBean.setId(14);
+		patrolPlanBean.setEndDate("2017-11-18");
+		patrolPlanBean.setStart("2017-11-12");
+		patrolPlanBean.setStatus(2);
+		BaseUserBean baseUserBean = new BaseUserBean();
+		baseUserBean.setId(1l);
+		patrolPlanBean.setCreator(baseUserBean);
 		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra("patrolplan",patrolPlanBean);
 		mContext.startActivity(intent);
 	}
 

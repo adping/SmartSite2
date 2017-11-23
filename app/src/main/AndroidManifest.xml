@@ -364,6 +364,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".model.dirtcar.activity.DirtCarListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".model.dirtcar.activity.SelectImageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
@@ -403,6 +408,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
+            ></activity>
+        <activity android:name=".model.map.ui.MapPOIActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             ></activity>
 
 

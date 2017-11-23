@@ -2,7 +2,6 @@ package com.isoftstone.smartsite.model.dirtcar.adapter
 
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,22 +16,22 @@ import com.isoftstone.smartsite.utils.ImageUtils
  * 拍照上传界面的GridView的Adapter
  */
 
-open class UpdatePhotoAdapter(context: Context, uriList: ArrayList<Uri>) : BaseAdapter() {
+open class UpdatePhotoAdapter(context: Context, pathList: ArrayList<String>) : BaseAdapter() {
     val TAG = "UpdatePhotoAdapter"
     var mContext = context
-    var mUriList = uriList
+    var mPathList = pathList
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var v = if (convertView != null) convertView else {
-            LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null)
+            LayoutInflater.from(mContext).inflate(R.layout.grid_view_update_photo_item, null)
         }
         var imageView = v.findViewById(R.id.image) as ImageView
-        Log.e(TAG, "getView position:" + position + " size:" + mUriList.size)
-        if (position == mUriList.size) {
-            ImageUtils.loadFromRes(mContext as?Activity, R.drawable.attachment, imageView)
-            // imageView.setImageResource(R.drawable.attachment);
+
+        Log.e(TAG, "getView position:" + position + " size:" + mPathList?.size)
+        if (position == mPathList?.size) {
+            ImageUtils.loadFromRes(mContext as?Activity, R.drawable.tianjiazhaopian, imageView)
         } else {
-            ImageUtils.loadImage(mContext,imageView, mUriList.get(position).toString())
+            ImageUtils.loadImageViewCache(mContext, mPathList?.get(position), imageView)
         }
         return v
     }
@@ -46,6 +45,6 @@ open class UpdatePhotoAdapter(context: Context, uriList: ArrayList<Uri>) : BaseA
     }
 
     override fun getCount(): Int {
-        return mUriList.size + 1
+        return if (mPathList.size >= 9) mPathList.size else mPathList.size + 1
     }
 }

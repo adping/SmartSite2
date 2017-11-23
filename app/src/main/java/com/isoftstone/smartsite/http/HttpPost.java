@@ -86,7 +86,7 @@ public class HttpPost {
     private String ADD_REPORT = URL + "/report";            //新增巡查报告回复 回访  验收
     private String IMAGE_UPLOAD = URL + "/report/attach/mobile";  //图片上传
     private String DICTIONARY_LIST = URL + "/dictionary/list";   //获取报告类型
-    private String GET_PATROL_ADDRESS  = URL+"/patrol/addresses";//获取巡查报告地点
+    private String GET_PATROL_ADDRESS = URL + "/patrol/addresses";//获取巡查报告地点
 
 
     private String GET_CAR_DAY_FLOW = URL + "/mcFlow/getDayFlow";     //路段渣土车的日流量查询
@@ -108,6 +108,7 @@ public class HttpPost {
     private String PATROL_PLAN_REFUSE = URL + "/patrol/plan/refuse"; //巡查计划审批通过
     private String PATROL_PLAN_COMMIT = URL + "/patrol/plan/tasks/commit";//提交巡查计划
     private String GET_PATROLTASK_LIST = URL + "/patrolTask/list";//获取巡查任务列表
+    private String GET_PATROLTASK_LIST_ALL = URL + "/patrolTask/listAll"; //查询巡查计划创建的所有任务列表
     private String ADD_PATROLTASK = URL + "/patrolTask/save";   //新增巡查任务
     private String PATROL_TASK_FINDONE = URL + "/patrolTask/findOne"; //获取一个任务详情
     private String UPDATE_TASK_START = URL + "/patrolTask/updateTaskStart"; //巡查任务开始
@@ -372,8 +373,8 @@ public class HttpPost {
     /*
     获取用户信息通过用户ID
      */
-    public BaseUserBean  getUserById(long userid){
-        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient,userid);
+    public BaseUserBean getUserById(long userid) {
+        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient, userid);
     }
 
     //更改用户信息
@@ -468,27 +469,27 @@ public class HttpPost {
     /*
     获取公司列表
      */
-    public  ArrayList<CompanyBean> getCompanyList(String lang){
-        return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
-	}
+    public ArrayList<CompanyBean> getCompanyList(String lang) {
+        return UserLogin.getCompanyList(DICTIONARY_LIST, mClient, lang);
+    }
 
-	/*
-	通过公司id获取公司名称   对应用户为部门id
-	 */
-	public  String  getCompanyNameByid(int id){
+    /*
+    通过公司id获取公司名称   对应用户为部门id
+     */
+    public String getCompanyNameByid(int id) {
         String companyName = null;
-        ArrayList<CompanyBean>  list = UserLogin.getCompanyList(DICTIONARY_LIST,mClient,"zh");
-        if(list != null){
-            for (int i = 0 ; i < list.size() ; i ++){
+        ArrayList<CompanyBean> list = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
                 CompanyBean companyBean = list.get(i);
-                if(companyBean.getValue().equals(id+"")){
+                if (companyBean.getValue().equals(id + "")) {
                     companyName = companyBean.getContent();
                 }
             }
         }
-        return  companyName;
+        return companyName;
     }
-	
+
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
     }
@@ -676,50 +677,57 @@ public class HttpPost {
     /*
     用户提交建议
      */
-    public  void feedback(long userId, String content) {
-         UserLogin.feedback(FEEDBACK,mClient,userId,content);
+    public void feedback(long userId, String content) {
+        UserLogin.feedback(FEEDBACK, mClient, userId, content);
     }
 
     /*
     获取巡查人员列表
      */
-    public ArrayList<BaseUserBean> findUserAll(){
-        return  PatrolTaskOperation.findUserAll(GET_LOCALUSER_ALL,mClient);
+    public ArrayList<BaseUserBean> findUserAll() {
+        return PatrolTaskOperation.findUserAll(GET_LOCALUSER_ALL, mClient);
     }
 
 
     /*
     单位月度任务排名   时间字段不可以空  格式为：yyyy-mm
      */
-    public  ArrayList<ReportDataBean> getPatrolReportData(String time) {
-         return PatrolInfoOperation.getPatrolReportData(GET_PATROL_REPORT_DATA,mClient,time);
+    public ArrayList<ReportDataBean> getPatrolReportData(String time) {
+        return PatrolInfoOperation.getPatrolReportData(GET_PATROL_REPORT_DATA, mClient, time);
     }
 
     /*
     单位人员月度任务量排名  连个字段都不可以空  时间格式为：yyyy-mm
      */
-    public  ArrayList<UserTaskCountBean> getDepartmentUserTaskData(String time, String departmentId) {
-        return PatrolInfoOperation.getDepartmentUserTaskData(GET_DEPARTMENT_USER_TASK_DATA,mClient,time,departmentId);
+    public ArrayList<UserTaskCountBean> getDepartmentUserTaskData(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentUserTaskData(GET_DEPARTMENT_USER_TASK_DATA, mClient, time, departmentId);
     }
 
     /*
     单位月度任务曲线
      */
-    public  DepartmentMonthDataBean getDepartmentMonthDat(String time, String departmentId) {
-        return PatrolInfoOperation.getDepartmentMonthDat(GET_DEPARTMENT_MONTH_DAT,mClient,time,departmentId);
+    public DepartmentMonthDataBean getDepartmentMonthDat(String time, String departmentId) {
+        return PatrolInfoOperation.getDepartmentMonthDat(GET_DEPARTMENT_MONTH_DAT, mClient, time, departmentId);
     }
 
     /*
    单位月度总任务量对比
      */
-    public  DepartmentsMonthTasks getDepartmentsMonthTasks(String time, String[] departmentIds){
-        return PatrolInfoOperation.getDepartmentsMonthTasks(GET_DEPARTMENTS_MONTH_TASKS,mClient,time,departmentIds);
+    public DepartmentsMonthTasks getDepartmentsMonthTasks(String time, String[] departmentIds) {
+        return PatrolInfoOperation.getDepartmentsMonthTasks(GET_DEPARTMENTS_MONTH_TASKS, mClient, time, departmentIds);
     }
+
     /*
     单位月度回访报告量对比
      */
-    public  DepartmentsMonthTasks getDepartmentReport(String time,String[] departmentIds) {
-        return PatrolInfoOperation.getDepartmentReport(GET_DEPARTMENT_REPORT,mClient,time,departmentIds);
+    public DepartmentsMonthTasks getDepartmentReport(String time, String[] departmentIds) {
+        return PatrolInfoOperation.getDepartmentReport(GET_DEPARTMENT_REPORT, mClient, time, departmentIds);
     }
 
+    /*
+    查询巡查计划创建的所有任务列表
+     */
+    public ArrayList<PatrolTaskBean> getPatrolTaskListAll(String userId, String planId, String planStatus, String taskType, String taskStatus, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
+        return PatrolTaskOperation.getPatrolTaskListAll(GET_PATROLTASK_LIST_ALL, mClient, userId, planId, planStatus, taskType, taskStatus, taskTimeStart, taskTimeEnd, pageableBean);
+    }
 }

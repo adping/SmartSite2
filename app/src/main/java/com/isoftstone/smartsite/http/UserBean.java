@@ -38,14 +38,14 @@ public class UserBean implements Serializable{
         private boolean B_USER_ADD = false;
         private boolean B_PATROL_ACCEPT = false;
         private boolean B_ARCH_ADD = false;
-        private boolean ENVIRMENT_VIEW_DATAQUERY = false;
+        private boolean ENVIRMENT_VIEW_DATAQUERY = false;  //数据查询
         private boolean MENU_2 = false;
         private boolean VS_MAP = false;
         private boolean B_ARCH_DELETE = false;
         private boolean MENU_1 = false;
         private boolean B_USER_UPDATE = false;
         private boolean B_USER_RESETPWD = false;
-        private boolean ENVIRMENT_VIEW_MAP = false;
+        private boolean ENVIRMENT_VIEW_MAP = false;   //站点地图
         private boolean B_PATROL_REPLY = false;
         private boolean B_USER_UNLOCK = false;
         private boolean B_USER_DELETE = false;
@@ -68,10 +68,10 @@ public class UserBean implements Serializable{
         private boolean B_DEVICE_UPDATE = false;
         private boolean M_PATROL_REPORT = false;    //巡查报告权限
         private boolean M_PATROL_ACCEPT = false;    //验收报告权限
-        private boolean MUCKCAR_TRACK = false;
+        private boolean MUCKCAR_TRACK = false;      //渣土车追踪
         private boolean M_MESSAGE_DELETE_ROLE = false;
         private boolean B_PATROL_VISIT = false;
-        private boolean MUCKCAR_MONITOR = false;
+        private boolean MUCKCAR_MONITOR = false;      //渣土车监控
         private boolean M_ROLE = false;
         private boolean M_MESSAGE = false;
         private boolean ENVIRMENT_VIEW = false;
@@ -80,6 +80,8 @@ public class UserBean implements Serializable{
         private boolean M_USER = false;
         private boolean B_ROLE_ADD = false;
         private boolean VS = false;
+        private boolean M_CPPA = false;   //巡查计划审批
+        private boolean M_CPP = false;    //巡查计划
 
         public boolean isB_USER_ADD() {
             return B_USER_ADD;
@@ -439,6 +441,22 @@ public class UserBean implements Serializable{
 
         public void setVS(boolean VS) {
             this.VS = VS;
+        }
+
+        public boolean isM_CPPA() {
+            return M_CPPA;
+        }
+
+        public void setM_CPPA(boolean m_CPPA) {
+            M_CPPA = m_CPPA;
+        }
+
+        public boolean isM_CPP() {
+            return M_CPP;
+        }
+
+        public void setM_CPP(boolean m_CPP) {
+            M_CPP = m_CPP;
         }
     }
 }
