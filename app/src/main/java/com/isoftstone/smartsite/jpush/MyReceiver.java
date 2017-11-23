@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.isoftstone.smartsite.model.dirtcar.Service.RecognizeDirtCarService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +39,7 @@ public class MyReceiver extends BroadcastReceiver {
 			} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
 				Logger.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 				processCustomMessage(context, bundle);
+				startDirtCarService(context);
 
 			} else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
 				Logger.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -123,5 +126,11 @@ public class MyReceiver extends BroadcastReceiver {
 			}
 			LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
 		}
+	}
+
+	private void startDirtCarService(Context context){
+		Intent i = new Intent(context, RecognizeDirtCarService.class);
+		i.putExtra("sync",true);
+		context.startService(i);
 	}
 }
