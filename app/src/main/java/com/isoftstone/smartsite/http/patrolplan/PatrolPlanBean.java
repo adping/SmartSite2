@@ -18,7 +18,7 @@ public class PatrolPlanBean  implements Serializable {
     private String title;     //标题
     private BaseUserBean creator;//用户
     private int weekOfYear;  //一年的第几周
-    private String start;    //开始时间
+    private String startDate;    //开始时间
     private String endDate;  //结束时间
     private String date;     //创建时间
 
@@ -64,11 +64,11 @@ public class PatrolPlanBean  implements Serializable {
     }
 
     public String getStart() {
-        return start;
+        return startDate;
     }
 
     public void setStart(String start) {
-        this.start = start;
+        this.startDate = start;
     }
 
     public String getEndDate() {
@@ -95,7 +95,7 @@ public class PatrolPlanBean  implements Serializable {
                 ", title='" + title + '\'' +
                 ", creator=" + creator +
                 ", weekOfYear=" + weekOfYear +
-                ", start='" + start + '\'' +
+                ", start='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", date='" + date + '\'' +
                 '}';

@@ -208,6 +208,8 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     protected void afterCreated(Bundle savedInstanceState) {
         //获取巡查计划ID
         patrolPlanBean = (PatrolPlanBean) getIntent().getSerializableExtra("patrolplan");
+        Log.e("test","-------------"+patrolPlanBean.getStart());
+        Log.e("test","-------------"+patrolPlanBean.getEndDate());
         if (patrolPlanBean != null) {
             userId = patrolPlanBean.getCreator().getId();   //用户id
         } else {
@@ -287,7 +289,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 //审批通过
-
+                mHandler.sendEmptyMessage(HANDLER_TONGUO_START);
             }
         });
         imageview_tongguo = (ImageView) findViewById(R.id.imageview_tongguo);  //通过按钮
@@ -295,6 +297,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 //审批拒绝
+                mHandler.sendEmptyMessage(HANDLER_BOHUI_START);
             }
         });
         tuihuitonguo_layout = (LinearLayout) findViewById(R.id.tuihuitonguo_layout);  //退回通过layout
@@ -304,6 +307,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 //提交审批
+                mHandler.sendEmptyMessage(HANDLER_TIJIAO_START);
             }
         });
 
