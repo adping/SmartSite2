@@ -45,6 +45,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     private ImageView add_plan;
     private ArrayList<PatrolTaskBean> patrolTaskBeanArrayList;
     private PatrolTaskBeanPage patrolTaskBeanPage;
+    private StartworkDialog startworkDialog = null;
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         add_plan.setOnClickListener(this);
         listview.setAdapter(new MyBaseAdapter(this, patrolTaskBeanArrayList));
         listview.setOnItemClickListener(itemClickListener);
+        startworkDialog = new StartworkDialog(this, listener);
     }
 
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
@@ -94,7 +96,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             PatrolTaskBean selectPatrolTaskBean = patrolTaskBeanArrayList.get(i);
             switch (selectPatrolTaskBean.getTaskStatus()) {
                 case WORK_WAIT_FOR_DOING:
-                    StartworkDialog startworkDialog = new StartworkDialog(getApplicationContext(), listener);
                     startworkDialog.show();
                     break;
                 case WORK_IS_DOING:
