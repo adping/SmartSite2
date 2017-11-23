@@ -91,9 +91,9 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	private void enterOtherView() {
 
 		PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
-		patrolPlanBean.setId(14);
-		patrolPlanBean.setEndDate("2017-11-18");
-		patrolPlanBean.setStart("2017-11-12");
+		patrolPlanBean.setId(114);
+		patrolPlanBean.setEndDate("2017-11-26");
+		patrolPlanBean.setStart("2017-11-20");
 		patrolPlanBean.setStatus(2);
 		BaseUserBean baseUserBean = new BaseUserBean();
 		baseUserBean.setId(1l);
