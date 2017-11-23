@@ -42,6 +42,9 @@ public class PatrolPlanAdapter extends BaseAdapter {
 	}
 	@Override
 	public int getCount() {
+		if(mList == null){
+             return  0;
+		}
 		return mList.size();
 	}
 
@@ -65,7 +68,8 @@ public class PatrolPlanAdapter extends BaseAdapter {
 			holder = (PatrolPlanAdapter.ViewHolder) convertView.getTag();
 		}
         holder.title.setText(mList.get(position).getTaskName());
-		holder.address.setText(mList.get(position).getPlanStatus()+"");
+		holder.time.setText(mList.get(position).getTaskStart());
+		holder.address.setText(mList.get(position).getTaskEnd());
 		return convertView;
 	}
 

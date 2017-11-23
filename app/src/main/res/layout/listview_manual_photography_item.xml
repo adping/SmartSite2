@@ -94,7 +94,7 @@
             android:paddingRight="16dp"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:drawableLeft="@drawable/company"
+            android:drawableLeft="@drawable/dircatlist_address"
             android:drawablePadding="5dp"
             android:singleLine="true"
             android:text="湖北怡瑞有限公司"

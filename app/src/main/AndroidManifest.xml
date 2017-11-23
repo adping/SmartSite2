@@ -428,6 +428,11 @@
         <service android:name=".model.map.service.DownloadAPKService"></service>
         <service android:name=".model.dirtcar.Service.RecognizeDirtCarService"></service>
         <!--zhangwei end-->
+
+        <activity android:name=".PatroPlanDetailsActivity"
+            android:launchMode="singleTask"></activity>
+       <activity android:name=".SlagcarInfoActivity"
+            android:launchMode="singleTask"></activity>
     </application>
 
 </manifest>

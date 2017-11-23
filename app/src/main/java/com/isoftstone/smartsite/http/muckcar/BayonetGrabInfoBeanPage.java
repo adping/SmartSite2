@@ -31,24 +31,5 @@ public class BayonetGrabInfoBeanPage extends PageBean {
         this.content = content;
     }
 
-    @Override
-    public String toString() {
-        String str = "BayonetGrabInfoBeanPage{" +
-                "first=" + first +
-                ", last=" + last +
-                ", number=" + number +
-                ", numberOfElements=" + numberOfElements +
-                ", size=" + size +
-                ", totalElements=" + totalElements +
-                ", totalPages=" + totalPages +
-                '}';
-        if(rawRecords != null){
-            str = str +", rawRecords size ="  + rawRecords.size();
-        }
-        if(content != null){
-            str = str +", content size ="  + content.size();
-        }
-        return str;
-    }
 }
 
