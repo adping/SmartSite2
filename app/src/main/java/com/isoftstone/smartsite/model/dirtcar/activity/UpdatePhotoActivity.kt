@@ -138,8 +138,8 @@ open class UpdatePhotoActivity : BaseActivity() {
                                     }
                                 }).show()
             } else {
-                val intent = FilesUtils.getImageFileIntent(this@UpdatePhotoActivity, mPathList.get(pos))
-                startActivity(intent)
+//                val intent = FilesUtils.getImageFileIntent(this@UpdatePhotoActivity, mPathList.get(pos))
+//                startActivity(intent)
             }
         }))
     }
@@ -161,6 +161,7 @@ open class UpdatePhotoActivity : BaseActivity() {
 
     fun startGallary() {
         var i = Intent(this, SelectImageActivity::class.java)
+        i.putExtra("selected_data", mPathList)
         startActivityForResult(i, FLAG_TARGET_GALLARY)
     }
 
@@ -184,6 +185,7 @@ open class UpdatePhotoActivity : BaseActivity() {
         } else if (requestCode == FLAG_TARGET_GALLARY) {
             if (resultCode == Activity.RESULT_OK) {
                 var pathlist = data?.getSerializableExtra("data") as HashSet<String>
+                mPathList.clear()
                 for (path in pathlist) {
                     mPathList.add(path)
                     mGridViewAdapter?.notifyDataSetChanged()
