@@ -2,7 +2,9 @@ package com.isoftstone.smartsite.model.dirtcar.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.dirtcar.activity.CameraDetailsActivity;
+import com.isoftstone.smartsite.model.dirtcar.activity.DisplayPhotoActivity;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
@@ -73,7 +77,8 @@ public class PhotoGridAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup paramViewGroup) {
-		String url = mListData.get(position);
+		final String url = mListData.get(position);
+		final int crrentPosition = position;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.photogrid_item, null);
@@ -89,6 +94,16 @@ public class PhotoGridAdapter extends BaseAdapter {
 		viewHolder.mImage.setLayoutParams(layoutParams);
 
 		mImageLoader.DisplayImage(url, viewHolder.mImage, false);
+
+		viewHolder.mImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.i("zzz", "gridview item OnClickListener position = " + crrentPosition + "   &url = " + url);
+				Intent intent = new Intent(mContext, DisplayPhotoActivity.class);
+				intent.putExtra("imageUrl",url);
+				mContext.startActivity(intent);
+			}
+		});
 
 		return convertView;
 	}

@@ -88,28 +88,8 @@
                         style="@style/add_report_lab"
                         android:text="任务名称" />
 
-                    <ImageView
-                        android:id="@+id/img_address_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="2dp"
-                        android:src="@drawable/droparrow"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/edit_address"
-                        style="@style/add_report_spinner"
-                        android:layout_height="match_parent"
-                        android:layout_toLeftOf="@id/img_address_down"
-                        android:background="@null"
-                        android:gravity="right|center_vertical"
-                        android:textColor="@color/des_text_color"
-                        android:visibility="gone" />
-
                     <EditText
-                        android:id="@+id/address_edittext"
+                        android:id="@+id/edit_name"
                         style="@style/add_report_edittext"
                         android:hint="请输入任务名称" />
 
@@ -139,21 +119,14 @@
                         style="@style/add_report_lab"
                         android:text="任务地点" />
 
-                    <ImageView
-                        android:id="@+id/img_address_choose"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="11dp"
-                        android:src="@drawable/jiahao" />
-
                     <TextView
                         android:id="@+id/lab_address_choose_right"
                         style="@style/add_report_spinner"
                         android:layout_height="match_parent"
-                        android:layout_toLeftOf="@id/img_address_choose"
+                        android:layout_alignParentRight="true"
                         android:background="@null"
+                        android:drawableEnd="@drawable/jiahao"
+                        android:drawablePadding="11dp"
                         android:gravity="right|center_vertical"
                         android:text="请选择地点"
                         android:textColor="@color/des_text_color" />
@@ -165,13 +138,25 @@
                     android:layout_marginLeft="16dp"
                     android:src="@color/dividing_line" />
 
-                <com.isoftstone.smartsite.model.tripartite.view.MyGridView
-                    android:id="@+id/grid_view_address"
+                <!--<com.isoftstone.smartsite.model.tripartite.view.MyGridView-->
+                <!--android:id="@+id/grid_view_address"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="38dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:numColumns="auto_fit"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>-->
+                <!--<GridLayout-->
+                    <!--android:id="@+id/grid_layout_address"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="38dp"-->
+                    <!--android:layout_marginRight="16dp"></GridLayout>-->
+                <com.isoftstone.smartsite.model.dirtcar.View.MyFlowLayout
+                    android:id="@+id/flow_layout_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="38dp"
-                    android:numColumns="auto_fit"
-                    android:layout_marginRight="16dp"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="38dp"></com.isoftstone.smartsite.model.dirtcar.View.MyFlowLayout>
             </LinearLayout>
 
             <!-- 任务执行人员-->
@@ -194,21 +179,14 @@
                         style="@style/add_report_lab"
                         android:text="任务执行人员" />
 
-                    <ImageView
-                        android:id="@+id/img_people_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="11dp"
-                        android:src="@drawable/jiahao" />
-
                     <TextView
                         android:id="@+id/lab_people_right"
                         style="@style/add_report_spinner"
                         android:layout_height="match_parent"
-                        android:layout_toLeftOf="@id/img_people_down"
+                        android:layout_alignParentRight="true"
                         android:background="@null"
+                        android:drawablePadding="11dp"
+                        android:drawableRight="@drawable/jiahao"
                         android:gravity="right|center_vertical"
                         android:text="请选择"
                         android:textColor="@color/des_text_color" />
@@ -224,9 +202,9 @@
                     android:id="@+id/grid_view_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numColumns="8"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
+                    android:layout_marginRight="16dp"
+                    android:numColumns="8"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
             </LinearLayout>
 
             <include
@@ -273,8 +251,8 @@
                         android:gravity="top|left"
                         android:hint="@string/pls_enter_msg"
                         android:inputType="textMultiLine"
-                        android:paddingTop="15dp"
                         android:paddingBottom="15dp"
+                        android:paddingTop="15dp"
                         android:textColor="@color/main_text_color"
                         android:textSize="14sp" />
 

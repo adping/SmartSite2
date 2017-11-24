@@ -100,4 +100,9 @@
     <color name="color3">#B0B0B0</color>
     <color name="color4">#666666</color>
     <color name="color5">#57C5E8</color>
+    <!-- select inspectors begin-->
+    <color name="colorSort">#666666</color>
+    <color name="colorContact">#333333</color>
+    <color name="colorSortBackground">#D3D3D3</color>
+    <!-- select inspectors begin-->
 </resources>

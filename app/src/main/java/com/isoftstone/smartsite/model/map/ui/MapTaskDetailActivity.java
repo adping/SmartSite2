@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,6 +61,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
     private final int UPDATE_USER_GUIJI = 0x0001;
     private final int NO_GUI_JI = 0x0002;
     private final int AFTER_GET_USERS = 0x0003;
+    private final int NO_DATA = 0x0004;
 
     private MapView mapView;
     private AMap aMap;
@@ -93,6 +95,10 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                 case AFTER_GET_USERS:
                     recyclerViewAdapter.setDatas(userBeans,userBeans.indexOf(currentUserBean));
                     updateUserGuiji();
+                    break;
+                case NO_DATA:
+                    loadingDailog.dismiss();
+                    ToastUtils.showShort("没有获取到任务详情！");
                     break;
                 case UPDATE_USER_GUIJI:
                     loadingDailog.dismiss();
@@ -293,6 +299,18 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                 marker.setObject(bean);
                 touXiangMarkers.add(marker);
             }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                super.onLoadFailed(e, errorDrawable);
+                View centerView = LayoutInflater.from(MapTaskDetailActivity.this).inflate(R.layout.layout_marker_with_icon,null);
+                markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setAnchor(0.5f,1f);
+                bean.bitmap = null;
+                marker.setObject(bean);
+                touXiangMarkers.add(marker);
+            }
         };
 
         bitmapTypeRequest.into(simpleTarget);
@@ -305,6 +323,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void run() {
                 patrolTaskBean= httpPost.patrolTaskFindOne(64);
+                LogUtils.e(TAG,"no  user");
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -317,7 +336,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                     }
                     mHandler.sendEmptyMessage(AFTER_GET_USERS);
                 } else {
-//                    mHandler.sendEmptyMessage(NO_DATA);
+                    mHandler.sendEmptyMessage(NO_DATA);
                 }
             }
         }).start();

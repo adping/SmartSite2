@@ -215,7 +215,7 @@
     <string name="approval_pending_inspect_plans_title">待审批巡查计划</string>
     <string name="camera_details_title">摄像头详情</string>
     <string name="shooting_time_txt">拍摄时间:</string>
-
+    <string name="show_photo_details">拍摄图片详情</string>
     <!--           insectplan end       -->
 
     <!--         极光推送字符串后期删掉            -->
@@ -231,4 +231,9 @@
     <string name="logining">Running in background. Please see log.</string>
     <string name="setting_su">Succeed to set</string>
     <!--        极光推送字符串后期删掉             -->
+    <!--         select inspectors          -->
+    <string name="select_inspecter">请选择巡查人员</string>
+    <string name="select_inspecter_title">选择人员</string>
+    <string name="select_inspecter_btn">确定</string>
+    <!--         select inspectors          -->
 </resources>

@@ -35,25 +35,16 @@
                 android:textSize="12sp"/>
 
             <TextView
-                android:id="@+id/res_code_tv"
+                android:id="@+id/device_coding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/lab_title"
                 android:layout_marginLeft="6dp"
                 android:textColor="@color/main_text_color"
-                android:text="123456_1"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/is_online_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:layout_toRightOf="@id/res_code_tv"
-                android:src="@drawable/online" />
 
             <TextView
                 android:id="@+id/lab_time"
@@ -64,7 +55,6 @@
                 android:layout_gravity="right"
                 android:layout_marginLeft="6dp"
                 android:layoutDirection="locale"
-                android:text="2017-11-15"
                 android:textColor="@color/des_text_color"
                 android:textSize="12sp" />
 
@@ -101,7 +91,7 @@
             android:id="@+id/gotomap">
 
             <TextView
-                android:id="@+id/res_name_tv"
+                android:id="@+id/device_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/site"
@@ -109,7 +99,6 @@
                 android:layout_gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text=""
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp" />
 
@@ -140,7 +129,6 @@
             android:layout_marginLeft="16dp"
             android:gravity="left|center"
             android:textColor="@color/main_text_color"
-            android:text="鄂A00000"
             android:textSize="14sp"
             android:textStyle="bold"/>
 
@@ -151,12 +139,5 @@
             android:divider="@color/app_background"/>
 
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/main_lv_list"
-        android:visibility="gone"
-        android:divider="@color/app_background"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
 
 </LinearLayout>
