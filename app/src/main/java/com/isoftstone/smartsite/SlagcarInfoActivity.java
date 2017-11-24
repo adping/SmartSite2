@@ -31,6 +31,7 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
     private TextView title;
     private ArrayList<Fragment> fragmentLists;
     private MyPagerAdapter pagerAdapter;
+    private String [] titles =new String[]{"月视图","日视图"};
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
 
     private void initTablayout() {
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.addTab(tabLayout.newTab().setText("月视图"));
-        tabLayout.addTab(tabLayout.newTab().setText("日视图"));
+        tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
+        tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
     }
 
     @Override
@@ -96,6 +97,11 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
         @Override
         public int getCount() {
             return list == null ? 0 : list.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
         }
     }
 }

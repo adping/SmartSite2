@@ -92,7 +92,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
-        android:background="#eeeeee"></View>
+        ></View>
 
     <RelativeLayout
         android:layout_width="match_parent"
