@@ -320,9 +320,7 @@ public class MainFragment extends BaseFragment{
      * 进入渣土车监控
      */
     private void enterDircar(){
-            //DirtCarListActivity
-        //Intent intent = new Intent(getActivity(),SlagcarInfoActivity.class);
-        Intent intent = new Intent(getActivity(),DirtCarListActivity.class);
+        Intent intent = new Intent(getActivity(),SlagcarInfoActivity.class);
         getActivity().startActivity(intent);
     }
 
