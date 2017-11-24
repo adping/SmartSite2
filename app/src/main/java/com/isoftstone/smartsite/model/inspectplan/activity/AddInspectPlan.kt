@@ -54,6 +54,7 @@ open class AddInspectPlan : BaseActivity() {
     var edit_report_msg: EditText? = null
     var lab_address_choose_left: TextView? = null
     val FLAG_TARGET_ADDRESS = 0
+    val FLAG_TARGET_PEOPLE = 1
 
     var flow_layout_address: MyFlowLayout? = null
     var mHttpPost = HttpPost()
@@ -144,6 +145,14 @@ open class AddInspectPlan : BaseActivity() {
     }
 
     fun initPeopleGridView() {
+        var lab_people_right = findViewById(R.id.lab_people_right) as TextView
+        lab_people_right.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                var i = Intent(this@AddInspectPlan, SelectInspectorsActivity::class.java)
+                startActivityForResult(i, FLAG_TARGET_PEOPLE)
+            }
+        })
+
         labPeople = findViewById(R.id.lab_people_left) as TextView
         mGridViewPeople = findViewById(R.id.grid_view_people) as GridView
         mGridViewPeople?.adapter = mAdapterPeople
@@ -188,6 +197,8 @@ open class AddInspectPlan : BaseActivity() {
                 }
                 addAddressView()
             }
+        } else if (requestCode == FLAG_TARGET_PEOPLE) {
+            ToastUtils.showShort("暂时实现");
         }
         super.onActivityResult(requestCode, resultCode, data)
 

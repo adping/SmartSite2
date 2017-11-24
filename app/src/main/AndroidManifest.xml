@@ -419,6 +419,11 @@
             android:screenOrientation="portrait"
             ></activity>
         <activity android:name=".model.map.ui.MapTestActivity"></activity>
+        <activity
+            android:name="com.isoftstone.smartsite.model.inspectplan.activity.SelectInspectorsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
