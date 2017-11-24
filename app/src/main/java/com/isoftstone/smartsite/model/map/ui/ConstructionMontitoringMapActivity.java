@@ -104,7 +104,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private Location currentLocation;
 
     private long loginUseId = HttpPost.mLoginBean.getmUserBean().getLoginUser().getId();
-//upload/xuncha187.png
+
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {

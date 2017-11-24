@@ -94,6 +94,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private LoadingDailog loadingDailog;
 
     private String licence;
+    private MapMarkersVoBean currentBean;
 
     @Override
     protected int getLayoutRes() {
@@ -323,6 +324,8 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
                 Intent intent = new Intent(this, CameraDetailsActivity.class);
                 intent.putExtra("licence",licence);
                 intent.putExtra("date",currentDate); //时间格式为：2017-11-19
+                intent.putExtra("device_coding",currentBean.getDeviceCoding());
+                intent.putExtra("device_address",currentBean.getAddr());
                 startActivity(intent);
                 break;
         }
@@ -331,14 +334,14 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(marker.getObject() != null){
-            MapMarkersVoBean bean = (MapMarkersVoBean) marker.getObject();
+             currentBean = (MapMarkersVoBean) marker.getObject();
             if(mPopWindow == null){
                 initPopWindow();
             }else {
-                tv_device_number.setText(bean.getDeviceName());
-                tv_time.setText("拍摄时间：" + bean.getInstallTime().substring(0,10));
-                tv_address.setText(bean.getAddr());
-                LatLng latLng = new LatLng(bean.getLatitude(),bean.getLongitude());
+                tv_device_number.setText(currentBean.getDeviceCoding());
+                tv_time.setText("拍摄时间：" + currentBean.getInstallTime().substring(0,10));
+                tv_address.setText(currentBean.getAddr());
+                LatLng latLng = new LatLng(currentBean.getLatitude(),currentBean.getLongitude());
                 initLocation(latLng);
                 addRoundMarker(latLng);
                 mPopWindow.showAtLocation(mapView, Gravity.BOTTOM,0, DensityUtils.dip2px(this,-8));
