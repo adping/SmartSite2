@@ -91,6 +91,6 @@
         android:layout_height="match_parent"
         android:paddingRight="8dp"
         android:layout_below="@id/listView_Icon"
-        android:sidebar_text_color="@color/colorContact"
+        app:sidebar_text_color="@color/colorContact"
         sidebar_text_size="12dp"/>
 </RelativeLayout>
