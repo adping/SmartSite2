@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +38,13 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     private static final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START = 1;
     private static  final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END = 2;
+
+    /* 查询请求识别码 查询成功*/
+    private static final int QUERY_RESULTS_SUCCESSFUL_CODE = 1;
+    /* 查询请求识别码 查询失败*/
+    private static final int QUERY_RESULTS_FAILED_CODE = 2;
+    /* 查询请求识别码 查询异常*/
+    private static final int QUERY_RESULTS_EXCEPTION_CODE = 3;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -100,10 +109,8 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     };
 
     private void setListViewData() {
-        if( mListData != null ){
-            ApprovalPendingInspectPlansAdapter adapter = new ApprovalPendingInspectPlansAdapter(ApprovalPendingInspectPlansActivity.this, mListData);
-            mListView.setAdapter(adapter);
-        }
+        ApprovalPendingInspectPlansAdapter adapter = new ApprovalPendingInspectPlansAdapter(ApprovalPendingInspectPlansActivity.this, mListData);
+        mListView.setAdapter(adapter);
     }
 
     @Override
@@ -117,10 +124,18 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
         initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        queryDataTask updateTextTask = new queryDataTask(this);
+        updateTextTask.execute();
+    }
+
     private void initView() {
         mHttpPost = new HttpPost();
         mListView = (ListView) findViewById(R.id.list_view);
-        mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START);
+        //mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START);
     }
 
     private void initToolbar(){
@@ -138,6 +153,92 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                 break;
             default:
                 break;
+        }
+    }
+
+    class queryDataTask extends AsyncTask<Void,Void,Integer> {
+        private Context context;
+        queryDataTask(Context context) {
+            this.context = context;
+        }
+
+        /**
+         * 运行在UI线程中，在调用doInBackground()之前执行
+         */
+        @Override
+        protected void onPreExecute() {
+            //Toast.makeText(context,"开始执行",Toast.LENGTH_SHORT).show();
+            if (mListView != null) {
+                mListView.setAdapter(null);
+            }
+            showDlg("正在获取列表");
+        }
+        /**
+         * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
+         */
+        @Override
+        protected Integer doInBackground(Void... params) {
+
+            if(mListData != null) {
+                mListData.clear();
+            }
+
+            try {
+                PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
+                PageableBean pageableBean = new PageableBean();
+                PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean);
+                ArrayList<PatrolPlanBean> arrayList = patrolPlanBeanPage.getContent();
+                Log.i("zzz","AAAAAAAAAAAAAAAAAAAAA     arrayList = " + arrayList);
+                if (arrayList == null || arrayList.size() == 0) {
+                    return QUERY_RESULTS_FAILED_CODE;
+                }
+
+                for (int i=0; i< arrayList.size(); i++) {
+                    Log.i("zzz","arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+                    InspectPlanBean inspectPlanBean = new InspectPlanBean();
+                    inspectPlanBean.setUserId(arrayList.get(i).getId());
+                    inspectPlanBean.setTaskName(arrayList.get(i).getTitle());
+                    inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
+                    inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
+                    inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
+                    inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
+                    inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());
+                    inspectPlanBean.setBaseUserBean(arrayList.get(i).getCreator());
+                    //inspectPlanBean.setAddress(arrayList.get(i));
+                    mListData.add(inspectPlanBean);
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG,"e : " + e.getMessage());
+                return QUERY_RESULTS_EXCEPTION_CODE;
+            }
+
+            return QUERY_RESULTS_SUCCESSFUL_CODE;
+        }
+
+        /**
+         * 运行在ui线程中，在doInBackground()执行完毕后执行
+         */
+        @Override
+        protected void onPostExecute(Integer resultsCode) {
+            super.onPostExecute(resultsCode);
+            closeDlg();
+            //Toast.makeText(context,"执行完毕",Toast.LENGTH_SHORT).show();
+            if (resultsCode == QUERY_RESULTS_SUCCESSFUL_CODE) {
+                setListViewData();
+            } else if (resultsCode == QUERY_RESULTS_FAILED_CODE){
+                ToastUtils.showLong("获取列表为空。");
+            } else if (resultsCode == QUERY_RESULTS_EXCEPTION_CODE) {
+                ToastUtils.showLong("获取列表失败，请稍后重试");
+            }
+        }
+
+        /**
+         * 在publishProgress()被调用以后执行，publishProgress()用于更新进度
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
         }
     }
 

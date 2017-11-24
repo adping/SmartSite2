@@ -293,6 +293,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
 
+        <!--  人工拍照图片显示界面 -->
+        <activity android:name=".model.dirtcar.activity.DisplayPhotoActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
+
         <!--  待审批巡查计划列表 -->
         <activity android:name=".model.inspectplan.activity.ApprovalPendingInspectPlansActivity"
             android:screenOrientation="portrait"
