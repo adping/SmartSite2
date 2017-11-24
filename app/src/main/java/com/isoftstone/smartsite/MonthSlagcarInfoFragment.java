@@ -11,11 +11,15 @@ import com.isoftstone.smartsite.base.BaseFragment;
 public class MonthSlagcarInfoFragment extends BaseFragment {
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-
+        initView();
     }
 
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_slagcar_info;
+    }
+
+    private void initView(){
+
     }
 }

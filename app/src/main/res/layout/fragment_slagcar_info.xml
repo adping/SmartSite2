@@ -1,61 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
+    >
 
     <LinearLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="36dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:layout_marginLeft="16dp"
-            android:src="@drawable/title_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="路段渣土车月度流量排名"
-            android:textColor="#666666"
-            android:textSize="12sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_11"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="17dp"
-            android:text="2017年10月"
-            android:textColor="#222222"
-            android:textSize="12sp" />
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/image_11"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="7dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/title_icon" />
+
+                <TextView
+                    android:id="@+id/liuliang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="17dp"
+                    android:paddingLeft="7dp"
+                    android:text="路段渣土车月度流量排名"
+                    android:textColor="#666666"
+                    android:textSize="14sp"></TextView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="17dp"
+                    android:text="2017年10月"
+                    android:textColor="#222222"
+                    android:textSize="12sp"></TextView>
+
+                <ImageView
+                    android:id="@+id/image_date_choice1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/droparrow" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#eeeeee"></View>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/blueround" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingLeft="5dp"
+                    android:text="白名单"
+                    android:textSize="14sp" />
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/weiwanchengdianwei" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:paddingLeft="5dp"
+                    android:text="黑名单"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/address_1"
+                layout="@layout/white_black_list_num"></include>
+
+            <include
+                android:id="@+id/address_2"
+                layout="@layout/white_black_list_num"></include>
+
+            <include
+                android:id="@+id/address_3"
+                layout="@layout/white_black_list_num"></include>
+
+            <include
+                android:id="@+id/address_4"
+                layout="@layout/white_black_list_num"></include>
+
+            <include
+                android:id="@+id/address_5"
+                layout="@layout/white_black_list_num"></include>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/title_icon" />
+
+            <TextView
+                android:id="@+id/liuliangduibi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="17dp"
+                android:paddingLeft="7dp"
+                android:text="路段渣土车月度流量对比"
+                android:textColor="#666666"
+                android:textSize="14sp"></TextView>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/liuliangduibi_detail"
+            layout="@layout/liuliangduibi_month_or_day"></include>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/title_icon" />
+
+            <TextView
+                android:id="@+id/baojinglv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="17dp"
+                android:paddingLeft="7dp"
+                android:text="路段报警率月度对比"
+                android:textColor="#666666"
+                android:textSize="14sp"></TextView>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/warning_detail"
+            layout="@layout/warning_month_or_day"></include>
+
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="#eeeeee"></View>
-
-
-
-
-</LinearLayout>
+</ScrollView>

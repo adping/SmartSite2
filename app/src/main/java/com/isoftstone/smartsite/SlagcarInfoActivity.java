@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.dirtcar.activity.DirtCarListActivity;
 
 import java.util.ArrayList;
 
@@ -31,12 +33,14 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
     private TextView title;
     private ArrayList<Fragment> fragmentLists;
     private MyPagerAdapter pagerAdapter;
+    private String [] titles =new String[]{"月视图","日视图"};
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         tabLayout = (TabLayout) findViewById(R.id.tab);
         viewPager = (ViewPager) findViewById(R.id.vp);
         btn_icon = (ImageButton) findViewById(R.id.btn_icon);
+        btn_icon.setImageResource(R.drawable.environmentlist);
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         title = (TextView) findViewById(R.id.toolbar_title);
         title.setText("渣土车概览");
@@ -63,8 +67,8 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
 
     private void initTablayout() {
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.addTab(tabLayout.newTab().setText("月视图"));
-        tabLayout.addTab(tabLayout.newTab().setText("日视图"));
+        tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
+        tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
     }
 
     @Override
@@ -74,10 +78,17 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.btn_icon:
+                enterDirctCar();
                 break;
             default:
                 break;
         }
+    }
+
+    private void enterDirctCar(){
+        Intent intent = new Intent(this,DirtCarListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {
@@ -96,6 +107,11 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
         @Override
         public int getCount() {
             return list == null ? 0 : list.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
         }
     }
 }
