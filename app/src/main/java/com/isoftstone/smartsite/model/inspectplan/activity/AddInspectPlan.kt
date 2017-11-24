@@ -2,27 +2,31 @@ package com.isoftstone.smartsite.model.inspectplan.activity
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
-import android.widget.GridLayout
 import android.widget.GridView
+import android.widget.ImageView
 import android.widget.TextView
+import com.amap.api.maps.model.LatLng
 import com.google.gson.Gson
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
+import com.isoftstone.smartsite.http.HttpPost
+import com.isoftstone.smartsite.http.patroltask.PatrolPositionBean
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean
+import com.isoftstone.smartsite.http.user.BaseUserBean
 import com.isoftstone.smartsite.model.dirtcar.View.MyFlowLayout
-import com.isoftstone.smartsite.model.inspectplan.adapter.AddressAdapter
 import com.isoftstone.smartsite.model.inspectplan.adapter.PeopleAdapter
 import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity
-import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity
-import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper
 import com.isoftstone.smartsite.utils.DateUtils
-import com.isoftstone.smartsite.utils.FilesUtils
+import com.isoftstone.smartsite.utils.ToastUtils
 import com.isoftstone.smartsite.widgets.CustomDatePicker
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,24 +35,16 @@ import java.util.*
  * Created by yanyongjun on 2017/11/15.
  */
 open class AddInspectPlan : BaseActivity() {
-    var mGridViewAddress: GridView? = null
-    var mAddressList = ArrayList<String>()
-    var mAdapterAddress: AddressAdapter? = null
+    var mAddressList = ArrayList<PatrolPositionBean>()
 
     var mGridViewPeople: GridView? = null
     var mPeopleList = ArrayList<String>()
     var mAdapterPeople: PeopleAdapter? = null
-
-    var mGridViewAttach: GridView? = null
-    var mAttachList = java.util.ArrayList<Any>()
-    var mAttachAdapter: AttachGridViewAdatper? = null
-
     var mEditName: EditText? = null
 
     private var mWaittingAdd: Drawable? = null
     private var mWattingChanged: Drawable? = null
 
-    var labAddress: TextView? = null
     var labPeople: TextView? = null
 
     var labTimeLeft: TextView? = null
@@ -59,9 +55,8 @@ open class AddInspectPlan : BaseActivity() {
     var lab_address_choose_left: TextView? = null
     val FLAG_TARGET_ADDRESS = 0
 
-    var grid_layout_address :GridLayout ?= null
-
-    var flow_layout_address:MyFlowLayout ?= null
+    var flow_layout_address: MyFlowLayout? = null
+    var mHttpPost = HttpPost()
 
     override fun getLayoutRes(): Int {
         return R.layout.activity_add_inspect_plan;
@@ -75,18 +70,13 @@ open class AddInspectPlan : BaseActivity() {
         mWattingChanged?.setBounds(0, 0, mWattingChanged?.getIntrinsicWidth()!!, mWattingChanged?.getIntrinsicHeight()!!)
 
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
-        //mAttachAdapter = AttachGridViewAdatper(this, mAttachList)
-
-
 
         initEditName()
         initBeginTime()
         initEndTime()
         initMsg()
         initAddressGridView()
-        initGridLayout()
         initPeopleGridView()
-        //initAttachGridView()
     }
 
     fun initEditName() {
@@ -159,17 +149,8 @@ open class AddInspectPlan : BaseActivity() {
         mGridViewPeople?.adapter = mAdapterPeople
     }
 
-    fun initGridLayout(){
-        //grid_layout_address = findViewById(R.id.grid_layout_address) as GridLayout
-        flow_layout_address = findViewById(R.id.flow_layout_address) as MyFlowLayout
-    }
-
     fun initAddressGridView() {
-       // mGridViewAddress = findViewById(R.id.grid_view_address) as GridView
-
-        mAdapterAddress = AddressAdapter(this, mAddressList,mWaittingAdd,labAddress)
-        mGridViewAddress?.adapter = mAdapterAddress
-
+        flow_layout_address = findViewById(R.id.flow_layout_address) as MyFlowLayout
         val lab_address_choose_right = findViewById(R.id.lab_address_choose_right) as TextView
         lab_address_choose_left = findViewById(R.id.lab_address_choose_left) as TextView
 
@@ -182,34 +163,29 @@ open class AddInspectPlan : BaseActivity() {
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FLAG_TARGET_ADDRESS) {
             var address = data?.getStringExtra("latLngsNameJson")
-            Log.e(TAG, "yanlog return address:" + address)
+            var latlan = data?.getStringExtra("latLngsJson")
+            Log.e(TAG, "yanlog latlan:" + latlan)
             if (address != null) {
                 var gson = Gson()
-                var temp: ArrayList<String> = gson.fromJson<ArrayList<String>>(address, ArrayList::class.java)
-                mAddressList.addAll(temp)
-                //mAdapterAddress?.notifyDataSetChanged()
+                var tempAddress: ArrayList<String> = gson.fromJson<ArrayList<String>>(address, ArrayList::class.java)
+                //var tempLatlng : ArrayList<LatLng> = gson.fromJson<ArrayList<LatLng>>(latlan,ArrayList<LatLng::class.java>::class.java)
+                var tempLatlng = data?.getParcelableArrayListExtra<LatLng>("latLngs")
+                for (temp in tempAddress) {
+                    var loc = tempAddress.indexOf(temp)
+                    var result = PatrolPositionBean()
+                    Log.e(TAG, "yanlog lati:" + tempLatlng!!.get(loc).latitude + " long:" + tempLatlng.get(loc).longitude)
+                    result.latitude = tempLatlng.get(loc).latitude
+                    result.longitude = tempLatlng.get(loc).longitude
+                    result.position = temp
+                    mAddressList.add(result)
+                }
+                //mAddressList.addAll(result)
                 if (mAddressList.size > 0) {
                     lab_address_choose_left?.setCompoundDrawables(mWattingChanged, null, null, null)
                 }
-
-                //for test
-//                var str = temp[0]
-//                var v = LayoutInflater.from(this@AddInspectPlan).inflate(R.layout.listview_add_inspect_plan_address_item, null)
-//                var textView = v.findViewById(R.id.lab_address) as TextView
-//                textView.setText(str)
-//                var array = ArrayList<View>()
-//                array.add(v)
-//                val rowSpec = GridLayout.spec(mAddressList.size / 3, 1f)
-//                val columnSpec = GridLayout.spec(mAddressList.size % 3, 1f)
-//
-//                val layoutParams = GridLayout.LayoutParams(rowSpec, columnSpec)
-//                layoutParams.height = v.height
-//                layoutParams.width = v.width
-//                grid_layout_address?.addView(v,layoutParams)
                 addAddressView()
             }
         }
@@ -217,47 +193,91 @@ open class AddInspectPlan : BaseActivity() {
 
     }
 
-    fun addAddressView(){
+    /**
+     * 新增选择之后的地点
+     */
+    fun addAddressView() {
         flow_layout_address?.removeAllViews()
-        for(str in mAddressList) {
+        for (str in mAddressList) {
             var v = LayoutInflater.from(this@AddInspectPlan).inflate(R.layout.listview_add_inspect_plan_address_item, null)
             var textView = v.findViewById(R.id.lab_address) as TextView
-            textView.setText(str)
+            textView.setText(str.position)
+
+            var imgDelete = v.findViewById(R.id.img_delete) as ImageView
+            imgDelete.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    flow_layout_address?.removeView(v)
+                    mAddressList.remove(str)
+                }
+            })
             flow_layout_address?.addView(v)
         }
     }
 
-    //add files
-    fun addAttach(path: String, uri: String) {
-        Log.e(TAG, "yanlog remove begin size:" + mAttachList.size);
-        var formatPath = FilesUtils.getFormatString(path);
-        Log.e(TAG, "yanlog remove begin size at0:" + mAttachList.get(0));
-        mAttachList.removeAt(mAttachList.size - 1);
-        //mFilesPath.add(path);
-        if (TripartiteActivity.mImageList.contains(formatPath)) {
-            mAttachList.add(uri);
-        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
-            mAttachList.add(TripartiteActivity.mAttach.get(".xls") ?: 0);
-        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
-            mAttachList.add(TripartiteActivity.mAttach.get(".doc") ?: 0);
-        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
-            mAttachList.add(TripartiteActivity.mAttach.get(".pdf") ?: 0);
-        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
-            mAttachList.add(TripartiteActivity.mAttach.get(".ppt") ?: 0);
-        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
-            mAttachList.add(TripartiteActivity.mAttach.get(".video") ?: 0);
-        } else {
-            mAttachList.add(TripartiteActivity.mAttach.get(".doc") ?: 0);
+    fun isOkTime(str: String?): Boolean {
+        try {
+            DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(str)
+        } catch (e: Exception) {
+            return false;
         }
-
-        mAttachList.add(R.drawable.attachment);
-        Log.e(TAG, "yanlog remove end size:" + mAttachList.size);
-        Log.e(TAG, "yanlog mData at 0:" + mAttachList.get(0));
-        mAttachAdapter?.notifyDataSetChanged();
+        return true
     }
 
     fun onClick_submit(v: View) {
-        //TODO
+        var submit = object : AsyncTask<Void, Void, Boolean>() {
+            override fun onPreExecute() {
+                this@AddInspectPlan.showDlg("正在提交")
+                super.onPreExecute()
+            }
+
+            override fun doInBackground(vararg params: Void?): Boolean {
+                try {
+                    var name = mEditName?.text?.toString()
+                    var addList = mAddressList
+                    var beginTime = labBeginTimeRight?.text?.toString()
+                    var endTime = labEndTimeRight?.text?.toString()
+                    var content = edit_report_msg?.text?.toString()
+
+                    var peopleList = ArrayList<BaseUserBean>()
+                    var bean_1 = BaseUserBean()
+                    bean_1.id = HttpPost.mLoginBean.getmUserBean().loginUser.getId() //TODO
+                    peopleList.add(bean_1)
+
+                    if (TextUtils.isEmpty(name) || !isOkTime(beginTime) || !isOkTime(endTime) ||
+                            TextUtils.isEmpty(content) || addList.size == 0 || peopleList.size == 0) {
+                        return false
+                    }
+
+                    var planBean = PatrolTaskBean()
+                    planBean.taskName = name
+                    planBean.patrolPositions = addList
+                    planBean.taskTimeStart = beginTime
+                    planBean.taskTimeEnd = endTime
+                    planBean.taskContent = content
+                    planBean.users = peopleList
+
+                    var result = mHttpPost.patrolTaskSave(planBean)
+                    if (result == null) {
+                        return false
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return false
+                }
+                return true
+            }
+
+            override fun onPostExecute(result: Boolean) {
+                this@AddInspectPlan.closeDlg()
+                if (result) {
+                    ToastUtils.showShort("提交成功")
+                    finish()
+                } else {
+                    ToastUtils.showShort("请检查字段或稍后重试")
+                }
+            }
+        }
+        submit.execute()
     }
 
     fun showDatePickerDialog(editRight: TextView?, labLeft: TextView?) {

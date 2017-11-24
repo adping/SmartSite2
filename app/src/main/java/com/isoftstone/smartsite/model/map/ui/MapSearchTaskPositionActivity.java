@@ -25,7 +25,6 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.model.map.adapter.MapSearchPositionInfoWindowAdapter;
 import com.isoftstone.smartsite.model.map.bean.TaskPositionBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -47,7 +46,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
     private EditText et;
     private LatLng currentLatLng;
     private Marker currentMarker;
-    private List<LatLng> latLngs = new ArrayList<>();
+    private ArrayList<LatLng> latLngs = new ArrayList<>();
     private List<String> latLngsName = new ArrayList<>();
     private List<Marker> markers = new ArrayList<>();
     private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
@@ -204,6 +203,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         Intent intent = new Intent();
         intent.putExtra("latLngsJson",latLngsJson);
         intent.putExtra("latLngsNameJson",latLngsNameJson);
+        intent.putParcelableArrayListExtra("latLngs",latLngs);
         ArrayList<String> temp = gson.fromJson(latLngsNameJson,ArrayList.class);
 
         LogUtils.e(TAG,latLngsNameJson);
