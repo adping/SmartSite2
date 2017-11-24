@@ -52,12 +52,12 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private HttpPost mHttpPost;
 	private Bitmap mHeadBitmap;//裁剪后得图片
 
-	/* 请求识别码 选择图库*/
-	private static final int IMAGE_REQUEST_CODE = 1;
-	/* 请求识别码 照相机*/
-	private static final int CAMERA_REQUEST_CODE = 2;
-	/* 请求识别码 裁剪*/
-	private static final int RESULECODE = 3;
+	/* 查询请求识别码 查询成功*/
+	private static final int QUERY_RESULTS_SUCCESSFUL_CODE = 1;
+	/* 查询请求识别码 查询失败*/
+	private static final int QUERY_RESULTS_FAILED_CODE = 2;
+	/* 查询请求识别码 查询异常*/
+	private static final int QUERY_RESULTS_EXCEPTION_CODE = 3;
 
 	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
 	private static  final int  HANDLER_MANUAL_PHOTPGRAPHY_END = 2;
@@ -137,7 +137,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	}
 
 	@Override
-	protected void afterCreated(Bundle savedInstanceState) {
+	protected void afterCreated(Bundle bundle) {
 		mLicence = getIntent().getStringExtra("licence");
 		initToolbar();
 		initView();
@@ -267,48 +267,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		}
 	}
 
-	// 从本地相册选取图片作为头像
-	private void choseHeadImageFromGallery() {
-
-		Intent intentFromGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		// 设置文件类型
-		intentFromGallery.setType("image/*");
-		startActivityForResult(intentFromGallery, IMAGE_REQUEST_CODE);
-	}
-
-	// 启动手机相机拍摄照片作为头像
-	private void choseHeadImageFromCameraCapture() {
-
-		if (PhoneInfoUtils.hasSdcard()) {
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-					SystemFragment.HEAD_IMAGE_NAME)));
-			startActivityForResult(intent, CAMERA_REQUEST_CODE);//采用ForResult打开
-		}
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode != Activity.RESULT_CANCELED) {
 			switch (requestCode) {
-				// 如果是直接从相册获取
-				case IMAGE_REQUEST_CODE:
-					cropPhoto(intent.getData());//裁剪图片
-					break;
-				// 如果是调用相机拍照时
-				case CAMERA_REQUEST_CODE:
-					File temp = new File(Environment.getExternalStorageDirectory()
-							+ "/" + SystemFragment.HEAD_IMAGE_NAME);
-					cropPhoto(Uri.fromFile(temp));//裁剪图片
-					break;
-				case RESULECODE:
-					if (intent != null) {
-						Bundle extras = intent.getExtras();
-						mHeadBitmap = extras.getParcelable("data");
-					}
-					break;
+
 				default:
 					break;
 
@@ -317,32 +282,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		}
 	}
 
-	/**
-	 * 裁剪图片
-	 *
-	 * @param uri 照片的url地址
-	 */
-	public void cropPhoto(Uri uri) {
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(uri, "image/*");
-		intent.putExtra("crop", "true");
-		// aspectX aspectY 是宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 150);
-		intent.putExtra("outputY", 150);
-		intent.putExtra("return-data", true);
-		startActivityForResult(intent, RESULECODE);
-	}
-
 	private void enterOtherActivity() {
 		Intent intent = new Intent(mContext, CameraDetailsActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mContext.startActivity(intent);
 	}
 
-	class queryDataTask extends AsyncTask<Void,Void,Boolean>{
+	class queryDataTask extends AsyncTask<Void,Void,Integer>{
 		private Context context;
 		queryDataTask(Context context) {
 			this.context = context;
@@ -354,67 +300,72 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		@Override
 		protected void onPreExecute() {
 			//Toast.makeText(context,"开始执行",Toast.LENGTH_SHORT).show();
+			if (mListView != null) {
+				mListView.setAdapter(null);
+			}
 			showDlg("正在获取列表");
 		}
 		/**
 		 * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
 		 */
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Integer doInBackground(Void... params) {
 			try {
 				PageableBean pageableBean = new PageableBean();
 				ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList(mLicence, pageableBean).getContent();
 				//Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList);
 				if (arrayList == null ||  arrayList.size() == 0) {
-					return  false;
+					return  QUERY_RESULTS_FAILED_CODE;
 				}
-				if (arrayList != null) {
-					for (int i=0; i< arrayList.size(); i++) {
-						String urlStr = arrayList.get(i).getSmallPhotoSrc();
-						StringBuffer stringBuffer = new StringBuffer();
-						if (urlStr != null) {
-							String[] urlsStr = urlStr.split(",");
-							for (int j=0; j<urlsStr.length; j++) {
-								if (j == urlsStr.length -1) {
-									stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]));
-								} else {
-									stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]) + ",");
-								}
+
+				for (int i=0; i< arrayList.size(); i++) {
+					String urlStr = arrayList.get(i).getSmallPhotoSrc();
+					StringBuffer stringBuffer = new StringBuffer();
+					if (urlStr != null) {
+						String[] urlsStr = urlStr.split(",");
+						for (int j=0; j<urlsStr.length; j++) {
+							if (j == urlsStr.length -1) {
+								stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]));
+							} else {
+								stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]) + ",");
 							}
 						}
-						Log.i("zzz","BBBBBBBB  arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
-						Log.i("zzz","BBBBBBBB"  +  " mLicence = " +  mLicence  +   "    &&stringBuffer = " + stringBuffer.toString());
-						BaseUserBean  baseUserBean = arrayList.get(i).getTakePhoroUser();
-						ManualPhotographyBean manualPhotographyBean = null;
-						if (baseUserBean != null) {
-							manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  baseUserBean.getImageData()!=null ? mHttpPost.getFileUrl(baseUserBean.getImageData()) : null, arrayList.get(i).getTakePhoroUser().getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getTakePhoroUser().getDepartmentId())));
-						} else {
-							manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  null, null, arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  null);
-						}
-						mListDate.add(manualPhotographyBean);
 					}
-
+					Log.i("zzz","BBBBBBBB  arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
+					Log.i("zzz","BBBBBBBB"  +  " mLicence = " +  mLicence  +   "    &&stringBuffer = " + stringBuffer.toString());
+					BaseUserBean  baseUserBean = arrayList.get(i).getTakePhoroUser();
+					ManualPhotographyBean manualPhotographyBean = null;
+					if (baseUserBean != null) {
+						manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  baseUserBean.getImageData()!=null ? mHttpPost.getFileUrl(baseUserBean.getImageData()) : null, arrayList.get(i).getTakePhoroUser().getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getTakePhoroUser().getDepartmentId())));
+					} else {
+						manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  null, null, arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  null);
+					}
+					mListDate.add(manualPhotographyBean);
 				}
+
+
 			} catch (Exception e) {
 				Log.e(TAG,"e : " + e.getMessage());
-				return false;
+				return QUERY_RESULTS_EXCEPTION_CODE;
 			}
 
-			return true;
+			return QUERY_RESULTS_SUCCESSFUL_CODE;
 		}
 
 		/**
 		 * 运行在ui线程中，在doInBackground()执行完毕后执行
 		 */
 		@Override
-		protected void onPostExecute(Boolean aBoolean) {
-			super.onPostExecute(aBoolean);
+		protected void onPostExecute(Integer resultsCode) {
+			super.onPostExecute(resultsCode);
 			closeDlg();
 			//Toast.makeText(context,"执行完毕",Toast.LENGTH_SHORT).show();
-			if (aBoolean) {
+			if (resultsCode == QUERY_RESULTS_SUCCESSFUL_CODE) {
 				setListViewData();
-			} else {
-				ToastUtils.showLong("获取列表为空.");
+			} else if (resultsCode == QUERY_RESULTS_FAILED_CODE){
+				ToastUtils.showLong("获取列表为空。");
+			} else if (resultsCode == QUERY_RESULTS_EXCEPTION_CODE) {
+				ToastUtils.showLong("获取列表失败，请稍后重试");
 			}
 		}
 

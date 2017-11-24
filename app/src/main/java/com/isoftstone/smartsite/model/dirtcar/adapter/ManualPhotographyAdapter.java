@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.utils.ImageUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -127,6 +129,14 @@ public class ManualPhotographyAdapter extends BaseAdapter{
 		viewHolder.mTakePhotoDateView.setText(manualPhotographyBean.getTakePhotoTime());
 		viewHolder.mTakePhotoUserCompanyView.setText(manualPhotographyBean.getTakePhotoUserCompany());
 		viewHolder.mTakePhotoAddrView.setText(manualPhotographyBean.getAddr());
+
+
+		viewHolder.mGradView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+				//ToastUtils.showShort("position = " + position);
+			}
+		});
 
 		return convertView;
 	}

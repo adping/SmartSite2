@@ -321,7 +321,8 @@ public class MainFragment extends BaseFragment{
      */
     private void enterDircar(){
             //DirtCarListActivity
-        Intent intent = new Intent(getActivity(),SlagcarInfoActivity.class);
+        //Intent intent = new Intent(getActivity(),SlagcarInfoActivity.class);
+        Intent intent = new Intent(getActivity(),DirtCarListActivity.class);
         getActivity().startActivity(intent);
     }
 
