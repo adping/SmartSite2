@@ -22,6 +22,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MobileHomeBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
+import com.isoftstone.smartsite.model.inspectplan.activity.SelectInspectorsActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 
@@ -346,16 +347,17 @@ public class MainFragment extends BaseFragment {
 
     private void enterInspectPlan() {
         //进入巡查计划
-        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
-            //有审批计划权限
-            Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
-            getActivity().startActivity(intent);
-        } else {
-            //没有审批计划权限
-            Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
-            getActivity().startActivity(intent);
-        }
-
+//        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
+//            //有审批计划权限
+//            Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
+//            getActivity().startActivity(intent);
+//        } else {
+//            //没有审批计划权限
+//            Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
+//            getActivity().startActivity(intent);
+//        }
+        Intent intent = new Intent(getActivity(), SelectInspectorsActivity.class);
+        getActivity().startActivity(intent);
     }
 
     private void enterPatrolMission() {

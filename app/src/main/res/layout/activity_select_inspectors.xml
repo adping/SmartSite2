@@ -53,13 +53,21 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ListView
+    <HorizontalScrollView
         android:id="@+id/listView_Icon"
         android:layout_below="@id/select_inspecter_title"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:scrollbars="horizontal"/>
+        android:scrollbars="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linear_inspector_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="57dp"
+            android:orientation="horizontal"/>
+
+    </HorizontalScrollView>
 
     <ImageView
         android:id="@+id/line"
