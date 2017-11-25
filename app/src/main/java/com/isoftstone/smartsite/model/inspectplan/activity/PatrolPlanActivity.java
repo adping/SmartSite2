@@ -122,7 +122,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                             taskTimeStart = taskTimeStart + " 00:00";
                             taskTimeEnd = taskTimeEnd + " 00:00";
                             PageableBean pageableBean = new PageableBean();
-                            mListData = mHttpPost.getPatrolTaskListAll(user_id,"", "", "", "", taskTimeStart, taskTimeEnd, pageableBean);
+                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "", "", taskTimeStart, taskTimeEnd, pageableBean);
                             mHandler.sendEmptyMessage(HANDLER_GET_DAY_END);
                         }
                     }.start();
@@ -177,8 +177,8 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                         @Override
                         public void run() {
                             PatrolPlanCommitBean patrolPlanCommitBean = new PatrolPlanCommitBean();
-                            patrolPlanCommitBean.setTaskTimeStart(today.toString()+" 00:00");
-                            patrolPlanCommitBean.setTaskTimeEnd(today.plusDays(6).toString()+" 23:59");
+                            patrolPlanCommitBean.setTaskTimeStart(today.toString() + " 00:00");
+                            patrolPlanCommitBean.setTaskTimeEnd(today.plusDays(6).toString() + " 23:59");
                             SimpleUserBean simpleUserBean = new SimpleUserBean();
                             simpleUserBean.setId(userId);
                             patrolPlanCommitBean.setCreator(simpleUserBean);
@@ -208,8 +208,8 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     protected void afterCreated(Bundle savedInstanceState) {
         //获取巡查计划ID
         patrolPlanBean = (PatrolPlanBean) getIntent().getSerializableExtra("patrolplan");
-        Log.e("test","-------------"+patrolPlanBean.getStart());
-        Log.e("test","-------------"+patrolPlanBean.getEndDate());
+        Log.e("test", "-------------" + patrolPlanBean.getStart());
+        Log.e("test", "-------------" + patrolPlanBean.getEndDate());
         if (patrolPlanBean != null) {
             userId = patrolPlanBean.getCreator().getId();   //用户id
         } else {
@@ -327,12 +327,12 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
                 //mTitleTextView.setText(time.substring(0,7));
-                LocalDate localDate = new LocalDate(time.substring(0,7)+"-01");
-                Log.e("test",localDate.toString());
+                LocalDate localDate = new LocalDate(time.substring(0, 7) + "-01");
+                Log.e("test", localDate.toString());
                 int minus = localDate.getDayOfWeek();
-                Log.e("test"," minus "+minus);
-                today = localDate.minusDays(minus-1);
-                Log.e("test"," today "+today.toString());
+                Log.e("test", " minus " + minus);
+                today = localDate.minusDays(minus - 1);
+                Log.e("test", " today " + today.toString());
                 selectindex = -1;
                 updateWidget();
                 taskTimeStart = today.toString(); //开始时间
@@ -381,20 +381,21 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         //根据计划状态来加载背景  是否显示审批按钮
         //设置计划状态
         int state = 0;
-        if(mListData != null && mListData.size() > 0){
+        if (mListData != null && mListData.size() > 0) {
 
             state = mListData.get(0).getPlanStatus();
 
             PatrolPlanAdapter adapter = new PatrolPlanAdapter(this);
             adapter.setList(mListData);
             mListView.setAdapter(adapter);
-        }else {
+        } else {
             PatrolPlanAdapter adapter = new PatrolPlanAdapter(this);
             mListView.setAdapter(adapter);
         }
 
         switch (state) {
             case 1://已创建，待提交
+                days.setBackgroundResource(R.drawable.jihua_weitijiao_bg);
                 break;
             case 2://已提交，待审批
                 days.setBackgroundResource(R.drawable.jihua_daishenpishenpi_bg);
@@ -405,26 +406,38 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             case 4://已打回
                 days.setBackgroundResource(R.drawable.jihua_shenpituihui_bg);
                 break;
+            default:
+                days.setBackgroundResource(R.drawable.jihua_weitijiao_bg);
         }
 
         //审批权限
         if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
-            if(state == 2){
+            if (state == 2) {
                 tuihuitonguo_layout.setVisibility(View.VISIBLE);
                 tijiaoshenpi_layout.setVisibility(View.GONE);
-            }else {
+            } else {
                 tuihuitonguo_layout.setVisibility(View.GONE);
                 tijiaoshenpi_layout.setVisibility(View.GONE);
             }
         } else {
-            if(state == 1){
+            if (state == 1) {
                 tuihuitonguo_layout.setVisibility(View.GONE);
                 tijiaoshenpi_layout.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 tuihuitonguo_layout.setVisibility(View.GONE);
                 tijiaoshenpi_layout.setVisibility(View.GONE);
             }
+        }
+
+        for (TextView textView : dayTextViewList) {
+            if (state >= 2 && state <= 4) {
+                textView.setTextColor(getResources().getColor(R.color.white));
+            } else {
+                textView.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
+        if (selectindex != -1) {
+            dayTextViewList.get(selectindex).setTextColor(getResources().getColor(R.color.mainColor));
         }
 
 
@@ -495,6 +508,6 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         day_5.setText(today.plusDays(5).getDayOfMonth() + "");
         day_6.setText(today.plusDays(6).getDayOfMonth() + "");
 
-        mTitleTextView.setText(today.toString().substring(0,7));
+        mTitleTextView.setText(today.toString().substring(0, 7));
     }
 }
