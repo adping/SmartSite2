@@ -51,12 +51,12 @@ public class InspectorsIconAdapter extends BaseAdapter {
         }else {
             holder = (InspectorsIconAdapter.ViewHolder)convertView.getTag();
         }
-//        ContactDate contactDate = getItem(position);
-//        if (contactDate.getSelected()){
-//            holder.imageView_Icon.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.imageView_Icon.setVisibility(View.GONE);
-//        }
+        InspectorData contactDate = getItem(position);
+        if (contactDate.getSelected()){
+            holder.imageView_Icon.setVisibility(View.VISIBLE);
+        } else {
+            holder.imageView_Icon.setVisibility(View.GONE);
+        }
 
 
         return convertView;
