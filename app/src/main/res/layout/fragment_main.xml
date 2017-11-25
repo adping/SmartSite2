@@ -371,7 +371,7 @@
     <!-- 视频播放   环境监控   三方系统按钮 -->
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="108dp"
+        android:layout_height="96dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal">
@@ -389,15 +389,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/video_button" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="视频监控" />
+                android:src="@drawable/shipinjiankong"
+                android:onClick="onClicked"/>
         </LinearLayout>
 
         <LinearLayout
@@ -413,15 +406,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/air_button" />
+                android:src="@drawable/huanjingjiance" />
 
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="环境监控" />
         </LinearLayout>
 
         <LinearLayout
@@ -437,15 +423,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/threeparty_button" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="三方协同" />
+                android:src="@drawable/sanfangxietong" />
         </LinearLayout>
 
         <LinearLayout
@@ -461,22 +439,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/threeparty_button" />
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="渣土车监控" />
+                android:src="@drawable/zhatuchejiankong" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="108dp"
+        android:layout_height="96dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal">
@@ -494,15 +464,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/video_button" />
-
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="巡查概况" />
+                android:src="@drawable/xunchagaikuang" />
         </LinearLayout>
 
         <LinearLayout
@@ -518,15 +480,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/air_button" />
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="巡查计划" />
+                android:src="@drawable/xunchajihua" />
         </LinearLayout>
 
         <LinearLayout
@@ -542,15 +496,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/threeparty_button" />
+                android:src="@drawable/xuncharenwu" />
 
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="巡查任务" />
         </LinearLayout>
 
         <LinearLayout
@@ -566,15 +513,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/threeparty_button" />
+                android:src="@drawable/xunchajiankong" />
 
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="施工监控" />
         </LinearLayout>
 
     </LinearLayout>
