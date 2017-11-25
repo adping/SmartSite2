@@ -70,6 +70,17 @@ public class PatrolPlanAdapter extends BaseAdapter {
         holder.title.setText(mList.get(position).getTaskName());
 		holder.time.setText(mList.get(position).getTaskStart());
 		holder.address.setText(mList.get(position).getTaskEnd());
+		switch (mList.get(position).getPlanStatus()){
+			case  3:
+				holder.zhuangtai.setImageResource(R.drawable.green);
+				break;
+			case 4:
+				holder.zhuangtai.setImageResource(R.drawable.red);
+				break;
+			case  2:
+				holder.zhuangtai.setImageResource(R.drawable.blue);
+				break;
+		}
 		return convertView;
 	}
 
