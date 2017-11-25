@@ -347,17 +347,17 @@ public class MainFragment extends BaseFragment {
 
     private void enterInspectPlan() {
         //进入巡查计划
-//        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
-//            //有审批计划权限
-//            Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
-//            getActivity().startActivity(intent);
-//        } else {
-//            //没有审批计划权限
-//            Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
-//            getActivity().startActivity(intent);
-//        }
-        Intent intent = new Intent(getActivity(), SelectInspectorsActivity.class);
-        getActivity().startActivity(intent);
+        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
+            //有审批计划权限
+            Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
+            getActivity().startActivity(intent);
+        } else {
+            //没有审批计划权限
+            Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
+            getActivity().startActivity(intent);
+        }
+        //Intent intent = new Intent(getActivity(), SelectInspectorsActivity.class);
+        //getActivity().startActivity(intent);
     }
 
     private void enterPatrolMission() {

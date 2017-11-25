@@ -50,7 +50,7 @@ public class PhotoGridAdapter extends BaseAdapter {
 
 		DisplayMetrics dm = new DisplayMetrics();
 		((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-		mWidth = dm.widthPixels/3;
+		mWidth = dm.widthPixels/3 - mContext.getResources().getDimensionPixelOffset(R.dimen.grid_view_item_spacing);
 		mInflater = LayoutInflater.from(context);
 
 		//ToastUtils.showShort("PhotoGridAdapter.....   mListData.size : " + mListData.size());
@@ -90,7 +90,7 @@ public class PhotoGridAdapter extends BaseAdapter {
 		}
 		LayoutParams layoutParams = viewHolder.mImage.getLayoutParams();
 		layoutParams.width = mWidth;
-		layoutParams.height =  mContext.getResources().getDimensionPixelOffset(R.dimen.grid_view_item_hight);
+		layoutParams.height =  mWidth;
 		viewHolder.mImage.setLayoutParams(layoutParams);
 
 		mImageLoader.DisplayImage(url, viewHolder.mImage, false);

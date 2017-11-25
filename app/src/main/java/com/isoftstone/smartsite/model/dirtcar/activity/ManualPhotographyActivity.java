@@ -303,6 +303,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 			if (mListView != null) {
 				mListView.setAdapter(null);
 			}
+
 			showDlg("正在获取列表");
 		}
 		/**
@@ -310,6 +311,11 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		 */
 		@Override
 		protected Integer doInBackground(Void... params) {
+
+			if (mListDate != null) {
+				mListDate.clear();
+			}
+
 			try {
 				PageableBean pageableBean = new PageableBean();
 				ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList(mLicence, pageableBean).getContent();
