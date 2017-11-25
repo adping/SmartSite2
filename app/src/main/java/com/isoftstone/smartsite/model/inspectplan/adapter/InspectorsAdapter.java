@@ -10,8 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.data.InspectorData;
 
 import java.util.ArrayList;
@@ -68,20 +70,20 @@ public class InspectorsAdapter extends BaseAdapter {
         }
 
         holder.textView_Sort.setText(contactDate.getSort());
-        holder.textView_ContactName.setText(contactDate.getContactName());
-        holder.textView_Sort.setVisibility(contactDate.getVisible());
+        holder.textView_ContactName.setText(contactDate.getName());
+        holder.textView_Sort.setVisibility(contactDate.getIsVisible());
+        holder.checkBox_ContactIsCheck.setChecked(contactDate.getIsSelected());
+
         holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactDate.setSelected(v.isSelected());
+                contactDate.setIsSelected(v.isSelected());
+                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
+
             }
         });
-        holder.checkBox_ContactIsCheck.setChecked(contactDate.getSelected());
-
         return convertView;
     }
-
-
 
     public class ViewHolder {
         public TextView textView_Sort;
