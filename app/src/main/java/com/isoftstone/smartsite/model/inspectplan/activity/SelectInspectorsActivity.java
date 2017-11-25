@@ -1,6 +1,5 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2017-11-24.
  */
 
-public class SelectInspectorsActivity extends Activity {
+public class SelectInspectorsActivity extends BaseActivity {
     public ArrayList<InspectorData> list = null;
     public InspectorData contactDate;
     private ListView listView_Contact;
@@ -31,9 +30,7 @@ public class SelectInspectorsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_inspectors);
-        listView_Contact = (ListView) findViewById(R.id.listView_Contact) ;
-        listView_Icon = (ListView) findViewById(R.id.listView_Icon) ;
+
         initDate();
         initSideBar();
     }
@@ -43,6 +40,40 @@ public class SelectInspectorsActivity extends Activity {
         super.onDestroy();
     }
 
+    @Override
+    protected int getLayoutRes() {
+        return 0;
+    }
+
+    @Override
+    protected void afterCreated(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void openActivity(Class<?> activity, Bundle bundle) {
+        super.openActivity(activity, bundle);
+    }
+
+    @Override
+    public void onBackBtnClick(View v) {
+        super.onBackBtnClick(v);
+    }
+
+    @Override
+    public PatrolBean getReportData() {
+        return super.getReportData();
+    }
+
+    @Override
+    public void showDlg(String text) {
+        super.showDlg(text);
+    }
+
+    @Override
+    public void closeDlg() {
+        super.closeDlg();
+    }
 
     public void initDate() {
         list = new ArrayList<InspectorData>();
