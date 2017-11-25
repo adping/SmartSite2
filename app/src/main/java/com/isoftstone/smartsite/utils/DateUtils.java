@@ -24,6 +24,7 @@ import java.util.TimeZone;
 
 public class DateUtils {
     public final static SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+    public final static SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM");
     public final static SimpleDateFormat format_yyyy_MM_dd_HH_mm_ss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public final static SimpleDateFormat format_yyyy_MM_dd_china = new SimpleDateFormat("yyyy年MM月dd日");
     public final static SimpleDateFormat format_yyyy_MM_dd_HH_mm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -230,5 +231,15 @@ public class DateUtils {
         Calendar sCalendar = Calendar.getInstance();
         sCalendar.set(year,monthOfYear,dayOfMonth,hour,min);
         return DateFormat.format("HH:mm", sCalendar).toString();
+    }
+
+    public static  String getNewTime_1(){
+        Date date = new Date();
+        return  format1.format(date).toString();
+    }
+
+    public static  String getNewTime_2(){
+        Date date = new Date();
+        return  format2.format(date).toString();
     }
 }

@@ -12,7 +12,7 @@
         android:layout_marginRight="37dp">
 
         <TextView
-            android:id="@+id/date_3"
+            android:id="@+id/date_louduanbaojinglv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@id/date_3"
+            android:layout_toRightOf="@id/date_louduanbaojinglv"
             android:layout_centerVertical="true"
             android:src="@drawable/droparrow" />
 
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="5dp"
             android:paddingLeft="5dp"
             android:text="白名单"
             android:textSize="14sp" />
@@ -93,6 +93,10 @@
             android:text="黑名单"
             android:textSize="14sp" />
     </LinearLayout>
-
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_baojinglv"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@android:color/white"/>
 
 </LinearLayout>

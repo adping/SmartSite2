@@ -439,9 +439,9 @@
         <service android:name=".model.dirtcar.Service.RecognizeDirtCarService"></service>
         <!--zhangwei end-->
 
-        <activity android:name=".PatroPlanDetailsActivity"
+        <activity android:name=".model.patroltask.ui.PatroPlanDetailsActivity"
             android:launchMode="singleTask"></activity>
-       <activity android:name=".SlagcarInfoActivity"
+       <activity android:name=".model.muckcar.ui.SlagcarInfoActivity"
             android:launchMode="singleTask"></activity>
     </application>
 

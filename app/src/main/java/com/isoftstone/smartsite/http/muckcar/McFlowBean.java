@@ -42,4 +42,5 @@ public class McFlowBean {
     public void setArchName(String archName) {
         this.archName = archName;
     }
+
 }

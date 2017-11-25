@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite;
+package com.isoftstone.smartsite.model.patroltask.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;

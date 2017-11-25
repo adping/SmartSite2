@@ -13,20 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.MainActivity;
-import com.isoftstone.smartsite.PatroPlanDetailsActivity;
+import com.isoftstone.smartsite.model.patroltask.ui.PatroPlanDetailsActivity;
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.SlagcarInfoActivity;
+import com.isoftstone.smartsite.model.muckcar.ui.SlagcarInfoActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.DataQueryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MobileHomeBean;
-import com.isoftstone.smartsite.model.dirtcar.activity.DirtCarListActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
