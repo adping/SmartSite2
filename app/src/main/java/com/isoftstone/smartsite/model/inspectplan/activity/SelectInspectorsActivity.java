@@ -1,8 +1,12 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.gjiazhe.wavesidebar.WaveSideBar;
@@ -19,20 +23,27 @@ import java.util.ArrayList;
  * Created by Administrator on 2017-11-24.
  */
 
-public class SelectInspectorsActivity extends BaseActivity {
+public class SelectInspectorsActivity extends Activity {
     public ArrayList<InspectorData> list = null;
     public InspectorData contactDate;
     private ListView listView_Contact;
-    private ListView listView_Icon;
+    private HorizontalScrollView listView_Icon;
     public InspectorsAdapter contactAdapter;
     public InspectorsIconAdapter iconAdapter;
+    private LinearLayout linearLayout_inspector_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        initDate();
+        setContentView(R.layout.activity_select_inspectors);
+        listView_Contact = (ListView) findViewById(R.id.listView_Contact) ;
+        listView_Icon = (HorizontalScrollView) findViewById(R.id.listView_Icon) ;
+        linearLayout_inspector_icon = (LinearLayout) findViewById(R.id.linear_inspector_icon);
+        initDate();//本地填充巡查人员数据
         initSideBar();
+        contactAdapter = new InspectorsAdapter(this, list);
+        listView_Contact.setAdapter(contactAdapter);
+        refreshHorizontalScrollView();
     }
 
     @Override
@@ -40,40 +51,6 @@ public class SelectInspectorsActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @Override
-    protected int getLayoutRes() {
-        return 0;
-    }
-
-    @Override
-    protected void afterCreated(Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public void openActivity(Class<?> activity, Bundle bundle) {
-        super.openActivity(activity, bundle);
-    }
-
-    @Override
-    public void onBackBtnClick(View v) {
-        super.onBackBtnClick(v);
-    }
-
-    @Override
-    public PatrolBean getReportData() {
-        return super.getReportData();
-    }
-
-    @Override
-    public void showDlg(String text) {
-        super.showDlg(text);
-    }
-
-    @Override
-    public void closeDlg() {
-        super.closeDlg();
-    }
 
     public void initDate() {
         list = new ArrayList<InspectorData>();
@@ -99,10 +76,6 @@ public class SelectInspectorsActivity extends BaseActivity {
             }
             list.add(contactDate);
         }
-        contactAdapter = new InspectorsAdapter(this, list);
-        listView_Contact.setAdapter(contactAdapter);
-        iconAdapter = new InspectorsIconAdapter(this, list);
-        listView_Icon.setAdapter(iconAdapter);
     }
 
     public void initSideBar() {
@@ -122,5 +95,16 @@ public class SelectInspectorsActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void refreshHorizontalScrollView() {
+        for (int i = 0; i < list.size(); i ++)
+        {
+            View inflate = View.inflate(this, R.layout.inspector_icon_item, null);
+            ImageView inspector_icon = (ImageView) inflate.findViewById(R.id.imageView_icon);
+            if ( list.get(i).getSelected() ) {
+                linearLayout_inspector_icon.addView(inflate);
+            }
+        }
     }
 }
