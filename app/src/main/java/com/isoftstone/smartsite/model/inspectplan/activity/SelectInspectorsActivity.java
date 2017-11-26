@@ -45,7 +45,7 @@ public class SelectInspectorsActivity extends Activity{
     private Button btnEnsure;
     private ArrayList<BaseUserBean> userList;
     private ArrayList<BaseUserBean> selectedInspectorsList = null;
-    private BaseUserBean selcetedInspector;
+    private BaseUserBean selectedInspector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class SelectInspectorsActivity extends Activity{
         btnBack.setOnClickListener(mGoBack);
         btnEnsure.setOnClickListener(mEnsure);
         list = new ArrayList<InspectorData>();
+
         initDate();//本地填充巡查人员数据
     }
 
@@ -70,34 +71,41 @@ public class SelectInspectorsActivity extends Activity{
 
     public View.OnClickListener mEnsure = new View.OnClickListener() {
         public void onClick(View v) {
+
+            selectedInspectorsList = new ArrayList<BaseUserBean>();
             for (int i=0; i < list.size(); i++){
                 if (list.get(i).isSelected) {
-                    selcetedInspector = new BaseUserBean();
+                    selectedInspector = new BaseUserBean();
 
-                    selcetedInspector.setAccount(list.get(i).getAccount());
-                    selcetedInspector.setAccountType(list.get(i).getAccountType());
-                    selcetedInspector.setAddress(list.get(i).getAddress());
-                    selcetedInspector.setCreateTime(list.get(i).getCreateTime());
-                    selcetedInspector.setCreator(list.get(i).getCreator());
-                    selcetedInspector.setDelFlag(list.get(i).getDelFlag());
-                    selcetedInspector.setDepartmentId(list.get(i).getDepartmentId());
-                    selcetedInspector.setDescription(list.get(i).getDescription());
-                    selcetedInspector.setEmail(list.get(i).getEmail());
-                    selcetedInspector.setEmployeeCode(list.get(i).getEmployeeCode());
-                    selcetedInspector.setFax(list.get(i).getFax());
-                    selcetedInspector.setLocked(list.get(i).getLocked());
-                    selcetedInspector.setId(list.get(i).getId());
-                    selcetedInspector.setImageData(list.get(i).getImageData());
-                    selcetedInspector.setName(list.get(i).getName());
-                    selcetedInspector.setPassword(list.get(i).getPassword());
-                    selcetedInspector.setResetPwd(list.get(i).getResetPwd());
-                    selcetedInspector.setRegisterId(list.get(i).getRegisterId());
-                    selcetedInspector.setSex(list.get(i).getSex());
-                    selcetedInspector.setTelephone(list.get(i).getTelephone());
+                    selectedInspector.setAccount(list.get(i).getAccount());
+                    selectedInspector.setAccountType(list.get(i).getAccountType());
+                    selectedInspector.setAddress(list.get(i).getAddress());
+                    selectedInspector.setCreateTime(list.get(i).getCreateTime());
+                    selectedInspector.setCreator(list.get(i).getCreator());
+                    selectedInspector.setDelFlag(list.get(i).getDelFlag());
+                    selectedInspector.setDepartmentId(list.get(i).getDepartmentId());
+                    selectedInspector.setDescription(list.get(i).getDescription());
+                    selectedInspector.setEmail(list.get(i).getEmail());
+                    selectedInspector.setEmployeeCode(list.get(i).getEmployeeCode());
+                    selectedInspector.setFax(list.get(i).getFax());
+                    selectedInspector.setLocked(list.get(i).getLocked());
+                    selectedInspector.setId(list.get(i).getId());
+                    selectedInspector.setImageData(list.get(i).getImageData());
+                    selectedInspector.setName(list.get(i).getName());
+                    selectedInspector.setPassword(list.get(i).getPassword());
+                    selectedInspector.setResetPwd(list.get(i).getResetPwd());
+                    selectedInspector.setRegisterId(list.get(i).getRegisterId());
+                    selectedInspector.setSex(list.get(i).getSex());
+                    selectedInspector.setTelephone(list.get(i).getTelephone());
 
-                    selectedInspectorsList.add(selcetedInspector);
+                    selectedInspectorsList.add(selectedInspector);
+
+//                    Log.e("Finish","选中了   姓名：" + selectedInspector.getName() + ", 账号:" + selectedInspector.getAccount());
                 }
             }
+
+//            Log.e("Finish","选中了" + selectedInspectorsList.size() + "个人");
+
             Intent intent = new Intent();
             intent.setAction("action");
             intent.putExtra("list", (ArrayList<BaseUserBean>) selectedInspectorsList);
@@ -163,7 +171,7 @@ public class SelectInspectorsActivity extends Activity{
                             break;
                         }
                     }
-//                    Log.e("handler","已加载至第" + String.valueOf(i) + "条数据，姓名为：" + inspectorDate.getName());
+//                    Log.e("handler","已加载至第" + String.valueOf(i) + "条数据，姓名为：" + inspectorDate.getName() + ", 账户为：" + inspectorDate.getAccount());
                     list.add(inspectorDate);
 //                }
 //                Log.e("handler","已加载" + list.size() + "条数据");
