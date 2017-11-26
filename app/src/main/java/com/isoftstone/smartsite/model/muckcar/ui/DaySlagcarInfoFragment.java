@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,6 +47,7 @@ import okhttp3.FormBody;
  */
 
 public class DaySlagcarInfoFragment extends BaseFragment {
+    public static final int TIME_INIT_TEXTVIEW_LIST = 0;
     private int mDayOrMonthFlag = 1; //1月  0日
     private LinearLayout layout_1;
     private LinearLayout layout_2;
@@ -58,12 +61,50 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private ArchMonthFlowBean mArchMonthFlowBean;
     private LineChart liuliangduibi_linechart;
     private LineChart baojinglv_linechart;
-    private TextView  baojinglv_address;
+    private TextView baojinglv_address;
+    private LinearLayout list_trextviews;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case TIME_INIT_TEXTVIEW_LIST:
+                    initTextViews();
+                    break;
+                    default:
+                        break;
+            }
+
+        }
+    };
+    private Spinner address_baojinglv;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler.removeCallbacks(null);
+        }
+    }
+
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        list_trextviews = (LinearLayout) rootView.findViewById(R.id.list_textview);//动态tv数据
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
         layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
-        spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);
+        spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);//bao jing lv
+        address_baojinglv = (Spinner) layout_2.findViewById(R.id.spinner_address_baojinglv);
+        address_baojinglv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         spinner_address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -83,9 +124,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 String now = sdf.format(new Date());
-                if(mDayOrMonthFlag == 1){
+                if (mDayOrMonthFlag == 1) {
                     customDatePicker2.showYearMonth();
-                }else if(mDayOrMonthFlag == 0){
+                } else if (mDayOrMonthFlag == 0) {
                     customDatePicker2.showSpecificTime(false); // 不显示时和分
                 }
                 customDatePicker2.show(now);
@@ -98,9 +139,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 String now = sdf.format(new Date());
-                if(mDayOrMonthFlag == 1){
+                if (mDayOrMonthFlag == 1) {
                     customDatePicker1.showYearMonth();
-                }else if(mDayOrMonthFlag == 0){
+                } else if (mDayOrMonthFlag == 0) {
                     customDatePicker1.showSpecificTime(false); // 不显示时和分
                 }
                 customDatePicker1.show(now);
@@ -112,9 +153,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 String now = sdf.format(new Date());
-                if(mDayOrMonthFlag == 1){
+                if (mDayOrMonthFlag == 1) {
                     customDatePicker3.showYearMonth();
-                }else if(mDayOrMonthFlag == 0){
+                } else if (mDayOrMonthFlag == 0) {
                     customDatePicker3.showSpecificTime(false); // 不显示时和分
                 }
                 customDatePicker3.show(now);
@@ -129,7 +170,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         });
 
         liuliangduibi_linechart = (LineChart) layout_1.findViewById(R.id.chart_liuliangduibi);
-        baojinglv_linechart = (LineChart)rootView.findViewById(R.id.chart_baojinglv);
+        baojinglv_linechart = (LineChart) rootView.findViewById(R.id.chart_baojinglv);
         if (mDayOrMonthFlag == 1) {
             date_liuliangduibi.setText(DateUtils.getNewTime_2());
             date_liuliangpaiming.setText(DateUtils.getNewTime_2());
@@ -141,7 +182,23 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         initDatePicker();
 
     }
-    private CustomDatePicker customDatePicker1,customDatePicker2,customDatePicker3;
+
+    private CustomDatePicker customDatePicker1, customDatePicker2, customDatePicker3;
+
+    //初始化多个textview
+    private void initTextViews() {
+        list_trextviews.removeAllViews();
+        if (mCarInfoList != null && mCarInfoList.size() != 0) {
+            int tv_num = mCarInfoList.size();
+            CarInfoBean mCarInfoBean;
+            for (int i = 0; i < tv_num; i++) {
+                mCarInfoBean = mCarInfoList.get(i);
+                MyTextView myTextView = new MyTextView(mContext, mCarInfoBean.getArch().getName(), mCarInfoBean.getIsAlarmMc(), mCarInfoBean.getNoAlarmMc());
+                list_trextviews.addView(myTextView);
+            }
+        }
+    }
+
     private void initDatePicker() {
         customDatePicker1 = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
             @Override
@@ -155,10 +212,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         customDatePicker2 = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-                if(mDayOrMonthFlag == 1){
-                    date_liuliangduibi.setText(time.substring(0,7));
-                }else if(mDayOrMonthFlag == 0){
-                    date_liuliangduibi.setText(time.substring(0,10));
+                if (mDayOrMonthFlag == 1) {
+                    date_liuliangduibi.setText(time.substring(0, 7));
+                } else if (mDayOrMonthFlag == 0) {
+                    date_liuliangduibi.setText(time.substring(0, 10));
                 }
                 ((SlagcarInfoActivity) getActivity()).getLiuliangduibiData(mDayOrMonthFlag);
             }
@@ -174,6 +231,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         customDatePicker3.setIsLoop(false); // 不允许循环滚动
 
     }
+
     public void setDayOrMonthFlag(int dayOrMonthFlag) {
         mDayOrMonthFlag = dayOrMonthFlag;
     }
@@ -188,6 +246,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
+        handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
         mCarInfoList = carInfoList;
         archName = null;
         if (mCarInfoList != null) {
@@ -264,19 +323,19 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 ArrayList<Entry> values = new ArrayList<Entry>();
                 for (int i = 0; i < countFlow.size(); i++) {
                     McFlowBean mcFlowBean = countFlow.get(i);
-                    if(mDayOrMonthFlag == 1){
+                    if (mDayOrMonthFlag == 1) {
                         LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
                         int index = date.getDayOfMonth();
-                        String value = mcFlowBean.getFlow()+"";
-                        if(max < mcFlowBean.getFlow()){
+                        String value = mcFlowBean.getFlow() + "";
+                        if (max < mcFlowBean.getFlow()) {
                             max = Integer.parseInt(value);
                         }
                         Entry entry = new Entry(index, Float.parseFloat(value));
                         values.add(entry);
-                    }else  if(mDayOrMonthFlag == 0){
+                    } else if (mDayOrMonthFlag == 0) {
                         int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
-                        String value = mcFlowBean.getFlow()+"";
-                        if(max < mcFlowBean.getFlow()){
+                        String value = mcFlowBean.getFlow() + "";
+                        if (max < mcFlowBean.getFlow()) {
                             max = Integer.parseInt(value);
                         }
                         Entry entry = new Entry(index, Float.parseFloat(value));
@@ -310,19 +369,19 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             }
 
             ArrayList<McFlowBean> isAlarms = mArchMonthFlowBean.getIsAlarms();
-            if (isAlarms != null && isAlarms.size() >0) {
+            if (isAlarms != null && isAlarms.size() > 0) {
                 ArrayList<Entry> values_2 = new ArrayList<Entry>();
                 for (int i = 0; i < isAlarms.size(); i++) {
                     McFlowBean mcFlowBean = isAlarms.get(i);
-                    if(mDayOrMonthFlag == 1){
+                    if (mDayOrMonthFlag == 1) {
                         LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
                         int day = date.getDayOfMonth();
-                        String value = mcFlowBean.getFlow()+"";
+                        String value = mcFlowBean.getFlow() + "";
                         Entry entry = new Entry(day, Float.parseFloat(value));
                         values_2.add(entry);
-                    }else if (mDayOrMonthFlag == 0){
+                    } else if (mDayOrMonthFlag == 0) {
                         int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
-                        String value = mcFlowBean.getFlow()+"";
+                        String value = mcFlowBean.getFlow() + "";
                         Entry entry = new Entry(index, Float.parseFloat(value));
                         values_2.add(entry);
                     }
