@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class InspectorsAdapter extends BaseAdapter {
 
     private ArrayList<InspectorData> list = null;
     private Context mContext;
+    LinearLayout linearLayout_inspector_icon;
 
     public InspectorsAdapter() {
         super();
@@ -35,6 +37,13 @@ public class InspectorsAdapter extends BaseAdapter {
     public InspectorsAdapter(Context mContext, ArrayList<InspectorData> list) {
         this.mContext = mContext;
         this.list = list;
+        Log.i("ContactAdapter","list length is:" + list.size());
+    }
+
+    public InspectorsAdapter(Context mContext, ArrayList<InspectorData> list, LinearLayout linearLayout_inspector_icon) {
+        this.mContext = mContext;
+        this.list = list;
+        this.linearLayout_inspector_icon = linearLayout_inspector_icon;
         Log.i("ContactAdapter","list length is:" + list.size());
     }
 
@@ -73,20 +82,29 @@ public class InspectorsAdapter extends BaseAdapter {
         holder.textView_Sort.setText(contactDate.getSort());
         holder.textView_ContactName.setText(contactDate.getName());
         holder.textView_Sort.setVisibility(contactDate.getIsVisible());
-//        holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                contactDate.setIsSelected(v.isSelected());
-//                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
+        holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
+                if(linearLayout_inspector_icon != null) {
+                    linearLayout_inspector_icon.removeAllViews();
+                }
+                for (int i = 0; i < list.size(); i ++)
+                {
+                    View inflate = View.inflate(mContext, R.layout.inspector_icon_item, null);
+                    ImageView inspector_icon = (ImageView) inflate.findViewById(R.id.imageView_icon);
+                    if ( list.get(i).getIsSelected() ) {
+                        linearLayout_inspector_icon.addView(inflate);
+                    }
+                }
+
+            }
+        });
 
         holder.checkBox_ContactIsCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 contactDate.setIsSelected(isChecked);
-                Toast.makeText(mContext,"多选框状态改变了",Toast.LENGTH_SHORT).show();
             }
         });
         holder.checkBox_ContactIsCheck.setChecked(contactDate.getIsSelected());
