@@ -26,7 +26,7 @@
             android:layout_marginRight="4dp"
             android:orientation="vertical">
 
-            <ImageView
+            <com.isoftstone.smartsite.model.system.ui.CircleImageView
                 android:id="@+id/img_head"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

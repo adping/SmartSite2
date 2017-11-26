@@ -224,7 +224,8 @@ open class AddInspectPlan : BaseActivity() {
 
             var imgDelete = v.findViewById(R.id.img_delete) as ImageView
             imgDelete.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
+                override fun onClick(tempV: View?) {
+                    Log.e(TAG,"yanlog imageDelte view")
                     flow_layout_address?.removeView(v)
                     mAddressList.remove(str)
                 }

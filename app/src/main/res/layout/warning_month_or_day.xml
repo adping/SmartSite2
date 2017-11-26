@@ -29,24 +29,6 @@
             android:layout_centerVertical="true"
             android:src="@drawable/droparrow" />
 
-        <TextView
-            android:id="@+id/load_name_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="7dp"
-            android:layout_toLeftOf="@id/load_name_choice3"
-            android:text="光谷六路"
-            android:textColor="#222222"
-            android:textSize="12sp"></TextView>
-
-        <ImageView
-            android:id="@+id/load_name_choice3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/droparrow" />
 
     </RelativeLayout>
 
