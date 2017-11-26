@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,16 +73,23 @@ public class InspectorsAdapter extends BaseAdapter {
         holder.textView_Sort.setText(contactDate.getSort());
         holder.textView_ContactName.setText(contactDate.getName());
         holder.textView_Sort.setVisibility(contactDate.getIsVisible());
-        holder.checkBox_ContactIsCheck.setChecked(contactDate.getIsSelected());
+//        holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                contactDate.setIsSelected(v.isSelected());
+//                Toast.makeText(mContext,"鐐瑰嚮浜嗗閫夋",Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
-        holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
+        holder.checkBox_ContactIsCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
-            public void onClick(View v) {
-                contactDate.setIsSelected(v.isSelected());
-                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                contactDate.setIsSelected(isChecked);
+                Toast.makeText(mContext,"澶氶�夋鐘舵�佹敼鍙樹簡",Toast.LENGTH_SHORT).show();
             }
         });
+        holder.checkBox_ContactIsCheck.setChecked(contactDate.getIsSelected());
         return convertView;
     }
 
