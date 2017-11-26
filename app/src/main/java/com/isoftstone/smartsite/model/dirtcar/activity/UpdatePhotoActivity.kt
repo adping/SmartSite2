@@ -159,12 +159,13 @@ open class UpdatePhotoActivity : BaseActivity() {
 
     fun startCamera() {
         var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        var fileName = DateUtils.format_file_name.format(Date()) + ".png"
+        var fileName = DateUtils.format_file_name.format(Date()) + ".jpg"
         var path = File(mStoragePath)
         mCameraImage = File(path, fileName)
         mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, mCameraImage?.path)
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUriImage)
         i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        Log.e(TAG,"yanlog i.flags" + i.flags)
         val uri = mUriImage;
         if (uri != null) {
             mUriImage = uri
