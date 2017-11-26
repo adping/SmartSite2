@@ -32,7 +32,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="12dp"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/ic_launcher_round"/>
+                android:src="@drawable/default_head"/>
             <!--android:layout_alignBottom="@id/textView_sort"-->
             <!--android:src="@mipmap/ic_launcher" />-->
 

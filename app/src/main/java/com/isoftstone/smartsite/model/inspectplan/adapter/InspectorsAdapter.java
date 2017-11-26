@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.data.InspectorData;
+import com.isoftstone.smartsite.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ public class InspectorsAdapter extends BaseAdapter {
     private ArrayList<InspectorData> list = null;
     private Context mContext;
     LinearLayout linearLayout_inspector_icon;
+    private HttpPost mHttpPost;
 
     public InspectorsAdapter() {
         super();
@@ -64,6 +67,7 @@ public class InspectorsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        mHttpPost = new HttpPost();
         ViewHolder holder = null;
         final InspectorData contactDate = getItem(position);
         if (null == convertView) {
@@ -82,6 +86,8 @@ public class InspectorsAdapter extends BaseAdapter {
         holder.textView_Sort.setText(contactDate.getSort());
         holder.textView_ContactName.setText(contactDate.getName());
         holder.textView_Sort.setVisibility(contactDate.getIsVisible());
+//        holder.imageView_ContactIcon
+
         holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +99,11 @@ public class InspectorsAdapter extends BaseAdapter {
                 {
                     View inflate = View.inflate(mContext, R.layout.inspector_icon_item, null);
                     ImageView inspector_icon = (ImageView) inflate.findViewById(R.id.imageView_icon);
+                    if(list.get(i).getImageData() != null) {
+                        ImageUtils.loadImageWithPlaceHolder(mContext, inspector_icon, mHttpPost.getFileUrl(list.get(i).getImageData()));
+                    } else {
+                        inspector_icon.setImageResource(R.drawable.default_head);
+                    }
                     if ( list.get(i).getIsSelected() ) {
                         linearLayout_inspector_icon.addView(inflate);
                     }
@@ -108,6 +119,9 @@ public class InspectorsAdapter extends BaseAdapter {
             }
         });
         holder.checkBox_ContactIsCheck.setChecked(contactDate.getIsSelected());
+        if(contactDate.getImageData() != null) {
+            ImageUtils.loadImageWithPlaceHolder(mContext, holder.imageView_ContactIcon, mHttpPost.getFileUrl(contactDate.getImageData()));
+        }
         return convertView;
     }
 
