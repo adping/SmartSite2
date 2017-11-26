@@ -164,7 +164,7 @@ open class UpdatePhotoActivity : BaseActivity() {
         mCameraImage = File(path, fileName)
         mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, mCameraImage?.path)
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUriImage)
-        i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         val uri = mUriImage;
         if (uri != null) {
             mUriImage = uri
