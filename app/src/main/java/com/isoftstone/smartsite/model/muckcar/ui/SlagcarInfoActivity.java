@@ -50,7 +50,7 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<CarInfoBean> mCarInfoList_day = null;
     private ArrayList<CarInfoBean> mCarInfoList_mouth = null;
     private ArchMonthFlowBean liuliangduibi;
-
+    private ArchMonthFlowBean baojinglv;
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         tabLayout = (TabLayout) findViewById(R.id.tab);
@@ -140,6 +140,25 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             archid = mMonthSlagcarInfoFragment.getLiuliangduibi_id();
         }
         new QueryArchMonthFlowDataTask(this,time,date,flag,archid).execute();
+    }
+
+    public void getBaojinglvData(int dayormonthflag){
+        long[] archids = new long[2];
+        String time = "";
+        String date = "";
+        int flag = 0;
+        if (dayormonthflag == 0) {
+            //日
+            time = mDaySlagcarInfoFragment.getBaojinglvTime();
+            flag = mDaySlagcarInfoFragment.getDayOrMonthFlag();
+            archids = mDaySlagcarInfoFragment.getBaojinglvAddressId();
+        } else if (dayormonthflag == 1) {
+            //月
+            date = mMonthSlagcarInfoFragment.getBaojinglvTime();
+            flag = mMonthSlagcarInfoFragment.getDayOrMonthFlag();
+            archids = mMonthSlagcarInfoFragment.getBaojinglvAddressId();
+        }
+        new QueryAlarmDataTask(this,time,date,flag,archids).execute();
     }
 
     public class QueryDayFlowDataTask extends AsyncTask<Void, Void, Integer> {
@@ -243,6 +262,62 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
                 mMonthSlagcarInfoFragment.setLiuliangduibi(liuliangduibi);
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setLiuliangduibi(liuliangduibi);
+            }
+            closeDlg();
+        }
+
+        /**
+         * 在publishProgress()被调用以后执行，publishProgress()用于更新进度
+         */
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    public class QueryAlarmDataTask extends AsyncTask<Void, Void, Integer> {
+        private Context context;
+        private String time;
+        private String date;
+        private int flag;
+        private long[] archIds;
+
+        public QueryAlarmDataTask(Context context, String time, String date, int flag,long[] archIds) {
+            this.context = context;
+            this.time = time;
+            this.date = date;
+            this.archIds = archIds;
+            this.flag = flag;
+        }
+
+        /**
+         * 运行在UI线程中，在调用doInBackground()之前执行
+         */
+        @Override
+        protected void onPreExecute() {
+            showDlg("数据加载中");
+        }
+
+        /**
+         * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
+         */
+        @Override
+        protected Integer doInBackground(Void... params) {
+            baojinglv = mHttpPost.getAlarmData(time, date,archIds, flag);
+            return 1;
+        }
+
+        /**
+         * 运行在ui线程中，在doInBackground()执行完毕后执行
+         */
+        @Override
+        protected void onPostExecute(Integer resultsCode) {
+            super.onPostExecute(resultsCode);
+            //
+            if (flag  == 1) {
+                mMonthSlagcarInfoFragment.setBaojinglv(baojinglv);
+            } else if (flag == 0) {
+                mDaySlagcarInfoFragment.setBaojinglv(baojinglv);
             }
             closeDlg();
         }

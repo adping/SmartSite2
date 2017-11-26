@@ -50,7 +50,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     public static final int TIME_INIT_TEXTVIEW_LIST = 0;
     private int mDayOrMonthFlag = 1; //1月  0日
     private LinearLayout layout_1;
-    private LinearLayout layout_2;
     private ArrayList<CarInfoBean> mCarInfoList;
     private String[] archName;
     private Spinner spinner_address = null;
@@ -63,6 +62,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private LineChart baojinglv_linechart;
     private TextView baojinglv_address;
     private LinearLayout list_trextviews;
+    private long[] baojinglv_addressid;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -91,7 +91,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     protected void afterCreated(Bundle savedInstanceState) {
         list_trextviews = (LinearLayout) rootView.findViewById(R.id.list_textview);//动态tv数据
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
-        layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
         spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);//bao jing lv
         spinner_address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -162,9 +161,11 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         if (mDayOrMonthFlag == 1) {
             date_liuliangduibi.setText(DateUtils.getNewTime_2());
             date_liuliangpaiming.setText(DateUtils.getNewTime_2());
+            date_louduanbaojinglv.setText(DateUtils.getNewTime_2());
         } else if (mDayOrMonthFlag == 0) {
             date_liuliangduibi.setText(DateUtils.getNewTime_1());
             date_liuliangpaiming.setText(DateUtils.getNewTime_1());
+            date_louduanbaojinglv.setText(DateUtils.getNewTime_1());
         }
         ((SlagcarInfoActivity) getActivity()).getLiuliangpaimingData(mDayOrMonthFlag);
         initDatePicker();
@@ -205,7 +206,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 } else if (mDayOrMonthFlag == 0) {
                     date_liuliangduibi.setText(time.substring(0, 10));
                 }
-                ((SlagcarInfoActivity) getActivity()).getLiuliangduibiData(mDayOrMonthFlag);
+                ((SlagcarInfoActivity)getActivity()).getLiuliangduibiData(mDayOrMonthFlag);
             }
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker2.setIsLoop(false); // 不允许循环滚动
@@ -213,7 +214,12 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         customDatePicker3 = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-
+                if (mDayOrMonthFlag == 1) {
+                    date_louduanbaojinglv.setText(time.substring(0, 7));
+                } else if (mDayOrMonthFlag == 0) {
+                    date_louduanbaojinglv.setText(time.substring(0, 10));
+                }
+                ((SlagcarInfoActivity)getActivity()).getBaojinglvData(mDayOrMonthFlag);
             }
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker3.setIsLoop(false); // 不允许循环滚动
@@ -235,6 +241,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
+        //加载流量对比地址选择
         mCarInfoList = carInfoList;
         archName = null;
         if (mCarInfoList != null) {
@@ -249,7 +256,23 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, archName);
             spinner_address.setAdapter(adapter);
         }
+        //获取报警率地区
 
+        if (mCarInfoList != null) {
+            if(mCarInfoList.size() >= 2){
+                baojinglv_addressid = new long[2];
+                baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
+                baojinglv_addressid[1] = mCarInfoList.get(1).getArch().getId();
+            }else {
+                baojinglv_addressid = new long[1];
+                baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
+            }
+        }
+        ((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
+    }
+
+    public  long[]  getBaojinglvAddressId(){
+        return  baojinglv_addressid;
     }
 
     public String getLiuliangpaimingTime() {
@@ -258,6 +281,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
     public String getLiuliangduibiTime() {
         return date_liuliangduibi.getText().toString();
+    }
+
+    public String getBaojinglvTime() {
+        return date_louduanbaojinglv.getText().toString();
     }
 
     public long getLiuliangduibi_id() {
@@ -413,5 +440,192 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             liuliangduibi_linechart.setData(data);
 
         }
+    }
+
+
+    public void setBaojinglv(ArchMonthFlowBean archMonthFlowBean) {
+
+        int max = 0;
+        if(archMonthFlowBean == null ){
+            return;
+        }
+        if(archMonthFlowBean.getMcFlows() == null){
+            return;
+        }
+        baojinglv_linechart.setDrawGridBackground(false);
+
+        // no description text
+        baojinglv_linechart.getDescription().setEnabled(false);
+
+        // enable touch gestures
+        baojinglv_linechart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        baojinglv_linechart.setDragEnabled(false);  //是否可以缩放
+        baojinglv_linechart.setScaleEnabled(false);  //是否可以缩放
+        // mChart.setScaleXEnabled(true);
+        // mChart.setScaleYEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        baojinglv_linechart.setPinchZoom(true);
+        baojinglv_linechart.setExtraOffsets(10,0,10,20);
+
+
+
+        XAxis xAxis = baojinglv_linechart.getXAxis();
+        xAxis.enableGridDashedLine(10f, 10f, 0f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setAxisMaximum(31);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+        YAxis leftAxis = baojinglv_linechart.getAxisLeft();
+        leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+
+        leftAxis.enableGridDashedLine(10f, 0f, 0f);
+        leftAxis.setDrawZeroLine(false);
+
+        // limit lines are drawn behind data (and not on top)
+        leftAxis.setDrawLimitLinesBehindData(false);
+
+        baojinglv_linechart.getAxisRight().setEnabled(false);
+
+        //mChart.getViewPortHandler().setMaximumScaleY(2f);
+        //mChart.getViewPortHandler().setMaximumScaleX(2f);
+
+        // add data
+//        mChart.setVisibleXRange(20);
+//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
+//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
+
+        baojinglv_linechart.animateX(2500);
+        //mChart.invalidate();
+
+        // get the legend (only possible after setting data)
+        Legend l = baojinglv_linechart.getLegend();
+        l.setForm(Legend.LegendForm.LINE);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setEnabled(false);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+
+        if(archMonthFlowBean.getMcFlows().get(0).size() >= 1) {
+            ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(0);
+                ArrayList<Entry> values = new ArrayList<Entry>();
+            for (int i = 0; i < list.size() ; i ++) {
+                McFlowBean mcFlowBean = list.get(i);
+                if (mDayOrMonthFlag == 1) {
+                    LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
+                    int index = date.getDayOfMonth();
+                    String value = mcFlowBean.getFlow() + "";
+                    if (max < mcFlowBean.getFlow()) {
+                        max = Integer.parseInt(value);
+                    }
+                    Entry entry = new Entry(index, Float.parseFloat(value));
+                    values.add(entry);
+                } else if (mDayOrMonthFlag == 0) {
+                    int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
+                    String value = mcFlowBean.getFlow() + "";
+                    if (max < mcFlowBean.getFlow()) {
+                        max = Integer.parseInt(value);
+                    }
+                    Entry entry = new Entry(index, Float.parseFloat(value));
+                    values.add(entry);
+                }
+            }
+
+                LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+                set1.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                //set1.enableDashedLine(10f, 10f, 0f);
+                set1.setColor(Color.parseColor("#ff9e5d"));
+                set1.setCircleColor(Color.parseColor("#ff9e5d"));
+                set1.setLineWidth(1f);
+                set1.setCircleRadius(4f);//设置焦点圆心的大小
+                set1.setDrawCircleHole(true);
+                set1.setCircleHoleRadius(2);
+                set1.setCircleColorHole(Color.WHITE);
+                set1.setValueTextSize(9f);
+                set1.setDrawFilled(false);
+                set1.setFormLineWidth(1f);
+                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set1.setFormSize(15.f);
+                set1.setDrawFilled(false);
+                set1.setHighlightEnabled(false);
+                set1.setDrawValues(false);
+
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                } else {
+                    set1.setFillColor(Color.BLACK);
+                }
+                dataSets.add(set1); // add the datasets
+        }
+
+
+        if(archMonthFlowBean.getMcFlows().get(0).size() >= 2) {
+            ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(1);
+             {
+                ArrayList<Entry> values_2 = new ArrayList<Entry>();
+                for (int i = 0; i < list.size() ; i ++) {
+                        McFlowBean mcFlowBean = list.get(i);
+                        if (mDayOrMonthFlag == 1) {
+                            LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
+                            int day = date.getDayOfMonth();
+                            String value = mcFlowBean.getFlow() + "";
+                            Entry entry = new Entry(day, Float.parseFloat(value));
+                            values_2.add(entry);
+                        } else if (mDayOrMonthFlag == 0) {
+                            int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
+                            String value = mcFlowBean.getFlow() + "";
+                            Entry entry = new Entry(index, Float.parseFloat(value));
+                            values_2.add(entry);
+                        }
+                }
+
+
+                LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+                set2.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
+                set2.setColor(Color.parseColor("#599fff"));
+                set2.setDrawCircleHole(false);
+                set2.setFormLineWidth(1f);
+                set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set2.setFormSize(15.f);
+                set2.setLineWidth(1f);//设置线宽
+                set2.setCircleColor(Color.parseColor("#599fff"));
+                set2.setCircleRadius(4f);//设置焦点圆心的大小
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+                set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+                set2.setHighlightEnabled(false);//是否禁用点击高亮线
+                set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+                set2.setValueTextSize(9f);//设置显示值的文字大小
+                set2.setDrawFilled(false);//设置禁用范围背景填充
+                set2.setDrawValues(false);
+
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                } else {
+                    set2.setFillColor(Color.BLACK);
+                }
+
+                dataSets.add(set2); // add the datasets
+            }
+        }
+        // create a data object with the datasets
+        LineData data = new LineData(dataSets);
+        // set data
+        baojinglv_linechart.setData(data);
     }
 }

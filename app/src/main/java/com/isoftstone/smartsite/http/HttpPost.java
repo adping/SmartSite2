@@ -490,16 +490,24 @@ public class HttpPost {
         return companyName;
     }
 
+    /*
+    路段渣土车日、月流量查询
+     */
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
+        Log.e("test",parentId+ " "+time+"  "+timeMonth+"  "+flag);
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
     }
 
+    /*
+    路段月度渣土车的日流量查询
+     */
     public ArchMonthFlowBean getArchMonthFlow(String time, String timeMonth, Long archId, int flag) {
         //
+        Log.e("test",archId+"  "+time+"  "+timeMonth+" "+flag);
         return MuckCarOperation.getArchMonthFlow(GET_ARCH_MONTH_FLOW, mClient, time, timeMonth, archId, flag);
     }
 
-    public ArchMonthFlowBean getAlarmData(String time, String timeMonth, Long[] archIds, int flag) {
+    public ArchMonthFlowBean getAlarmData(String time, String timeMonth, long[] archIds, int flag) {
         //
         return MuckCarOperation.getAlarmData(GET_ALARM_DATA, mClient, time, timeMonth, archIds, flag);
     }

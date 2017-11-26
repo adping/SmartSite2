@@ -108,7 +108,7 @@ public class MuckCarOperation {
         return archMonthFlowBean;
     }
 
-    public static ArchMonthFlowBean getAlarmData(String strurl, OkHttpClient mClient, String time, String timeMonth,  Long[] archIds, int flag) {
+    public static ArchMonthFlowBean getAlarmData(String strurl, OkHttpClient mClient, String time, String timeMonth,  long[] archIds, int flag) {
         ArchMonthFlowBean archMonthFlowBean = null;
         String funName = "getAlarmData";
 

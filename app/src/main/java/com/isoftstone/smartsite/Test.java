@@ -148,12 +148,14 @@ public class Test {
 			/*
 
 			 */
-		    /*mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
+		    mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
 
+		    /*
 		    mHttpPost.getArchMonthFlow("2017-11-17","2017-11",4L,1);
-		    Long[] ar = {4l,3l};
-		    mHttpPost.getAlarmData("2017-10-17","2017-10",ar,0);
-            */
+		    */
+		    //long[] ar = {4l,7l};
+		    //mHttpPost.getAlarmData("2017-11-17","2017-11",ar,1);
+
                 //mHttpPost.recForMobile("鄂A0001",1);
 
               /*PageableBean pageableBean = new PageableBean();
