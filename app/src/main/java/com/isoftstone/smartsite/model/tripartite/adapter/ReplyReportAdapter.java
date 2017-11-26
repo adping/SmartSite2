@@ -19,24 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.autonavi.amap.mapcore.FileUtil;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
-import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReplyReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -115,6 +112,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         View v = null;
         ReportBean data = mData.get(position);
         Log.e(TAG, "yanlog getView report:" + data.getFiles());
+        Log.d(TAG,"getView:HeaderPath:"+data.getCreator().getImageData());
         if (data.getReportFiles() == null) {
             Gson gson = new Gson();
             ArrayList<String> temp = gson.fromJson(data.getFiles(), ArrayList.class);
@@ -168,6 +166,16 @@ public class ReplyReportAdapter extends BaseAdapter {
         GridView gridView = (GridView) v.findViewById(R.id.grid_view_source_report_temp);
         initGridView(null, data, gridView);
 
+        //init user head
+        try {
+            String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
+            ImageView imgView = (ImageView)v.findViewById(R.id.img_head_send_report);
+            ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 //        TextView lab_next_visit_time = (TextView) v.findViewById(R.id.lab_next_visit_time);
 //        String visitTime = "下次回访时间：" + mReportData.getVisitDate();
 //        try {
@@ -207,6 +215,15 @@ public class ReplyReportAdapter extends BaseAdapter {
         GridView gridView = (GridView) v.findViewById(R.id.grid_view);
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.linear_grid_view);
         initGridView(linearLayout, data, gridView);
+
+        try {
+            String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
+            ImageView imgView = (ImageView)v.findViewById(R.id.img_head);
+            ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return v;
     }
 
@@ -242,6 +259,14 @@ public class ReplyReportAdapter extends BaseAdapter {
         GridView gridView = (GridView) v.findViewById(R.id.grid_view);
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.linear_grid_view);
         initGridView(linearLayout, data, gridView);
+
+        try {
+            String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
+            ImageView imgView = (ImageView)v.findViewById(R.id.img_head);
+            ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return v;
     }
 

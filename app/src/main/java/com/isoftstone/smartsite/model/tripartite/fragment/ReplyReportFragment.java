@@ -13,20 +13,22 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -63,6 +65,18 @@ public class ReplyReportFragment extends BaseFragment {
     private void init() {
         initView();
         initGridView();
+        initUserHead();
+    }
+
+    private void initUserHead() {
+        try {
+            ImageView v = (ImageView) getView().findViewById(R.id.img_head);
+            String headPath = HttpPost.mLoginBean.getmUserBean().getLoginUser().imageData;
+            String uri = mHttpPost.getFileUrl(headPath);
+            ImageUtils.loadImageWithPlaceHolder(mContext, v, uri, R.drawable.default_head);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {

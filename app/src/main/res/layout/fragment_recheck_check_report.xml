@@ -13,7 +13,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <ImageView
+        <com.isoftstone.smartsite.model.system.ui.CircleImageView
             android:id="@+id/img_head"
             android:layout_width="32dp"
             android:layout_height="32dp"
