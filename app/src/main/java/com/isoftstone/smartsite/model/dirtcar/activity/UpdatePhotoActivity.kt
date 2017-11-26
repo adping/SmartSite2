@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.dirtcar.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
@@ -163,7 +164,7 @@ open class UpdatePhotoActivity : BaseActivity() {
         mCameraImage = File(path, fileName)
         mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, mCameraImage?.path)
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUriImage)
-        i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         val uri = mUriImage;
         if (uri != null) {
             mUriImage = uri
@@ -181,7 +182,7 @@ open class UpdatePhotoActivity : BaseActivity() {
         Log.e(TAG, "onActivityResult:" + requestCode)
         if (requestCode == FLAG_TARGET_CAMERA) {
             val uri = mUriImage
-            if (uri != null && isTakePicOk(uri)) {
+            if (uri != null && isTakePicOk(mCameraImage?.canonicalPath)) {
                 //var path = FilesUtils.getPath(this, mCameraImage?.canonicalPath)
                 var path = mCameraImage?.canonicalPath
                 if (path != null) {
@@ -223,8 +224,9 @@ open class UpdatePhotoActivity : BaseActivity() {
     }
 
     fun isTakePicOk(uri: Uri): Boolean {
-        var cursor = contentResolver.query(uri, null, null, null, null);
-        if (cursor != null) {
+        var cursor: Cursor ?= null
+        try {
+            cursor = contentResolver.query(uri, null, null, null, null);
             val sizeCol = cursor.getColumnIndex(OpenableColumns.SIZE)
             cursor.moveToFirst()
             val size = cursor.getInt(sizeCol)
@@ -233,9 +235,21 @@ open class UpdatePhotoActivity : BaseActivity() {
                 return false;
             }
             return true;
-        } else {
-            return false;
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        } finally {
+            cursor?.close()
         }
+        return true
+    }
+
+    fun isTakePicOk(str: String?): Boolean {
+        if (str == null) {
+            return false
+        }
+        var file = File(str)
+        return file.exists()
     }
 
     fun initLocationLab() {

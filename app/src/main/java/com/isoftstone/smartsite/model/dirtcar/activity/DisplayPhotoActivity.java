@@ -101,13 +101,13 @@ public class DisplayPhotoActivity extends BaseActivity implements View.OnClickLi
                     Bitmap bitmap = bitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
                     //设置图片
                     closeDlg();
-                    ToastUtils.showLong( "RequestResultMessage：" + mResultMsg);
+                    //ToastUtils.showLong( "RequestResultMessage：" + mResultMsg);
                     mImageUrlView.setImageBitmap(bitmap);
                 } else {
                     closeDlg();
                     mResultCode = QUERY_RESULTS_FAILED_CODE;
                     mResultMsg = "请求网络加载图片失败，错误状态码：" + statusCode;
-                    ToastUtils.showLong( "RequestResultMessage：" + mResultMsg);
+                    ToastUtils.showLong(mResultMsg);
                 }
             }
 
@@ -116,8 +116,8 @@ public class DisplayPhotoActivity extends BaseActivity implements View.OnClickLi
                                   byte[] responseBody, Throwable error) {
                 closeDlg();
                 mResultCode = QUERY_RESULTS_EXCEPTION_CODE;
-                mResultMsg = "请求网络加载图片异常，message：" + error.getMessage();
-                ToastUtils.showLong( "RequestResultMessage：" + mResultMsg);
+                mResultMsg = "请求网络加载图片异常：" + error.getMessage();
+                ToastUtils.showLong(mResultMsg);
                 error.printStackTrace();
 
             }
