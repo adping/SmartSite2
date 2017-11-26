@@ -161,6 +161,9 @@ open class UpdatePhotoActivity : BaseActivity() {
         var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         var fileName = DateUtils.format_file_name.format(Date()) + ".jpg"
         var path = File(mStoragePath)
+        if (!path.exists()) {
+            path.mkdirs()
+        }
         mCameraImage = File(path, fileName)
         mUriImage = FilesUtils.getUriForFile(this@UpdatePhotoActivity, mCameraImage?.path)
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUriImage)
