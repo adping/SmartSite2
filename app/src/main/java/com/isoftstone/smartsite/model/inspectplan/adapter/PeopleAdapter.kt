@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.isoftstone.smartsite.R
+import com.isoftstone.smartsite.http.user.BaseUserBean
 
 /**
  * Created by yanyongjun on 2017/11/15.
  */
-open class PeopleAdapter(context: Context, list: ArrayList<String>) : BaseAdapter() {
+open class PeopleAdapter(context: Context, list: ArrayList<BaseUserBean>) : BaseAdapter() {
     var mContext = context
     var mList = list
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -29,6 +30,6 @@ open class PeopleAdapter(context: Context, list: ArrayList<String>) : BaseAdapte
     }
 
     override fun getCount(): Int {
-        return 3
+        return mList.size
     }
 }

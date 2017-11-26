@@ -38,7 +38,7 @@ open class AddInspectPlan : BaseActivity() {
     var mAddressList = ArrayList<PatrolPositionBean>()
 
     var mGridViewPeople: GridView? = null
-    var mPeopleList = ArrayList<String>()
+    var mPeopleList = ArrayList<BaseUserBean>()
     var mAdapterPeople: PeopleAdapter? = null
     var mEditName: EditText? = null
 
@@ -149,6 +149,8 @@ open class AddInspectPlan : BaseActivity() {
         lab_people_right.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 var i = Intent(this@AddInspectPlan, SelectInspectorsActivity::class.java)
+                i.action = "action"
+                i.putExtra("list",mPeopleList)
                 startActivityForResult(i, FLAG_TARGET_PEOPLE)
             }
         })
@@ -198,7 +200,13 @@ open class AddInspectPlan : BaseActivity() {
                 addAddressView()
             }
         } else if (requestCode == FLAG_TARGET_PEOPLE) {
-            ToastUtils.showShort("暂时实现");
+            var peopleList = data?.getSerializableExtra("list") as? ArrayList<BaseUserBean>
+            if (peopleList != null) {
+                mPeopleList.clear()
+                mPeopleList.addAll(peopleList)
+                Log.e(TAG,"yanlog result:"+mPeopleList.size)
+                mAdapterPeople?.notifyDataSetChanged()
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -249,13 +257,22 @@ open class AddInspectPlan : BaseActivity() {
                     var endTime = labEndTimeRight?.text?.toString()
                     var content = edit_report_msg?.text?.toString()
 
-                    var peopleList = ArrayList<BaseUserBean>()
-                    var bean_1 = BaseUserBean()
-                    bean_1.id = HttpPost.mLoginBean.getmUserBean().loginUser.getId() //TODO
-                    peopleList.add(bean_1)
+//                    var peopleList = ArrayList<BaseUserBean>()
+//                    var bean_1 = BaseUserBean()
+//                    bean_1.id = HttpPost.mLoginBean.getmUserBean().loginUser.getId() //TODO
+                    //peopleList.add(bean_1)
+
+                    var peopleTempList = ArrayList<BaseUserBean>()
+                    Log.e(TAG,"yanlog submit people size:"+mPeopleList.size)
+                    for(temp in mPeopleList){
+                        var people = BaseUserBean()
+                        people.id = temp.id
+                        peopleTempList.add(people)
+                    }
+                    Log.e(TAG,"yanlog peopleTempList size:"+peopleTempList.size)
 
                     if (TextUtils.isEmpty(name) || !isOkTime(beginTime) || !isOkTime(endTime) ||
-                            TextUtils.isEmpty(content) || addList.size == 0 || peopleList.size == 0) {
+                            TextUtils.isEmpty(content) || addList.size == 0 || peopleTempList.size == 0) {
                         return false
                     }
 
@@ -265,7 +282,8 @@ open class AddInspectPlan : BaseActivity() {
                     planBean.taskTimeStart = beginTime
                     planBean.taskTimeEnd = endTime
                     planBean.taskContent = content
-                    planBean.users = peopleList
+                    planBean.users = peopleTempList
+
 
                     var result = mHttpPost.patrolTaskSave(planBean)
                     if (result == null) {
