@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,6 +44,8 @@ public class SelectInspectorsActivity extends Activity{
     private ImageButton btnBack;
     private Button btnEnsure;
     private ArrayList<BaseUserBean> userList;
+    private ArrayList<BaseUserBean> selectedInspectorsList = null;
+    private BaseUserBean selcetedInspector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,6 @@ public class SelectInspectorsActivity extends Activity{
         btnEnsure = (Button)findViewById(R.id.btn_inspectors) ;
         btnBack.setOnClickListener(mGoBack);
         btnEnsure.setOnClickListener(mEnsure);
-
         list = new ArrayList<InspectorData>();
         initDate();//本地填充巡查人员数据
     }
@@ -68,6 +70,38 @@ public class SelectInspectorsActivity extends Activity{
 
     public View.OnClickListener mEnsure = new View.OnClickListener() {
         public void onClick(View v) {
+            for (int i=0; i < list.size(); i++){
+                if (list.get(i).isSelected) {
+                    selcetedInspector = new BaseUserBean();
+
+                    selcetedInspector.setAccount(list.get(i).getAccount());
+                    selcetedInspector.setAccountType(list.get(i).getAccountType());
+                    selcetedInspector.setAddress(list.get(i).getAddress());
+                    selcetedInspector.setCreateTime(list.get(i).getCreateTime());
+                    selcetedInspector.setCreator(list.get(i).getCreator());
+                    selcetedInspector.setDelFlag(list.get(i).getDelFlag());
+                    selcetedInspector.setDepartmentId(list.get(i).getDepartmentId());
+                    selcetedInspector.setDescription(list.get(i).getDescription());
+                    selcetedInspector.setEmail(list.get(i).getEmail());
+                    selcetedInspector.setEmployeeCode(list.get(i).getEmployeeCode());
+                    selcetedInspector.setFax(list.get(i).getFax());
+                    selcetedInspector.setLocked(list.get(i).getLocked());
+                    selcetedInspector.setId(list.get(i).getId());
+                    selcetedInspector.setImageData(list.get(i).getImageData());
+                    selcetedInspector.setName(list.get(i).getName());
+                    selcetedInspector.setPassword(list.get(i).getPassword());
+                    selcetedInspector.setResetPwd(list.get(i).getResetPwd());
+                    selcetedInspector.setRegisterId(list.get(i).getRegisterId());
+                    selcetedInspector.setSex(list.get(i).getSex());
+                    selcetedInspector.setTelephone(list.get(i).getTelephone());
+
+                    selectedInspectorsList.add(selcetedInspector);
+                }
+            }
+            Intent intent = new Intent();
+            intent.setAction("action");
+            intent.putExtra("list", (ArrayList<BaseUserBean>) selectedInspectorsList);
+            setResult(RESULT_OK, intent);
             finish();
         }
     };
@@ -76,6 +110,8 @@ public class SelectInspectorsActivity extends Activity{
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 
 
     Handler handler = new Handler() {
@@ -95,10 +131,32 @@ public class SelectInspectorsActivity extends Activity{
 //            if (list2 != null && list2.size() > 0) {
                 for (int i = 0; i < list2.size(); i++) {
                     inspectorDate = new InspectorData();
-                    inspectorDate.setName(list2.get(i).getName());
-                    inspectorDate.setImageData(list2.get(i).getImageData());
+
                     inspectorDate.setSort(ZhongWen2PinYinUtils.getPinYinFirstHeadChar(list2.get(i).getName()));
                     inspectorDate.setIsVisible(View.VISIBLE);
+                    inspectorDate.setIsSelected(false); // 默认全都不选中
+
+                    inspectorDate.setAccount(list2.get(i).getAccount());
+                    inspectorDate.setAccountType(list2.get(i).getAccountType());
+                    inspectorDate.setAddress(list2.get(i).getAddress());
+                    inspectorDate.setCreateTime(list2.get(i).getCreateTime());
+                    inspectorDate.setCreator(list2.get(i).getCreator());
+                    inspectorDate.setDelFlag(list2.get(i).getDelFlag());
+                    inspectorDate.setDepartmentId(list2.get(i).getDepartmentId());
+                    inspectorDate.setDescription(list2.get(i).getDescription());
+                    inspectorDate.setEmail(list2.get(i).getEmail());
+                    inspectorDate.setEmployeeCode(list2.get(i).getEmployeeCode());
+                    inspectorDate.setFax(list2.get(i).getFax());
+                    inspectorDate.setLocked(list2.get(i).getLocked());
+                    inspectorDate.setId(list2.get(i).getId());
+                    inspectorDate.setImageData(list2.get(i).getImageData());
+                    inspectorDate.setName(list2.get(i).getName());
+                    inspectorDate.setPassword(list2.get(i).getPassword());
+                    inspectorDate.setResetPwd(list2.get(i).getResetPwd());
+                    inspectorDate.setRegisterId(list2.get(i).getRegisterId());
+                    inspectorDate.setSex(list2.get(i).getSex());
+                    inspectorDate.setTelephone(list2.get(i).getTelephone());
+
                     for (int j = 0; j < i; j++) {
                         if (ZhongWen2PinYinUtils.getPinYinFirstHeadChar(list2.get(j).getName()).equals(ZhongWen2PinYinUtils.getPinYinFirstHeadChar(list2.get(i).getName()))) {
                             inspectorDate.setIsVisible(View.GONE);
@@ -109,15 +167,41 @@ public class SelectInspectorsActivity extends Activity{
                     list.add(inspectorDate);
 //                }
 //                Log.e("handler","已加载" + list.size() + "条数据");
-                initIspectorsAdaptor();
-                initSideBar();
-                refreshHorizontalScrollView();
             }
+            initSelectedStatus();
+            initIspectorsAdaptor();
+            initSideBar();
+            refreshHorizontalScrollView();
 //            else {
 //                Log.e("handler","无法获取服务器数据，请稍后再试!");
 //            }
         }
     };
+
+    public void initSelectedStatus(){
+        Intent intent = getIntent();
+        if("action".equals(intent.getAction())) {
+            selectedInspectorsList = (ArrayList<BaseUserBean>) intent.getSerializableExtra("list");
+            if (selectedInspectorsList == null || selectedInspectorsList.size() == 0){
+                Log.e("Intent", "接收到的选中人员信息为空");
+            }else {
+
+                for(int i = 0; i < selectedInspectorsList.size(); i ++)
+                {
+                    for(int j = 0; j < list.size(); j++){
+//                        if (selectedInspectorsList.get(i).getName().equals(list.get(j).getName())){
+                        if (selectedInspectorsList.get(i).getAccount().equals(list.get(j).getAccount())){
+                            list.get(j).setIsSelected(true);
+                            break;
+                        }
+                    }
+                    Log.e("Intent","接收到选中人员信息为: (姓名)" + selectedInspectorsList.get(i).getName() + "(账号)" + selectedInspectorsList.get(i).getAccount());
+                }
+            }
+        } else {
+            Log.e("Intent", "未接收到选中人员信息");
+        }
+    }
 
     public void initDate() {
         new Thread(networkTask).start();
@@ -192,9 +276,9 @@ public class SelectInspectorsActivity extends Activity{
             handler.sendMessage(message);
 
 
-            for(int i = 0; i < userList.size(); i++){
-                Log.e("imageData","图片信息：" + userList.get(i).getImageData());
-            }
+//            for(int i = 0; i < userList.size(); i++){
+//                Log.e("imageData","图片信息：" + userList.get(i).getImageData());
+//            }
         }
     };
 
