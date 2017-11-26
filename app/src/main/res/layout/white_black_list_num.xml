@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="17dp"
-    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
     android:layout_marginRight="17dp"
     android:orientation="vertical">
 
@@ -15,24 +15,27 @@
         android:textSize="12sp" />
 
     <LinearLayout
+        android:layout_marginTop="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
+            android:text="5"
             android:id="@+id/balck_list"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textColor="#ffffff"
+            android:background="#fe3f3f"
             android:textSize="12sp" />
 
         <TextView
+            android:text="5"
             android:id="@+id/white_list"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textColor="#4978ef"
-            android:textSize="14sp" />
+            android:background="#4978ef"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

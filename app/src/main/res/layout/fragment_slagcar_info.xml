@@ -114,25 +114,13 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <include
-                android:id="@+id/address_1"
-                layout="@layout/white_black_list_num"></include>
-
-            <include
-                android:id="@+id/address_2"
-                layout="@layout/white_black_list_num"></include>
-
-            <include
-                android:id="@+id/address_3"
-                layout="@layout/white_black_list_num"></include>
-
-            <include
-                android:id="@+id/address_4"
-                layout="@layout/white_black_list_num"></include>
-
-            <include
-                android:id="@+id/address_5"
-                layout="@layout/white_black_list_num"></include>
+            <LinearLayout
+                android:id="@+id/list_textview"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
         </LinearLayout>
 
 
