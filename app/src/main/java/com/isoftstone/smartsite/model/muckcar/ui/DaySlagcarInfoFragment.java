@@ -93,18 +93,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
         layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
         spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);//bao jing lv
-        address_baojinglv = (Spinner) layout_2.findViewById(R.id.spinner_address_baojinglv);
-        address_baojinglv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         spinner_address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -161,13 +149,13 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 customDatePicker3.show(now);
             }
         });
-        baojinglv_address = (TextView) rootView.findViewById(R.id.load_name_3);
-        baojinglv_address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //baojinglv_address = (TextView) rootView.findViewById(R.id.load_name_3);
+        //baojinglv_address.setOnClickListener(new View.OnClickListener() {
+           // @Override
+            //public void onClick(View v) {
 
-            }
-        });
+           // }
+        //});
 
         liuliangduibi_linechart = (LineChart) layout_1.findViewById(R.id.chart_liuliangduibi);
         baojinglv_linechart = (LineChart) rootView.findViewById(R.id.chart_baojinglv);
