@@ -155,6 +155,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+
         taskId = getIntent().getIntExtra("taskId",taskId);
         if(taskId == 0){
             ToastUtils.showLong("没有获取到任务信息！");
