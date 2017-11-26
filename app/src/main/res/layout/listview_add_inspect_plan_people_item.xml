@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="54dp">
 
-        <ImageView
+        <com.isoftstone.smartsite.model.system.ui.CircleImageView
             android:id="@+id/img_head"
             android:layout_width="32dp"
             android:layout_height="32dp"
