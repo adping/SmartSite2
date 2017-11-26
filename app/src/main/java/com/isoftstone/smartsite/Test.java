@@ -24,9 +24,9 @@ public class Test {
         new Thread() {
             @Override
             public void run() {
-                mHttpPost.login("admin", "bmeB4000", jpushId);
- /*
-             String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
+            //mHttpPost.login("admin", "bmeB4000", jpushId);
+
+            /* String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
              Log.i("test",day);
              */
             /*
@@ -156,9 +156,9 @@ public class Test {
             */
                 //mHttpPost.recForMobile("鄂A0001",1);
 
-              PageableBean pageableBean = new PageableBean();
+              /*PageableBean pageableBean = new PageableBean();
               pageableBean.setPage(1+"");
-              mHttpPost.getUnRecList("",pageableBean);
+              mHttpPost.getUnRecList("",pageableBean);*/
 
               /*PageableBean pageableBean = new PageableBean();
               String test = mHttpPost.getTrackList("",pageableBean).toString();

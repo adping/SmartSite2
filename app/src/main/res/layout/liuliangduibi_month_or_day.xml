@@ -7,11 +7,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="37dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
         <TextView
-            android:id="@+id/date_2"
+            android:id="@+id/date_liuliangduibi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -25,29 +25,17 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@id/date_2"
+            android:layout_toRightOf="@id/date_liuliangduibi"
             android:src="@drawable/droparrow" />
 
-        <TextView
-            android:id="@+id/load_name_2"
+        <Spinner
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="7dp"
-            android:layout_toLeftOf="@id/load_name_choice2"
-            android:text="光谷六路"
-            android:textColor="#222222"
-            android:textSize="12sp"></TextView>
-
-        <ImageView
-            android:id="@+id/load_name_choice2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="AQI"
+            android:textSize="12dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/droparrow" />
-
-
+            android:id="@+id/spinner_address"/>
     </RelativeLayout>
 
     <View
@@ -93,6 +81,11 @@
             android:text="黑名单"
             android:textSize="14sp" />
     </LinearLayout>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_liuliangduibi"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@android:color/white"/>
 
 </LinearLayout>
 

@@ -20,6 +20,7 @@ import com.uniview.airimos.service.KeepaliveService;
  * Created by L02465 on 2017.01.13.
  */
 public class NewKeepAliveService extends KeepAliveService implements OnLoginListener,KeepaliveService.OnKeepaliveListener{
+    private static final String TAG = "NewKeepAliveService";
 
     private HttpPost mHttpPost = new HttpPost();
 
@@ -41,13 +42,13 @@ public class NewKeepAliveService extends KeepAliveService implements OnLoginList
     @Override
     public void keepAliveSuccess() {
         HttpPost.mVideoIsLogin = true;
-        Log.e("eee"," keepAlive Success ");
+        Log.e(TAG," keepAlive Success ");
     }
 
     @Override
     public void keepAliveFailure(String error) {
         HttpPost.mVideoIsLogin = false;
-        Log.e("eee"," keepAlive Failure " + error);
+        Log.e(TAG," keepAlive Failure " + error);
         LoginParam params = new LoginParam();
         LoginBean loginBean = mHttpPost.mLoginBean;
         if(loginBean != null){
@@ -65,9 +66,9 @@ public class NewKeepAliveService extends KeepAliveService implements OnLoginList
     public void onLoginResult(long logincode, String s) {
          if(logincode == 0){
              HttpPost.mVideoIsLogin = true;
-             Log.e("eee"," -------------------------------ok");
+             Log.e(TAG," onLoginResult -------------------------------ok");
          }else{
-             Log.e("eee"," -------------------------------fail");
+             Log.e(TAG," onLoginResult -------------------------------fail");
              HttpPost.mVideoIsLogin = false;
          }
     }

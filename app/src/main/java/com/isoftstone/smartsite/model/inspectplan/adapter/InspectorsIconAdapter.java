@@ -52,7 +52,7 @@ public class InspectorsIconAdapter extends BaseAdapter {
             holder = (InspectorsIconAdapter.ViewHolder)convertView.getTag();
         }
         InspectorData contactDate = getItem(position);
-        if (contactDate.getSelected()){
+        if (contactDate.getIsSelected()){
             holder.imageView_Icon.setVisibility(View.VISIBLE);
         } else {
             holder.imageView_Icon.setVisibility(View.GONE);

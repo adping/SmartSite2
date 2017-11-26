@@ -1,12 +1,14 @@
-package com.isoftstone.smartsite;
+package com.isoftstone.smartsite.model.patroltask.ui;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
@@ -14,6 +16,7 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
+import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
@@ -42,7 +45,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     public static final int WORK_IS_DOING = 1;
     public static final int WORK_HAS_DONE = 2;
     public static final int TIME_TO_INITVIEW = 4;
-    private ImageView add_plan;
+    private ImageButton add_plan;
     private ArrayList<PatrolTaskBean> patrolTaskBeanArrayList;
     private PatrolTaskBeanPage patrolTaskBeanPage;
     private StartworkDialog startworkDialog = null;
@@ -77,7 +80,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         View v = findViewById(R.id.title);
         ibt_back = (ImageButton) v.findViewById(R.id.btn_back);
         title = (TextView) v.findViewById(R.id.toolbar_title);
-        add_plan = (ImageView) findViewById(R.id.btn_icon);
+        add_plan = (ImageButton) v.findViewById(R.id.btn_icon);
         add_plan.setImageResource(R.drawable.jiahao);
         title.setText("巡查任务");
         listview = (ListView) findViewById(R.id.patrol_detail_list);
@@ -88,12 +91,11 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         startworkDialog = new StartworkDialog(this, listener);
     }
 
+    private  PatrolTaskBean  selectPatrolTaskBean;
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            //dianjijutitiaou
-            ToastUtils.showShort("choice is :" + (i + 1));
-            PatrolTaskBean selectPatrolTaskBean = patrolTaskBeanArrayList.get(i);
+            selectPatrolTaskBean = patrolTaskBeanArrayList.get(i);
             switch (selectPatrolTaskBean.getTaskStatus()) {
                 case WORK_WAIT_FOR_DOING:
                     startworkDialog.show();
@@ -113,7 +115,13 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     private StartworkDialog.OnStartworkLstener listener = new StartworkDialog.OnStartworkLstener() {
         @Override
         public void onStartwork() {
-            ToastUtils.showShort("你点了开始执行");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    new HttpPost().updateTaskStart(selectPatrolTaskBean.getTaskId(),selectPatrolTaskBean.getTaskName());
+                }
+            }).start();
+
         }
     };
 
@@ -124,7 +132,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 finish();
                 break;
             case R.id.btn_icon:
-                //TODO
+                //openActivity(AddInspectPlan.class,null);
                 break;
             default:
                 break;
@@ -166,7 +174,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.reportor = (TextView) convertView.findViewById(R.id.reporterName);
                 holder.company_name = (TextView) convertView.findViewById(R.id.comparyName);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
-                holder.work_status = (ImageView) findViewById(R.id.work_status);
+                holder.work_status = (ImageView) convertView.findViewById(R.id.work_status);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -177,12 +185,15 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             if (status == 0) {
                 holder.report_status.setImageResource(R.drawable.daizhixing);
                 holder.data.setText(patrolTaskBean.getTaskTimeStart());
+                holder.work_status.setImageResource(R.drawable.kaishizhixing);
             } else if (status == 1) {
                 holder.report_status.setImageResource(R.drawable.zhixingzhong);
                 holder.data.setText(patrolTaskBean.getTaskStart());
+                holder.work_status.setImageResource(R.drawable.jinrurenwu);
             } else if (status == 2) {
                 holder.report_status.setImageResource(R.drawable.yiwancheng);
                 holder.data.setText(patrolTaskBean.getTaskEnd());
+                holder.work_status.setImageResource(R.drawable.chakanbaogao);
             }
             holder.reportor.setText(patrolTaskBean.getCreator().name);
             holder.company_name.setText("湖北毅瑞公司");

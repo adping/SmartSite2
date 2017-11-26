@@ -539,12 +539,16 @@ public class CustomDatePicker {
         if (canAccess) {
             if (show) {
                 disScrollUnit();
+                day_pv.setVisibility(View.VISIBLE);
+                day_text.setVisibility(View.VISIBLE);
                 hour_pv.setVisibility(View.VISIBLE);
                 hour_text.setVisibility(View.VISIBLE);
                 minute_pv.setVisibility(View.VISIBLE);
                 minute_text.setVisibility(View.VISIBLE);
             } else {
                 disScrollUnit(SCROLL_TYPE.HOUR, SCROLL_TYPE.MINUTE);
+                day_pv.setVisibility(View.VISIBLE);
+                day_text.setVisibility(View.VISIBLE);
                 hour_pv.setVisibility(View.GONE);
                 hour_text.setVisibility(View.GONE);
                 minute_pv.setVisibility(View.GONE);

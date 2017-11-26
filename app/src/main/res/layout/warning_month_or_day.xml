@@ -12,7 +12,7 @@
         android:layout_marginRight="37dp">
 
         <TextView
-            android:id="@+id/date_3"
+            android:id="@+id/date_louduanbaojinglv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -25,28 +25,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@id/date_3"
+            android:layout_toRightOf="@id/date_louduanbaojinglv"
             android:layout_centerVertical="true"
             android:src="@drawable/droparrow" />
 
-        <TextView
-            android:id="@+id/load_name_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="7dp"
-            android:layout_toLeftOf="@id/load_name_choice3"
-            android:text="光谷六路"
-            android:textColor="#222222"
-            android:textSize="12sp"></TextView>
-
-        <ImageView
-            android:id="@+id/load_name_choice3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/droparrow" />
 
     </RelativeLayout>
 
@@ -73,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="5dp"
             android:paddingLeft="5dp"
             android:text="白名单"
             android:textSize="14sp" />
@@ -93,6 +75,10 @@
             android:text="黑名单"
             android:textSize="14sp" />
     </LinearLayout>
-
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_baojinglv"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@android:color/white"/>
 
 </LinearLayout>

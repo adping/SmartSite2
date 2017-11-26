@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.http.muckcar;
 
+import com.isoftstone.smartsite.http.BaseBean.ArchBean;
 import com.isoftstone.smartsite.http.EQIRankingBean;
 
 /**
@@ -9,7 +10,7 @@ import com.isoftstone.smartsite.http.EQIRankingBean;
 public class CarInfoBean {
     private int isAlarmMc;  //当前区域黑名单渣土车流量
     private int noAlarmMc;  //当前区域白名单渣土车流量
-    private EQIRankingBean.ArchBean arch;  //区域实体
+    private ArchBean arch;  //区域实体
     private int count ;   //当前区域总流量
 
     public int getIsAlarmMc() {
@@ -28,11 +29,11 @@ public class CarInfoBean {
         this.noAlarmMc = noAlarmMc;
     }
 
-    public EQIRankingBean.ArchBean getArch() {
+    public ArchBean getArch() {
         return arch;
     }
 
-    public void setArch(EQIRankingBean.ArchBean arch) {
+    public void setArch(ArchBean arch) {
         this.arch = arch;
     }
 

@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -15,9 +14,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -27,14 +26,15 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
@@ -98,6 +98,7 @@ public class CheckFragment extends BaseFragment {
         initView();
         initListener();
         initGridView();
+        initUserHead();
     }
 
     public void initView() {
@@ -111,6 +112,17 @@ public class CheckFragment extends BaseFragment {
 
         mRadioNo = (RadioButton) getView().findViewById(R.id.radio_no);
         mRadioYes = (RadioButton) getView().findViewById(R.id.radio_yes);
+    }
+
+    private void initUserHead() {
+        try {
+            ImageView v = (ImageView) getView().findViewById(R.id.img_head);
+            String headPath = HttpPost.mLoginBean.getmUserBean().getLoginUser().imageData;
+            String uri = mHttpPost.getFileUrl(headPath);
+            ImageUtils.loadImageWithPlaceHolder(mContext, v, uri, R.drawable.default_head);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initListener() {
