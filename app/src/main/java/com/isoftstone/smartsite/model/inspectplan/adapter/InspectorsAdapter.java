@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.model.inspectplan.adapter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.data.InspectorData;
 
 import java.util.ArrayList;
@@ -78,7 +76,7 @@ public class InspectorsAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 contactDate.setIsSelected(v.isSelected());
-                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"鐐瑰嚮浜嗗閫夋",Toast.LENGTH_SHORT).show();
 
             }
         });
