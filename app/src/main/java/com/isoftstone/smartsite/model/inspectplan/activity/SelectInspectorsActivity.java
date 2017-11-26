@@ -169,9 +169,10 @@ public class SelectInspectorsActivity extends Activity{
 //                Log.e("handler","已加载" + list.size() + "条数据");
             }
             initSelectedStatus();
+            refreshHorizontalScrollView();
             initIspectorsAdaptor();
             initSideBar();
-            refreshHorizontalScrollView();
+
 //            else {
 //                Log.e("handler","无法获取服务器数据，请稍后再试!");
 //            }
@@ -211,7 +212,8 @@ public class SelectInspectorsActivity extends Activity{
 //        if (list == null || list.size() < 1) {
 //            Log.e("SelectInspector","list is null");
 //        }else {
-            inspectorsAdapter = new InspectorsAdapter(this, list);
+//            inspectorsAdapter = new InspectorsAdapter(this, list);
+            inspectorsAdapter = new InspectorsAdapter(this, list, linearLayout_inspector_icon);
             listView_Contact.setAdapter(inspectorsAdapter);
             Log.e("initIspectorsAdaptor","加载数据成功");
 //        }
