@@ -18,6 +18,14 @@ open class PeopleAdapter(context: Context, list: ArrayList<BaseUserBean>) : Base
         var v = if (convertView != null) convertView else {
             LayoutInflater.from(mContext).inflate(R.layout.listview_add_inspect_plan_people_item, null)
         }
+
+        var img_delete = v.findViewById(R.id.img_delete)
+        img_delete.setOnClickListener(object:View.OnClickListener{
+            override fun onClick(v: View?) {
+                mList.removeAt(position)
+                this@PeopleAdapter.notifyDataSetChanged()
+            }
+        })
         return v
     }
 
