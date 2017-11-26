@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.adapter.InspectorsAdapter;
 import com.isoftstone.smartsite.model.inspectplan.adapter.InspectorsIconAdapter;
 import com.isoftstone.smartsite.model.inspectplan.data.InspectorData;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ZhongWen2PinYinUtils;
 
 import java.util.ArrayList;
@@ -258,6 +259,11 @@ public class SelectInspectorsActivity extends Activity{
         {
             View inflate = View.inflate(this, R.layout.inspector_icon_item, null);
             ImageView inspector_icon = (ImageView) inflate.findViewById(R.id.imageView_icon);
+            if(list.get(i).getImageData() != null) {
+                ImageUtils.loadImageWithPlaceHolder(this, inspector_icon, mHttpPost.getFileUrl(list.get(i).getImageData()));
+            } else {
+                inspector_icon.setImageResource(R.drawable.default_head);
+            }
             if ( list.get(i).getIsSelected() ) {
                 linearLayout_inspector_icon.addView(inflate);
             }
