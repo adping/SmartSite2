@@ -272,7 +272,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 								intent.setClass(LoginActivity.this,MainActivity.class);
 								LoginActivity.this.startActivity(intent);
 								mLoginResult = "登录成功";
-								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+//								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
 								finish();
 							}
 
