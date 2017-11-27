@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.muckcar.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -38,6 +40,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import okhttp3.FormBody;
@@ -48,6 +51,7 @@ import okhttp3.FormBody;
 
 public class DaySlagcarInfoFragment extends BaseFragment {
     public static final int TIME_INIT_TEXTVIEW_LIST = 0;
+    public static final int TIME_INIT_DOUBLE_LINE_CHART = 1;
     private int mDayOrMonthFlag = 1; //1月  0日
     private LinearLayout layout_1;
     private LinearLayout layout_2;
@@ -67,17 +71,20 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case TIME_INIT_TEXTVIEW_LIST:
                     initTextViews();
                     break;
-                    default:
-                        break;
+                case TIME_INIT_DOUBLE_LINE_CHART:
+                    break;
+                default:
+                    break;
             }
 
         }
     };
     private Spinner address_baojinglv;
+    private LineChart lineChart_baojinglv;
 
     @Override
     public void onDestroy() {
@@ -92,6 +99,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         list_trextviews = (LinearLayout) rootView.findViewById(R.id.list_textview);//动态tv数据
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
         layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
+        lineChart_baojinglv = (LineChart) layout_2.findViewById(R.id.chart_baojinglv);
         spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);//bao jing lv
         spinner_address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -151,10 +159,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         });
         //baojinglv_address = (TextView) rootView.findViewById(R.id.load_name_3);
         //baojinglv_address.setOnClickListener(new View.OnClickListener() {
-           // @Override
-            //public void onClick(View v) {
+        // @Override
+        //public void onClick(View v) {
 
-           // }
+        // }
         //});
 
         liuliangduibi_linechart = (LineChart) layout_1.findViewById(R.id.chart_liuliangduibi);
@@ -172,6 +180,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     private CustomDatePicker customDatePicker1, customDatePicker2, customDatePicker3;
+
+
+
 
     //初始化多个textview
     private void initTextViews() {
@@ -235,6 +246,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
+        handler.sendEmptyMessage(TIME_INIT_DOUBLE_LINE_CHART);
         mCarInfoList = carInfoList;
         archName = null;
         if (mCarInfoList != null) {
@@ -414,4 +426,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         }
     }
+
+
 }

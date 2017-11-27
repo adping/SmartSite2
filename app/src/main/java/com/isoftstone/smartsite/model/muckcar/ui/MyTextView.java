@@ -47,8 +47,8 @@ public class MyTextView extends LinearLayout{
         }
         int black_width=(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width*black_num, getResources().getDisplayMetrics());
         int white_width=(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width*white_num, getResources().getDisplayMetrics());
-        LinearLayout.LayoutParams white_layoutParams = new LinearLayout.LayoutParams(black_width, LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams black_layoutParams = new LinearLayout.LayoutParams(white_width, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams white_layoutParams = new LinearLayout.LayoutParams(white_width, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams black_layoutParams = new LinearLayout.LayoutParams(black_width, LayoutParams.WRAP_CONTENT);
         tv_black_list.setLayoutParams(black_layoutParams);
         tv_white_list.setLayoutParams(white_layoutParams);
     }
@@ -63,7 +63,7 @@ public class MyTextView extends LinearLayout{
     }
 
     private int getTotalWidth() {
-        WindowManager wm=(WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm=(WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int i = wm.getDefaultDisplay().getWidth();
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (i/ scale + 0.5f);
