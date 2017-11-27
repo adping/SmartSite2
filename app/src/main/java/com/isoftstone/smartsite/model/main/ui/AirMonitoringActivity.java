@@ -1129,6 +1129,8 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         int checkId = Integer.parseInt(checkStr);
         addressFlags[checkId] = isChecked;
         /**
+         * by zw
+         *
          * 1.预制两个点击的ID，0、1
          * 2.如果选择新的，就把1传给0，然后把新的传给1  保证被点击的按钮永远都是最新的
          * 3.取消选择时，保证剩余的要么都是-1，要么剩下的一个是旧的

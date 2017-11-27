@@ -20,7 +20,7 @@ public class MyXFormatter implements IAxisValueFormatter{
 
     @Override
     public String getFormattedValue(float v, AxisBase axisBase) {
-        LogUtils.e("zw","v .. " + v + "  ... " + values.size());
+//        LogUtils.e("zw","v .. " + v + "  ... " + values.size());
         if(v < 0) v = 0;
         return values.get((int) (v % values.size()));
     }
