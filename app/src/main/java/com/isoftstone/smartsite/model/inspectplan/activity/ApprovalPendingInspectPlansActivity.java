@@ -22,6 +22,7 @@ import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspect
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.system.ui.OpinionFeedbackActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,7 +71,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                                         inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
                                         inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
                                         inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
-                                        inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
+                                        inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(Utils.isEmptyStr(arrayList.get(i).getCreator().getDepartmentId()) ? "1" : arrayList.get(i).getCreator().getDepartmentId())));
                                         inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());
                                         inspectPlanBean.setBaseUserBean(arrayList.get(i).getCreator());
                                         //inspectPlanBean.setAddress(arrayList.get(i));
@@ -79,6 +80,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                                 }
                             } catch (Exception e) {
                                 Log.e(TAG,"e : " + e.getMessage());
+                                e.printStackTrace();
                             }
 
                             /**for (int i = 0; i < 3; i++) {
@@ -201,7 +203,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                     inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
                     inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
                     inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
-                    inspectPlanBean.setUserCompany(mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
+                    inspectPlanBean.setUserCompany(Utils.isEmptyStr(arrayList.get(i).getCreator().getDepartmentId()) ?  "" : mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
                     inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());
                     inspectPlanBean.setBaseUserBean(arrayList.get(i).getCreator());
                     //inspectPlanBean.setAddress(arrayList.get(i));
@@ -210,6 +212,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
             } catch (Exception e) {
                 Log.e(TAG,"e : " + e.getMessage());
+                e.printStackTrace();
                 return QUERY_RESULTS_EXCEPTION_CODE;
             }
 

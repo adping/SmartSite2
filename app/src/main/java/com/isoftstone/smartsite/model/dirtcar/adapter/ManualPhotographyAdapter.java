@@ -16,6 +16,7 @@ import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -119,7 +120,7 @@ public class ManualPhotographyAdapter extends BaseAdapter{
 		PhotoGridAdapter photoAdapter = new PhotoGridAdapter(mActivity, photoList, mImageLoader);
 		viewHolder.mGradView.setAdapter(photoAdapter);
 
-		if (null == manualPhotographyBean.getTakePhotoUserHeadPath()) {
+		if (Utils.isEmptyStr(manualPhotographyBean.getTakePhotoUserHeadPath())) {
 			viewHolder.mTakePhotoUserHeadView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.default_head, null));
 		} else {
 			ImageUtils.loadImageWithPlaceHolder(mContext, viewHolder.mTakePhotoUserHeadView, manualPhotographyBean.getTakePhotoUserHeadPath(), R.drawable.default_head);
