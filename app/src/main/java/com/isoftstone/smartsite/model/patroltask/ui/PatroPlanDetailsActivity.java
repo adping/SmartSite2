@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.patroltask.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,6 +53,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        initViews();
         initData();
     }
 
@@ -81,14 +83,16 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         ibt_back = (ImageButton) v.findViewById(R.id.btn_back);
         title = (TextView) v.findViewById(R.id.toolbar_title);
         add_plan = (ImageButton) v.findViewById(R.id.btn_icon);
-        add_plan.setImageResource(R.drawable.jiahao);
+        add_plan.setImageResource(R.drawable.addreport);
         title.setText("巡查任务");
         listview = (ListView) findViewById(R.id.patrol_detail_list);
         ibt_back.setOnClickListener(this);
         add_plan.setOnClickListener(this);
-        listview.setAdapter(new MyBaseAdapter(this, patrolTaskBeanArrayList));
         listview.setOnItemClickListener(itemClickListener);
         startworkDialog = new StartworkDialog(this, listener);
+    }
+    private  void setData(){
+        listview.setAdapter(new MyBaseAdapter(this, patrolTaskBeanArrayList));
     }
 
     private  PatrolTaskBean  selectPatrolTaskBean;
@@ -128,11 +132,11 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btn_icon:
+                Intent intent=new Intent(PatroPlanDetailsActivity.this,AddInspectPlan.class);
+                startActivity(intent);
             case R.id.btn_back:
                 finish();
-                break;
-            case R.id.btn_icon:
-                //openActivity(AddInspectPlan.class,null);
                 break;
             default:
                 break;
@@ -144,7 +148,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == TIME_TO_INITVIEW) {
-                initViews();
+                setData();
             }
         }
     };
