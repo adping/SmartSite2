@@ -18,6 +18,8 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
@@ -105,10 +107,10 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                     startworkDialog.show();
                     break;
                 case WORK_IS_DOING:
-                    ToastUtils.showShort("ZAI  ZHI  XING ");
-                    break;
                 case WORK_HAS_DONE:
-                    ToastUtils.showShort("YI WAN CHENG");
+                    Bundle bundle=new Bundle();
+                    bundle.putLong("taskId",selectPatrolTaskBean.getTaskId());
+                    openActivity(ConstructionMontitoringMapActivity.class,bundle);
                     break;
                 default:
                     break;
