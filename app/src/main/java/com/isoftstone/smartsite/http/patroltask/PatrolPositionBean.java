@@ -82,4 +82,17 @@ public class PatrolPositionBean {
         this.executionTime = executionTime;
     }
 
+    @Override
+    public String toString() {
+        return "PatrolPositionBean{" +
+                "id=" + id +
+                ", position='" + position + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", status=" + status +
+                ", user=" + user +
+                ", executionTime='" + executionTime + '\'' +
+                ", bitmap=" + bitmap +
+                '}';
+    }
 }

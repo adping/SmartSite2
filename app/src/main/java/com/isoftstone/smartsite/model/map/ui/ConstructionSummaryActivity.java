@@ -6,7 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.tu.loadingdialog.LoadingDailog;
@@ -29,17 +32,23 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
 import com.isoftstone.smartsite.http.patrolinfo.ReportDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.UserTaskCountBean;
+import com.isoftstone.smartsite.model.map.adapter.PersonRankArrayAdapter;
 import com.isoftstone.smartsite.model.map.bean.MyValueFomatter;
 import com.isoftstone.smartsite.model.map.bean.MyXFormatter;
+import com.isoftstone.smartsite.model.map.bean.PersonRankCompare;
 import com.isoftstone.smartsite.model.map.bean.ReportDataBeanCompare;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,10 +66,14 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private final int UPDATE_THIRD_CHART = 0x0003;
     private final int UPDATE_FOUR_CHART = 0x0004;
     private final int UPDATE_FIVE_CHART = 0x0005;
-    private int currentUpdateChart = 0;
+    private int currentUpdateChart = UPDATE_FIRST_CHART;
 
     private final int HANDLER_FIRST_CHART_OK = 0x0011;
     private final int HANDLER_FIRST_CHART_FAIL = 0x0012;
+    private final int HANDLE_SECOND_CHART_OK = 0x0021;
+    private final int HANDLE_SECOND_CHART_FAIL = 0x0022;
+    private final int HANDLE_THRID_CHART_OK = 0x0031;
+    private final int HANDLE_THRID_CHART_FAIL = 0x0032;
 
     private LineChart lineChart;
     private LineChart lineChart2;
@@ -72,6 +85,15 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private HttpPost httpPost;
 
     private List<ReportDataBean> reportDataBeans;
+    private List<UserTaskCountBean> userTaskCountBeans;
+
+    private String selectTwoDate,selectThirdDate,selectFourDate,selectFiveDate;
+    private boolean isFirstInSecondChart = true;
+    private boolean isFirstInThridChart = true;
+    private boolean isFirstInFourChart = true;
+    private boolean isFirstInFiveChart = true;
+
+    private DepartmentMonthDataBean monthDataBean;
 
 
     private Handler mHandler = new Handler(){
@@ -80,17 +102,55 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             super.handleMessage(msg);
             switch (msg.what){
                 case HANDLER_FIRST_CHART_OK:
-                    loadingDailog.dismiss();
+                    isFirstInSecondChart = false;
                     updateFirstChartData();
+                    //更新第二个图表
+                    personRankAdapter = new PersonRankArrayAdapter(ConstructionSummaryActivity.this,R.layout.layout_summary_spinner, personRankList);
+                    spinner_person_rank.setAdapter(personRankAdapter);
+                    currentUpdateChart = UPDATE_SECOND_CHART;
+                    spinner_person_rank.setSelection(0);
+                    //更新第三个图表
+                    spinnerThrid.setAdapter(personRankAdapter);
+                    currentUpdateChart = UPDATE_THIRD_CHART;
+                    spinnerThrid.setSelection(0);
+
                     break;
                 case HANDLER_FIRST_CHART_FAIL:
+                    ToastUtils.showShort("没有获取到巡查单位任务排名数据！");
+                    break;
+                case HANDLE_SECOND_CHART_OK:
                     loadingDailog.dismiss();
-                    ToastUtils.showShort("没有获取到数据！");
+                    updateSecondChartData();
+                    break;
+                case HANDLE_SECOND_CHART_FAIL:
+                    loadingDailog.dismiss();
+                    ToastUtils.showShort("没有获取到月度人员任务完成排名数据！");
+                    break;
+                case HANDLE_THRID_CHART_OK:
+                    loadingDailog.dismiss();
+                    updateThridChartData();
+                    break;
+                case HANDLE_THRID_CHART_FAIL:
+                    loadingDailog.dismiss();
+                    ToastUtils.showShort("没有获取到单位月度任务量数据！");
                     break;
             }
         }
     };
     private HorizontalBarChart firstBarChart;
+    private TextView tv_person_rank;
+    private Spinner spinner_person_rank;
+    private PersonRankArrayAdapter<String> personRankAdapter;
+
+    private String currentPersonRankIdString = "";
+    private String currentCompanyTotalIdString = "";
+
+    private List<String> personRankList;
+    private BarChart senondBarChart;
+    private TextView tv_company_total;
+    private PersonRankArrayAdapter<String> companyTotalAdapter;
+    private ArrayList<String> companyTotalList;
+    private Spinner spinnerThrid;
 
     @Override
     protected int getLayoutRes() {
@@ -105,13 +165,14 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         initDatePicker(selectDate);
         initLoadingDialog();
 
-        ToastUtils.showShort("此界面数据为假！");
         initToolBar();
         initFirstBarChart();
         initSecondBarChart();
         initThridBarChart();
         initFourBarChart();
         initFiveBarChart();
+
+        updateChart(selectDate);
     }
 
     private void initView(){
@@ -122,6 +183,66 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
         tv_company_rank_date.setText(parseTimeOnlyYearAndMonth(selectDate));
         tv_company_rank_date.setOnClickListener(this);
+
+        //second
+        tv_person_rank = (TextView) findViewById(R.id.tv_person_rank);
+        tv_person_rank.setText(parseTimeOnlyYearAndMonth(selectDate));
+        tv_person_rank.setOnClickListener(this);
+        spinner_person_rank = (Spinner) findViewById(R.id.spinner_person_rank);
+        personRankList = new ArrayList<>();
+        personRankList.add("选择单位");
+        personRankAdapter = new PersonRankArrayAdapter(this,R.layout.layout_summary_spinner, personRankList);
+        personRankAdapter.setDropDownViewResource(R.layout.layout_summary_spinner_item);
+        spinner_person_rank.setAdapter(personRankAdapter);
+        spinner_person_rank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(isFirstInSecondChart) {
+                    isFirstInSecondChart = false;
+                    return;
+                }
+
+                currentUpdateChart = UPDATE_SECOND_CHART;
+                currentPersonRankIdString = personRankList.get(position);
+                updateChart(selectTwoDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner_person_rank.setDropDownVerticalOffset(DensityUtils.dip2px(this,36));
+
+        //third
+        tv_company_total = (TextView) findViewById(R.id.tv_company_total);
+        tv_company_total.setText(parseTimeOnlyYearAndMonth(selectDate));
+        tv_company_total.setOnClickListener(this);
+        spinnerThrid = (Spinner) findViewById(R.id.spinner_company_total);
+        companyTotalList = new ArrayList<>();
+        companyTotalList.add("选择单位");
+        companyTotalAdapter = new PersonRankArrayAdapter(this, R.layout.layout_summary_spinner, companyTotalList);
+        companyTotalAdapter.setDropDownViewResource(R.layout.layout_summary_spinner_item);
+        spinnerThrid.setAdapter(companyTotalAdapter);
+        spinnerThrid.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(isFirstInThridChart) {
+                    isFirstInThridChart = false;
+                    return;
+                }
+
+                currentUpdateChart = UPDATE_THIRD_CHART;
+                currentCompanyTotalIdString = personRankList.get(position);
+                updateChart(selectThirdDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerThrid.setDropDownVerticalOffset(DensityUtils.dip2px(this,36));
     }
 
     private void initDatePicker(String date){
@@ -176,132 +297,24 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     }
 
     private void initSecondBarChart(){
-        BarChart barChart = (BarChart) findViewById(R.id.person_rank_chart);
-        ViewGroup.LayoutParams layoutParams = barChart.getLayoutParams();
-
-
+        senondBarChart = (BarChart) findViewById(R.id.person_rank_chart);
+        senondBarChart.setTouchEnabled(false); // 设置是否可以触摸
+        senondBarChart.setDragEnabled(false);// 是否可以拖拽
+        senondBarChart.setScaleEnabled(false);// 是否可以缩放
+        senondBarChart.setPinchZoom(false);//y轴的值是否跟随图表变换缩放;如果禁止，y轴的值会跟随图表变换缩放
 
         //设置显示边界
-        barChart.setDrawBorders(false);
+        senondBarChart.setDrawBorders(false);
 
         //网格
-        barChart.setDrawGridBackground(false);
+        senondBarChart.setDrawGridBackground(false);
 
         //不显示描述
-        Legend legend = barChart.getLegend();
+        Legend legend = senondBarChart.getLegend();
         legend.setEnabled(false);
-        barChart.setDescription(null);
+        senondBarChart.setDescription(null);
 
-        //X轴
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
-        xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-
-
-        //Y轴
-        YAxis yLeftAxis = barChart.getAxisLeft();
-        YAxis yRrightAxis = barChart.getAxisRight();
-        yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-        yLeftAxis.setAxisMaximum(50);
-        yLeftAxis.setAxisMinimum(0);
-        yRrightAxis.setAxisMaximum(50);
-        yRrightAxis.setAxisMinimum(0);
-        yRrightAxis.setDrawLabels(false);
-        yLeftAxis.setLabelCount(50 / 10);
-        yLeftAxis.setGridColor(Color.parseColor("#ededed"));
-        yRrightAxis.setGridColor(Color.parseColor("#ededed"));
-
-        //保证Y轴从0开始，不然会上移一点
-        yLeftAxis.setAxisMinimum(0f);
-        yRrightAxis.setAxisMinimum(0f);
-
-        //设置x轴的数据
-        ArrayList<Float> xValues = new ArrayList<>();
-        ArrayList<String> xVaulesName = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            xValues.add((float) i);
-            xVaulesName.add("人员" + i);
-        }
-        xAxis.setLabelCount(xValues.size() - 1,false);
-        MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
-        xAxis.setValueFormatter(xFormatter);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        //设置y轴的数据()
-        List<List<Float>> yValues = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            List<Float> yValue = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
-                yValue.add(40f);
-            }
-            yValues.add(yValue);
-        }
-
-        //颜色集合
-        List<Integer> colours = new ArrayList<>();
-        colours.add(Color.parseColor("#3464dd"));
-        colours.add(Color.parseColor("#c6c6c6"));
-
-        //线的名字集合
-        List<String> names = new ArrayList<>();
-        names.add("折线一");
-        names.add("折线二");
-
-        BarData barData = new BarData();
-        barData.setBarWidth(0.5f);
-        for (int i = 0; i < yValues.size(); i++) {
-            ArrayList<BarEntry> entries = new ArrayList<>();
-            for (int j = 0; j < yValues.get(i).size(); j++) {
-                entries.add(new BarEntry(xValues.get(j), yValues.get(i).get(j)));
-            }
-            BarDataSet barDataSet = new BarDataSet(entries, names.get(i));
-
-            barDataSet.setDrawValues(false);
-            barDataSet.setColor(colours.get(i));
-            barDataSet.setValueTextColor(Color.WHITE);
-            barDataSet.setValueTextSize(10f);
-            barDataSet.setValueFormatter(new MyValueFomatter());
-            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            barData.addDataSet(barDataSet);
-        }
-
-
-        int amount = xValues.size();
-
-        float groupSpace = 0.3f; //柱状图组之间的间距
-        float barSpace = (float) ((1 - groupSpace) / amount / 10); // x4 DataSet
-        float barWidth = (float) ((1 - groupSpace) / amount / 10 * 9); // x4 DataSet
-
-//        float avgWidth = 1/amount;
-//        barWidth = avgWidth/4;
-//        barSpace = avgWidth/2 * 0.2f;
-//        groupSpace = avgWidth/2 * 0.8f;
-        barWidth = 0.25f;
-        barSpace = 0.1f;
-
-        // (0.2 + 0.02) * 4 + 0.08 = 1.00 -> interval per "group"
-        barData.setBarWidth(barWidth);
-
-
-        barData.groupBars(0, groupSpace, barSpace);
-
-        barChart.setDrawValueAboveBar(false);
-
-        barChart.setData(barData);
-
-        xAxis.setAxisMaximum(xValues.size());
-        xAxis.setAxisMinimum(0);
-        xAxis.setLabelCount(xValues.size() - 1,false);
-        xAxis.setCenterAxisLabels(true);
-        barChart.invalidate();
-
-        barChart.setTouchEnabled(false); // 设置是否可以触摸
-        barChart.setDragEnabled(false);// 是否可以拖拽
-        barChart.setScaleEnabled(false);// 是否可以缩放
-        barChart.setPinchZoom(false);//y轴的值是否跟随图表变换缩放;如果禁止，y轴的值会跟随图表变换缩放
+        senondBarChart.setNoDataText("没有获取到数据。");
 
     }
 
@@ -319,119 +332,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         legend.setEnabled(false);
         lineChart.setDescription(null);
 
-        //X轴
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
-        xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
 
-        //Y轴
-        YAxis yLeftAxis = lineChart.getAxisLeft();
-        YAxis yRrightAxis = lineChart.getAxisRight();
-        yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-        yLeftAxis.setAxisMaximum(140);
-        yLeftAxis.setAxisMinimum(0);
-        yRrightAxis.setAxisMaximum(140);
-        yRrightAxis.setAxisMinimum(0);
-        yRrightAxis.setDrawLabels(false);
-        yLeftAxis.setLabelCount(140 / 20);
-        yLeftAxis.setGridColor(Color.parseColor("#ededed"));
-        yRrightAxis.setGridColor(Color.parseColor("#ededed"));
-
-        //保证Y轴从0开始，不然会上移一点
-        yLeftAxis.setAxisMinimum(0f);
-        yRrightAxis.setAxisMinimum(0f);
-
-        //设置x轴的数据
-        ArrayList<Float> xValues = new ArrayList<>();
-        ArrayList<String> xVaulesName = new ArrayList<>();
-        for (int i = 1; i <= 31; i++) {
-            xVaulesName.add((i < 10 ? "0" : "") + i);
-            xValues.add((float) i);
-        }
-        xAxis.setLabelCount(xValues.size(),false);
-        MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
-        xAxis.setValueFormatter(xFormatter);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        //设置y轴的数据()
-        List<Entry> yValues1 = new ArrayList<>();
-        List<Entry> yValues2 = new ArrayList<>();
-        int shujucount = 11;
-        for (int i = 0;i < 31; i++){
-            if(i % 2 == 0){
-                yValues1.add(new Entry(i,120f));
-                yValues2.add(new Entry(i,60f));
-            }else {
-                yValues1.add(new Entry(i,100f));
-                yValues2.add(new Entry(i,50f));
-            }
-        }
-
-
-        LineDataSet set1 = null;
-        LineDataSet set2 = null;
-        if (lineChart.getData() != null &&
-                lineChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-            set2 = (LineDataSet) lineChart.getData().getDataSetByIndex(1);
-            set1.setValues(yValues1);
-            set2.setValues(yValues2);
-            lineChart.getData().notifyDataChanged();
-            lineChart.notifyDataSetChanged();
-        } else {
-
-            // create a dataset and give it a type
-            set1 = new LineDataSet(yValues1, "DataSet");
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set1.setColor(Color.parseColor("#c6c6c6"));
-            set1.setDrawCircles(false);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(5f);
-            set1.setFillAlpha(255);
-            set1.setDrawFilled(true);
-
-            set1.setFillColor(Color.parseColor("#c6c6c6"));
-            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set1.setDrawCircleHole(false);
-//            set.setFillFormatter(new IFillFormatter() {
-//                @Override
-//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-//                    return lineChart.getAxisLeft().getAxisMaximum();
-//                }
-//            });
-
-            // create a dataset and give it a type
-            set2 = new LineDataSet(yValues2, "DataSet");
-            set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set2.setColor(Color.parseColor("#3464dd"));
-            set2.setDrawCircles(false);
-            set2.setLineWidth(1f);
-            set2.setCircleRadius(5f);
-            set2.setFillAlpha(255);
-            set2.setDrawFilled(true);
-            set2.setFillColor(Color.parseColor("#3464dd"));
-            set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set2.setDrawCircleHole(false);
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-            dataSets.add(set2);
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-            data.setDrawValues(false);
-
-            // set data
-            lineChart.setData(data);
-        }
-
-        xAxis.setAxisMaximum(xValues.size());
-        xAxis.setAxisMinimum(0);
-        xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
-        lineChart.invalidate();
 
         lineChart.setTouchEnabled(false); // 设置是否可以触摸
         lineChart.setDragEnabled(false);// 是否可以拖拽
@@ -725,63 +626,123 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     }
 
     private void updateChart(String time){
-        final String year = time.substring(0,4);
-        final String month = time.substring(5,7);
+        String year = time.substring(0,4);
+        String month = time.substring(5,7);
         String strTime = year + "年" + month + "月";
-        loadingDailog.show();
 
+        loadingDailog.show();
         if(currentUpdateChart == UPDATE_FIRST_CHART){
             selectDate = time;
+            selectTwoDate = time;
+            selectThirdDate = time;
             tv_company_rank_date.setText(strTime);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    reportDataBeans = httpPost.getPatrolReportData(year + "-" + month);
-                    if(reportDataBeans != null && reportDataBeans.size() != 0){
-                        Collections.sort(reportDataBeans,new ReportDataBeanCompare());
-                        mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_OK);
-                    } else {
-                        mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
-                    }
-                }
-            }).start();
-
+            loadFirstChartData(year,month);
+        } else if(currentUpdateChart == UPDATE_SECOND_CHART){
+            selectTwoDate = time;
+            tv_person_rank.setText(strTime);
+            loadSecondCharData(year,month);
+        } else if(currentUpdateChart == UPDATE_THIRD_CHART){
+            selectThirdDate = time;
+            tv_company_total.setText(strTime);
+            loadThirdChartDate(year,month);
         }
     }
 
+    private void loadFirstChartData(final String year,final String month){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                reportDataBeans = httpPost.getPatrolReportData(year + "-" + month);
+                if(reportDataBeans != null && reportDataBeans.size() != 0){
+                    Collections.sort(reportDataBeans,new ReportDataBeanCompare());
+                    //更新第二个图表
+                    currentPersonRankIdString = reportDataBeans.get(0).getDepartmentId();
+                    personRankList = new ArrayList<>();
+                    for (int i = 0; i < reportDataBeans.size(); i++) {
+                        personRankList.add(reportDataBeans.get(i).getDepartmentId());
+                    }
+
+                    //更新第三个图表
+                    currentCompanyTotalIdString = reportDataBeans.get(0).getDepartmentId();
+
+
+                }else {
+                    mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
+                }
+                mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_OK);
+            }
+        }).start();
+    }
+
+    private void loadSecondCharData(final String year,final String month){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                userTaskCountBeans = httpPost.getDepartmentUserTaskData(year + "-" + month,currentPersonRankIdString);
+
+                if(userTaskCountBeans != null && userTaskCountBeans.size() != 0){
+                    Collections.sort(userTaskCountBeans,new PersonRankCompare());
+                } else {
+                    mHandler.sendEmptyMessage(HANDLE_SECOND_CHART_FAIL);
+                }
+                mHandler.sendEmptyMessage(HANDLE_SECOND_CHART_OK);
+            }
+        }).start();
+    }
+
+    private void loadThirdChartDate(final String year,final String month){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                monthDataBean = httpPost.getDepartmentMonthDat(year + "-" + month,currentCompanyTotalIdString);
+                if(monthDataBean == null || monthDataBean.getAll().size() == 0){
+                    mHandler.sendEmptyMessage(HANDLE_THRID_CHART_FAIL);
+                }
+                mHandler.sendEmptyMessage(HANDLE_THRID_CHART_OK);
+            }
+        }).start();
+    }
+
     private void updateFirstChartData(){
-        int dataCount = reportDataBeans.size() > 5 ? 5 : reportDataBeans.size();
-        int maxCount = reportDataBeans.get(0).getUnCount() + reportDataBeans.get(0).getOff();
-        if(dataCount > 5){
-            reportDataBeans = reportDataBeans.subList(0,5);
-        }
-        ArrayList tempList = new ArrayList();
-        for (int i = 0; i < dataCount; i++) {
-            tempList.add(0,reportDataBeans.get(i));
-        }
-        reportDataBeans = tempList;
+        if(reportDataBeans != null && reportDataBeans.size() != 0){
+            int dataCount = reportDataBeans.size() > 5 ? 5 : reportDataBeans.size();
+            int maxCount = reportDataBeans.get(0).getUnCount() + reportDataBeans.get(0).getOff();
 
-        ViewGroup.LayoutParams layoutParams = firstBarChart.getLayoutParams();
-        layoutParams.height = DensityUtils.dip2px(this,50 * dataCount);
+            if(reportDataBeans.get(0).getOff() == 0){
 
-        //X轴
-        XAxis xAxis = firstBarChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
-        xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            }
+
+            if(dataCount > 5){
+                reportDataBeans = reportDataBeans.subList(0,5);
+            }
+            ArrayList tempList = new ArrayList();
+            for (int i = 0; i < dataCount; i++) {
+                tempList.add(0,reportDataBeans.get(i));
+            }
+            reportDataBeans = tempList;
+
+            ViewGroup.LayoutParams layoutParams = firstBarChart.getLayoutParams();
+            layoutParams.height = DensityUtils.dip2px(this,50 * dataCount);
+
+            //X轴
+            XAxis xAxis = firstBarChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(false);
+
+            xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
 
 
-        //Y轴
-        YAxis yLeftAxis = firstBarChart.getAxisLeft();
-        YAxis yRrightAxis = firstBarChart.getAxisRight();
-        yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yRrightAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yLeftAxis.setAxisMaximum(maxCount);
-        yLeftAxis.setAxisMinimum(0);
-        yRrightAxis.setAxisMaximum(maxCount);
-        yRrightAxis.setAxisMinimum(0);
-        yLeftAxis.setDrawLabels(false);
+            //Y轴
+            YAxis yLeftAxis = firstBarChart.getAxisLeft();
+            YAxis yRrightAxis = firstBarChart.getAxisRight();
+            yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yRrightAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMinimum(0);
+            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMinimum(0);
+            yLeftAxis.setDrawLabels(false);
 //        if(maxCount > 100){
 //            yRrightAxis.setLabelCount(maxCount/100);
 //            yRrightAxis.setLabelCount(maxCount/100);
@@ -789,70 +750,368 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 //            yRrightAxis.setLabelCount(maxCount/10);
 //            yRrightAxis.setLabelCount(maxCount/10);
 //        }
-        yRrightAxis.setLabelCount(10);
-        yRrightAxis.setLabelCount(10);
-        yLeftAxis.setGridColor(Color.parseColor("#ededed"));
-        yRrightAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setLabelCount(10);
+            yRrightAxis.setLabelCount(10);
+            yLeftAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setGridColor(Color.parseColor("#ededed"));
 
-        //保证Y轴从0开始，不然会上移一点
-        yLeftAxis.setAxisMinimum(0f);
-        yRrightAxis.setAxisMinimum(0f);
+            //保证Y轴从0开始，不然会上移一点
+            yLeftAxis.setAxisMinimum(0f);
+            yRrightAxis.setAxisMinimum(0f);
 
-        //设置x轴的数据
-        ArrayList<Float> xValues = new ArrayList<>();
-        ArrayList<String> xVaulesName = new ArrayList<>();
-        for (int i = 0; i < dataCount; i++) {
-            xValues.add((float) i);
-            xVaulesName.add(reportDataBeans.get(i).getDepartmentId());
-        }
-        xAxis.setLabelCount(xValues.size() - 1,false);
-        MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
-        xAxis.setValueFormatter(xFormatter);
-
-        //设置y轴的数据()
-        List<List<Float>> yValues = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            List<Float> yValue = new ArrayList<>();
-            for (int j = 0; j < dataCount; j++) {
-                yValue.add(i == 0 ? (float)reportDataBeans.get(j).getOff() + reportDataBeans.get(j).getUnCount()
-                        : reportDataBeans.get(j).getOff());
+            //设置x轴的数据
+            ArrayList<Float> xValues = new ArrayList<>();
+            ArrayList<String> xVaulesName = new ArrayList<>();
+            for (int i = 0; i < dataCount; i++) {
+                xValues.add((float) i);
+                xVaulesName.add(reportDataBeans.get(i).getDepartmentId());
             }
-            yValues.add(yValue);
-        }
+            xAxis.setLabelCount(xValues.size() - 1,false);
+            MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
+            xAxis.setValueFormatter(xFormatter);
 
-        //颜色集合
-        List<Integer> colours = new ArrayList<>();
-        colours.add(Color.parseColor("#c6c6c6"));
-        colours.add(Color.parseColor("#3464dd"));
+            //设置y轴的数据()
+            List<List<Float>> yValues = new ArrayList<>();
+            for (int i = 0; i < 2; i++) {
+                List<Float> yValue = new ArrayList<>();
+                for (int j = 0; j < dataCount; j++) {
+                    if(i == 0){
+                        float temp = (float)reportDataBeans.get(j).getOff() + reportDataBeans.get(j).getUnCount();
+                        yValue.add(temp);
+                    } else {
+                        yValue.add((float) reportDataBeans.get(j).getOff());
+                    }
 
-
-        //线的名字集合
-        List<String> names = new ArrayList<>();
-        names.add("折线一");
-        names.add("折线二");
-
-        BarData barData = new BarData();
-        barData.setBarWidth(0.5f);
-        for (int i = 0; i < yValues.size(); i++) {
-            ArrayList<BarEntry> entries = new ArrayList<>();
-            for (int j = 0; j < yValues.get(i).size() ; j++) {
-
-                entries.add(new BarEntry(xValues.get(j), yValues.get(i).get(j)));
+                }
+                yValues.add(yValue);
             }
-            BarDataSet barDataSet = new BarDataSet(entries, names.get(i));
 
-            barDataSet.setColor(colours.get(i));
-            barDataSet.setValueTextColor(Color.WHITE);
-            barDataSet.setValueTextSize(10f);
-            barDataSet.setValueFormatter(new MyValueFomatter());
-            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            barData.addDataSet(barDataSet);
+            //颜色集合
+            List<Integer> colours = new ArrayList<>();
+            colours.add(Color.parseColor("#c6c6c6"));
+            colours.add(Color.parseColor("#3464dd"));
+
+
+            //线的名字集合
+            List<String> names = new ArrayList<>();
+            names.add("折线一");
+            names.add("折线二");
+
+            BarData barData = new BarData();
+            barData.setBarWidth(0.5f);
+            for (int i = 0; i < yValues.size(); i++) {
+                ArrayList<BarEntry> entries = new ArrayList<>();
+                for (int j = 0; j < yValues.get(i).size() ; j++) {
+
+                    entries.add(new BarEntry(xValues.get(j), yValues.get(i).get(j)));
+                }
+                BarDataSet barDataSet = new BarDataSet(entries, names.get(i));
+
+                barDataSet.setColor(colours.get(i));
+                barDataSet.setValueTextColor(Color.WHITE);
+                barDataSet.setValueTextSize(10f);
+                barDataSet.setValueFormatter(new MyValueFomatter());
+                barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+                for (int j = 0; j < yValues.get(i).size() ; j++) {
+                    float temp = xValues.get(j);
+                    if(temp < 1){
+                        barDataSet.setDrawValues(false);
+                        break;
+                    }
+                }
+
+                barData.addDataSet(barDataSet);
+            }
+
+            firstBarChart.setDrawValueAboveBar(false);
+            firstBarChart.setData(barData);
+            firstBarChart.invalidate();
+        } else {
+            firstBarChart.setDrawValueAboveBar(false);
+            firstBarChart.setData(null);
+            firstBarChart.invalidate();
         }
 
 
-        firstBarChart.setDrawValueAboveBar(false);
-        firstBarChart.setData(barData);
-        firstBarChart.invalidate();
+    }
+
+    private void updateSecondChartData(){
+        if(userTaskCountBeans != null && userTaskCountBeans.size() != 0){
+
+            int dataCount = userTaskCountBeans.size() > 5 ? 5 : userTaskCountBeans.size();
+            int maxCount = userTaskCountBeans.get(0).getUnCount() + userTaskCountBeans.get(0).getOffCount();
+
+            ArrayList tempList = new ArrayList();
+            for (int i = 0; i < dataCount; i++) {
+                tempList.add(userTaskCountBeans.get(i));
+            }
+            userTaskCountBeans = tempList;
+
+            //X轴
+            XAxis xAxis = senondBarChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(false);
+            xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+
+            //Y轴
+            YAxis yLeftAxis = senondBarChart.getAxisLeft();
+            YAxis yRrightAxis = senondBarChart.getAxisRight();
+            yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
+            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMinimum(0);
+            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMinimum(0);
+            yRrightAxis.setDrawLabels(false);
+            yLeftAxis.setLabelCount(5);
+            yLeftAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setGridColor(Color.parseColor("#ededed"));
+
+            //保证Y轴从0开始，不然会上移一点
+            yLeftAxis.setAxisMinimum(0f);
+            yRrightAxis.setAxisMinimum(0f);
+
+            //设置x轴的数据
+            ArrayList<Float> xValues = new ArrayList<>();
+            ArrayList<String> xVaulesName = new ArrayList<>();
+            for (int i = 0; i < dataCount; i++) {
+                if(userTaskCountBeans.get(i).getUser() != null){
+                    xVaulesName.add(userTaskCountBeans.get(i).getUser().getName());
+                    xValues.add((float) i);
+                }
+            }
+            xAxis.setLabelCount(xValues.size() - 1,false);
+            MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
+            xAxis.setValueFormatter(xFormatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            //设置y轴的数据()
+            List<List<Float>> yValues = new ArrayList<>();
+            for (int i = 0; i < 2; i++) {
+                List<Float> yValue = new ArrayList<>();
+                for (int j = 0; j < dataCount; j++) {
+                    if(userTaskCountBeans.get(j) != null){
+                        if(i == 0){
+                            yValue.add(userTaskCountBeans.get(j).getOffCount() == 0 ? (float) 0.2 : userTaskCountBeans.get(j).getOffCount());
+                        } else {
+                            yValue.add((float) (userTaskCountBeans.get(j).getUnCount() == 0 ? 0.2 : userTaskCountBeans.get(j).getUnCount()));
+                        }
+
+                    }
+                }
+                yValues.add(yValue);
+            }
+
+            //颜色集合
+            List<Integer> colours = new ArrayList<>();
+            colours.add(Color.parseColor("#3464dd"));
+            colours.add(Color.parseColor("#c6c6c6"));
+
+            //线的名字集合
+            List<String> names = new ArrayList<>();
+            names.add("折线一");
+            names.add("折线二");
+
+            BarData barData = new BarData();
+            barData.setBarWidth(0.5f);
+            for (int i = 0; i < yValues.size(); i++) {
+                ArrayList<BarEntry> entries = new ArrayList<>();
+                for (int j = 0; j < yValues.get(i).size(); j++) {
+                    entries.add(new BarEntry(xValues.get(j), yValues.get(i).get(j)));
+                }
+                BarDataSet barDataSet = new BarDataSet(entries, names.get(i));
+
+                barDataSet.setDrawValues(false);
+                barDataSet.setColor(colours.get(i));
+                barDataSet.setValueTextColor(Color.WHITE);
+                barDataSet.setValueTextSize(10f);
+                barDataSet.setValueFormatter(new MyValueFomatter());
+                barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                barData.addDataSet(barDataSet);
+            }
+
+
+
+            float groupSpace = 0.3f; //柱状图组之间的间距
+
+            float barWidth = 0.25f;
+            float barSpace = 0.1f;
+
+            // (0.2 + 0.02) * 4 + 0.08 = 1.00 -> interval per "group"
+            barData.setBarWidth(barWidth);
+
+
+            barData.groupBars(0, groupSpace, barSpace);
+
+            senondBarChart.setDrawValueAboveBar(false);
+
+            senondBarChart.setData(barData);
+
+            xAxis.setAxisMaximum(5);
+            xAxis.setAxisMinimum(0);
+            xAxis.setLabelCount(5,false);
+            xAxis.setCenterAxisLabels(true);
+            senondBarChart.invalidate();
+        } else {
+            senondBarChart.setData(null);
+            senondBarChart.invalidate();
+        }
+
+
+    }
+
+    private void updateThridChartData(){
+        if(monthDataBean != null && monthDataBean.getAll() != null
+                && monthDataBean.getAll().size() != 0){
+
+            int monthDays = getMonthDays(monthDataBean.getAll().get(0).getTime());
+            ArrayList<ReportDataBean> all = new ArrayList<>();
+            ArrayList<ReportDataBean> off = new ArrayList<>();
+            for (int i = 0; i < monthDays; i++) {
+                ReportDataBean bean = new ReportDataBean();
+                bean.setUnCount(0);
+                bean.setOff(0);
+                all.add(bean);
+                off.add(bean);
+            }
+            int allMax = monthDataBean.getAll().get(0).getUnCount() + monthDataBean.getAll().get(0).getOff();
+//            int offMax = monthDataBean.getOff().get(0).getOff();
+
+            for (int i = 0; i < monthDataBean.getAll().size(); i++) {
+                int temp = monthDataBean.getAll().get(i).getCount();
+                if(temp > allMax){
+                    allMax = temp;
+                }
+                int day = replaceTime(monthDataBean.getAll().get(i).getTime()) - 1;
+                all.remove(day);
+                all.add(day,monthDataBean.getAll().get(i));
+            }
+//            for (int i = 0; i < monthDataBean.getOff().size(); i++) {
+//                int temp = monthDataBean.getOff().get(i).getOff();
+//                if(temp > offMax){
+//                    offMax = temp;
+//                }
+//                int day = replaceTime(monthDataBean.getOff().get(i).getTime()) - 1;
+//                off.remove(day);
+//                off.add(day,monthDataBean.getOff().get(i));
+//            }
+
+            //X轴
+            XAxis xAxis = lineChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(false);
+            xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+
+            //Y轴
+            YAxis yLeftAxis = lineChart.getAxisLeft();
+            YAxis yRrightAxis = lineChart.getAxisRight();
+            yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
+            yLeftAxis.setAxisMaximum((float) (allMax * 1.8));
+            yLeftAxis.setAxisMinimum(0);
+            yRrightAxis.setAxisMaximum(allMax);
+            yRrightAxis.setAxisMinimum(0);
+            yRrightAxis.setDrawLabels(false);
+            yLeftAxis.setLabelCount(5);
+            yLeftAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setGridColor(Color.parseColor("#ededed"));
+
+            //保证Y轴从0开始，不然会上移一点
+            yLeftAxis.setAxisMinimum(0f);
+            yRrightAxis.setAxisMinimum(0f);
+
+            //设置x轴的数据
+            ArrayList<Float> xValues = new ArrayList<>();
+            ArrayList<String> xVaulesName = new ArrayList<>();
+            for (int i = 0; i <= all.size(); i++) {
+                xVaulesName.add((i + 1 < 10 ? "0" : "") + (i + 1));
+                xValues.add((float) i);
+            }
+            xAxis.setLabelCount(xValues.size(),false);
+            MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
+            xAxis.setValueFormatter(xFormatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            //设置y轴的数据()
+            List<Entry> yValues1 = new ArrayList<>();
+            List<Entry> yValues2 = new ArrayList<>();
+
+            for (int i = 0;i < all.size(); i++){
+//                yValues1.add(new Entry(i,all.get(i).getOff() + all.get(i).getUnCount()));
+                yValues1.add(new Entry(i,all.get(i).getCount()));
+                yValues2.add(new Entry(i,off.get(i).getOff()));
+            }
+
+
+            LineDataSet set1 = null;
+            LineDataSet set2 = null;
+            if (lineChart.getData() != null &&
+                    lineChart.getData().getDataSetCount() > 0) {
+                set1 = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
+                set2 = (LineDataSet) lineChart.getData().getDataSetByIndex(1);
+                set1.setValues(yValues1);
+                set2.setValues(yValues2);
+                lineChart.getData().notifyDataChanged();
+                lineChart.notifyDataSetChanged();
+            } else {
+
+                // create a dataset and give it a type
+                set1 = new LineDataSet(yValues1, "DataSet");
+                set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+                set1.setColor(Color.parseColor("#c6c6c6"));
+                set1.setDrawCircles(false);
+                set1.setLineWidth(1f);
+                set1.setCircleRadius(5f);
+                set1.setFillAlpha(255);
+                set1.setDrawFilled(true);
+
+                set1.setFillColor(Color.parseColor("#c6c6c6"));
+                set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                set1.setDrawCircleHole(false);
+//            set.setFillFormatter(new IFillFormatter() {
+//                @Override
+//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+//                    return lineChart.getAxisLeft().getAxisMaximum();
+//                }
+//            });
+
+                // create a dataset and give it a type
+                set2 = new LineDataSet(yValues2, "DataSet");
+                set2.setAxisDependency(YAxis.AxisDependency.LEFT);
+                set2.setColor(Color.parseColor("#3464dd"));
+                set2.setDrawCircles(false);
+                set2.setLineWidth(1f);
+                set2.setCircleRadius(5f);
+                set2.setFillAlpha(255);
+                set2.setDrawFilled(true);
+                set2.setFillColor(Color.parseColor("#3464dd"));
+                set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                set2.setDrawCircleHole(false);
+
+                ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                dataSets.add(set1); // add the datasets
+                dataSets.add(set2);
+
+                // create a data object with the datasets
+                LineData data = new LineData(dataSets);
+                data.setDrawValues(false);
+
+                // set data
+                lineChart.setData(data);
+            }
+
+            xAxis.setAxisMaximum(xValues.size());
+            xAxis.setAxisMinimum(0);
+            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            lineChart.invalidate();
+        } else {
+            lineChart.setData(null);
+            lineChart.invalidate();
+        }
+
     }
 
     private String parseTimeOnlyYearAndMonth(String date){
@@ -874,6 +1133,36 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 String now = sdf.format(new Date());
                 customDatePicker.show(now);
                 break;
+            case R.id.tv_person_rank:
+                currentUpdateChart = UPDATE_SECOND_CHART;
+
+                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now2 = sdf2.format(new Date());
+                customDatePicker.show(now2);
+                break;
+            case R.id.tv_company_total:
+                currentUpdateChart = UPDATE_THIRD_CHART;
+                SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now3 = sdf3.format(new Date());
+                customDatePicker.show(now3);
+                break;
         }
+    }
+
+    private int replaceTime(String time){
+        time = time.substring(time.length() - 2,time.length());
+        return Integer.parseInt(time);
+    }
+
+    private int getMonthDays(String time){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(sdf.parse(time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 }

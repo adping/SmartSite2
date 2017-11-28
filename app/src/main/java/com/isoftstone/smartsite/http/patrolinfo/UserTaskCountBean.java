@@ -34,4 +34,13 @@ public class UserTaskCountBean {
     public void setUnCount(int unCount) {
         this.unCount = unCount;
     }
+
+    @Override
+    public String toString() {
+        return "UserTaskCountBean{" +
+                "user=" + user +
+                ", offCount=" + offCount +
+                ", unCount=" + unCount +
+                '}';
+    }
 }

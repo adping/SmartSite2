@@ -17,7 +17,7 @@
             android:layout_height="22dp"
             android:id="@+id/civ"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/test"/>
+            android:src="@drawable/default_head"/>
     </RelativeLayout>
 
 

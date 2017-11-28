@@ -108,7 +108,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                 case NO_GUI_JI:
                     loadingDailog.dismiss();
                     ToastUtils.showShort("没有获取到轨迹！");
-                    removeMarkers();
+                    updateTaskPoints();
                     break;
             }
         }
@@ -119,6 +119,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
     private TextView tv_person;
     private TextView tv_address;
     private Marker currentClickMarker;
+    private long taskId;
 
     @Override
     protected int getLayoutRes() {
@@ -129,6 +130,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
     protected void afterCreated(Bundle savedInstanceState) {
         httpPost = new HttpPost();
         userTrackBean = (UserTrackBean) getIntent().getSerializableExtra("data");
+        taskId = userTrackBean.getTaskId();
 
         initToorBar();
         initRecyclerView();
@@ -202,13 +204,17 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         removeMarkers();
 
         if(patrolPositionBeans == null) return;
+
         List<PatrolPositionBean> beans = new ArrayList<>();
-        int userId = currentUserTrackBeans.get(0).getUserId();
-        for (int i = 0; i < patrolPositionBeans.size(); i++) {
-            if(patrolPositionBeans.get(i).getUser().getId() == userId){
-                beans.add(patrolPositionBeans.get(i));
+        if(currentUserTrackBeans.size() != 0){
+            int userId = currentUserTrackBeans.get(0).getUserId();
+            for (int i = 0; i < patrolPositionBeans.size(); i++) {
+                if(patrolPositionBeans.get(i).getUser() != null && patrolPositionBeans.get(i).getUser().getId() == userId){
+                    beans.add(patrolPositionBeans.get(i));
+                }
             }
         }
+
 
         for (int i = 0; i < patrolPositionBeans.size(); i++) {
             PatrolPositionBean bean = patrolPositionBeans.get(i);
@@ -322,14 +328,14 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         new Thread(new Runnable() {
             @Override
             public void run() {
-                patrolTaskBean= httpPost.patrolTaskFindOne(64);
-                LogUtils.e(TAG,"no  user");
+                patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
                     long userId = userTrackBean.getUser().getId();
 
                     for (int i = 0; i < userBeans.size(); i++) {
+                        LogUtils.e(TAG,userBeans.get(i).toString());
                         if(userBeans.get(i).getId() == userId){
                             currentUserBean = userBeans.get(i);
                         }
