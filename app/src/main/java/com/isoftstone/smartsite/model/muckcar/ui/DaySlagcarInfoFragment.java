@@ -51,6 +51,7 @@ import okhttp3.FormBody;
 
 public class DaySlagcarInfoFragment extends BaseFragment {
     public static final int TIME_INIT_TEXTVIEW_LIST = 0;
+    public static final int TIME_INIT_DOUBLE_LINE_CHART = 1;
     private int mDayOrMonthFlag = 1; //1月  0日
     private LinearLayout layout_1;
     private LinearLayout layout_2;
@@ -61,6 +62,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private TextView date_louduanbaojinglv = null;
     private TextView date_liuliangduibi = null;
     private long liuliangduibi_id = 0;
+    private long[] baojinglv_addressid;
     private ArchMonthFlowBean mArchMonthFlowBean;
     private LineChart liuliangduibi_linechart;
     private LineChart baojinglv_linechart;
