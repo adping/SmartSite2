@@ -32,6 +32,7 @@ import com.isoftstone.smartsite.http.muckcar.CarInfoBean;
 import com.isoftstone.smartsite.http.muckcar.McFlowBean;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.utils.DateUtils;
+import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import org.joda.time.LocalDate;
@@ -202,7 +203,12 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         customDatePicker1 = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-
+                if (mDayOrMonthFlag == 1) {
+                    date_liuliangpaiming.setText(time.substring(0, 7));
+                } else if (mDayOrMonthFlag == 0) {
+                    date_liuliangpaiming.setText(time.substring(0, 10));
+                }
+                ((SlagcarInfoActivity) getActivity()).getLiuliangpaimingData(mDayOrMonthFlag);
 
             }
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
@@ -250,6 +256,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
+        SharedPreferencesUtils.saveBaseWidth(mContext,0);
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
         handler.sendEmptyMessage(TIME_INIT_DOUBLE_LINE_CHART);
         //加载流量对比地址选择

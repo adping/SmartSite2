@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 /**
  * Created by 2013020220 on 2017/11/26.
@@ -41,8 +42,9 @@ public class MyTextView extends LinearLayout {
     private void initData() {
         int total = getTotalWidth() - 90;
         int base_width = SharedPreferencesUtils.getBaseWidth(context);
-        if (base_width == 0) {
-            base_width = total / (white_num + black_num);
+        int total_num = white_num + black_num;
+        if (base_width == 0 && total_num != 0) {
+            base_width = total / total_num;
             SharedPreferencesUtils.saveBaseWidth(context, base_width);
         }
         int black_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width * black_num + 10, getResources().getDisplayMetrics());
