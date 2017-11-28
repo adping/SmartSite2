@@ -16,7 +16,7 @@ import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
  * Created by 2013020220 on 2017/11/26.
  */
 
-public class MyTextView extends LinearLayout{
+public class MyTextView extends LinearLayout {
     private Context context;
     private String load_name;
     private int black_num;
@@ -38,20 +38,21 @@ public class MyTextView extends LinearLayout{
     }
 
 
-    private void initData(){
-        int total = getTotalWidth()-70;
-        int base_width=SharedPreferencesUtils.getBaseWidth(context);
-        if(base_width==0){
+    private void initData() {
+        int total = getTotalWidth() - 90;
+        int base_width = SharedPreferencesUtils.getBaseWidth(context);
+        if (base_width == 0) {
             base_width = total / (white_num + black_num);
-            SharedPreferencesUtils.saveBaseWidth(context,base_width);
+            SharedPreferencesUtils.saveBaseWidth(context, base_width);
         }
-        int black_width=(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width*black_num, getResources().getDisplayMetrics());
-        int white_width=(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width*white_num, getResources().getDisplayMetrics());
+        int black_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width * black_num + 10, getResources().getDisplayMetrics());
+        int white_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width * white_num + 10, getResources().getDisplayMetrics());
         LinearLayout.LayoutParams white_layoutParams = new LinearLayout.LayoutParams(white_width, LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams black_layoutParams = new LinearLayout.LayoutParams(black_width, LayoutParams.WRAP_CONTENT);
         tv_black_list.setLayoutParams(black_layoutParams);
         tv_white_list.setLayoutParams(white_layoutParams);
     }
+
     private void initView() {
         tv_load_name = (TextView) view.findViewById(R.id.load_name);
         tv_load_name.setText(load_name);
@@ -63,10 +64,10 @@ public class MyTextView extends LinearLayout{
     }
 
     private int getTotalWidth() {
-        WindowManager wm=(WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int i = wm.getDefaultDisplay().getWidth();
         final float scale = getResources().getDisplayMetrics().density;
-        return (int) (i/ scale + 0.5f);
+        return (int) (i / scale + 0.5f);
     }
 
 }
