@@ -26,4 +26,11 @@ public class Utils {
         }
         return versionName;
     }
+
+    public static boolean isEmptyStr(String str) {
+        if (str == null || str.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 }

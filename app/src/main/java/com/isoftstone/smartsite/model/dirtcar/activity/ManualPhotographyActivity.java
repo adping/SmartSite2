@@ -33,6 +33,7 @@ import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog;
 import com.isoftstone.smartsite.model.system.ui.PhoneInfoUtils;
 import com.isoftstone.smartsite.model.system.ui.SystemFragment;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -343,7 +344,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 					BaseUserBean  baseUserBean = arrayList.get(i).getTakePhoroUser();
 					ManualPhotographyBean manualPhotographyBean = null;
 					if (baseUserBean != null) {
-						manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  baseUserBean.getImageData()!=null ? mHttpPost.getFileUrl(baseUserBean.getImageData()) : null, arrayList.get(i).getTakePhoroUser().getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getTakePhoroUser().getDepartmentId())));
+						manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  baseUserBean.getImageData()!=null ? mHttpPost.getFileUrl(baseUserBean.getImageData()) : null, baseUserBean.getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  Utils.isEmptyStr(baseUserBean.getDepartmentId()) ?  "" : mHttpPost.getCompanyNameByid(Integer.parseInt(baseUserBean.getDepartmentId())));
 					} else {
 						manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  null, null, arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  null);
 					}

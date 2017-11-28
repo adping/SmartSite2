@@ -268,12 +268,13 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 							loggin(mIdString,mPwdString,mJpushId);
 							if(isLogin_1){
 								//logginVideo();
-								Intent intent = new Intent();
+								/**Intent intent = new Intent();
 								intent.setClass(LoginActivity.this,MainActivity.class);
 								LoginActivity.this.startActivity(intent);
 								mLoginResult = "登录成功";
 								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								finish();
+								finish();*/
+								mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
 							}
 
 						}
@@ -282,12 +283,13 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				break;
 				case HANDLER_LOGIN_END:{
 					closeLoginingDlg();// 关闭对话框
-					if(isLogin_1 && isLogin_2){
+					//if(isLogin_1 && isLogin_2){
+					if(isLogin_1){
 						Intent intent = new Intent();
 						intent.setClass(LoginActivity.this,MainActivity.class);
 						LoginActivity.this.startActivity(intent);
-						//mLoginResult = "登录成功";
-						//Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
+						mLoginResult = "登录成功";
+						Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				}

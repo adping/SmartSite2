@@ -34,6 +34,8 @@ import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspec
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.SelectInspectorsActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
+import com.isoftstone.smartsite.model.map.ui.ConstructionSummaryActivity;
+import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnLoginListener;
@@ -362,7 +364,8 @@ public class MainFragment extends BaseFragment {
      进入巡查概况
      */
     private void enterPatrolSurvey(){
-        Toast.makeText(getContext(),"进入巡查概况",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ConstructionSummaryActivity.class);
+        getActivity().startActivity(intent);
     }
 
     private void enterAirMonitoring() {
@@ -395,6 +398,7 @@ public class MainFragment extends BaseFragment {
     private void enterConstructionMonitor() {
         //进入施工监控
         Intent intent = new Intent(getActivity(), ConstructionMonitorMapActivity.class);
+//        Intent intent = new Intent(getActivity(), MapSearchTaskPositionActivity.class);
         getActivity().startActivity(intent);
     }
 

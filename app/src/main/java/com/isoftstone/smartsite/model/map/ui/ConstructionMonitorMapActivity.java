@@ -105,6 +105,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+
         httpPost = new HttpPost();
         initToorBar();
         initMapView(savedInstanceState);

@@ -50,4 +50,15 @@ public class ReportDataBean {
     public void setTime(String time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "ReportDataBean{" +
+                "departmentId='" + departmentId + '\'' +
+                ", off=" + off +
+                ", unCount=" + unCount +
+                ", count=" + count +
+                ", time='" + time + '\'' +
+                '}';
+    }
 }

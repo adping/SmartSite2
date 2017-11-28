@@ -196,6 +196,11 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
     }
 
     private void saveAllPosition(){
+        if(latLngs.size() == 0) {
+            ToastUtils.showShort("请先添加坐标信息再保存！");
+            return;
+        }
+
         Gson gson = new Gson();
         String latLngsJson = gson.toJson(latLngs);
         String latLngsNameJson = gson.toJson(latLngsName);
