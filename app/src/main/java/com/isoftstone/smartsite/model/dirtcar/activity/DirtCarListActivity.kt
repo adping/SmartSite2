@@ -53,7 +53,7 @@ class DirtCarListActivity : BaseActivity() {
                 bean.setPage("0")
                 bean.setSize("100")
                 var result = mHttpPost.getTrackList("",bean)
-                if(result == null){
+                if(result == null || result.size == 0){
                     return false
                 }
                 Log.e(TAG,"yanlog result:"+result)
