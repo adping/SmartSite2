@@ -27,6 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.common.NetworkStateService;
 import com.isoftstone.smartsite.common.widget.AlertView;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -42,6 +45,7 @@ import com.isoftstone.smartsite.model.video.bean.PhotoList;
 import com.isoftstone.smartsite.model.video.utils.ThumbnailsUtil;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.model.video.SnapPicturesActivity;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnQueryResourceListener;
@@ -65,9 +69,16 @@ import java.util.List;
  * modifed by zhangyinfu on 2017/10/19
  */
 
-public class VideoMonitoringActivity extends Activity implements VideoMonitorAdapter.AdapterViewOnClickListener,View.OnClickListener{
+public class VideoMonitoringActivity extends BaseActivity implements VideoMonitorAdapter.AdapterViewOnClickListener, View.OnClickListener{
     private static final String TAG = "VideoMonitoringActivity";
     public HttpPost mHttpPost = new HttpPost();
+
+    /*请求识别码 实时视频*/
+    public static final int REQUEST_FOR_ONE_TYPE_CODE = 1;
+    /* 请求识别码 历史监控*/
+    public static final int REQUEST_FOR_TWO_TYPE_CODE = 2;
+    /* 请求识别码 抓拍记录*/
+    public static final int REQUEST_FOR_THREE_TYPE_CODE = 3;
 	
     private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
     private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
@@ -127,9 +138,12 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_videomonitoring);
+    protected int getLayoutRes() {
+        return R.layout.activity_videomonitoring;
+    }
+
+    @Override
+    protected void afterCreated(Bundle savedInstanceState) {
         init();
         //查询设备列表,并填充ListView数据
         //setResourceDate();
@@ -161,24 +175,40 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     @Override
-    public void viewOnClickListener(DevicesBean devicesBean, boolean isFormOneType) {
+    public void viewOnClickListener(DevicesBean devicesBean, int requestType) {
         mDevicesBean = devicesBean;
-        if (isFormOneType) {
+
+        if (requestType == REQUEST_FOR_ONE_TYPE_CODE) {
+
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("resCode", devicesBean.getDeviceCoding());
+            bundle.putInt("resSubType", devicesBean.getCameraType());
+            intent.putExtras(bundle);
+            intent.setClass(mContext, VideoPlayActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+        } else if (requestType == REQUEST_FOR_TWO_TYPE_CODE) {
+
             //进入历史摄像界面
             startRePlayListActivity();
-        } else {
+
+        } else if (requestType == REQUEST_FOR_THREE_TYPE_CODE) {
+
             //打开系统相册浏览照片  
             /**Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
+             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+             startActivity(intent);*/
             /**Intent intent = new Intent();
-            intent.setClass(mContext, ManualPhotographyActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);*/
-			
-			mListImageInfo.clear();
+             intent.setClass(mContext, ManualPhotographyActivity.class);
+             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+             mContext.startActivity(intent);*/
+
+            mListImageInfo.clear();
             mlistPhotoInfo.clear();
             new ImageAsyncTask().execute();
+
         }
 
     }
@@ -254,6 +284,16 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     private class ImageAsyncTask extends AsyncTask<Void, Void, Object> {
+
+        /**
+         * 运行在UI线程中，在调用doInBackground()之前执行
+         */
+        @Override
+        protected void onPreExecute() {
+            //Toast.makeText(context,"开始执行",Toast.LENGTH_SHORT).show();
+            showDlg("正在获取" + mDevicesBean.getDeviceCoding() + "设备抓拍记录");
+        }
+
         @Override
         protected Object doInBackground(Void... params) {
             //获取缩略图
@@ -319,6 +359,14 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                     }
                 }while (cursor.moveToNext());
             }
+
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
         @Override
@@ -330,6 +378,8 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                     mlistPhotoInfo.addAll(mListImageInfo.get(i).getList());
                 }
             }
+
+            closeDlg();
 
             if (mlistPhotoInfo.size() <= 0 ) {
                 ToastUtils.showShort(getText(R.string.snatch_photo_size_0_toast).toString());

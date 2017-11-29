@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
     public interface AdapterViewOnClickListener {
         //postionType means   true ? onclick button 2 : onclick button 3
-        public void viewOnClickListener(DevicesBean devicesBean, boolean isFormOneType);
+        public void viewOnClickListener(DevicesBean devicesBean, int requestType);
     }
 
     public void setData(ArrayList<DevicesBean> list){
@@ -94,6 +96,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder.button_2 = (LinearLayout)convertView.findViewById(R.id.button2);
             holder.button_3 = (LinearLayout)convertView.findViewById(R.id.button3);
             holder.gotoMap = (LinearLayout)convertView.findViewById(R.id.gotomap);
+            holder.realtimeVideoImage = (ImageView) convertView.findViewById(R.id.realtime_video_img);
+            holder.realtimeVideoTxt = (TextView) convertView.findViewById(R.id.realtime_video_txt);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder)convertView.getTag();
@@ -119,13 +123,27 @@ public class VideoMonitorAdapter extends BaseAdapter {
         if(devicesBean.getDeviceStatus().equals("0")){
             holder.isOnlineTv.setImageResource(R.drawable.online);
             holder.button_1.setEnabled(true);
+            holder.realtimeVideoImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.time));
+            holder.realtimeVideoTxt.setTextColor(mContext.getColor(R.color.mainColor));
+
         }else if(devicesBean.getDeviceStatus().equals("1")){
+
             holder.isOnlineTv.setImageResource(R.drawable.offline);
             holder.button_1.setEnabled(false);
+            holder.realtimeVideoImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timedisable));
+            holder.realtimeVideoTxt.setTextColor(mContext.getColor(R.color.hit_text_color));
+
         }else if(devicesBean.getDeviceStatus().equals("2")){
+
             holder.isOnlineTv.setImageResource(R.drawable.breakdown);
             holder.button_1.setEnabled(false);
+            holder.realtimeVideoImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timedisable));
+            holder.realtimeVideoTxt.setTextColor(mContext.getColor(R.color.hit_text_color));
+
         }
+
+        holder.button_1.invalidate();
+
         holder.isShared = false;
 
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
@@ -135,14 +153,16 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).toString(), Toast.LENGTH_SHORT).show();
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if(null != viewHolder) {
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("resCode", devicesBean.getDeviceCoding());
-                    bundle.putInt("resSubType", devicesBean.getCameraType());
-                    intent.putExtras(bundle);
-                    intent.setClass(mContext, VideoPlayActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
+
+                    if (!NetworkUtils.isConnected()){
+                        ToastUtils.showShort("当前网络不可用，请检查您的网络设置。");
+                        return;
+                    } else if (!HttpPost.mVideoIsLogin) {
+                        ToastUtils.showShort("相关视频服务不可用，请尝试退出此界面后，重新进入。");
+                        return;
+                    }
+
+                    listener.viewOnClickListener(devicesBean, VideoMonitoringActivity.REQUEST_FOR_ONE_TYPE_CODE);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
                 }
@@ -155,7 +175,16 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if (null != viewHolder) {
-                    listener.viewOnClickListener(devicesBean,true);
+
+                    if (!NetworkUtils.isConnected()){
+                        ToastUtils.showShort("当前网络不可用，请检查您的网络设置。");
+                        return;
+                    } else if (!HttpPost.mVideoIsLogin) {
+                        ToastUtils.showShort("相关视频服务不可用，请尝试退出此界面后，重新进入。");
+                        return;
+                    }
+
+                    listener.viewOnClickListener(devicesBean, VideoMonitoringActivity.REQUEST_FOR_TWO_TYPE_CODE);
                 }
             }
         });
@@ -167,7 +196,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
             public void onClickCallBack(View registedView, View rootView,int position) {
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if (null != viewHolder) {
-                    listener.viewOnClickListener(devicesBean, false);
+                    listener.viewOnClickListener(devicesBean, VideoMonitoringActivity.REQUEST_FOR_THREE_TYPE_CODE);
                 }
             }
         });
@@ -231,6 +260,9 @@ public class VideoMonitorAdapter extends BaseAdapter {
         public LinearLayout button_1;//视频监控Btn
         public LinearLayout button_2;//环境监控
         public LinearLayout button_3 ;//三方协同
+
+        public ImageView realtimeVideoImage;
+        public TextView realtimeVideoTxt;
 
     }
 

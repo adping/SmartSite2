@@ -211,6 +211,10 @@
     <string name="select_date_quash">取消</string>
     <!--          system   end            -->
 
+    <!--           video begin       -->
+    <string name="snap_pictures_title">抓拍记录</string>
+    <!--           video end       -->
+
     <!--           insectplan begin       -->
     <string name="approval_pending_inspect_plans_title">待审批巡查计划</string>
     <string name="camera_details_title">摄像头详情</string>

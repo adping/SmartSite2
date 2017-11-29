@@ -68,7 +68,7 @@ public class ImageUtils {
     public static void loadImageWithPlaceHolder(Context context, ImageView imageView, String imageUrl, int resId) {
         Glide.with(context)
                 .load(imageUrl)
-                .placeholder(R.mipmap.pic_loading)
+                //.placeholder(R.mipmap.pic_loading)
                 .error(resId)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

@@ -14,7 +14,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
+
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.system.ui.PermissionsActivity;
 import com.isoftstone.smartsite.model.system.ui.PermissionsChecker;
 import com.isoftstone.smartsite.model.video.Adapter.PhotoGridAdapter;
@@ -28,7 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SnapPicturesActivity extends Activity {
+public class SnapPicturesActivity extends Activity implements View.OnClickListener {
 	
 	private GridView gridView;
 	private PhotoGridAdapter photoAdapter;
@@ -44,6 +47,8 @@ public class SnapPicturesActivity extends Activity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_snap_pictures);
+
+		initToolbar();
 
 		gridView = (GridView) findViewById(R.id.gv_photos);
 
@@ -99,5 +104,24 @@ public class SnapPicturesActivity extends Activity {
 								 int visibleItemCount, int totalItemCount) {
 			}
 		});
+	}
+
+
+	private void initToolbar(){
+		TextView tv_title = (TextView) findViewById(R.id.toolbar_title);
+		tv_title.setText(R.string.snap_pictures_title);
+
+		findViewById(R.id.btn_back).setOnClickListener(SnapPicturesActivity.this);
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()){
+			case R.id.btn_back:
+				SnapPicturesActivity.this.finish();
+				break;
+			default:
+				break;
+		}
 	}
 }
