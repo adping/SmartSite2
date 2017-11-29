@@ -7,6 +7,12 @@
 
     <include layout="@layout/layout_toolbar_no_icon"></include>
 
+    <TextView
+        android:id="@+id/net_work_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <ListView
         android:id="@+id/list_view"
         android:divider="@color/app_background"

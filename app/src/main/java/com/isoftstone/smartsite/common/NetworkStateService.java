@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
@@ -72,19 +74,22 @@ public class NetworkStateService extends Service{
         return super.onStartCommand(intent, flags, startId);
     }
 
-
+    public interface NetEventHandler {
+        public void onNetChange(boolean isConnected);
+    }
 
     public static class NetworkConnectChangedReceiver extends BroadcastReceiver {
 
-        public static ArrayList<netEventHandler> mListeners = new ArrayList<netEventHandler>();
+        public static ArrayList<NetEventHandler> mListeners = new ArrayList<NetEventHandler>();
         //private static String NET_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null && intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 App.mNetWorkState = NetworkUtils.getNetworkType(context);
+                Log.i("zzz", "onReceive......"  + mListeners.size());
                 if (mListeners.size() > 0) {// 通知接口完成加载
-                    for (netEventHandler handler : mListeners) {
+                    for (NetEventHandler handler : mListeners) {
                         handler.onNetChange(NetworkUtils.isConnected());
                     }
                 }
@@ -96,10 +101,6 @@ public class NetworkStateService extends Service{
                 }
 
             }
-        }
-
-        public static abstract interface netEventHandler {
-            public abstract void onNetChange(boolean isConnected);
         }
     }
 }

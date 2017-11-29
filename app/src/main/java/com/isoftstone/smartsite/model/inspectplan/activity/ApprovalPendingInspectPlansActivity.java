@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.NetworkStateService;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
@@ -21,6 +22,7 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspectPlansAdapter;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.system.ui.OpinionFeedbackActivity;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.utils.Utils;
 
@@ -31,11 +33,12 @@ import java.util.Date;
  * Created by zhang on 2017/11/18.
  */
 
-public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener{
+public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener, NetworkStateService.NetEventHandler{
     private static final String TAG = "zzz_InspectPlans";
     private ListView mListView = null;
     private ArrayList<InspectPlanBean> mListData = new ArrayList<InspectPlanBean>();
     private HttpPost mHttpPost;
+    private TextView mNetWorkMsgView;
 
     private static final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START = 1;
     private static  final int  HANDLER_APPROVAL_PENDING_INSPECT_PLANS_END = 2;
@@ -122,6 +125,9 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+
+        NetworkStateService.NetworkConnectChangedReceiver.mListeners.add(this);
+
         initToolbar();
         initView();
     }
@@ -137,6 +143,8 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     private void initView() {
         mHttpPost = new HttpPost();
         mListView = (ListView) findViewById(R.id.list_view);
+        mNetWorkMsgView = (TextView) findViewById(R.id.net_work_msg);
+        mNetWorkMsgView.setVisibility(NetworkUtils.isConnected() ? View.GONE : View.VISIBLE);
         //mHandler.sendEmptyMessage(HANDLER_APPROVAL_PENDING_INSPECT_PLANS_START);
     }
 
@@ -155,6 +163,17 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onNetChange(boolean isConnected) {
+        mNetWorkMsgView.setText("当前网络不可用，请检查您的网络设置");
+        Log.i("zzz","onNetChange...........");
+        if (isConnected) {
+            mNetWorkMsgView.setVisibility(View.GONE);
+        } else {
+            mNetWorkMsgView.setVisibility(View.VISIBLE);
         }
     }
 
