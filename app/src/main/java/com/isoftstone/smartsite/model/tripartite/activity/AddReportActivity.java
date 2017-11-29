@@ -23,6 +23,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.CompanyBean;
 import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.tripartite.adapter.AddressDialogListViewAdapter;
 import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;
 import com.isoftstone.smartsite.model.tripartite.fragment.RevisitFragment;
 import com.isoftstone.smartsite.utils.SPUtils;
@@ -65,10 +66,12 @@ public class AddReportActivity extends BaseActivity {
     public String mTypes = "1";
 
     public ArrayList<String> mAddressList = new ArrayList<>();
-    public ArrayList<String> mTypesList = new ArrayList<>();
+    public ArrayList<DictionaryBean> mTypesList = new ArrayList<>();
     public boolean isSettedAddress = false;
 
     String mCompanyName = "";
+
+    public boolean isShowCompany = true;
 
 
     @Override
@@ -210,11 +213,26 @@ public class AddReportActivity extends BaseActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mTypesEditor.setText(mTypesList.get(position));
-                        isSettedType = true;
-                        mTypes = position + 1 + "";
-                        mLabTypes.setCompoundDrawables(mWattingChanged, null, null, null);
-                        mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
+                        try {
+                            mTypesEditor.setText(mTypesList.get(position).getContent());
+                            isSettedType = true;
+                            mTypes = position + 1 + "";
+                            mLabTypes.setCompoundDrawables(mWattingChanged, null, null, null);
+                            mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
+
+                            DictionaryBean bean = mTypesList.get(position);
+                            int type = Integer.parseInt(bean.getValue());
+                            View v = AddReportActivity.this.findViewById(R.id.linear_company);
+                            if (v != null && type / 100 == 2) {
+                                v.setVisibility(View.GONE);
+                                isShowCompany = false;
+                            } else {
+                                v.setVisibility(View.VISIBLE);
+                                isShowCompany = true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         dialog.dismiss();
                     }
                 });
@@ -229,7 +247,7 @@ public class AddReportActivity extends BaseActivity {
                 View dialogLayout = LayoutInflater.from(AddReportActivity.this).inflate(R.layout.dialog_add_report, null);
                 ListView listView = (ListView) dialogLayout.findViewById(R.id.listview_dialog_add_report);
 
-                DialogListViewAdapter adapter = new DialogListViewAdapter(AddReportActivity.this, mAddressList);
+                AddressDialogListViewAdapter adapter = new AddressDialogListViewAdapter(AddReportActivity.this, mAddressList);
                 listView.setAdapter(adapter);
 
                 builder.setView(dialogLayout);
@@ -356,8 +374,13 @@ public class AddReportActivity extends BaseActivity {
             try {
                 mAddressList = mHttpPost.getPatrolAddress();
                 ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-                for (DictionaryBean temp : tempLists) {
-                    mTypesList.add(temp.getContent());
+//                for (DictionaryBean temp : tempLists) {
+//                    Log.e(TAG,"yanlog dictionarybean temp:"+temp);
+//                    mTypesList.add(temp.getContent());
+//                }
+                if (tempLists != null && tempLists.size() > 0) {
+                    mTypesList.clear();
+                    mTypesList.addAll(tempLists);
                 }
 
                 ArrayList<CompanyBean> companyList = mHttpPost.getCompanyList("zh");
