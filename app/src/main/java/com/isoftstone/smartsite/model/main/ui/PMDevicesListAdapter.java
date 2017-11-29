@@ -125,13 +125,13 @@ public class PMDevicesListAdapter extends BaseAdapter {
 
         String pm10 = "";
 
-        double d_pm10 = devices.getPm10();
+        double d_pm10 = devices.getPm10() == null ? 0 : devices.getPm10();
         int pm_10 = (int) d_pm10;
 
-        double d_pm25 = devices.getPm2_5();
+        double d_pm25 = devices.getPm2_5() == null ? 0 : devices.getPm2_5();
         int pm_25 = (int) d_pm25;
 
-        double d_so2 = devices.getCo2();
+        double d_so2 = devices.getCo2() == null ? 0 : devices.getPm2_5();
         int pm_so2 = (int) d_so2;
 
 

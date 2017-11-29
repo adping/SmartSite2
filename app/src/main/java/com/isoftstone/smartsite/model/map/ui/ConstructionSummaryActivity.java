@@ -1,14 +1,27 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,13 +46,18 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
+import com.isoftstone.smartsite.http.patrolinfo.DepartmentsMonthTasks;
 import com.isoftstone.smartsite.http.patrolinfo.ReportDataBean;
 import com.isoftstone.smartsite.http.patrolinfo.UserTaskCountBean;
+import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
+import com.isoftstone.smartsite.model.main.ui.SplashActivity;
 import com.isoftstone.smartsite.model.map.adapter.PersonRankArrayAdapter;
 import com.isoftstone.smartsite.model.map.bean.MyValueFomatter;
 import com.isoftstone.smartsite.model.map.bean.MyXFormatter;
 import com.isoftstone.smartsite.model.map.bean.PersonRankCompare;
 import com.isoftstone.smartsite.model.map.bean.ReportDataBeanCompare;
+import com.isoftstone.smartsite.model.map.service.DownloadAPKService;
+import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -59,7 +77,7 @@ import java.util.Random;
  * Created by zw on 2017/11/25.
  */
 
-public class ConstructionSummaryActivity extends BaseActivity implements View.OnClickListener {
+public class ConstructionSummaryActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private final int UPDATE_FIRST_CHART = 0x0001;
     private final int UPDATE_SECOND_CHART = 0x0002;
@@ -74,6 +92,10 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private final int HANDLE_SECOND_CHART_FAIL = 0x0022;
     private final int HANDLE_THRID_CHART_OK = 0x0031;
     private final int HANDLE_THRID_CHART_FAIL = 0x0032;
+    private final int HANDLE_FOUR_CHART_OK = 0x0041;
+    private final int HANDLE_FOUR_CHART_FAIL = 0x0042;
+    private final int HANDLE_FIVE_CHART_OK = 0x0051;
+    private final int HANDLE_FIVE_CHART_FAIL = 0x0052;
 
     private LineChart lineChart;
     private LineChart lineChart2;
@@ -109,30 +131,114 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     spinner_person_rank.setAdapter(personRankAdapter);
                     currentUpdateChart = UPDATE_SECOND_CHART;
                     spinner_person_rank.setSelection(0);
-                    //更新第三个图表
-                    spinnerThrid.setAdapter(personRankAdapter);
-                    currentUpdateChart = UPDATE_THIRD_CHART;
-                    spinnerThrid.setSelection(0);
+
 
                     break;
                 case HANDLER_FIRST_CHART_FAIL:
                     ToastUtils.showShort("没有获取到巡查单位任务排名数据！");
                     break;
                 case HANDLE_SECOND_CHART_OK:
-                    loadingDailog.dismiss();
                     updateSecondChartData();
+                    if(isFromFirst){
+                        //更新第三个图表
+                        spinnerThrid.setAdapter(personRankAdapter);
+                        currentUpdateChart = UPDATE_THIRD_CHART;
+                        spinnerThrid.setSelection(0);
+                    } else {
+                        loadingDailog.dismiss();
+                    }
+
                     break;
                 case HANDLE_SECOND_CHART_FAIL:
                     loadingDailog.dismiss();
                     ToastUtils.showShort("没有获取到月度人员任务完成排名数据！");
                     break;
                 case HANDLE_THRID_CHART_OK:
-                    loadingDailog.dismiss();
                     updateThridChartData();
+                    if(isFromFirst){
+                        //更新第四个图表
+                        currentUpdateChart = UPDATE_FOUR_CHART;
+                        updateChart(selectFourDate);
+                    } else {
+                        loadingDailog.dismiss();
+                    }
                     break;
                 case HANDLE_THRID_CHART_FAIL:
-                    loadingDailog.dismiss();
                     ToastUtils.showShort("没有获取到单位月度任务量数据！");
+                    break;
+                case HANDLE_FOUR_CHART_OK:
+                    updateFourChartData();
+                    if(monthTasks == null || monthTasks.getData().size() == 0){
+                        tv_four_view1.setVisibility(View.INVISIBLE);
+                        tv_four_view2.setVisibility(View.INVISIBLE);
+                        fourView1.setVisibility(View.INVISIBLE);
+                        fourView2.setVisibility(View.INVISIBLE);
+                    } else {
+                        if(monthTasks.getList().get(1).size() == 0){
+                            tv_four_view1.setVisibility(View.INVISIBLE);
+                            fourView1.setVisibility(View.INVISIBLE);
+                        } else {
+                            tv_four_view1.setVisibility(View.VISIBLE);
+                            fourView1.setVisibility(View.VISIBLE);
+                            tv_four_view1.setText(monthTasks.getList().get(1).get(0).getDepartmentId());
+                        }
+
+                        if(monthTasks.getList().get(0).size() == 0){
+                            tv_four_view2.setVisibility(View.INVISIBLE);
+                            fourView2.setVisibility(View.INVISIBLE);
+                        } else {
+                            tv_four_view2.setVisibility(View.VISIBLE);
+                            fourView2.setVisibility(View.VISIBLE);
+                            tv_four_view2.setText(monthTasks.getList().get(0).get(0).getDepartmentId());
+                        }
+                    }
+
+                    if(isFromFirst){
+                        //更新第五个图表
+                        currentUpdateChart = UPDATE_FIVE_CHART;
+                        updateChart(selectFiveDate);
+                    } else {
+                        loadingDailog.dismiss();
+                    }
+
+                    break;
+                case HANDLE_FOUR_CHART_FAIL:
+                    ToastUtils.showShort("没有获取到单位月度任务量对比！");
+                    break;
+                case HANDLE_FIVE_CHART_OK:
+                    updateFiveChartData();
+                    if(fiveMonthTasks == null || fiveMonthTasks.getData().size() == 0){
+                        tv_five_view1.setVisibility(View.INVISIBLE);
+                        tv_five_view2.setVisibility(View.INVISIBLE);
+                        fiveView1.setVisibility(View.INVISIBLE);
+                        fiveView2.setVisibility(View.INVISIBLE);
+                    } else {
+                        if(fiveMonthTasks.getDate().get(1).size() == 0){
+                            tv_five_view1.setVisibility(View.INVISIBLE);
+                            fiveView1.setVisibility(View.INVISIBLE);
+                        } else {
+                            tv_five_view1.setVisibility(View.VISIBLE);
+                            fiveView1.setVisibility(View.VISIBLE);
+                            tv_five_view1.setText(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
+                        }
+
+                        if(fiveMonthTasks.getDate().get(0).size() == 0){
+                            tv_five_view2.setVisibility(View.INVISIBLE);
+                            fiveView2.setVisibility(View.INVISIBLE);
+                        } else {
+                            tv_five_view2.setVisibility(View.VISIBLE);
+                            fiveView2.setVisibility(View.VISIBLE);
+                            tv_five_view2.setText(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
+                        }
+                    }
+
+                    if(isFromFirst){
+                        currentUpdateChart = UPDATE_FIRST_CHART;
+                    }
+                    loadingDailog.dismiss();
+                    break;
+                case HANDLE_FIVE_CHART_FAIL:
+                    ToastUtils.showShort("没有获取到单位月度报告量！");
                     break;
             }
         }
@@ -144,6 +250,10 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
     private String currentPersonRankIdString = "";
     private String currentCompanyTotalIdString = "";
+    private String currentCompanyTotalCompareIdString1 = "";
+    private String currentCompanyTotalCompareIdString2 = "";
+    private String currentCompanyMonthIdString1 = "";
+    private String currentCompanyMonthIdString2 = "";
 
     private List<String> personRankList;
     private BarChart senondBarChart;
@@ -151,6 +261,24 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private PersonRankArrayAdapter<String> companyTotalAdapter;
     private ArrayList<String> companyTotalList;
     private Spinner spinnerThrid;
+    private TextView tv_company_total_compare;
+    private DepartmentsMonthTasks monthTasks,fiveMonthTasks;
+
+    private boolean isFromFirst = true;
+    private View fourView1;
+    private View fourView2;
+    private TextView tv_four_view1;
+    private TextView tv_four_view2;
+    private TextView tv_four_view_choose;
+    private MyFourCheckboxAdapter fourCheckboxAdapter;
+    private PopupWindow fourCheckPopwindow;
+    private View fiveView1;
+    private View fiveView2;
+    private TextView tv_five_view1;
+    private TextView tv_five_view2;
+    private TextView tv_five_view_choose;
+    private MyFourCheckboxAdapter myFiveCheckboxAdapter;
+    private PopupWindow fiveCheckPopwindow;
 
     @Override
     protected int getLayoutRes() {
@@ -243,6 +371,32 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             }
         });
         spinnerThrid.setDropDownVerticalOffset(DensityUtils.dip2px(this,36));
+
+        //four
+        tv_company_total_compare = (TextView) findViewById(R.id.tv_company_total_compare);
+        tv_company_total_compare.setText(parseTimeOnlyYearAndMonth(selectDate));
+        tv_company_total_compare.setOnClickListener(this);
+
+        fourView1 = findViewById(R.id.four_view1);
+        fourView2 = findViewById(R.id.four_view2);
+        tv_four_view1 = (TextView) findViewById(R.id.tv_four_view1);
+        tv_four_view2 = (TextView) findViewById(R.id.tv_four_view2);
+        tv_four_view_choose = (TextView) findViewById(R.id.tv_company_total_compare_choose);
+        tv_four_view_choose.setOnClickListener(this);
+        initFourChartPopWindow();
+
+        //five
+        TextView tv_company_month_report = (TextView) findViewById(R.id.tv_company_month_report);
+        tv_company_month_report.setText(parseTimeOnlyYearAndMonth(selectDate));
+        tv_company_month_report.setOnClickListener(this);
+
+        fiveView1 = findViewById(R.id.five_view1);
+        fiveView2 = findViewById(R.id.five_view2);
+        tv_five_view1 = (TextView) findViewById(R.id.tv_five_view1);
+        tv_five_view2 = (TextView) findViewById(R.id.tv_five_view2);
+        tv_five_view_choose = (TextView) findViewById(R.id.tv_company_month_report_choose);
+        tv_five_view_choose.setOnClickListener(this);
+        initFiveChartPopWindow();
     }
 
     private void initDatePicker(String date){
@@ -332,7 +486,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         legend.setEnabled(false);
         lineChart.setDescription(null);
 
-
+        lineChart.setNoDataText("没有获取到数据。");
 
         lineChart.setTouchEnabled(false); // 设置是否可以触摸
         lineChart.setDragEnabled(false);// 是否可以拖拽
@@ -355,127 +509,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         legend.setEnabled(false);
         lineChart2.setDescription(null);
 
-        //X轴
-        XAxis xAxis = lineChart2.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(true);
-        xAxis.setGridColor(Color.parseColor("#ededed"));
-        xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-
-        //Y轴
-        YAxis yLeftAxis = lineChart2.getAxisLeft();
-        YAxis yRrightAxis = lineChart2.getAxisRight();
-        yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-        yLeftAxis.setAxisMaximum(140);
-        yLeftAxis.setAxisMinimum(0);
-        yRrightAxis.setAxisMaximum(140);
-        yRrightAxis.setAxisMinimum(0);
-        yRrightAxis.setDrawLabels(false);
-        yLeftAxis.setLabelCount(140 / 20);
-        yLeftAxis.setGridColor(Color.parseColor("#ededed"));
-        yRrightAxis.setGridColor(Color.parseColor("#ededed"));
-
-        //保证Y轴从0开始，不然会上移一点
-        yLeftAxis.setAxisMinimum(0f);
-        yRrightAxis.setAxisMinimum(0f);
-
-        //设置x轴的数据
-        ArrayList<Float> xValues = new ArrayList<>();
-        ArrayList<String> xVaulesName = new ArrayList<>();
-        for (int i = 1; i <= 31; i++) {
-            xVaulesName.add((i < 10 ? "0" : "") + i);
-            xValues.add((float) i);
-        }
-        xAxis.setLabelCount(xValues.size(),false);
-        MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
-        xAxis.setValueFormatter(xFormatter);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        //设置y轴的数据()
-        List<Entry> yValues1 = new ArrayList<>();
-        List<Entry> yValues2 = new ArrayList<>();
-        int shujucount = 11;
-        for (int i = 0;i < 31; i++){
-            if(i % 2 == 0){
-                yValues1.add(new Entry(i,120f));
-                yValues2.add(new Entry(i,60f));
-            }else {
-                yValues1.add(new Entry(i,100f));
-                yValues2.add(new Entry(i,50f));
-            }
-        }
-
-
-        LineDataSet set1 = null;
-        LineDataSet set2 = null;
-        if (lineChart2.getData() != null &&
-                lineChart2.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) lineChart2.getData().getDataSetByIndex(0);
-            set2 = (LineDataSet) lineChart2.getData().getDataSetByIndex(1);
-            set1.setValues(yValues1);
-            set2.setValues(yValues2);
-            lineChart2.getData().notifyDataChanged();
-            lineChart2.notifyDataSetChanged();
-        } else {
-
-            // create a dataset and give it a type
-            set1 = new LineDataSet(yValues1, "DataSet");
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            //orange
-            set1.setColor(Color.parseColor("#ff9e5d"));
-            set1.setDrawCircles(true);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(4f);
-            set1.setCircleColor(Color.parseColor("#ff9e5d"));
-            set1.setFillAlpha(255);
-            set1.setDrawFilled(false);
-
-            set1.setFillColor(Color.parseColor("#c6c6c6"));
-            set1.setMode(LineDataSet.Mode.LINEAR);
-            set1.setDrawCircleHole(true);
-            set1.setCircleHoleRadius(2f);
-            set1.setCircleColorHole(Color.WHITE);
-//            set.setFillFormatter(new IFillFormatter() {
-//                @Override
-//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-//                    return lineChart.getAxisLeft().getAxisMaximum();
-//                }
-//            });
-
-            // create a dataset and give it a type
-            set2 = new LineDataSet(yValues2, "DataSet");
-            set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set2.setColor(Color.parseColor("#61a4ff"));
-            set2.setDrawCircles(true);
-            set2.setCircleColor(Color.parseColor("#61a4ff"));
-            set2.setLineWidth(2f);
-            set2.setCircleRadius(4f);
-            set2.setFillAlpha(255);
-            set2.setDrawFilled(false);
-            set2.setFillColor(Color.parseColor("#3464dd"));
-            set2.setMode(LineDataSet.Mode.LINEAR);
-            set2.setDrawCircleHole(true);
-            set2.setCircleHoleRadius(2f);
-            set2.setCircleColorHole(Color.WHITE);
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-            dataSets.add(set2);
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-            data.setDrawValues(false);
-
-            // set data
-            lineChart2.setData(data);
-        }
-
-        xAxis.setAxisMaximum(xValues.size());
-        xAxis.setAxisMinimum(0);
-        xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
-        lineChart2.invalidate();
+        lineChart2.setNoDataText("没有获取到数据。");
 
         lineChart2.setTouchEnabled(false); // 设置是否可以触摸
         lineChart2.setDragEnabled(false);// 是否可以拖拽
@@ -492,132 +526,12 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         //网格
         lineChart3.setDrawGridBackground(false);
 
+        lineChart3.setNoDataText("没有获取到数据。");
+
         //不显示描述
         Legend legend = lineChart3.getLegend();
         legend.setEnabled(false);
         lineChart3.setDescription(null);
-
-        //X轴
-        XAxis xAxis = lineChart3.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(true);
-        xAxis.setGridColor(Color.parseColor("#ededed"));
-        xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-
-        //Y轴
-        YAxis yLeftAxis = lineChart3.getAxisLeft();
-        YAxis yRrightAxis = lineChart3.getAxisRight();
-        yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
-        yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-        yLeftAxis.setAxisMaximum(140);
-        yLeftAxis.setAxisMinimum(0);
-        yRrightAxis.setAxisMaximum(140);
-        yRrightAxis.setAxisMinimum(0);
-        yRrightAxis.setDrawLabels(false);
-        yLeftAxis.setLabelCount(140 / 20);
-        yLeftAxis.setGridColor(Color.parseColor("#ededed"));
-        yRrightAxis.setGridColor(Color.parseColor("#ededed"));
-
-        //保证Y轴从0开始，不然会上移一点
-        yLeftAxis.setAxisMinimum(0f);
-        yRrightAxis.setAxisMinimum(0f);
-
-        //设置x轴的数据
-        ArrayList<Float> xValues = new ArrayList<>();
-        ArrayList<String> xVaulesName = new ArrayList<>();
-        for (int i = 1; i <= 31; i++) {
-            xVaulesName.add((i < 10 ? "0" : "") + i);
-            xValues.add((float) i);
-        }
-        xAxis.setLabelCount(xValues.size(),false);
-        MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
-        xAxis.setValueFormatter(xFormatter);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        //设置y轴的数据()
-        List<Entry> yValues1 = new ArrayList<>();
-        List<Entry> yValues2 = new ArrayList<>();
-        int shujucount = 11;
-        for (int i = 0;i < 31; i++){
-            if(i % 2 == 0){
-                yValues1.add(new Entry(i,120f));
-                yValues2.add(new Entry(i,60f));
-            }else {
-                yValues1.add(new Entry(i,100f));
-                yValues2.add(new Entry(i,50f));
-            }
-        }
-
-
-        LineDataSet set1 = null;
-        LineDataSet set2 = null;
-        if (lineChart3.getData() != null &&
-                lineChart3.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) lineChart3.getData().getDataSetByIndex(0);
-            set2 = (LineDataSet) lineChart3.getData().getDataSetByIndex(1);
-            set1.setValues(yValues1);
-            set2.setValues(yValues2);
-            lineChart3.getData().notifyDataChanged();
-            lineChart3.notifyDataSetChanged();
-        } else {
-
-            // create a dataset and give it a type
-            set1 = new LineDataSet(yValues1, "DataSet");
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            //orange
-            set1.setColor(Color.parseColor("#ff9e5d"));
-            set1.setDrawCircles(true);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(4f);
-            set1.setCircleColor(Color.parseColor("#ff9e5d"));
-            set1.setFillAlpha(255);
-            set1.setDrawFilled(false);
-
-            set1.setFillColor(Color.parseColor("#c6c6c6"));
-            set1.setMode(LineDataSet.Mode.LINEAR);
-            set1.setDrawCircleHole(true);
-            set1.setCircleHoleRadius(2f);
-            set1.setCircleColorHole(Color.WHITE);
-//            set.setFillFormatter(new IFillFormatter() {
-//                @Override
-//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-//                    return lineChart.getAxisLeft().getAxisMaximum();
-//                }
-//            });
-
-            // create a dataset and give it a type
-            set2 = new LineDataSet(yValues2, "DataSet");
-            set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set2.setColor(Color.parseColor("#61a4ff"));
-            set2.setDrawCircles(true);
-            set2.setCircleColor(Color.parseColor("#61a4ff"));
-            set2.setLineWidth(2f);
-            set2.setCircleRadius(4f);
-            set2.setFillAlpha(255);
-            set2.setDrawFilled(false);
-            set2.setFillColor(Color.parseColor("#3464dd"));
-            set2.setMode(LineDataSet.Mode.LINEAR);
-            set2.setDrawCircleHole(true);
-            set2.setCircleHoleRadius(2f);
-            set2.setCircleColorHole(Color.WHITE);
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-            dataSets.add(set2);
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-            data.setDrawValues(false);
-
-            // set data
-            lineChart3.setData(data);
-        }
-
-        xAxis.setAxisMaximum(xValues.size());
-        xAxis.setAxisMinimum(0);
-        xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
-        lineChart3.invalidate();
 
         lineChart3.setTouchEnabled(false); // 设置是否可以触摸
         lineChart3.setDragEnabled(false);// 是否可以拖拽
@@ -635,6 +549,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             selectDate = time;
             selectTwoDate = time;
             selectThirdDate = time;
+            selectFourDate = time;
+            selectFiveDate = time;
             tv_company_rank_date.setText(strTime);
             loadFirstChartData(year,month);
         } else if(currentUpdateChart == UPDATE_SECOND_CHART){
@@ -645,6 +561,13 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             selectThirdDate = time;
             tv_company_total.setText(strTime);
             loadThirdChartDate(year,month);
+        } else if(currentUpdateChart == UPDATE_FOUR_CHART){
+            selectFourDate = time;
+            tv_company_total_compare.setText(strTime);
+            loadFourChartDate(year,month);
+        } else if(currentUpdateChart == UPDATE_FIVE_CHART){
+            selectFiveDate = time;
+            loadFiveChartDate(year,month);
         }
     }
 
@@ -664,7 +587,19 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
                     //更新第三个图表
                     currentCompanyTotalIdString = reportDataBeans.get(0).getDepartmentId();
+                    //更新第四个图表
+                    currentCompanyTotalCompareIdString2 = reportDataBeans.get(0).getDepartmentId();
+                    oldFourClickedId2 = 0;
+                    //更新第五个图表
+                    currentCompanyMonthIdString2 = reportDataBeans.get(0).getDepartmentId();
+                    oldFiveClickedId2 = 0;
 
+                    if(reportDataBeans.size() > 1){
+                        currentCompanyTotalCompareIdString1 = reportDataBeans.get(1).getDepartmentId();
+                        currentCompanyMonthIdString1 = reportDataBeans.get(1).getDepartmentId();
+                        oldFourClickedId1 = 1;
+                        oldFiveClickedId1 = 1;
+                    }
 
                 }else {
                     mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
@@ -699,6 +634,48 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     mHandler.sendEmptyMessage(HANDLE_THRID_CHART_FAIL);
                 }
                 mHandler.sendEmptyMessage(HANDLE_THRID_CHART_OK);
+            }
+        }).start();
+    }
+
+    private void loadFourChartDate(final String year,final String month){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] strs = null;
+                if(TextUtils.isEmpty(currentCompanyTotalCompareIdString1)){
+                    strs = new String[]{currentCompanyTotalCompareIdString2};
+                } else {
+                    strs = new String[]{currentCompanyTotalCompareIdString2,currentCompanyTotalCompareIdString1};
+                }
+                monthTasks = httpPost.getDepartmentsMonthTasks(year + "-" + month,strs);
+                if(monthTasks == null || (monthTasks.getData().size() == 0 && monthTasks.getList().size() == 0)){
+                    mHandler.sendEmptyMessage(HANDLE_FOUR_CHART_FAIL);
+                }
+                mHandler.sendEmptyMessage(HANDLE_FOUR_CHART_OK);
+
+            }
+        }).start();
+
+    }
+
+    private void loadFiveChartDate(final String year,final String month){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] strs = null;
+                if(TextUtils.isEmpty(currentCompanyMonthIdString1)){
+                    strs = new String[]{currentCompanyMonthIdString2};
+                } else {
+                    strs = new String[]{currentCompanyMonthIdString2,currentCompanyMonthIdString1};
+                }
+                fiveMonthTasks = httpPost.getDepartmentReport(year + "-" + month,strs);
+                LogUtils.e(TAG,(fiveMonthTasks.getDate().get(1) == null) + " .. ");
+                if(fiveMonthTasks == null || (fiveMonthTasks.getData().size() == 0 && fiveMonthTasks.getDate().size() == 0)){
+                    mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
+                }
+                mHandler.sendEmptyMessage(HANDLE_FIVE_CHART_OK);
+
             }
         }).start();
     }
@@ -987,6 +964,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 int day = replaceTime(monthDataBean.getAll().get(i).getTime()) - 1;
                 all.remove(day);
                 all.add(day,monthDataBean.getAll().get(i));
+
             }
 //            for (int i = 0; i < monthDataBean.getOff().size(); i++) {
 //                int temp = monthDataBean.getOff().get(i).getOff();
@@ -1010,7 +988,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             YAxis yRrightAxis = lineChart.getAxisRight();
             yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
             yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-            yLeftAxis.setAxisMaximum((float) (allMax * 1.8));
+            yLeftAxis.setAxisMaximum((float) (allMax * 1.5));
             yLeftAxis.setAxisMinimum(0);
             yRrightAxis.setAxisMaximum(allMax);
             yRrightAxis.setAxisMinimum(0);
@@ -1026,7 +1004,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             //设置x轴的数据
             ArrayList<Float> xValues = new ArrayList<>();
             ArrayList<String> xVaulesName = new ArrayList<>();
-            for (int i = 0; i <= all.size(); i++) {
+            for (int i = 0; i < all.size(); i++) {
                 xVaulesName.add((i + 1 < 10 ? "0" : "") + (i + 1));
                 xValues.add((float) i);
             }
@@ -1106,11 +1084,377 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             xAxis.setAxisMaximum(xValues.size());
             xAxis.setAxisMinimum(0);
             xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            xAxis.setCenterAxisLabels(true);
+//            xAxis.setLabelCount(5,false);
             lineChart.invalidate();
         } else {
             lineChart.setData(null);
             lineChart.invalidate();
         }
+
+    }
+
+    private void updateFourChartData(){
+        if(monthTasks != null && monthTasks.getData().size() != 0){
+
+            int month = getMonthDays(monthTasks.getData().get(0));
+            int maxCount = 0;
+
+            List<ReportDataBean> first = new ArrayList<>();
+            List<ReportDataBean> second = new ArrayList<>();
+            for (int i = 0; i < month; i++) {
+                ReportDataBean bean = new ReportDataBean();
+                bean.setCount(0);
+                first.add(bean);
+                second.add(bean);
+            }
+            if(monthTasks.getList().get(0).size() != 0){
+                for (int i = 0; i < monthTasks.getList().get(0).size(); i++) {
+                    ReportDataBean bean = monthTasks.getList().get(0).get(i);
+
+                    int temp = bean.getCount();
+                    if(temp > maxCount){
+                        maxCount = temp;
+                    }
+
+                    int day = replaceTime(bean.getTime());
+                    first.remove(day);
+                    first.add(day,bean);
+                }
+            }
+
+            if(monthTasks.getList().get(1).size() != 0){
+                for (int i = 0; i < monthTasks.getList().get(1).size(); i++) {
+                    ReportDataBean bean = monthTasks.getList().get(1).get(i);
+
+                    int temp = bean.getCount();
+                    if(temp > maxCount){
+                        maxCount = temp;
+                    }
+
+                    int day = replaceTime(bean.getTime());
+                    second.remove(day);
+                    second.add(day,bean);
+                }
+            }
+
+
+            //X轴
+            XAxis xAxis = lineChart2.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(true);
+            xAxis.setGridColor(Color.parseColor("#ededed"));
+            xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+
+            //Y轴
+            YAxis yLeftAxis = lineChart2.getAxisLeft();
+            YAxis yRrightAxis = lineChart2.getAxisRight();
+            yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
+            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMinimum(0);
+            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMinimum(0);
+            yRrightAxis.setDrawLabels(false);
+            yLeftAxis.setLabelCount(5);
+            yLeftAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setGridColor(Color.parseColor("#ededed"));
+
+            //保证Y轴从0开始，不然会上移一点
+            yLeftAxis.setAxisMinimum(0f);
+            yRrightAxis.setAxisMinimum(0f);
+
+            //设置x轴的数据
+            ArrayList<Float> xValues = new ArrayList<>();
+            ArrayList<String> xVaulesName = new ArrayList<>();
+            for (int i = 1; i <= month; i++) {
+                xVaulesName.add((i < 10 ? "0" : "") + i);
+                xValues.add((float) i);
+            }
+            xAxis.setLabelCount(xValues.size(),false);
+            MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
+            xAxis.setValueFormatter(xFormatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            //设置y轴的数据()
+            List<Entry> yValues1 = new ArrayList<>();
+            List<Entry> yValues2 = new ArrayList<>();
+            boolean drawY1 = false;
+            boolean drawY2 = false;
+            for (int i = 0;i < month; i++){
+                int firstMin = first.get(i).getCount();
+                int secondMin = second.get(i).getCount();
+                if(firstMin != 0){
+                    drawY1 = true;
+                }
+                if(secondMin != 0){
+                    drawY2 = true;
+                }
+                yValues1.add(new Entry(i,firstMin));
+                yValues2.add(new Entry(i,secondMin));
+            }
+
+            LineDataSet set1 = null;
+            LineDataSet set2 = null;
+            if (lineChart2.getData() != null &&
+                    lineChart2.getData().getDataSetCount() > 0) {
+                set1 = (LineDataSet) lineChart2.getData().getDataSetByIndex(0);
+                set2 = (LineDataSet) lineChart2.getData().getDataSetByIndex(1);
+
+                set1.setValues(yValues1);
+                set2.setValues(yValues2);
+                set1.setVisible(drawY1);
+                set2.setVisible(drawY2);
+                lineChart2.getData().notifyDataChanged();
+                lineChart2.notifyDataSetChanged();
+            } else {
+
+                // create a dataset and give it a type
+                set1 = new LineDataSet(yValues1,"DataSet");
+                set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+                //orange
+                set1.setColor(Color.parseColor("#ff9e5d"));
+                set1.setDrawCircles(true);
+                set1.setLineWidth(2f);
+                set1.setCircleRadius(4f);
+                set1.setCircleColor(Color.parseColor("#ff9e5d"));
+                set1.setFillAlpha(255);
+                set1.setDrawFilled(false);
+                set1.setVisible(drawY1);
+
+                set1.setFillColor(Color.parseColor("#c6c6c6"));
+                set1.setMode(LineDataSet.Mode.LINEAR);
+                set1.setDrawCircleHole(true);
+                set1.setCircleHoleRadius(2f);
+                set1.setCircleColorHole(Color.WHITE);
+//            set.setFillFormatter(new IFillFormatter() {
+//                @Override
+//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+//                    return lineChart.getAxisLeft().getAxisMaximum();
+//                }
+//            });
+
+                // create a dataset and give it a type
+                set2 = new LineDataSet(yValues2, "DataSet");
+                set2.setAxisDependency(YAxis.AxisDependency.LEFT);
+                set2.setColor(Color.parseColor("#61a4ff"));
+                set2.setDrawCircles(true);
+                set2.setCircleColor(Color.parseColor("#61a4ff"));
+                set2.setLineWidth(2f);
+                set2.setCircleRadius(4f);
+                set2.setFillAlpha(255);
+                set2.setDrawFilled(false);
+                set2.setFillColor(Color.parseColor("#3464dd"));
+                set2.setMode(LineDataSet.Mode.LINEAR);
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2f);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.setVisible(drawY2);
+
+                ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                dataSets.add(set1); // add the datasets
+                dataSets.add(set2);
+
+                // create a data object with the datasets
+                LineData data = new LineData(dataSets);
+                data.setDrawValues(false);
+
+                // set data
+                lineChart2.setData(data);
+            }
+
+            xAxis.setAxisMaximum(xValues.size());
+            xAxis.setAxisMinimum(0);
+            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            lineChart2.invalidate();
+        } else {
+            lineChart2.setData(null);
+            lineChart2.invalidate();
+        }
+
+
+    }
+
+    private void updateFiveChartData(){
+        if(fiveMonthTasks != null && fiveMonthTasks.getData().size() != 0){
+
+            int month = getMonthDays(fiveMonthTasks.getData().get(0));
+            int maxCount = 0;
+
+            List<ReportDataBean> first = new ArrayList<>();
+            List<ReportDataBean> second = new ArrayList<>();
+            for (int i = 0; i < month; i++) {
+                ReportDataBean bean = new ReportDataBean();
+                bean.setCount(0);
+                first.add(bean);
+                second.add(bean);
+            }
+            if(fiveMonthTasks.getDate().get(0).size() != 0){
+                for (int i = 0; i < fiveMonthTasks.getDate().get(0).size(); i++) {
+                    ReportDataBean bean = fiveMonthTasks.getDate().get(0).get(i);
+
+                    int temp = bean.getCount();
+                    if(temp > maxCount){
+                        maxCount = temp;
+                    }
+
+                    int day = replaceTime(bean.getTime());
+                    first.remove(day);
+                    first.add(day,bean);
+                }
+            }
+
+            if(fiveMonthTasks.getDate().get(1).size() != 0){
+                for (int i = 0; i < fiveMonthTasks.getDate().get(1).size(); i++) {
+                    ReportDataBean bean = fiveMonthTasks.getDate().get(1).get(i);
+
+                    int temp = bean.getCount();
+                    if(temp > maxCount){
+                        maxCount = temp;
+                    }
+
+                    int day = replaceTime(bean.getTime());
+                    second.remove(day);
+                    second.add(day,bean);
+                }
+            }
+
+
+            //X轴
+            XAxis xAxis = lineChart3.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setDrawGridLines(true);
+            xAxis.setGridColor(Color.parseColor("#ededed"));
+            xAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+
+            //Y轴
+            YAxis yLeftAxis = lineChart3.getAxisLeft();
+            YAxis yRrightAxis = lineChart3.getAxisRight();
+            yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
+            yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
+            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMinimum(0);
+            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMinimum(0);
+            yRrightAxis.setDrawLabels(false);
+            yLeftAxis.setLabelCount(5);
+            yLeftAxis.setGridColor(Color.parseColor("#ededed"));
+            yRrightAxis.setGridColor(Color.parseColor("#ededed"));
+
+            //保证Y轴从0开始，不然会上移一点
+            yLeftAxis.setAxisMinimum(0f);
+            yRrightAxis.setAxisMinimum(0f);
+
+            //设置x轴的数据
+            ArrayList<Float> xValues = new ArrayList<>();
+            ArrayList<String> xVaulesName = new ArrayList<>();
+            for (int i = 1; i <= month; i++) {
+                xVaulesName.add((i < 10 ? "0" : "") + i);
+                xValues.add((float) i);
+            }
+            xAxis.setLabelCount(xValues.size(),false);
+            MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
+            xAxis.setValueFormatter(xFormatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            //设置y轴的数据()
+            List<Entry> yValues1 = new ArrayList<>();
+            List<Entry> yValues2 = new ArrayList<>();
+            boolean drawY1 = false;
+            boolean drawY2 = false;
+            for (int i = 0;i < month; i++){
+                int firstMin = first.get(i).getCount();
+                int secondMin = second.get(i).getCount();
+                if(firstMin != 0){
+                    drawY1 = true;
+                }
+                if(secondMin != 0){
+                    drawY2 = true;
+                }
+                yValues1.add(new Entry(i,firstMin));
+                yValues2.add(new Entry(i,secondMin));
+            }
+
+            LineDataSet set1 = null;
+            LineDataSet set2 = null;
+            if (lineChart3.getData() != null &&
+                    lineChart3.getData().getDataSetCount() > 0) {
+                set1 = (LineDataSet) lineChart3.getData().getDataSetByIndex(0);
+                set2 = (LineDataSet) lineChart3.getData().getDataSetByIndex(1);
+
+                set1.setValues(yValues1);
+                set2.setValues(yValues2);
+                set1.setVisible(drawY1);
+                set2.setVisible(drawY2);
+                lineChart3.getData().notifyDataChanged();
+                lineChart3.notifyDataSetChanged();
+            } else {
+
+                // create a dataset and give it a type
+                set1 = new LineDataSet(yValues1,"DataSet");
+                set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+                //orange
+                set1.setColor(Color.parseColor("#ff9e5d"));
+                set1.setDrawCircles(true);
+                set1.setLineWidth(2f);
+                set1.setCircleRadius(4f);
+                set1.setCircleColor(Color.parseColor("#ff9e5d"));
+                set1.setFillAlpha(255);
+                set1.setDrawFilled(false);
+                set1.setVisible(drawY1);
+
+                set1.setFillColor(Color.parseColor("#c6c6c6"));
+                set1.setMode(LineDataSet.Mode.LINEAR);
+                set1.setDrawCircleHole(true);
+                set1.setCircleHoleRadius(2f);
+                set1.setCircleColorHole(Color.WHITE);
+//            set.setFillFormatter(new IFillFormatter() {
+//                @Override
+//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+//                    return lineChart.getAxisLeft().getAxisMaximum();
+//                }
+//            });
+
+                // create a dataset and give it a type
+                set2 = new LineDataSet(yValues2, "DataSet");
+                set2.setAxisDependency(YAxis.AxisDependency.LEFT);
+                set2.setColor(Color.parseColor("#61a4ff"));
+                set2.setDrawCircles(true);
+                set2.setCircleColor(Color.parseColor("#61a4ff"));
+                set2.setLineWidth(2f);
+                set2.setCircleRadius(4f);
+                set2.setFillAlpha(255);
+                set2.setDrawFilled(false);
+                set2.setFillColor(Color.parseColor("#3464dd"));
+                set2.setMode(LineDataSet.Mode.LINEAR);
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2f);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.setVisible(drawY2);
+
+                ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                dataSets.add(set1); // add the datasets
+                dataSets.add(set2);
+
+                // create a data object with the datasets
+                LineData data = new LineData(dataSets);
+                data.setDrawValues(false);
+
+                // set data
+                lineChart3.setData(data);
+            }
+
+            xAxis.setAxisMaximum(xValues.size());
+            xAxis.setAxisMinimum(0);
+            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            lineChart3.invalidate();
+        } else {
+            lineChart3.setData(null);
+            lineChart3.invalidate();
+        }
+
 
     }
 
@@ -1120,6 +1464,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         return year + "年" + month + "月";
     }
 
+    private int currentSure = 0;
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -1128,6 +1473,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 break;
             case R.id.tv_company_rank_date:
                 currentUpdateChart = UPDATE_FIRST_CHART;
+                isFromFirst = true;
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 String now = sdf.format(new Date());
@@ -1145,6 +1491,24 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 String now3 = sdf3.format(new Date());
                 customDatePicker.show(now3);
+                break;
+            case R.id.sure:
+                if(currentSure == 4){
+                    currentUpdateChart = UPDATE_FOUR_CHART;
+                    fourCheckPopwindow.dismiss();
+                } else if(currentSure == 5){
+                    currentUpdateChart = UPDATE_FIVE_CHART;
+                    fiveCheckPopwindow.dismiss();
+                }
+
+                break;
+            case R.id.tv_company_total_compare_choose:
+                currentSure = 4;
+                fourCheckPopwindow.showAtLocation(findViewById(R.id.scrollview), Gravity.BOTTOM,0,0);
+                break;
+            case R.id.tv_company_month_report_choose:
+                currentSure = 5;
+                fiveCheckPopwindow.showAtLocation(findViewById(R.id.scrollview), Gravity.BOTTOM,0,0);
                 break;
         }
     }
@@ -1164,5 +1528,197 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             return 0;
         }
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    private void initFourChartPopWindow(){
+        LinearLayout view = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_summary_check_box,null);
+        TextView tv_sure = (TextView) view.findViewById(R.id.sure);
+        tv_sure.setOnClickListener(this);
+        ListView fourListView = (ListView) view.findViewById(R.id.lv);
+        fourCheckboxAdapter = new MyFourCheckboxAdapter(4);
+        fourListView.setAdapter(fourCheckboxAdapter);
+
+        fourCheckPopwindow = new PopupWindow(this);
+        fourCheckPopwindow.setWidth(this.getWindowManager().getDefaultDisplay().getWidth());
+        fourCheckPopwindow.setHeight(this.getWindowManager().getDefaultDisplay().getHeight()/ 2);
+        fourCheckPopwindow.setContentView(view);
+        fourCheckPopwindow.setOutsideTouchable(false);
+        fourCheckPopwindow.setFocusable(true);
+        fourCheckPopwindow.setTouchable(true);
+        fourCheckPopwindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        fourCheckPopwindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                updateChart(selectFourDate);
+            }
+        });
+
+
+    }
+
+    private void initFiveChartPopWindow(){
+        LinearLayout view = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_summary_check_box,null);
+        TextView tv_sure = (TextView) view.findViewById(R.id.sure);
+        tv_sure.setOnClickListener(this);
+        ListView fiveListView = (ListView) view.findViewById(R.id.lv);
+        myFiveCheckboxAdapter = new MyFourCheckboxAdapter(5);
+        fiveListView.setAdapter(myFiveCheckboxAdapter);
+
+        fiveCheckPopwindow = new PopupWindow(this);
+        fiveCheckPopwindow.setWidth(this.getWindowManager().getDefaultDisplay().getWidth());
+        fiveCheckPopwindow.setHeight(this.getWindowManager().getDefaultDisplay().getHeight()/ 2);
+        fiveCheckPopwindow.setContentView(view);
+        fiveCheckPopwindow.setOutsideTouchable(false);
+        fiveCheckPopwindow.setFocusable(true);
+        fiveCheckPopwindow.setTouchable(true);
+        fiveCheckPopwindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        fiveCheckPopwindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                updateChart(selectFiveDate);
+            }
+        });
+    }
+
+    private int oldFourClickedId1 = -1;
+    private int oldFourClickedId2 = -1;
+    private int oldFiveClickedId1 = -1;
+    private int oldFiveClickedId2 = -1;
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        String checkStr = (String) buttonView.getTag();
+        if(checkStr.startsWith("Four")){
+            String index = checkStr.substring(4,checkStr.length());
+            int checkId = Integer.parseInt(index);
+
+            /**
+             * by zw
+             *
+             * 1.预制两个点击的ID，0、1
+             * 2.如果选择新的，就把1传给0，然后把新的传给1  保证被点击的按钮永远都是最新的
+             * 3.取消选择时，保证剩余的要么都是-1，要么剩下的一个是旧的
+             */
+            if(isChecked){
+                if(oldFourClickedId1 != -1 && oldFourClickedId2 != -1){
+                    oldFourClickedId1 = oldFourClickedId2;
+                    oldFourClickedId2 = checkId;
+                } else if(oldFourClickedId1 != -1){
+                    oldFourClickedId2 = checkId;
+                } else {
+                    oldFourClickedId1 = checkId;
+                }
+
+            }else {
+                if(checkId == oldFourClickedId1){
+                    oldFourClickedId1 = oldFourClickedId2;
+                    oldFourClickedId2 = -1;
+                } else if(checkId == oldFourClickedId2){
+                    oldFourClickedId2 = -1;
+                }
+
+            }
+            if(oldFourClickedId1 != -1 && reportDataBeans != null){
+                currentCompanyTotalCompareIdString1 = personRankList.get(oldFourClickedId1);
+            } else {
+                currentCompanyTotalCompareIdString1 = "";
+            }
+            if(oldFourClickedId2 != -1 && reportDataBeans != null){
+                currentCompanyTotalCompareIdString2 = personRankList.get(oldFourClickedId2);
+            } else {
+                currentCompanyTotalCompareIdString2 = "";
+            }
+            fourCheckboxAdapter.notifyDataSetChanged();
+        } else if(checkStr.startsWith("Five")){
+            String index = checkStr.substring(4,checkStr.length());
+            int checkId = Integer.parseInt(index);
+
+            if(isChecked){
+                if(oldFiveClickedId1 != -1 && oldFiveClickedId2 != -1){
+                    oldFiveClickedId1 = oldFiveClickedId2;
+                    oldFiveClickedId2 = checkId;
+                } else if(oldFiveClickedId1 != -1){
+                    oldFiveClickedId2 = checkId;
+                } else {
+                    oldFiveClickedId1 = checkId;
+                }
+
+            }else {
+                if(checkId == oldFiveClickedId1){
+                    oldFiveClickedId1 = oldFiveClickedId2;
+                    oldFiveClickedId2 = -1;
+                } else if(checkId == oldFiveClickedId2){
+                    oldFiveClickedId2 = -1;
+                }
+
+            }
+            if(oldFiveClickedId1 != -1 && reportDataBeans != null){
+                currentCompanyMonthIdString1 = personRankList.get(oldFiveClickedId1);
+            } else {
+                currentCompanyMonthIdString1 = "";
+            }
+            if(oldFiveClickedId2 != -1 && reportDataBeans != null){
+                currentCompanyMonthIdString2 = personRankList.get(oldFiveClickedId2);
+            } else {
+                currentCompanyMonthIdString2 = "";
+            }
+            myFiveCheckboxAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    private class MyFourCheckboxAdapter extends BaseAdapter {
+
+        private int type = 0;
+
+        public MyFourCheckboxAdapter(int type){
+            this.type = type;
+        }
+
+        @Override
+        public int getCount() {
+            return personRankList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                convertView = LayoutInflater.from(ConstructionSummaryActivity.this).inflate(R.layout.layout_main_checkbox_item,parent,false);
+            }
+
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.check_box);
+            if(type == 4){
+                checkBox.setTag("Four" + position);
+                if(oldFourClickedId1 == position || oldFourClickedId2 == position){
+                    checkBox.setChecked(true);
+                }else {
+                    checkBox.setChecked(false);
+                }
+            } else if(type == 5){
+                checkBox.setTag("Five" + position);
+                if(oldFiveClickedId1 == position || oldFiveClickedId2 == position){
+                    checkBox.setChecked(true);
+                }else {
+                    checkBox.setChecked(false);
+                }
+            }
+
+
+            checkBox.setOnCheckedChangeListener(ConstructionSummaryActivity.this);
+            TextView textView = (TextView) convertView.findViewById(R.id.tv);
+            textView.setText(personRankList.get(position));
+
+            return convertView;
+        }
     }
 }

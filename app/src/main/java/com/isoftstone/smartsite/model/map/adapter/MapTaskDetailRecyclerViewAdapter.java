@@ -73,6 +73,7 @@ public class MapTaskDetailRecyclerViewAdapter extends RecyclerView.Adapter<MapTa
         }
         if(userBeans.get(position).imageData != null){
             String url = HttpPost.URL + "/" + userBeans.get(position).imageData;
+            holder.civ.setTag(url);
             ImageUtils.loadImage(holder.civ,url);
         }
         holder.tv.setText(userBeans.get(position).name);
