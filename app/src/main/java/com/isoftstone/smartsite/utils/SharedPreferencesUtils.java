@@ -26,17 +26,17 @@ public class SharedPreferencesUtils {
         return isSave;
     }
 
-    public static void saveBaseWidth(Context context, int w) {
+    public static void saveBaseWidth(Context context, float w) {
         SharedPreferences settings = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(BASE_WIDTH, w);
+        editor.putFloat(BASE_WIDTH, w);
         editor.commit();
     }
 
 
-    public static int getBaseWidth(Context context) {
+    public static Float getBaseWidth(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-        return settings.getInt(BASE_WIDTH, 0);
+        return settings.getFloat(BASE_WIDTH, 0);
     }
 
 }

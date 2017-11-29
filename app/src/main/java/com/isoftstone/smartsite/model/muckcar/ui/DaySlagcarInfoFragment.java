@@ -87,6 +87,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     };
     private Spinner address_baojinglv;
     private LineChart lineChart_baojinglv;
+    private TextView liuliang;
+    private TextView liuliangduibi;
+    private TextView baojinglv;
 
     @Override
     public void onDestroy() {
@@ -98,6 +101,19 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        liuliang = (TextView) rootView.findViewById(R.id.liuliang);
+        liuliangduibi = (TextView) rootView.findViewById(R.id.liuliangduibi);
+        baojinglv = (TextView) rootView.findViewById(R.id.baojinglv);
+        if (mDayOrMonthFlag == 1) {
+            liuliang.setText("路段渣土车月度流量排名");
+            liuliangduibi.setText("路段渣土车月度流量对比");
+            baojinglv.setText("路段报警率月度对比");
+        } else if (mDayOrMonthFlag == 0) {
+            liuliang.setText("路段渣土日度流量排名");
+            liuliangduibi.setText("路段渣土车日度流量对比");
+            baojinglv.setText("路段报警率日度对比");
+        }
+
         list_trextviews = (LinearLayout) rootView.findViewById(R.id.list_textview);//动态tv数据
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
         layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
@@ -161,10 +177,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         });
         //baojinglv_address = (TextView) rootView.findViewById(R.id.load_name_3);
         //baojinglv_address.setOnClickListener(new View.OnClickListener() {
-           // @Override
-            //public void onClick(View v) {
+        // @Override
+        //public void onClick(View v) {
 
-           // }
+        // }
         //});
 
         liuliangduibi_linechart = (LineChart) layout_1.findViewById(R.id.chart_liuliangduibi);
@@ -235,7 +251,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 } else if (mDayOrMonthFlag == 0) {
                     date_louduanbaojinglv.setText(time.substring(0, 10));
                 }
-                ((SlagcarInfoActivity)getActivity()).getBaojinglvData(mDayOrMonthFlag);
+                ((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
             }
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker3.setIsLoop(false); // 不允许循环滚动
@@ -256,9 +272,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
-        SharedPreferencesUtils.saveBaseWidth(mContext,0);
+        SharedPreferencesUtils.saveBaseWidth(mContext, 0.000f);
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
-        handler.sendEmptyMessage(TIME_INIT_DOUBLE_LINE_CHART);
         //加载流量对比地址选择
         mCarInfoList = carInfoList;
         archName = null;
@@ -277,11 +292,11 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         //获取报警率地区
 
         if (mCarInfoList != null) {
-            if(mCarInfoList.size() >= 2){
+            if (mCarInfoList.size() >= 2) {
                 baojinglv_addressid = new long[2];
                 baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
                 baojinglv_addressid[1] = mCarInfoList.get(1).getArch().getId();
-            }else {
+            } else {
                 baojinglv_addressid = new long[1];
                 baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
             }
@@ -289,8 +304,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         ((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
     }
 
-    public  long[]  getBaojinglvAddressId(){
-        return  baojinglv_addressid;
+    public long[] getBaojinglvAddressId() {
+        return baojinglv_addressid;
     }
 
     public String getLiuliangpaimingTime() {
@@ -464,10 +479,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     public void setBaojinglv(ArchMonthFlowBean archMonthFlowBean) {
 
         int max = 0;
-        if(archMonthFlowBean == null ){
+        if (archMonthFlowBean == null) {
             return;
         }
-        if(archMonthFlowBean.getMcFlows() == null){
+        if (archMonthFlowBean.getMcFlows() == null) {
             return;
         }
         baojinglv_linechart.setDrawGridBackground(false);
@@ -486,8 +501,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         // if disabled, scaling can be done on x- and y-axis separately
         baojinglv_linechart.setPinchZoom(true);
-        baojinglv_linechart.setExtraOffsets(10,0,10,20);
-
+        baojinglv_linechart.setExtraOffsets(10, 0, 10, 20);
 
 
         XAxis xAxis = baojinglv_linechart.getXAxis();
@@ -530,10 +544,10 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
 
-        if(archMonthFlowBean.getMcFlows().get(0).size() >= 1) {
+        if (archMonthFlowBean.getMcFlows().get(0).size() >= 1) {
             ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(0);
-                ArrayList<Entry> values = new ArrayList<Entry>();
-            for (int i = 0; i < list.size() ; i ++) {
+            ArrayList<Entry> values = new ArrayList<Entry>();
+            for (int i = 0; i < list.size(); i++) {
                 McFlowBean mcFlowBean = list.get(i);
                 if (mDayOrMonthFlag == 1) {
                     LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
@@ -555,55 +569,55 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 }
             }
 
-                LineDataSet set1 = new LineDataSet(values, "DataSet 1");
-                set1.setDrawIcons(false);
-                // set the line to be drawn like this "- - - - - -"
-                //set1.enableDashedLine(10f, 10f, 0f);
-                set1.setColor(Color.parseColor("#ff9e5d"));
-                set1.setCircleColor(Color.parseColor("#ff9e5d"));
-                set1.setLineWidth(1f);
-                set1.setCircleRadius(4f);//设置焦点圆心的大小
-                set1.setDrawCircleHole(true);
-                set1.setCircleHoleRadius(2);
-                set1.setCircleColorHole(Color.WHITE);
-                set1.setValueTextSize(9f);
-                set1.setDrawFilled(false);
-                set1.setFormLineWidth(1f);
-                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-                set1.setFormSize(15.f);
-                set1.setDrawFilled(false);
-                set1.setHighlightEnabled(false);
-                set1.setDrawValues(false);
+            LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+            set1.setDrawIcons(false);
+            // set the line to be drawn like this "- - - - - -"
+            //set1.enableDashedLine(10f, 10f, 0f);
+            set1.setColor(Color.parseColor("#ff9e5d"));
+            set1.setCircleColor(Color.parseColor("#ff9e5d"));
+            set1.setLineWidth(1f);
+            set1.setCircleRadius(4f);//设置焦点圆心的大小
+            set1.setDrawCircleHole(true);
+            set1.setCircleHoleRadius(2);
+            set1.setCircleColorHole(Color.WHITE);
+            set1.setValueTextSize(9f);
+            set1.setDrawFilled(false);
+            set1.setFormLineWidth(1f);
+            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+            set1.setFormSize(15.f);
+            set1.setDrawFilled(false);
+            set1.setHighlightEnabled(false);
+            set1.setDrawValues(false);
 
-                if (Utils.getSDKInt() >= 18) {
-                    // fill drawable only supported on api level 18 and above
-                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                    //set1.setFillDrawable(drawable);
-                } else {
-                    set1.setFillColor(Color.BLACK);
-                }
-                dataSets.add(set1); // add the datasets
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                //set1.setFillDrawable(drawable);
+            } else {
+                set1.setFillColor(Color.BLACK);
+            }
+            dataSets.add(set1); // add the datasets
         }
 
 
-        if(archMonthFlowBean.getMcFlows().get(0).size() >= 2) {
+        if (archMonthFlowBean.getMcFlows().get(0).size() >= 2) {
             ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(1);
-             {
+            {
                 ArrayList<Entry> values_2 = new ArrayList<Entry>();
-                for (int i = 0; i < list.size() ; i ++) {
-                        McFlowBean mcFlowBean = list.get(i);
-                        if (mDayOrMonthFlag == 1) {
-                            LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
-                            int day = date.getDayOfMonth();
-                            String value = mcFlowBean.getFlow() + "";
-                            Entry entry = new Entry(day, Float.parseFloat(value));
-                            values_2.add(entry);
-                        } else if (mDayOrMonthFlag == 0) {
-                            int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
-                            String value = mcFlowBean.getFlow() + "";
-                            Entry entry = new Entry(index, Float.parseFloat(value));
-                            values_2.add(entry);
-                        }
+                for (int i = 0; i < list.size(); i++) {
+                    McFlowBean mcFlowBean = list.get(i);
+                    if (mDayOrMonthFlag == 1) {
+                        LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
+                        int day = date.getDayOfMonth();
+                        String value = mcFlowBean.getFlow() + "";
+                        Entry entry = new Entry(day, Float.parseFloat(value));
+                        values_2.add(entry);
+                    } else if (mDayOrMonthFlag == 0) {
+                        int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
+                        String value = mcFlowBean.getFlow() + "";
+                        Entry entry = new Entry(index, Float.parseFloat(value));
+                        values_2.add(entry);
+                    }
                 }
 
 

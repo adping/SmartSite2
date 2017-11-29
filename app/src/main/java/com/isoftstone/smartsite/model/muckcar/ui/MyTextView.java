@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.muckcar.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,14 +42,14 @@ public class MyTextView extends LinearLayout {
 
     private void initData() {
         int total = getTotalWidth() - 90;
-        int base_width = SharedPreferencesUtils.getBaseWidth(context);
+        float base_width = SharedPreferencesUtils.getBaseWidth(context) + 0.000f;
         int total_num = white_num + black_num;
-        if (base_width == 0 && total_num != 0) {
-            base_width = total / total_num;
+        if (base_width == 0.000f && total_num != 0) {
+            base_width = 10*total / total_num;
             SharedPreferencesUtils.saveBaseWidth(context, base_width);
         }
-        int black_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width * black_num + 10, getResources().getDisplayMetrics());
-        int white_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base_width * white_num + 10, getResources().getDisplayMetrics());
+        int black_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (base_width * black_num)/10 + 10, getResources().getDisplayMetrics());
+        int white_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (base_width * white_num)/10 + 10, getResources().getDisplayMetrics());
         LinearLayout.LayoutParams white_layoutParams = new LinearLayout.LayoutParams(white_width, LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams black_layoutParams = new LinearLayout.LayoutParams(black_width, LayoutParams.WRAP_CONTENT);
         tv_black_list.setLayoutParams(black_layoutParams);
