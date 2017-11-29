@@ -29,6 +29,26 @@
             android:layout_centerVertical="true"
             android:src="@drawable/droparrow" />
 
+        <TextView
+            android:id="@+id/baojinglv_duibi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/baojinglv_duibi_arrow"
+            android:layout_marginRight="7dp"
+            android:text="光谷六路"
+            android:textColor="#222222"
+            android:textSize="12sp"></TextView>
+
+        <ImageView
+            android:id="@+id/baojinglv_duibi_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/droparrow" />
+
 
     </RelativeLayout>
 
@@ -51,6 +71,7 @@
             android:src="@drawable/blueround" />
 
         <TextView
+            android:id="@+id/choice_load_one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -67,6 +88,7 @@
             android:src="@drawable/weiwanchengdianwei" />
 
         <TextView
+            android:id="@+id/choice_load_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
