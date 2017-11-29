@@ -339,4 +339,8 @@ public class NetworkUtils {
         return null;
     }
 
+    public static boolean isAvailable() {
+        NetworkInfo info = getActiveNetworkInfo(App.getAppContext());
+        return info != null && info.isAvailable();
+    }
 }

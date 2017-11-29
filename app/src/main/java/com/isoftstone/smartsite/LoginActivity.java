@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.request.target.ImageViewTargetFactory;
+import com.isoftstone.smartsite.common.NetworkStateService;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
 import com.isoftstone.smartsite.http.CompanyBean;
 import com.isoftstone.smartsite.http.DictionaryBean;
@@ -285,6 +286,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 					closeLoginingDlg();// 关闭对话框
 					//if(isLogin_1 && isLogin_2){
 					if(isLogin_1){
+						NetworkStateService();
 						Intent intent = new Intent();
 						intent.setClass(LoginActivity.this,MainActivity.class);
 						LoginActivity.this.startActivity(intent);
@@ -414,4 +416,11 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	public void onKeepaliveFailed() {
 		//Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
 	}
+
+	//启动网络检测服务
+	public void NetworkStateService(){
+		Intent netWorkService = new Intent(this, NetworkStateService.class);
+		startService(netWorkService);
+	}
+
 }

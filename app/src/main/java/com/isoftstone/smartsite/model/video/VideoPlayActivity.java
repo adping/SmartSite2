@@ -87,10 +87,12 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        if(!HttpPost.mVideoIsLogin){
+
+        /**if(!HttpPost.mVideoIsLogin){
             Toast.makeText(this,"观看视频需要联网，请确认网络是否连接成功",Toast.LENGTH_LONG).show();
             finish();
-        }
+        }*/
+
         setContentView(R.layout.activity_video_play);
         mContext = this;
         //SurfaceView用于渲染

@@ -276,6 +276,8 @@
 
         <service android:name=".common.NewKeepAliveService"/>
 
+        <service android:name=".common.NetworkStateService"/>
+
         <activity android:name=".model.system.ui.AboutUsActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
