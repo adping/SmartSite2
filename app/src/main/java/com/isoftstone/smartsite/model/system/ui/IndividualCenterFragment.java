@@ -128,9 +128,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         new Thread(){
             @Override
             public void run() {
-                UserBean userBean = mHttpPost.getLoginUser();
-                MyThread myThread = new MyThread(userBean);
-                mHandler.post(myThread);
+                try {
+                    UserBean userBean = mHttpPost.getLoginUser();
+                    MyThread myThread = new MyThread(userBean);
+                    mHandler.post(myThread);
+                } catch (Exception e) {
+                    Log.i(TAG, "throws a exception: "  + e.getMessage());
+                    e.printStackTrace();
+                }
+
             }
         }.start();
     }
@@ -399,15 +405,20 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                 new Thread(){
                     @Override
                     public void run() {
-                        if (null != mUploadHeadBitmap) {
-                            toUploadHeadFile(mUploadHeadBitmap);
-                        }
+                        try {
+                            if (null != mUploadHeadBitmap) {
+                                toUploadHeadFile(mUploadHeadBitmap);
+                            }
 
-                        UserBean userBean = mHttpPost.getLoginUser();
-                        if (userBean != null) {
-                            updateUserInfo(getUpdateUserBean(userBean.getLoginUser().getImageData()));
-                        } else {
-                            updateUserInfo(getUpdateUserBean(null));
+                            UserBean userBean = mHttpPost.getLoginUser();
+                            if (userBean != null) {
+                                updateUserInfo(getUpdateUserBean(userBean.getLoginUser().getImageData()));
+                            } else {
+                                updateUserInfo(getUpdateUserBean(null));
+                            }
+                        } catch (Exception e) {
+                            Log.i(TAG, "throws a exception: "  + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 }.start();

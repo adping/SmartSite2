@@ -34,6 +34,7 @@ import com.isoftstone.smartsite.utils.Utils;
  */
 
 public class SystemFragment extends BaseFragment{
+    private static final String TAG = "zzz_SystemFragment";
 
     private LinearLayout mLinearLayout;//用户头像父节点LL
     private ImageView mHeadImageView;//用户头像IV
@@ -154,9 +155,14 @@ public class SystemFragment extends BaseFragment{
         new Thread(){
             @Override
             public void run() {
-                UserBean userBean = mHttpPost.getLoginUser();
-                MyThread myThread = new MyThread(userBean);
-                mHandler.post(myThread);
+                try {
+                    UserBean userBean = mHttpPost.getLoginUser();
+                    MyThread myThread = new MyThread(userBean);
+                    mHandler.post(myThread);
+                } catch (Exception e) {
+                    Log.i(TAG, "throws a exception: "  + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
@@ -222,7 +228,12 @@ public class SystemFragment extends BaseFragment{
         }
         @Override
         public void run() {
-            initUserInfo(userBean);
+            try {
+                initUserInfo(userBean);
+            } catch (Exception e) {
+                Log.i(TAG, "throws a exception: "  + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 }
