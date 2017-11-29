@@ -110,10 +110,9 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:paddingLeft="16dp"
-                android:background="@color/white"
-                android:src="@color/app_background" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/shape_listview_year_bg" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -129,16 +128,9 @@
 
                 <EditText
                     android:id="@+id/edit_company"
-                    android:focusable="false"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:focusable="false" />
             </RelativeLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:paddingLeft="16dp"
-                android:background="@color/white"
-                android:src="@color/app_background" />
 
             <!--<RelativeLayout-->
             <!--android:layout_width="match_parent"-->
@@ -174,6 +166,12 @@
 
             <!--</RelativeLayout>-->
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/shape_listview_year_bg" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
@@ -208,73 +206,78 @@
             </RelativeLayout>
 
             <!-- 建设单位 默认不显示-->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/linear_company"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/lab_build_company"
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_build_company" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-                <EditText
-                    android:id="@+id/edit_build_company"
-                    style="@style/add_report_edittext" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/lab_build_company"
+                        style="@style/add_report_lab"
+                        android:text="@string/inspect_report_build_company" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:paddingLeft="16dp"
-                android:background="@color/white"
-                android:src="@color/app_background" />
+                    <EditText
+                        android:id="@+id/edit_build_company"
+                        style="@style/add_report_edittext" />
+                </RelativeLayout>
 
-            <!-- 施工单位，默认不显示-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:background="@color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/shape_listview_year_bg" />
 
-                <TextView
-                    android:id="@+id/lab_cons_company"
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_construction_company" />
+                <!-- 施工单位，默认不显示-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:background="@color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-                <EditText
-                    android:id="@+id/edit_cons_company"
-                    style="@style/add_report_edittext" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/lab_cons_company"
+                        style="@style/add_report_lab"
+                        android:text="@string/inspect_report_construction_company" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:paddingLeft="16dp"
-                android:background="@color/white"
-                android:src="@color/app_background" />>
+                    <EditText
+                        android:id="@+id/edit_cons_company"
+                        style="@style/add_report_edittext" />
+                </RelativeLayout>
 
-            <!-- 监理单位，默认不显示-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:background="@color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/shape_listview_year_bg" />
 
-                <TextView
-                    android:id="@+id/lab_super_company"
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_supervision_company" />
+                <!-- 监理单位，默认不显示-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:background="@color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-                <EditText
-                    android:id="@+id/edit_super_company"
-                    style="@style/add_report_edittext" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/lab_super_company"
+                        style="@style/add_report_lab"
+                        android:text="@string/inspect_report_supervision_company" />
+
+                    <EditText
+                        android:id="@+id/edit_super_company"
+                        style="@style/add_report_edittext" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <fragment
                 android:id="@+id/frag_reply_inspect_report"

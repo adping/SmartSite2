@@ -249,16 +249,24 @@ public class RevisitFragment extends BaseFragment {
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(developmentCompany)
-                            || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
+                    if (TextUtils.isEmpty(address)  || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+                    if (mAddReportActivity.isShowCompany && (TextUtils.isEmpty(constructionCompany) ||
+                            TextUtils.isEmpty(supervisionCompany) || TextUtils.isEmpty(developmentCompany))) {
+                        Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     reportData.setAddress(address);
                     reportData.setCompany(company);
-                    reportData.setDevelopmentCompany(developmentCompany);
-                    reportData.setConstructionCompany(constructionCompany);
-                    reportData.setSupervisionCompany(supervisionCompany);
+                    if(mAddReportActivity.isShowCompany) {
+                        reportData.setDevelopmentCompany(developmentCompany);
+                        reportData.setConstructionCompany(constructionCompany);
+                        reportData.setSupervisionCompany(supervisionCompany);
+                    }
                     reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                     reportData.setCategory(mAddReportActivity.mTypes);
                     //
