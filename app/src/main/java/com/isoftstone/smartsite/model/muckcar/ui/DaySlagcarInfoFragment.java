@@ -36,7 +36,6 @@ import com.isoftstone.smartsite.http.muckcar.McFlowBean;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.isoftstone.smartsite.widgets.MyPopuWindow;
 
@@ -115,7 +114,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         public void onDataCheck(String left, String right, int first_choice, int second_choice) {
             choice_load_one.setText(left);
             choice_load_two.setText(right);
-            ToastUtils.showShort("ok");
+           // ToastUtils.showShort("ok");
             // if (mCarInfoList != null) {
             //if (mCarInfoList.size() >= 2) {
             // baojinglv_addressid = new long[2];
@@ -148,8 +147,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             liuliangduibi.setText("路段渣土车月度流量对比");
             baojinglv.setText("渣土车流量路段对比");
         } else if (mDayOrMonthFlag == 0) {
-            liuliang.setText("路段渣土日度流量排名");
-            liuliangduibi.setText("路段渣土车日度流量对比");
+            liuliang.setText("路段渣土日流量排名");
+            liuliangduibi.setText("路段渣土车日流量对比");
             baojinglv.setText("渣土车流量路段对比");
         }
 
@@ -317,7 +316,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private View.OnClickListener baojinglvduiClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ToastUtils.showShort("baojinglv");
             if (myPopuWindow != null) {
                 myPopuWindow.showAtLocation(rootView.findViewById(R.id.scrollview), Gravity.CENTER, 0, 0);
             }

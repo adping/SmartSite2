@@ -85,7 +85,7 @@ public class MyPopuWindow extends PopupWindow {
                     //onDataCheckedListener.onDataCheck(data.get(first), data.get(second), first, second);
                 }
             } else {
-                ToastUtils.showShort("只能选择两个数据哦");
+                //ToastUtils.showShort("只能选择两个数据哦");
             }
             choice_data.clear();
             dismiss();
