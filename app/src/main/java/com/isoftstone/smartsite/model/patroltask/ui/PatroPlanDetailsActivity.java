@@ -2,36 +2,28 @@ package com.isoftstone.smartsite.model.patroltask.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.pageable.PageableBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
-import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
-import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
-import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
-import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
-import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
-import com.isoftstone.smartsite.utils.LogUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
-import com.isoftstone.smartsite.widgets.StartworkDialog;
-
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
+import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
+import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
+import com.isoftstone.smartsite.widgets.StartworkDialog;
 
 import java.util.ArrayList;
 
@@ -136,6 +128,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.btn_icon:
                 Intent intent=new Intent(PatroPlanDetailsActivity.this,AddInspectPlan.class);
+                intent.putExtra("taskType",1);
                 startActivity(intent);
             case R.id.btn_back:
                 finish();
