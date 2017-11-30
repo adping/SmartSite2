@@ -131,8 +131,6 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     spinner_person_rank.setAdapter(personRankAdapter);
                     currentUpdateChart = UPDATE_SECOND_CHART;
                     spinner_person_rank.setSelection(0);
-
-
                     break;
                 case HANDLER_FIRST_CHART_FAIL:
                     ToastUtils.showShort("没有获取到巡查单位任务排名数据！");
@@ -180,7 +178,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_four_view1.setVisibility(View.VISIBLE);
                             fourView1.setVisibility(View.VISIBLE);
-                            tv_four_view1.setText(monthTasks.getList().get(1).get(0).getDepartmentId());
+                            int departmentId = Integer.parseInt(monthTasks.getList().get(1).get(0).getDepartmentId());
+                            tv_four_view1.setText(httpPost.getCompanyNameByid(departmentId));
                         }
 
                         if(monthTasks.getList().get(0).size() == 0){
@@ -189,7 +188,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_four_view2.setVisibility(View.VISIBLE);
                             fourView2.setVisibility(View.VISIBLE);
-                            tv_four_view2.setText(monthTasks.getList().get(0).get(0).getDepartmentId());
+                            int departmentId = Integer.parseInt(monthTasks.getList().get(0).get(0).getDepartmentId());
+                            tv_four_view2.setText(httpPost.getCompanyNameByid(departmentId));
                         }
                     }
 
@@ -219,7 +219,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_five_view1.setVisibility(View.VISIBLE);
                             fiveView1.setVisibility(View.VISIBLE);
-                            tv_five_view1.setText(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
+                            int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
+                            tv_five_view1.setText(httpPost.getCompanyNameByid(departmentId));
                         }
 
                         if(fiveMonthTasks.getDate().get(0).size() == 0){
@@ -228,12 +229,14 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_five_view2.setVisibility(View.VISIBLE);
                             fiveView2.setVisibility(View.VISIBLE);
-                            tv_five_view2.setText(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
+                            int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
+                            tv_five_view2.setText(httpPost.getCompanyNameByid(departmentId));
                         }
                     }
 
                     if(isFromFirst){
                         currentUpdateChart = UPDATE_FIRST_CHART;
+                        isFromFirst = false;
                     }
                     loadingDailog.dismiss();
                     break;
@@ -256,6 +259,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private String currentCompanyMonthIdString2 = "";
 
     private List<String> personRankList;
+    private List<Integer> personRankIdList;
+
     private BarChart senondBarChart;
     private TextView tv_company_total;
     private PersonRankArrayAdapter<String> companyTotalAdapter;
@@ -279,6 +284,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
     private TextView tv_five_view_choose;
     private MyFourCheckboxAdapter myFiveCheckboxAdapter;
     private PopupWindow fiveCheckPopwindow;
+    private TextView tv_company_month_report;
 
     @Override
     protected int getLayoutRes() {
@@ -318,6 +324,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         tv_person_rank.setOnClickListener(this);
         spinner_person_rank = (Spinner) findViewById(R.id.spinner_person_rank);
         personRankList = new ArrayList<>();
+        personRankIdList = new ArrayList<>();
         personRankList.add("选择单位");
         personRankAdapter = new PersonRankArrayAdapter(this,R.layout.layout_summary_spinner, personRankList);
         personRankAdapter.setDropDownViewResource(R.layout.layout_summary_spinner_item);
@@ -331,7 +338,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 }
 
                 currentUpdateChart = UPDATE_SECOND_CHART;
-                currentPersonRankIdString = personRankList.get(position);
+                currentPersonRankIdString = personRankIdList.get(position) + "";
                 updateChart(selectTwoDate);
             }
 
@@ -361,7 +368,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 }
 
                 currentUpdateChart = UPDATE_THIRD_CHART;
-                currentCompanyTotalIdString = personRankList.get(position);
+                currentCompanyTotalIdString = personRankIdList.get(position) + "";
                 updateChart(selectThirdDate);
             }
 
@@ -386,7 +393,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
         initFourChartPopWindow();
 
         //five
-        TextView tv_company_month_report = (TextView) findViewById(R.id.tv_company_month_report);
+        tv_company_month_report = (TextView) findViewById(R.id.tv_company_month_report);
         tv_company_month_report.setText(parseTimeOnlyYearAndMonth(selectDate));
         tv_company_month_report.setOnClickListener(this);
 
@@ -567,6 +574,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             loadFourChartDate(year,month);
         } else if(currentUpdateChart == UPDATE_FIVE_CHART){
             selectFiveDate = time;
+            tv_company_month_report.setText(strTime);
             loadFiveChartDate(year,month);
         }
     }
@@ -582,7 +590,10 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     currentPersonRankIdString = reportDataBeans.get(0).getDepartmentId();
                     personRankList = new ArrayList<>();
                     for (int i = 0; i < reportDataBeans.size(); i++) {
-                        personRankList.add(reportDataBeans.get(i).getDepartmentId());
+                        int departmentId = Integer.parseInt(reportDataBeans.get(i).getDepartmentId());
+                        String companyName = httpPost.getCompanyNameByid(departmentId);
+                        personRankList.add(companyName);
+                        personRankIdList.add(departmentId);
                     }
 
                     //更新第三个图表
@@ -741,7 +752,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             ArrayList<String> xVaulesName = new ArrayList<>();
             for (int i = 0; i < dataCount; i++) {
                 xValues.add((float) i);
-                xVaulesName.add(reportDataBeans.get(i).getDepartmentId());
+                xVaulesName.add(personRankList.get(i));
             }
             xAxis.setLabelCount(xValues.size() - 1,false);
             MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
@@ -856,6 +867,12 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             for (int i = 0; i < dataCount; i++) {
                 if(userTaskCountBeans.get(i).getUser() != null){
                     xVaulesName.add(userTaskCountBeans.get(i).getUser().getName());
+                    xValues.add((float) i);
+                }
+            }
+            if(dataCount < 5){
+                for (int i = 0; i < 5 - dataCount; i++) {
+                    xVaulesName.add("");
                     xValues.add((float) i);
                 }
             }
@@ -1117,7 +1134,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         maxCount = temp;
                     }
 
-                    int day = replaceTime(bean.getTime());
+                    int day = replaceTime(bean.getTime()) - 1;
                     first.remove(day);
                     first.add(day,bean);
                 }
@@ -1132,7 +1149,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         maxCount = temp;
                     }
 
-                    int day = replaceTime(bean.getTime());
+                    int day = replaceTime(bean.getTime()) - 1;
                     second.remove(day);
                     second.add(day,bean);
                 }
@@ -1299,7 +1316,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         maxCount = temp;
                     }
 
-                    int day = replaceTime(bean.getTime());
+                    int day = replaceTime(bean.getTime()) - 1;
                     first.remove(day);
                     first.add(day,bean);
                 }
@@ -1314,7 +1331,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         maxCount = temp;
                     }
 
-                    int day = replaceTime(bean.getTime());
+                    int day = replaceTime(bean.getTime()) - 1;
                     second.remove(day);
                     second.add(day,bean);
                 }
@@ -1502,6 +1519,18 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 }
 
                 break;
+            case R.id.tv_company_total_compare:
+                currentUpdateChart = UPDATE_FOUR_CHART;
+                SimpleDateFormat sdf4 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now4 = sdf4.format(new Date());
+                customDatePicker.show(now4);
+                break;
+            case R.id.tv_company_month_report:
+                currentUpdateChart = UPDATE_FIVE_CHART;
+                SimpleDateFormat sdf5 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now5 = sdf5.format(new Date());
+                customDatePicker.show(now5);
+                break;
             case R.id.tv_company_total_compare_choose:
                 currentSure = 4;
                 fourCheckPopwindow.showAtLocation(findViewById(R.id.scrollview), Gravity.BOTTOM,0,0);
@@ -1618,12 +1647,12 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
             }
             if(oldFourClickedId1 != -1 && reportDataBeans != null){
-                currentCompanyTotalCompareIdString1 = personRankList.get(oldFourClickedId1);
+                currentCompanyTotalCompareIdString1 = personRankIdList.get(oldFourClickedId1) + "";
             } else {
                 currentCompanyTotalCompareIdString1 = "";
             }
             if(oldFourClickedId2 != -1 && reportDataBeans != null){
-                currentCompanyTotalCompareIdString2 = personRankList.get(oldFourClickedId2);
+                currentCompanyTotalCompareIdString2 = personRankIdList.get(oldFourClickedId2) + "";
             } else {
                 currentCompanyTotalCompareIdString2 = "";
             }
@@ -1652,12 +1681,12 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
             }
             if(oldFiveClickedId1 != -1 && reportDataBeans != null){
-                currentCompanyMonthIdString1 = personRankList.get(oldFiveClickedId1);
+                currentCompanyMonthIdString1 = personRankIdList.get(oldFiveClickedId1) + "";
             } else {
                 currentCompanyMonthIdString1 = "";
             }
             if(oldFiveClickedId2 != -1 && reportDataBeans != null){
-                currentCompanyMonthIdString2 = personRankList.get(oldFiveClickedId2);
+                currentCompanyMonthIdString2 = personRankIdList.get(oldFiveClickedId2) + "";
             } else {
                 currentCompanyMonthIdString2 = "";
             }
