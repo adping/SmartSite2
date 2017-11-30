@@ -44,7 +44,6 @@
             android:id="@+id/baojinglv_duibi_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/droparrow" />

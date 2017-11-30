@@ -1,12 +1,14 @@
 package com.isoftstone.smartsite.widgets;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -32,12 +34,12 @@ public class MyPopuWindow extends PopupWindow {
     private OnDataCheckedListener onDataCheckedListener;
     private ArrayList<Integer> choice_data = new ArrayList<Integer>();
 
-    public MyPopuWindow(Context context, String title, ArrayList<String> data, OnDataCheckedListener onDataCheckedListener) {
+    public MyPopuWindow(Context context, String title, ArrayList<String> data) {
         super(context);
         this.context = context;
         this.title = title;
         this.data = data;
-        this.onDataCheckedListener = onDataCheckedListener;
+        //this.onDataCheckedListener = onDataCheckedListener;
         initView();
     }
 
@@ -46,26 +48,30 @@ public class MyPopuWindow extends PopupWindow {
         tv_title = (TextView) rootView.findViewById(R.id.title);
         lv = (ListView) rootView.findViewById(R.id.lv);
         tv_ok = (TextView) rootView.findViewById(R.id.tv_ok);
+        this.setContentView(rootView);
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
+        this.update();
         tv_title.setText(title);
         tv_ok.setOnClickListener(clickListener);
         lv.setAdapter(new MyBaseAdapter(context, data));
-        lv.setOnItemClickListener(itemClickListener);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("nie", "itemClickListener");
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                if (checkBox.isChecked()) {
+                    choice_data.add(position);
+                    Log.e("nie", "if  position:" + position);
+                } else {
+                    choice_data.remove(position);
+                    Log.e("nie", "else position:" + position);
+                }
+            }
+        });
 
     }
 
-    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-            if (checkBox.isChecked()) {
-                checkBox.setChecked(false);
-                choice_data.remove(position);
-            } else {
-                checkBox.setChecked(true);
-                choice_data.add(position);
-            }
-        }
-    };
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -74,14 +80,15 @@ public class MyPopuWindow extends PopupWindow {
                 int first = choice_data.get(0);
                 int second = choice_data.get(1);
                 if (first > second) {
-                    onDataCheckedListener.onDataCheck(data.get(second), data.get(first), second, first);
+                    //onDataCheckedListener.onDataCheck(data.get(second), data.get(first), second, first);
                 } else {
-                    onDataCheckedListener.onDataCheck(data.get(first), data.get(second), first, second);
+                    //onDataCheckedListener.onDataCheck(data.get(first), data.get(second), first, second);
                 }
             } else {
                 ToastUtils.showShort("只能选择两个数据哦");
             }
-
+            choice_data.clear();
+            dismiss();
         }
     };
 

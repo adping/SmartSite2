@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,7 +36,9 @@ import com.isoftstone.smartsite.http.muckcar.McFlowBean;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
+import com.isoftstone.smartsite.widgets.MyPopuWindow;
 
 import org.joda.time.LocalDate;
 import org.w3c.dom.Text;
@@ -90,6 +95,11 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private TextView liuliang;
     private TextView liuliangduibi;
     private TextView baojinglv;
+    private TextView baojinlv_duibi;
+    private TextView choice_load_one;
+    private TextView choice_load_two;
+    private ImageView liuliangduibi_arrow;
+    private MyPopuWindow myPopuWindow;
 
     @Override
     public void onDestroy() {
@@ -99,26 +109,55 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         }
     }
 
+    private ArrayList<String> choiceLists;
+    private MyPopuWindow.OnDataCheckedListener dataCheckedListener = new MyPopuWindow.OnDataCheckedListener() {
+        @Override
+        public void onDataCheck(String left, String right, int first_choice, int second_choice) {
+            choice_load_one.setText(left);
+            choice_load_two.setText(right);
+            ToastUtils.showShort("ok");
+            // if (mCarInfoList != null) {
+            //if (mCarInfoList.size() >= 2) {
+            // baojinglv_addressid = new long[2];
+            // baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
+            // baojinglv_addressid[1] = mCarInfoList.get(1).getArch().getId();
+            // } else {
+            // baojinglv_addressid = new long[1];
+            // baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
+            // }
+            // }
+            //((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
+        }
+    };
+
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        choiceLists = new ArrayList<String>();
+        choiceLists.add("光谷二路");
+        choiceLists.add("光谷四路");
+        choiceLists.add("光谷一路");
+        choiceLists.add("光谷五路");
+        choiceLists.add("光谷三路");
+        choiceLists.add("中心城");
+        myPopuWindow = new MyPopuWindow(getActivity(), "请选择两个：", choiceLists);
         liuliang = (TextView) rootView.findViewById(R.id.liuliang);
         liuliangduibi = (TextView) rootView.findViewById(R.id.liuliangduibi);
         baojinglv = (TextView) rootView.findViewById(R.id.baojinglv);
         if (mDayOrMonthFlag == 1) {
             liuliang.setText("路段渣土车月度流量排名");
             liuliangduibi.setText("路段渣土车月度流量对比");
-            baojinglv.setText("路段报警率月度对比");
+            baojinglv.setText("渣土车流量路段对比");
         } else if (mDayOrMonthFlag == 0) {
             liuliang.setText("路段渣土日度流量排名");
             liuliangduibi.setText("路段渣土车日度流量对比");
-            baojinglv.setText("路段报警率日度对比");
+            baojinglv.setText("渣土车流量路段对比");
         }
 
         list_trextviews = (LinearLayout) rootView.findViewById(R.id.list_textview);//动态tv数据
         layout_1 = (LinearLayout) rootView.findViewById(R.id.liuliangduibi_detail);
         layout_2 = (LinearLayout) rootView.findViewById(R.id.warning_detail);
         lineChart_baojinglv = (LineChart) layout_2.findViewById(R.id.chart_baojinglv);
-        spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);//bao jing lv
+        spinner_address = (Spinner) layout_1.findViewById(R.id.spinner_address);
         spinner_address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -182,6 +221,15 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         // }
         //});
+        //报警率,选择路段
+
+        baojinlv_duibi = (TextView) layout_2.findViewById(R.id.baojinglv_duibi);
+        liuliangduibi_arrow = (ImageView) layout_2.findViewById(R.id.baojinglv_duibi_arrow);
+        choice_load_one = (TextView) layout_2.findViewById(R.id.choice_load_one);
+        choice_load_two = (TextView) layout_2.findViewById(R.id.choice_load_two);
+        baojinlv_duibi.setOnClickListener(baojinglvduiClickListener);
+        liuliangduibi_arrow.setOnClickListener(baojinglvduiClickListener);
+
 
         liuliangduibi_linechart = (LineChart) layout_1.findViewById(R.id.chart_liuliangduibi);
         baojinglv_linechart = (LineChart) rootView.findViewById(R.id.chart_baojinglv);
@@ -265,6 +313,16 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     public int getDayOrMonthFlag() {
         return mDayOrMonthFlag;
     }
+
+    private View.OnClickListener baojinglvduiClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ToastUtils.showShort("baojinglv");
+            if (myPopuWindow != null) {
+                myPopuWindow.showAtLocation(rootView.findViewById(R.id.scrollview), Gravity.CENTER, 0, 0);
+            }
+        }
+    };
 
     @Override
     protected int getLayoutRes() {
