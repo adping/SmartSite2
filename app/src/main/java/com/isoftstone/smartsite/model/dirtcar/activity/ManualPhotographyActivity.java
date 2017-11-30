@@ -160,7 +160,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	}
 
 	private void setupViews() {
-		mAdapter = new ManualPhotographyAdapter(this.getBaseContext(), mListDate, ManualPhotographyActivity.this);
+		mAdapter = new ManualPhotographyAdapter(mContext, mListDate, ManualPhotographyActivity.this);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnScrollListener(mScrollListener);
 	}

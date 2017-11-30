@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.dirtcar.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 
 public class ManualPhotographyAdapter extends BaseAdapter{
 
-	private static final String TAG = "ManualPhotographyAdapter";
+	private static final String TAG = "PhotographyAdapter";
     ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
 
 
@@ -117,14 +118,10 @@ public class ManualPhotographyAdapter extends BaseAdapter{
 		for (int i=0; i < photoUrls.length; i++ ) {
 			photoList.add(photoUrls[i]);
 		}
+
 		PhotoGridAdapter photoAdapter = new PhotoGridAdapter(mActivity, photoList, mImageLoader);
 		viewHolder.mGradView.setAdapter(photoAdapter);
 
-		if (Utils.isEmptyStr(manualPhotographyBean.getTakePhotoUserHeadPath())) {
-			viewHolder.mTakePhotoUserHeadView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.default_head, null));
-		} else {
-			ImageUtils.loadImageWithPlaceHolder(mContext, viewHolder.mTakePhotoUserHeadView, manualPhotographyBean.getTakePhotoUserHeadPath(), R.drawable.default_head);
-		}
 
 		viewHolder.mTakePhotoUserNameView.setText(manualPhotographyBean.getTakePhotoUserName());
 		viewHolder.mTakePhotoDateView.setText(manualPhotographyBean.getTakePhotoTime());
@@ -138,6 +135,22 @@ public class ManualPhotographyAdapter extends BaseAdapter{
 				//ToastUtils.showShort("position = " + position);
 			}
 		});
+
+		boolean isHaveLoaded = false;
+		try {
+			isHaveLoaded = (null != viewHolder.mTakePhotoUserHeadView.getDrawable().getCurrent().getConstantState());
+		} catch (Exception e) {
+			Log.i(TAG,"throw a exception : " +  e.getMessage());
+			isHaveLoaded = false;
+		} finally {
+			if (!isHaveLoaded) {
+				if (Utils.isEmptyStr(manualPhotographyBean.getTakePhotoUserHeadPath())) {
+					viewHolder.mTakePhotoUserHeadView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.default_head, null));
+				} else {
+					ImageUtils.loadImageWithPlaceHolder(mContext, viewHolder.mTakePhotoUserHeadView, manualPhotographyBean.getTakePhotoUserHeadPath(), R.drawable.default_head);
+				}
+			}
+		}
 
 		return convertView;
 	}
