@@ -36,6 +36,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -197,6 +198,8 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                     if (intent != null) {
                         Bundle extras = intent.getExtras();
                         mHeadBitmap = extras.getParcelable("data");
+                        Log.i("zzz","mHeadBitmap = " +  mHeadBitmap);
+                        mHeadImageView.setImageURI(null);
                         mHeadImageView.setImageBitmap(mHeadBitmap);
                         mHeadImageView.invalidate();
                         if (mHeadBitmap != null) {
@@ -245,8 +248,8 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
+        intent.putExtra("outputX", mContext.getResources().getDimensionPixelOffset(R.dimen.head_image_view_height));
+        intent.putExtra("outputY", mContext.getResources().getDimensionPixelOffset(R.dimen.head_image_view_height));
         intent.putExtra("return-data", true);
         startActivityForResult(intent, RESULECODE);
     }
@@ -398,10 +401,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             case R.id.btn_icon_right:
                 //toolbar right view click
                 //保存用戶數據 上傳到服务器..... zyf modifed.....
-                if (!isNetworkConnected(mContext)) {
+                if (!NetworkUtils.isConnected()) {
                     ToastUtils.showShort("当前无网络环境，无法完成用户信息更改操作");
                     break;
                 }
+
                 new Thread(){
                     @Override
                     public void run() {
@@ -511,6 +515,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         String urlString = mHttpPost.getFileUrl(userBean.getLoginUser().getImageData());
         //ToastUtils.showShort("urlString = " + urlString);
         //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
+        Log.i("zzz"," initUserInfo urlString--->" + urlString);
         ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
 
 
@@ -751,19 +756,4 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         });
     }
 
-    /**
-     * 判断是否有网络连接
-     * @param context
-     * @return
-     */
-    public static boolean isNetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null) {
-                return mNetworkInfo.isAvailable();
-            }
-        }
-        return false;
-    }
 }

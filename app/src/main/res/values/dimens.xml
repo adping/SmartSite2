@@ -48,5 +48,6 @@
     <dimen name="play_seekbar_layout_margin_top">200dp</dimen>
     <dimen name="play_seekbar_layout_margin_bottom">10dp</dimen>
     <dimen name="grid_view_item_spacing">10dp</dimen>
+    <dimen name="head_image_view_height">48dp</dimen>
     <!--system   end -->
 </resources>

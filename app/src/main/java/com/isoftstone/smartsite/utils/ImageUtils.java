@@ -71,7 +71,7 @@ public class ImageUtils {
                 //.placeholder(R.mipmap.pic_loading)
                 .error(resId)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(imageView);
     }
 

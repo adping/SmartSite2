@@ -376,14 +376,29 @@ public class MainFragment extends BaseFragment {
 
     private void enterInspectPlan() {
         //进入巡查计划
-        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
-            //有审批计划权限
-            Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
-            getActivity().startActivity(intent);
-        } else {
-            //没有审批计划权限
-            Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
-            getActivity().startActivity(intent);
+        boolean isHasPermission = false;
+
+        try {
+
+            isHasPermission = HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA();
+
+        } catch (Exception e) {
+
+            isHasPermission = false;
+            Log.i(TAG,"access permission exception : " + e.getMessage());
+
+        } finally {
+
+            if (isHasPermission) {
+                //有审批计划权限
+                Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
+                getActivity().startActivity(intent);
+            } else {
+                //没有审批计划权限
+                Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
+                getActivity().startActivity(intent);
+            }
+
         }
         //Intent intent = new Intent(getActivity(), SelectInspectorsActivity.class);
         //getActivity().startActivity(intent);
