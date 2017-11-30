@@ -1047,7 +1047,7 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         mCheckBoxPopWindow = new PopupWindow(this);
 //        mCheckBoxPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 //        mCheckBoxPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        mCheckBoxPopWindow.setWidth(this.getWindowManager().getDefaultDisplay().getWidth()/3 * 2);
+        mCheckBoxPopWindow.setWidth(this.getWindowManager().getDefaultDisplay().getWidth()/2);
         mCheckBoxPopWindow.setHeight(this.getWindowManager().getDefaultDisplay().getHeight()/ 2);
         mCheckBoxPopWindow.setContentView(view);
         mCheckBoxPopWindow.setOutsideTouchable(false);

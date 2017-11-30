@@ -130,6 +130,7 @@ public class HttpPost {
 
     public static LoginBean mLoginBean = null;
     public static CookiesManager mCookiesManager = null;
+    private ArrayList<CompanyBean> companyNameList;
 
     public HttpPost() {
         if (mClient == null) {
@@ -478,10 +479,20 @@ public class HttpPost {
      */
     public String getCompanyNameByid(int id) {
         String companyName = null;
-        ArrayList<CompanyBean> list = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                CompanyBean companyBean = list.get(i);
+        if(companyNameList == null || companyNameList.size() == 0){
+            companyNameList = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
+            if (companyNameList != null) {
+                for (int i = 0; i < companyNameList.size(); i++) {
+                    CompanyBean companyBean = companyNameList.get(i);
+                    if (companyBean.getValue().equals(id + "")) {
+                        companyName = companyBean.getContent();
+                    }
+                }
+            }
+
+        } else {
+            for (int i = 0; i < companyNameList.size(); i++) {
+                CompanyBean companyBean = companyNameList.get(i);
                 if (companyBean.getValue().equals(id + "")) {
                     companyName = companyBean.getContent();
                 }

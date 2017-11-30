@@ -29,7 +29,6 @@ import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,9 +102,9 @@ public class ReplyReportFragment extends BaseFragment {
         mData = new ArrayList<Object>();
         mData.add(R.drawable.attachment);
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData);
+        mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData,mFilesPath);
         mAttachView.setAdapter(mAttachAdapter);
-
+        mAttachAdapter.setmIsShowDelete(true);
         mAttachView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,10 +114,10 @@ public class ReplyReportFragment extends BaseFragment {
                     i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
                 } else {
-                    mFilesPath.remove(position);
-                    mData.remove(position);
-                    mAttachAdapter.notifyDataSetChanged();
-                    ToastUtils.showShort("附件删除成功");
+//                    mFilesPath.remove(position);
+//                    mData.remove(position);
+//                    mAttachAdapter.notifyDataSetChanged();
+//                    ToastUtils.showShort("附件删除成功");
                 }
             }
         });

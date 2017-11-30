@@ -25,6 +25,8 @@ public class AttachGridViewAdatper extends BaseAdapter {
     private final static String TAG = "AttachGridViewAdapter";
     private boolean mIsPath = false;
     private ArrayList<String> mAllPath = new ArrayList<>();
+    private boolean mIsShowDelete = false;
+    private ArrayList<String> mPathList = null;
 
     public AttachGridViewAdatper(Context context, ArrayList<Object> datas) {
         mDatas = datas;
@@ -32,11 +34,22 @@ public class AttachGridViewAdatper extends BaseAdapter {
         mRes = mContext.getResources();
     }
 
+    public AttachGridViewAdatper(Context context, ArrayList<Object> datas, ArrayList<String> pathList) {
+        mDatas = datas;
+        mContext = context;
+        mRes = mContext.getResources();
+        mPathList = pathList;
+    }
+
     public AttachGridViewAdatper(Context context, ArrayList<Object> datas, boolean isPath) {
         mDatas = datas;
         mContext = context;
         mRes = mContext.getResources();
         mIsPath = isPath;
+    }
+
+    public void setmIsShowDelete(boolean showDelete) {
+        mIsShowDelete = showDelete;
     }
 
     @Override
@@ -55,7 +68,7 @@ public class AttachGridViewAdatper extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null);
         }
@@ -72,17 +85,35 @@ public class AttachGridViewAdatper extends BaseAdapter {
                 ImageUtils.loadImage(imgView, str);
             }
         }
+
+        View imgDelete = convertView.findViewById(R.id.img_delete);
+        if (!mIsShowDelete || position == mDatas.size() - 1) {
+            imgDelete.setVisibility(View.GONE);
+        } else {
+            imgDelete.setVisibility(View.VISIBLE);
+            imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDatas.remove(position);
+                    if (mPathList != null) {
+                        mPathList.remove(position);
+                    }
+                    notifyDataSetChanged();
+                }
+            });
+        }
         return convertView;
     }
 
-    public void setAllPath(ArrayList<String> path){
+    public void setAllPath(ArrayList<String> path) {
         mAllPath = path;
     }
-    public ArrayList<String> getAllPath(){
+
+    public ArrayList<String> getAllPath() {
         return mAllPath;
     }
 
-    public ArrayList<Object> getAllData(){
+    public ArrayList<Object> getAllData() {
         return mDatas;
     }
 

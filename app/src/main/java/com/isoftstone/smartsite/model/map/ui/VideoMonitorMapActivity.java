@@ -284,13 +284,13 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             }
 
             String pm10 = "";
-            double d_pm10 = currentEnvirDevice.getPm10();
+            double d_pm10 = currentEnvirDevice.getPm10() == null ? 0 : currentEnvirDevice.getPm10();
             int pm_10 = (int) d_pm10;
 
-            double d_pm25 = currentEnvirDevice.getPm2_5();
+            double d_pm25 = currentEnvirDevice.getPm2_5() == null ? 0 : currentEnvirDevice.getPm2_5();
             int pm_25 = (int) d_pm25;
 
-            double d_so2 = currentEnvirDevice.getCo2();
+            double d_so2 = currentEnvirDevice.getCo2() == null ? 0 : currentEnvirDevice.getCo2();
             int pm_so2 = (int) d_so2;
 
             if(pm_10 < 50){
@@ -401,7 +401,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 markerOption.draggable(false);//设置Marker可拖动
                 //0在线，1离线，2故障
                 if(0 == device.getDeviceStatus()){
-                    double pm10 = device.getPm10();
+                    double pm10 = device.getPm10() == null ? 0 : device.getPm10();
                     if(pm10 <= 0){
                         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                                 .decodeResource(getResources(),R.drawable.environment_blue)));
@@ -650,6 +650,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     };
     private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
     private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
+
     private class ImageAsyncTask extends AsyncTask<Void, Void, Object> {
         @Override
         protected Object doInBackground(Void... params) {
@@ -841,13 +842,13 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 }
 
                 String pm10 = "";
-                double d_pm10 = device.getPm10();
+                double d_pm10 = device.getPm10() == null ? 0 : device.getPm10();
                 int pm_10 = (int) d_pm10;
 
-                double d_pm25 = device.getPm2_5();
+                double d_pm25 = device.getPm2_5() == null ? 0 : device.getPm2_5();
                 int pm_25 = (int) d_pm25;
 
-                double d_so2 = device.getCo2();
+                double d_so2 = device.getCo2() == null ? 0 : device.getCo2();
                 int pm_so2 = (int) d_so2;
 
                 if(pm_10 < 50){

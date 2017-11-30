@@ -146,7 +146,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private Marker currentClickMarker;
     private Marker roundMarker;
 
-    private int taskId;
+    private int taskId = -1;
 
     @Override
     protected int getLayoutRes() {
@@ -156,7 +156,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
 
-        taskId = getIntent().getIntExtra("taskId",taskId);
+        taskId = (int) getIntent().getLongExtra("taskId",taskId);
         if(taskId == 0){
             ToastUtils.showLong("没有获取到任务信息！");
         }
@@ -245,7 +245,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                patrolTaskBean= httpPost.patrolTaskFindOne(64);
+                patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -496,7 +496,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             @Override
             public void onMyLocationChange(Location location) {
                 currentLocation = location;
-//                updateNowLocation(location);
+                updateNowLocation(location);
             }
         });
     }
@@ -601,7 +601,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                httpPost.userTrack(loginUseId,patrolTaskBean.getTaskId(),lon,lat);
+                if(patrolTaskBean != null){
+                    httpPost.userTrack(loginUseId,patrolTaskBean.getTaskId(),lon,lat);
+                }
             }
         }).start();
     }

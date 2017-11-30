@@ -34,4 +34,13 @@ public class DepartmentsMonthTasks {
     public void setData(ArrayList<String> data) {
         this.date = data;
     }
+
+    @Override
+    public String toString() {
+        return "DepartmentsMonthTasks{" +
+                "list=" + list +
+                ", date=" + date +
+                ", data=" + data +
+                '}';
+    }
 }

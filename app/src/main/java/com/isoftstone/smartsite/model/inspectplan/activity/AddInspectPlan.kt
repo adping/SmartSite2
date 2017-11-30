@@ -55,6 +55,7 @@ open class AddInspectPlan : BaseActivity() {
     var lab_address_choose_left: TextView? = null
     val FLAG_TARGET_ADDRESS = 0
     val FLAG_TARGET_PEOPLE = 1
+    var mTaskType = 0
 
     var flow_layout_address: MyFlowLayout? = null
     var mHttpPost = HttpPost()
@@ -71,6 +72,8 @@ open class AddInspectPlan : BaseActivity() {
         mWattingChanged?.setBounds(0, 0, mWattingChanged?.getIntrinsicWidth()!!, mWattingChanged?.getIntrinsicHeight()!!)
 
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
+
+        mTaskType = intent.getIntExtra("taskType",0)
 
         initEditName()
         initBeginTime()
@@ -284,6 +287,7 @@ open class AddInspectPlan : BaseActivity() {
                     planBean.taskTimeEnd = endTime
                     planBean.taskContent = content
                     planBean.users = peopleTempList
+                    planBean.taskType = mTaskType
 
 
                     var result = mHttpPost.patrolTaskSave(planBean)

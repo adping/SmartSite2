@@ -477,8 +477,8 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 markerOption.draggable(false);//设置Marker可拖动
                 //0在线，1离线，2故障
                 if(0 == bean.getDeviceStatus()){
-                    double pm10 = bean.getPm10();
-                    if(pm10 <= 0){
+                    double pm10 = bean.getPm10() == null ? 0 : bean.getPm10();
+                   if(pm10 <= 0){
                         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                                 .decodeResource(getResources(),R.drawable.environment_blue)));
                     }else if(pm10 <= 50){
@@ -552,7 +552,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
+        if(mMapView != null){
+            mMapView.onSaveInstanceState(outState);
+        }
     }
 
 
@@ -668,13 +670,13 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 tv_history.setText("历史数据");
 
                 String pm10 = "";
-                double d_pm10 = bean.getPm10();
+                double d_pm10 = bean.getPm10() == null ? 0 : bean.getPm10();
                 int pm_10 = (int) d_pm10;
 
-                double d_pm25 = bean.getPm2_5();
+                double d_pm25 = bean.getPm2_5() == null ? 0 : bean.getPm2_5();
                 int pm_25 = (int) d_pm25;
 
-                double d_so2 = bean.getCo2();
+                double d_so2 = bean.getCo2() == null ? 0 : bean.getPm2_5();
                 int pm_so2 = (int) d_so2;
 
                 if(pm_10 < 50){
@@ -690,7 +692,6 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 } else {
                     pm10 = "PM10：<font color='" + COLOR_600 + "'>" + pm_10 + "</font>";
                 }
-
                 tv_pm10.setText(Html.fromHtml(pm10));
                 String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25 + "</font>";
                 tv_pm25.setText(Html.fromHtml(pm25));

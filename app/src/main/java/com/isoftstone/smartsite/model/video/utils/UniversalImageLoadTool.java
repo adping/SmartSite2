@@ -20,7 +20,7 @@ public class UniversalImageLoadTool {
 	
 	public static void disPlay(String uri, ImageAware imageAware,int default_pic){
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(default_pic)
+		//.showImageOnLoading(default_pic)
 		.showImageForEmptyUri(default_pic)
 		.showImageOnFail(default_pic)
 		.cacheInMemory(true)

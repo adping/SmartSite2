@@ -26,7 +26,7 @@ public class PhotoGridAdapter extends BaseAdapter {
 	public PhotoGridAdapter(Context context, List<PhotoInfo> list){
 		DisplayMetrics dm = new DisplayMetrics();
 		((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-		width = dm.widthPixels/3;
+		width = dm.widthPixels/3  - context.getResources().getDimensionPixelOffset(R.dimen.grid_view_item_spacing);
 		mInflater = LayoutInflater.from(context);
 		this.list = list;
 	}
