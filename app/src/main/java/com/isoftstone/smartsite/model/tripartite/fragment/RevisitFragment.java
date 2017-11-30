@@ -41,7 +41,6 @@ import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import java.text.SimpleDateFormat;
@@ -602,7 +601,8 @@ public class RevisitFragment extends BaseFragment {
         mData = new ArrayList<Object>();
         mData.add(R.drawable.attachment);
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData);
+        mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData,mFilesPath);
+        mAttachAdapter.setmIsShowDelete(true);
         mAttachView.setAdapter(mAttachAdapter);
 
         mAttachView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -614,10 +614,10 @@ public class RevisitFragment extends BaseFragment {
                     i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
                 } else {
-                    mFilesPath.remove(position);
-                    mData.remove(position);
-                    mAttachAdapter.notifyDataSetChanged();
-                    ToastUtils.showShort("附件删除成功");
+//                    mFilesPath.remove(position);
+//                    mData.remove(position);
+//                    mAttachAdapter.notifyDataSetChanged();
+//                    ToastUtils.showShort("附件删除成功");
                 }
             }
         });
