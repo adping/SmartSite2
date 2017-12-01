@@ -37,7 +37,6 @@ public class ReadReportActivity extends BaseActivity {
     protected void afterCreated(Bundle savedInstanceState) {
         Intent i = getIntent();
         mId = i.getIntExtra("_id", 0);
-        //mId = 218;
         if(CheckReportActivity.isDebug){
             mId = CheckReportActivity.debugMsg;
         }

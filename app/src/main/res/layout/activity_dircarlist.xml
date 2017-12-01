@@ -10,51 +10,56 @@
     android:orientation="vertical"
     tools:context="com.isoftstone.smartsite.model.dirtcar.activity.DirtCarListActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar3"
-        style="@style/toolbar_style"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_default"
+            style="@style/toolbar_style"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp">
 
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_back_press_bg"
-                android:onClick="onBackBtnClick"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:src="@drawable/bigarrow" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/lab_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="渣土车车辆列表"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:onClick="onBackBtnClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:src="@drawable/bigarrow" />
 
-            <ImageButton
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_back_press_bg"
-                android:onClick="onSearchBtnClick"
-                android:visibility="gone"
-                android:paddingLeft="16dp"
-                android:paddingRight="12dp"
-                android:src="@drawable/search" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+                <TextView
+                    android:id="@+id/lab_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="渣土车车辆列表"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/search" />
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <include layout="@layout/layout_toolbar_search"></include>
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
