@@ -179,10 +179,12 @@
             android:gravity="center"
             android:layout_weight="1">
             <ImageView
+                android:id="@+id/iv_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/time"/>
             <TextView
+                android:id="@+id/tv_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="实时数据"

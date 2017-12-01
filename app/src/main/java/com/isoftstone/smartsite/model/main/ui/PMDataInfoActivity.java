@@ -264,7 +264,6 @@ public class PMDataInfoActivity extends BaseActivity {
             return;
         }
         mDevicesName.setText(dataQueryVoBean.getDeviceName());
-        String pm10 = dataQueryVoBean.getPm10().toString();
 
         text_pm10.setText("PM10:"+doubleToString(dataQueryVoBean.getPm10()));
         text_pm25.setText("PM2.5:"+doubleToString(dataQueryVoBean.getPm2_5()));
@@ -289,6 +288,8 @@ public class PMDataInfoActivity extends BaseActivity {
     }
 
     private String doubleToString( Double dl){
+        if(dl == null) return "0";
+
         String value = dl+"";
         if(value.indexOf(".") == -1){
             return  value;

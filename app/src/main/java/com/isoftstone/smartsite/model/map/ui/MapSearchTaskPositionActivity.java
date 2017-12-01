@@ -192,6 +192,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         //隐藏软键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+        et.setText("");
 
     }
 
@@ -230,13 +231,11 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             marker1.remove();
             deleteMarker = null;
         } else if(markers.indexOf(marker) != -1){
-            LogUtils.e(TAG,"markers onMarkerClick");
             clickPosition = markers.indexOf(marker);
             TaskPositionBean bean = (TaskPositionBean) marker.getObject();
             marker.setVisible(false);
             addDeleteMarker(bean);
         }
-        LogUtils.e(TAG,"onMarkerClick");
         return true;
     }
 
@@ -250,7 +249,6 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
             markers.get(clickPosition).setVisible(true);
         }
         addMarker(latLng);
-        LogUtils.e(TAG,"onMapClick");
     }
 
     private void addMarker(LatLng latLng){
