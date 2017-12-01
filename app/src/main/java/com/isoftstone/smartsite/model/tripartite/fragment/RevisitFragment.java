@@ -137,7 +137,11 @@ public class RevisitFragment extends BaseFragment {
 
     private void initView() {
         mReportPeopleName = (TextView) getView().findViewById(R.id.lab_report_people_name);
-        mReportPeopleName.setText(mHttpPost.mLoginBean.getmName());
+        try {
+            mReportPeopleName.setText(HttpPost.mLoginBean.getmUserBean().getLoginUser().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mName = (TextView) getView().findViewById(R.id.lab_name);
         mReportName = (TextView) getView().findViewById(R.id.lab_report_name);
         mReportMsg = (TextView) getView().findViewById(R.id.lab_report_msg);
@@ -247,7 +251,7 @@ public class RevisitFragment extends BaseFragment {
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (TextUtils.isEmpty(address)  || !mAddReportActivity.isSettedType) {
+                    if (TextUtils.isEmpty(address) || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -260,7 +264,7 @@ public class RevisitFragment extends BaseFragment {
 
                     reportData.setAddress(address);
                     reportData.setCompany(company);
-                    if(mAddReportActivity.isShowCompany) {
+                    if (mAddReportActivity.isShowCompany) {
                         reportData.setDevelopmentCompany(developmentCompany);
                         reportData.setConstructionCompany(constructionCompany);
                         reportData.setSupervisionCompany(supervisionCompany);
@@ -567,8 +571,8 @@ public class RevisitFragment extends BaseFragment {
 
                     int reportId = reports.get(reports.size() - 1).getId();
                     for (Object path : mData) {
-                        if(path instanceof String) {
-                            mHttpPost.reportFileUpload((String)path, reportId);
+                        if (path instanceof String) {
+                            mHttpPost.reportFileUpload((String) path, reportId);
                         }
                     }
                     return true;
@@ -653,8 +657,8 @@ public class RevisitFragment extends BaseFragment {
         Log.e(TAG, "yanlog remove begin size at0:" + mData.get(0));
         mData.remove(mData.size() - 1);
         //mFilesPath.add(path);
- //       if (TripartiteActivity.mImageList.contains(formatPath)) {
-            mData.add(path);
+        //       if (TripartiteActivity.mImageList.contains(formatPath)) {
+        mData.add(path);
 //        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
 //            mData.add(TripartiteActivity.mAttach.get(".xls"));
 //        } else if (TripartiteActivity.mDocList.contains(formatPath)) {

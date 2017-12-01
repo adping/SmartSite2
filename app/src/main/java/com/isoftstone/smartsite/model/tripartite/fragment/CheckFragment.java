@@ -103,7 +103,11 @@ public class CheckFragment extends BaseFragment {
         mLabRevisitTime = (TextView) rootView.findViewById(R.id.lab_revisit_time);
         mEditRevisitTime = (TextView) rootView.findViewById(R.id.edit_lab_revisit_time);
         mLabCreator = (TextView) rootView.findViewById(R.id.lab_report_people_name);
-        mLabCreator.setText(mHttpPost.mLoginBean.getmName());
+        try {
+            mLabCreator.setText(HttpPost.mLoginBean.getmUserBean().getLoginUser().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mBtnNo = (Button) rootView.findViewById(R.id.btn_no);
         mBtnYes = (Button) rootView.findViewById(R.id.btn_yes);
         mEditContent = (EditText) rootView.findViewById(R.id.edit_report_msg);

@@ -92,7 +92,11 @@ public class ReplyReportFragment extends BaseFragment {
             }
         });
         mLabName = (TextView) rootView.findViewById(R.id.lab_report_people_name);
-        mLabName.setText(mHttpPost.mLoginBean.getmName());
+        try {
+            mLabName.setText(HttpPost.mLoginBean.getmUserBean().getLoginUser().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initGridView() {

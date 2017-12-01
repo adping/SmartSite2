@@ -156,7 +156,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         time.setText(date);
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getName());
 
         TextView checkpeople = (TextView) v.findViewById(R.id.inspect_report_check_people_read);
         checkpeople.setText(data.getPatrolUser());
@@ -220,7 +220,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         msg.setText(data.getContent());
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getName());
 
         GridView gridView = (GridView) v.findViewById(R.id.grid_view);
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.linear_grid_view);
@@ -253,7 +253,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator().getAccount());
+        lab_creator_name.setText(data.getCreator().getName());
 
         time.setText(date);
         ImageView img = (ImageView) v.findViewById(R.id.img_status);

@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -59,25 +60,43 @@ public class ReadReportFrag extends BaseFragment {
     }
 
     private void initViewData() {
-        if(mData != null){
-            mLabAddress.setText(mData.getAddress());
-            mLabCompany.setText(mData.getCompany());
-            int status = mData.getStatus();
-            if (status > 1) {
-                status--;
-            }
-            mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
-
-            mBuildCompany.setText(mData.getDevelopmentCompany());
-            mCosCompany.setText(mData.getConstructionCompany());
-            mSupCompany.setText(mData.getSupervisionCompany());
-            if (mData.isVisit()) {
-                mLabVisit.setText(mData.getVisitDate());
-            }
-
+        if (mData != null) {
             try {
+                mLabAddress.setText(mData.getAddress());
+                mLabCompany.setText(mData.getCompany());
+                int status = mData.getStatus();
+                if (status > 1) {
+                    status--;
+                }
+                mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
+
+                String developmentcompany = mData.getDevelopmentCompany();
+                if (TextUtils.isEmpty(developmentcompany)) {
+                    mBuildCompany.setText("无");
+                } else {
+                    mBuildCompany.setText(mData.getDevelopmentCompany());
+                }
+
+                String cosCompany = mData.getConstructionCompany();
+                if (TextUtils.isEmpty(cosCompany)) {
+                    mCosCompany.setText("无");
+                } else {
+                    mCosCompany.setText(mData.getConstructionCompany());
+                }
+
+                String supCompany = mData.getSupervisionCompany();
+                if (TextUtils.isEmpty(supCompany)) {
+                    mSupCompany.setText("无");
+                } else {
+                    mSupCompany.setText(mData.getSupervisionCompany());
+                }
+
+                if (mData.isVisit()) {
+                    mLabVisit.setText(mData.getVisitDate());
+                }
+
                 int category = Integer.parseInt(mData.getCategory());
-                mLabTypes.setText(mTypesList.get(category -1));
+                mLabTypes.setText(mTypesList.get(category - 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
