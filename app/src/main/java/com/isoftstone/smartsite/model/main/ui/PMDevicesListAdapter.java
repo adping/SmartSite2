@@ -103,6 +103,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder.SO2 = (TextView)convertView.findViewById(R.id.text_so2);
             holder.NO2 = (TextView)convertView.findViewById(R.id.text_no2);
             holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
+            holder.iv_data = (ImageView) convertView.findViewById(R.id.iv_data);
+            holder.tv_data = (TextView) convertView.findViewById(R.id.tv_data);
             holder.button_2 = (LinearLayout)convertView.findViewById(R.id.button2);
             holder.gotomap = (LinearLayout) convertView.findViewById(R.id.gotomap);
             convertView.setTag(holder);
@@ -115,10 +117,16 @@ public class PMDevicesListAdapter extends BaseAdapter {
         paint.setFakeBoldText(true);
         if(devices.getDeviceStatus() == 0){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.online));
+            holder.iv_data.setImageResource(R.drawable.time);
+            holder.tv_data.setTextColor(mContext.getResources().getColor(R.color.mainColor));
         }else if(devices.getDeviceStatus() == 1){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
+            holder.iv_data.setImageResource(R.drawable.timedisable);
+            holder.tv_data.setTextColor(mContext.getResources().getColor(R.color.gray_9999));
         }else if(devices.getDeviceStatus() == 2){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.breakdown));
+            holder.iv_data.setImageResource(R.drawable.timedisable);
+            holder.tv_data.setTextColor(mContext.getResources().getColor(R.color.gray_9999));
         }
         holder.installTime.setText("安装时间: "+devices.getInstallTime().substring(0,10));
         holder.address.setText("设备名称"+devices.getDeviceName());
@@ -158,27 +166,32 @@ public class PMDevicesListAdapter extends BaseAdapter {
         holder.NO2.setText(Html.fromHtml(no2));
 
         final int map_position = position;
-        holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
+        if(devices.getDeviceStatus() == 0){
+            holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
-            @Override
-            public void onClickCallBack(View registedView, View rootView, int position) {
-                //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).toString(), Toast.LENGTH_SHORT).show();
-                ViewHolder viewHolder = (ViewHolder)rootView.getTag();
-                if(null != viewHolder) {
-                    //实时数据
-                    Intent intent = new Intent();
-                    intent.putExtra("devices",mData);
-                    intent.putExtra("position",map_position);
-                    intent.putExtra("id",devices.getDeviceId());
-                    intent.putExtra("address","设备名称"+devices.getDeviceName());
-                    intent.setClass(mContext, PMDataInfoActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                } else {
-                    Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onClickCallBack(View registedView, View rootView, int position) {
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).toString(), Toast.LENGTH_SHORT).show();
+                    ViewHolder viewHolder = (ViewHolder)rootView.getTag();
+                    if(null != viewHolder) {
+                        //实时数据
+                        Intent intent = new Intent();
+                        intent.putExtra("devices",mData);
+                        intent.putExtra("position",map_position);
+                        intent.putExtra("id",devices.getDeviceId());
+                        intent.putExtra("address","设备名称"+devices.getDeviceName());
+                        intent.setClass(mContext, PMDataInfoActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            holder.button_1.setOnClickListener(null);
+        }
+
 
         holder.button_2.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
             @Override
@@ -230,6 +243,9 @@ public class PMDevicesListAdapter extends BaseAdapter {
         public TextView  NO2;//NO2
 
         public LinearLayout button_1;//实时数据
+        public ImageView iv_data;
+        public TextView tv_data;
+
         public LinearLayout button_2;//历史数据
 
         public LinearLayout gotomap ; //跳转到地图
