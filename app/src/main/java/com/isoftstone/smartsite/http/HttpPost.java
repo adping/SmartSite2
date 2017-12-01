@@ -10,13 +10,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.http.muckcar.ArchMonthFlowBean;
-import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBean;
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBeanPage;
 import com.isoftstone.smartsite.http.muckcar.CarInfoBean;
+import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
 import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
 import com.isoftstone.smartsite.http.muckcar.MuckCarOperation;
-import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.muckcar.UpdatePhotoInfoBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
@@ -39,7 +38,6 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -277,19 +275,19 @@ public class HttpPost {
     /*
      获取巡查报告列表  测试数据 1
      */
-    public ArrayList<PatrolBean> getPatrolReportList(String status) {
+    public ArrayList<PatrolBean> getPatrolReportList(String status, PageableBean pageableBean) {
         String departmentId = "";
         if (mLoginBean != null && mLoginBean.getmUserBean() != null) {
             departmentId = mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
         }
-        return ReportOperation.getPatrolReportList(PATROL_LIST, mClient, status, departmentId);
+        return ReportOperation.getPatrolReportList(PATROL_LIST, mClient, status, departmentId, pageableBean);
     }
 
     /*
     获取验收报告列表
      */
-    public ArrayList<PatrolBean> getCheckReportList(String status) {
-        return ReportOperation.getCheckReportList(PATROL_LIST, mClient, status);
+    public ArrayList<PatrolBean> getCheckReportList(String status, PageableBean pageableBean) {
+        return ReportOperation.getCheckReportList(PATROL_LIST, mClient, status, pageableBean);
     }
 
     /*
@@ -479,7 +477,7 @@ public class HttpPost {
      */
     public String getCompanyNameByid(int id) {
         String companyName = null;
-        if(companyNameList == null || companyNameList.size() == 0){
+        if (companyNameList == null || companyNameList.size() == 0) {
             companyNameList = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
             if (companyNameList != null) {
                 for (int i = 0; i < companyNameList.size(); i++) {
@@ -505,7 +503,7 @@ public class HttpPost {
     路段渣土车日、月流量查询
      */
     public ArrayList<CarInfoBean> getDayFlow(String time, String parentId, String timeMonth, int flag) {
-        Log.e("test",parentId+ " "+time+"  "+timeMonth+"  "+flag);
+        Log.e("test", parentId + " " + time + "  " + timeMonth + "  " + flag);
         return MuckCarOperation.getDayFlow(GET_CAR_DAY_FLOW, mClient, time, parentId, timeMonth, flag);
     }
 
@@ -514,7 +512,7 @@ public class HttpPost {
      */
     public ArchMonthFlowBean getArchMonthFlow(String time, String timeMonth, Long archId, int flag) {
         //
-        Log.e("test",archId+"  "+time+"  "+timeMonth+" "+flag);
+        Log.e("test", archId + "  " + time + "  " + timeMonth + " " + flag);
         return MuckCarOperation.getArchMonthFlow(GET_ARCH_MONTH_FLOW, mClient, time, timeMonth, archId, flag);
     }
 

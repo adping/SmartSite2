@@ -3,12 +3,10 @@ package com.isoftstone.smartsite.model.tripartite.activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,16 +16,11 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PatrolBean;
-import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.model.tripartite.fragment.CheckReportMainFragment;
 import com.isoftstone.smartsite.model.tripartite.fragment.InspectReportMainFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -272,53 +265,53 @@ public class TripartiteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new QueryMsgTask().execute();
+        //new QueryMsgTask().execute();
     }
 
     public ArrayList<ReportData> getDatas() {
         return mDatas;
     }
 
-    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("");
-            if(msgs == null){
-                return "";
-            }
-            Collections.sort(msgs, new Comparator<PatrolBean>() {
-                @Override
-                public int compare(PatrolBean o1, PatrolBean o2) {
-                    try {
-                        Date date1 = MsgData.format5.parse(o1.getDate());
-                        Date date2 = MsgData.format5.parse(o2.getDate());
-                        return date2.compareTo(date1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
-                }
-            });
-            mDatas.clear();
-            for (PatrolBean temp : msgs) {
-                ReportData reportData = new ReportData(temp);
-                Log.e(TAG, "reportData:" + reportData);
-                mDatas.add(reportData);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            for (Fragment temp : mFragList) {
-                if (temp instanceof CheckReportMainFragment) {
-                    ((CheckReportMainFragment) temp).onDataSetChanged();
-                } else if (temp instanceof InspectReportMainFragment) {
-                    ((InspectReportMainFragment) temp).onDataSetChanged();
-                }
-            }
-        }
-    }
+//    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+//        @Override
+//        protected String doInBackground(String... params) {
+//            ArrayList<PatrolBean> msgs = mHttpPost .getPatrolReportList("");
+//            if(msgs == null){
+//                return "";
+//            }
+//            Collections.sort(msgs, new Comparator<PatrolBean>() {
+//                @Override
+//                public int compare(PatrolBean o1, PatrolBean o2) {
+//                    try {
+//                        Date date1 = MsgData.format5.parse(o1.getDate());
+//                        Date date2 = MsgData.format5.parse(o2.getDate());
+//                        return date2.compareTo(date1);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    return 0;
+//                }
+//            });
+//            mDatas.clear();
+//            for (PatrolBean temp : msgs) {
+//                ReportData reportData = new ReportData(temp);
+//                Log.e(TAG, "reportData:" + reportData);
+//                mDatas.add(reportData);
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            for (Fragment temp : mFragList) {
+//                if (temp instanceof CheckReportMainFragment) {
+//                    ((CheckReportMainFragment) temp).onDataSetChanged();
+//                } else if (temp instanceof InspectReportMainFragment) {
+//                    ((InspectReportMainFragment) temp).onDataSetChanged();
+//                }
+//            }
+//        }
+//    }
 
 
     private void chooseFrag(int position) {

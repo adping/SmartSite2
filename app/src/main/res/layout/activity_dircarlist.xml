@@ -61,17 +61,11 @@
         <include layout="@layout/layout_toolbar_search"></include>
     </FrameLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdge="vertical"
-        android:scrollbars="vertical">
 
-        <com.isoftstone.smartsite.model.tripartite.view.MyListView
+        <com.isoftstone.smartsite.common.widget.PullToRefreshListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:divider="@null"></com.isoftstone.smartsite.model.tripartite.view.MyListView>
-    </ScrollView>
+            android:divider="@null"/>
 </LinearLayout>

@@ -17,6 +17,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String TAG = this.getClass().getSimpleName();
     private Dialog mLoginingDlg; // 显示正在登录的Dialog
     private TextView dlg_textview = null;
+    public static final String DEFAULT_PAGE_SIZE = "20";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

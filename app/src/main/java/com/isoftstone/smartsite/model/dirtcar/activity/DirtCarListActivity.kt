@@ -8,10 +8,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.ListView
 import android.widget.TextView
 import com.isoftstone.smartsite.R
 import com.isoftstone.smartsite.base.BaseActivity
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView
 import com.isoftstone.smartsite.http.HttpPost
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBean
 import com.isoftstone.smartsite.http.pageable.PageableBean
@@ -22,7 +22,7 @@ import com.isoftstone.smartsite.utils.ToastUtils
  * Created by yanyongjun on 2017/11/14.
  */
 class DirtCarListActivity : BaseActivity() {
-    var mListView: ListView? = null
+    var mListView: PullToRefreshListView? = null
     var mList: ArrayList<BayonetGrabInfoBean> = ArrayList<BayonetGrabInfoBean>()
     var mAdapter: DirtCarAdapter = DirtCarAdapter(this, mList)
     var mHttpPost: HttpPost = HttpPost()
@@ -30,24 +30,27 @@ class DirtCarListActivity : BaseActivity() {
     var mIsUIInSearchMode = false
     var mIsDataInSearchMode = false
 
+    //分页开始
+    private var mCurPageNum = -1
+    var isLoading = false
+
     override fun getLayoutRes(): Int {
         return R.layout.activity_dircarlist;
     }
 
     override fun afterCreated(savedInstanceState: Bundle?) {
-        mListView = findViewById(R.id.listview) as ListView
-        mListView?.adapter = mAdapter
+        initListView()
         initSearchView()
+        if (!mIsUIInSearchMode) {
+            queryData("",true)
+        } else {
+            val search_edit_text = findViewById(R.id.search_edit_text) as EditText
+            queryData(search_edit_text.text.toString(),true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (!mIsUIInSearchMode) {
-            queryData("")
-        } else {
-            val search_edit_text = findViewById(R.id.search_edit_text) as EditText
-            queryData(search_edit_text.text.toString())
-        }
     }
 
     fun initSearchView() {
@@ -77,7 +80,7 @@ class DirtCarListActivity : BaseActivity() {
                 if (TextUtils.isEmpty(search_edit_text.text.toString())) {
                     exitSearchMode()
                 } else {
-                    queryData(search_edit_text.text.toString())
+                    queryData(search_edit_text.text.toString(),true)
                 }
             }
         })
@@ -133,36 +136,71 @@ class DirtCarListActivity : BaseActivity() {
         toolbar_search.visibility = View.INVISIBLE
         mIsUIInSearchMode = false
         if (mIsDataInSearchMode) {
-            queryData("")
+            queryData("",true)
         }
 
     }
 
-    //    fun onSearchBtnClick(v: View) {
-//        mIsInSeachMode = true
-//        var toolbar_search = findViewById(R.id.toolbar_search)
-//        var toolbar_default = findViewById(R.id.toolbar_default)
-//        toolbar_search.setVisibility(View.VISIBLE)
-//        toolbar_default.setVisibility(View.INVISIBLE)
-//    }
-//    fun
-    fun queryData(licence: String) {
+    fun initListView() {
+        mListView = findViewById(R.id.listview) as PullToRefreshListView
+        val search_edit_text = findViewById(R.id.search_edit_text) as EditText
+        val listener = object : PullToRefreshListView.OnRefreshListener {
+            override fun onRefresh() {
+                if (isLoading) {
+                    //mListView.onRefreshComplete();
+                } else {
+                    mCurPageNum = -1
+                    //QueryMsgTask(true).execute()
+                    if (mIsUIInSearchMode) {
+                        queryData(search_edit_text.text.toString(),true)
+                    } else {
+                        queryData("",true)
+                    }
+                }
+            }
+
+            override fun onLoadMore() {
+                if (isLoading) {
+                    // mListView.onLoadMoreComplete();
+                } else {
+                    //QueryMsgTask(false).execute()
+                    if (mIsUIInSearchMode) {
+                        queryData(search_edit_text.text.toString(),false)
+                    } else {
+                        queryData("",false)
+                    }
+                }
+            }
+        }
+        mListView?.setOnRefreshListener(listener)
+        mListView?.adapter = mAdapter
+    }
+
+    fun queryData(licence: String, isReload: Boolean) {
+        if(isReload){
+            mCurPageNum = -1
+        }
         var query = object : AsyncTask<Void, Void, Boolean>() {
             override fun onPreExecute() {
-                this@DirtCarListActivity.showDlg("正在获取列表")
+                isLoading = true
+                //this@DirtCarListActivity.showDlg("正在获取列表")
                 super.onPreExecute()
             }
 
             override fun doInBackground(vararg params: Void?): Boolean? {
                 var bean = PageableBean()
-                bean.setPage("0")
-                bean.setSize("100")
+                bean.setPage((mCurPageNum + 1).toString())
+                bean.setSize(BaseActivity.DEFAULT_PAGE_SIZE)
                 var result = mHttpPost.getTrackList(licence, bean)
                 if (result == null || result.size == 0) {
                     return false
                 }
-                Log.e(TAG, "yanlog result:" + result)
-                mList.clear()
+                if (isReload) {
+                    mList.clear()
+                }
+                if (result != null && result.content != null && result.content.size > 0) {
+                    mCurPageNum++
+                }
                 mList.addAll(result.content)
 
                 if (TextUtils.isEmpty(licence)) {
@@ -175,8 +213,11 @@ class DirtCarListActivity : BaseActivity() {
 
             override fun onPostExecute(result: Boolean?) {
                 super.onPostExecute(result)
-                this@DirtCarListActivity.closeDlg()
+                isLoading = false
+                //this@DirtCarListActivity.closeDlg()
                 var temp = if (result == null) false else result
+                mListView?.onLoadMoreComplete()
+                mListView?.onRefreshComplete()
                 if (temp) {
                     mAdapter.notifyDataSetChanged()
                 } else {

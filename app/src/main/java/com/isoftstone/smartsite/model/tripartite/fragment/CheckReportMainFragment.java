@@ -2,20 +2,21 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
-import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,11 +36,15 @@ public class CheckReportMainFragment extends BaseFragment {
     public static final String ITEM_STATS = "lab_status";
 
     private TripartiteActivity mActivity = null;
-    private ListView mListView = null;
+    private PullToRefreshListView mListView = null;
     private ArrayList<ReportData> mDatas = new ArrayList<>();
     private HttpPost mHttpPost = new HttpPost();
     private String mAccountName = "";
     private BaseAdapter mAdapter = null;
+
+    //分页开始
+    private int mCurPageNum = -1;
+    public boolean isLoading = false;
 
     @Override
     protected int getLayoutRes() {
@@ -52,28 +57,64 @@ public class CheckReportMainFragment extends BaseFragment {
         init();
     }
 
-    public void onDataSetChanged() {
-
-    }
 
     private void init() {
         //初始化Listview
-        mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
+        mListView = (PullToRefreshListView) mActivity.findViewById(R.id.listview_check_frag);
+        PullToRefreshListView.OnRefreshListener listener = new PullToRefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.e(TAG, "yanlog onRefresh:" + isLoading);
+                if (isLoading) {
+                    //mListView.onRefreshComplete();
+                } else {
+                    mCurPageNum = -1;
+                    new QueryMsgTask(true).execute();
+                }
+            }
+
+            @Override
+            public void onLoadMore() {
+                Log.e(TAG, "yanlog onLoadMore:" + isLoading);
+                if (isLoading) {
+                    // mListView.onLoadMoreComplete();
+                } else {
+                    new QueryMsgTask(false).execute();
+                }
+            }
+        };
+        mListView.setOnRefreshListener(listener);
         mAdapter = new CheckReportAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
+        new QueryMsgTask(true).execute();
     }
 
     @Override
     public void onResume() {
-        new QueryMsgTask().execute();
         super.onResume();
     }
 
     private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+        private boolean mIsReLoad = true;
+
+        public QueryMsgTask(boolean isreLoad) {
+            mIsReLoad = isreLoad;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Log.e(TAG, "yanlog query begin:" + mCurPageNum);
+            super.onPreExecute();
+            isLoading = true;
+        }
+
         @Override
         protected String doInBackground(String... params) {
-            ArrayList<PatrolBean> msgs = mHttpPost.getCheckReportList("");
-            if(msgs != null){
+            PageableBean page = new PageableBean();
+            page.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
+            page.setPage(mCurPageNum + 1 + "");
+            ArrayList<PatrolBean> msgs = mHttpPost.getCheckReportList("", page);
+            if (msgs != null) {
                 Collections.sort(msgs, new Comparator<PatrolBean>() {
                     @Override
                     public int compare(PatrolBean o1, PatrolBean o2) {
@@ -87,7 +128,12 @@ public class CheckReportMainFragment extends BaseFragment {
                         return 0;
                     }
                 });
-                mDatas.clear();
+                if (mIsReLoad) {
+                    mDatas.clear();
+                }
+                if (msgs != null && msgs.size() > 0) {
+                    mCurPageNum++;
+                }
                 for (PatrolBean temp : msgs) {
                     ReportData reportData = new ReportData(temp);
                     Log.e(TAG, "reportData:" + reportData);
@@ -100,6 +146,13 @@ public class CheckReportMainFragment extends BaseFragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.e(TAG, "yanlog queryEnd:" + mCurPageNum);
+            isLoading = false;
+            if (mDatas == null || mDatas.size() == 0) {
+                ToastUtils.showShort("未获取到数据");
+            }
+            mListView.onLoadMoreComplete();
+            mListView.onRefreshComplete();
             mAdapter.notifyDataSetChanged();
         }
     }

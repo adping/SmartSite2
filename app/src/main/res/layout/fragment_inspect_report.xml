@@ -9,11 +9,11 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <ListView
+    <com.isoftstone.smartsite.common.widget.PullToRefreshListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="6dp"
-        android:divider="@null"></ListView>
+        android:divider="@null"></com.isoftstone.smartsite.common.widget.PullToRefreshListView>
 
 </LinearLayout>
