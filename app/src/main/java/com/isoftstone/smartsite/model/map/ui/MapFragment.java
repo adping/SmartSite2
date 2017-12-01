@@ -21,6 +21,8 @@ import com.orhanobut.logger.Logger;
  *
  * 发布版SHA1 ： C3:83:83:56:68:FD:2B:BC:EE:BB:16:AF:BA:52:EC:6A:C9:24:19:D5
  *
+ *          isoftstone:90:E0:C0:33:34:8B:6A:7D:6B:3C:68:3D:38:68:CB:0C:DE:06:80:A1
+ *
  *              C3:83:83:56:68:FD:2B:BC:EE:BB:16:AF:BA:52:EC:6A:C9:24:19:D5;com.isoftstone.smartsite
  */
 

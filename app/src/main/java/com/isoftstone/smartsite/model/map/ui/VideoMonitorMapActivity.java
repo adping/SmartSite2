@@ -785,15 +785,15 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 } else {
                     videoView.setClickable(false);
                     videoView.setEnabled(false);
-                    historyView.setClickable(false);
-                    historyView.setEnabled(false);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
                     iv_video.setImageResource(R.drawable.timedisable);
-                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_history.setImageResource(R.drawable.history);
                     iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
-                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
                 }
                 initLocation(new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude())));
@@ -829,15 +829,15 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 } else {
                     videoView.setClickable(false);
                     videoView.setEnabled(false);
-                    historyView.setClickable(false);
-                    historyView.setEnabled(false);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
                     iv_video.setImageResource(R.drawable.timedisable);
-                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_history.setImageResource(R.drawable.history);
                     iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
-                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
                 }
 

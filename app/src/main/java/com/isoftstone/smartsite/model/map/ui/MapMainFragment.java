@@ -598,15 +598,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 } else {
                     videoView.setClickable(false);
                     videoView.setEnabled(false);
-                    historyView.setClickable(false);
-                    historyView.setEnabled(false);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
                     iv_video.setImageResource(R.drawable.timedisable);
-                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_history.setImageResource(R.drawable.history);
                     iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
-                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
                 }
                 tv_video.setText("实时视频");
@@ -652,15 +652,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 } else {
                     videoView.setClickable(false);
                     videoView.setEnabled(false);
-                    historyView.setClickable(false);
-                    historyView.setEnabled(false);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
                     iv_video.setImageResource(R.drawable.timedisable);
-                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_history.setImageResource(R.drawable.history);
                     iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
-                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
                 }
                 eviorment_view.setVisibility(View.VISIBLE);

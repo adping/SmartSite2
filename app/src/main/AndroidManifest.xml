@@ -60,8 +60,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="2bbb674749feb50c096e27343e2d37a4"></meta-data>
 
-
-
         <!-- For test only 测试的主程序-->
         <activity
             android:name="com.isoftstone.smartsite.jpush.MainActivity"
