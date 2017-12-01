@@ -24,8 +24,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
-import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
-import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
+import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdapter;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
@@ -39,7 +38,7 @@ import java.util.Date;
 
 public class ReplyReportFragment extends BaseFragment {
     private GridView mAttachView = null;
-    private AttachGridViewAdatper mAttachAdapter = null;
+    private AttachGridViewAdapter mAttachAdapter = null;
     private ArrayList<Object> mData = null;
 
     private EditText mEditContent = null;
@@ -47,7 +46,7 @@ public class ReplyReportFragment extends BaseFragment {
     private BaseActivity mActivity = null;
     private TextView mLabName = null;
     public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
-    private ArrayList<String> mFilesPath = new ArrayList<>();
+    //private ArrayList<String> mFilesPath = new ArrayList<>();
     Dialog mLoginingDlg;
 
 
@@ -102,7 +101,7 @@ public class ReplyReportFragment extends BaseFragment {
         mData = new ArrayList<Object>();
         mData.add(R.drawable.attachment);
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData,mFilesPath);
+        mAttachAdapter = new AttachGridViewAdapter(getActivity(), mData);
         mAttachView.setAdapter(mAttachAdapter);
         mAttachAdapter.setmIsShowDelete(true);
         mAttachView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -187,13 +186,16 @@ public class ReplyReportFragment extends BaseFragment {
             Log.e(TAG, "deal task begin");
             try {
                 mHttpPost.addPatrolReply(mBean); //添加回复
-                if (mFilesPath != null && mFilesPath.size() >= 1) {
+                if (mData != null && mData.size() >= 1) {
                     PatrolBean report = mHttpPost.getPatrolReport(mBean.getPatrol().getId() + "");
                     ArrayList<ReportBean> reports = report.getReports();
                     int id = report.getReports().get(reports.size() - 1).getId(); //查到刚才回复消息的id
-                    for (String path : mFilesPath) {
-                        Log.e(TAG,"yanlog update file:"+path);
-                        mHttpPost.reportFileUpload(path, id); //上传附件
+                    for (Object path : mData) {
+                        if(path instanceof String) {
+                            Log.e(TAG, "yanlog update file:" + path);
+
+                            mHttpPost.reportFileUpload((String)path, id); //上传附件
+                        }
                     }
                 }
                 return true;
@@ -226,12 +228,12 @@ public class ReplyReportFragment extends BaseFragment {
                     Log.e(TAG, "yanlog uri:" + uri);
                     if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
                         //Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
-                        addAttach(uri.getPath(), uri.toString());
+                        addAttach(uri.getPath());
                         return;
                     }
                     String path = FilesUtils.getPath(getActivity(), uri);
                     //Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
-                    addAttach(path, uri.toString());
+                    addAttach(path);
                 }
             }
         }
@@ -239,27 +241,27 @@ public class ReplyReportFragment extends BaseFragment {
     }
 
     //add files
-    public void addAttach(String path, String uri) {
+    public void addAttach(String path) {
         Log.e(TAG, "yanlog remove begin size:" + mData.size());
         String formatPath = FilesUtils.getFormatString(path);
         Log.e(TAG, "yanlog remove begin size at0:" + mData.get(0));
         mData.remove(mData.size() - 1);
-        mFilesPath.add(path);
-        if (TripartiteActivity.mImageList.contains(formatPath)) {
-            mData.add(uri);
-        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
-            mData.add(TripartiteActivity.mAttach.get(".xls"));
-        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
-            mData.add(TripartiteActivity.mAttach.get(".doc"));
-        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
-            mData.add(TripartiteActivity.mAttach.get(".pdf"));
-        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
-            mData.add(TripartiteActivity.mAttach.get(".ppt"));
-        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
-            mData.add(TripartiteActivity.mAttach.get(".video"));
-        } else {
-            mData.add(TripartiteActivity.mAttach.get(".doc"));
-        }
+        //mFilesPath.add(path);
+ //       if (TripartiteActivity.mImageList.contains(formatPath)) {
+            mData.add(path);
+//        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
+//            mData.add(TripartiteActivity.mAttach.get(".xls"));
+//        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
+//            mData.add(TripartiteActivity.mAttach.get(".doc"));
+//        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
+//            mData.add(TripartiteActivity.mAttach.get(".pdf"));
+//        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
+//            mData.add(TripartiteActivity.mAttach.get(".ppt"));
+//        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
+//            mData.add(TripartiteActivity.mAttach.get(".video"));
+//        } else {
+//            mData.add(TripartiteActivity.mAttach.get(".doc"));
+//        }
 
         mData.add(R.drawable.attachment);
         Log.e(TAG, "yanlog remove end size:" + mData.size());

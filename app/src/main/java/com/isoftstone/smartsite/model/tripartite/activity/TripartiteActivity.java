@@ -105,6 +105,7 @@ public class TripartiteActivity extends BaseActivity {
         mVideoList.add(".asf");
         mVideoList.add(".rm");
         mVideoList.add(".vob");
+        mVideoList.add(".mp3");
 
         mXlsList.add(".txt");
         mXlsList.add(".csv");

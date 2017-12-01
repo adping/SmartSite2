@@ -25,6 +25,10 @@ public class ReportBean {
     private boolean needVisit;;
     private String visitDate;
     private ArrayList<String> reportFiles;
+    private ArrayList<String> smallImagesList;
+    private String smallImages;
+
+
 
     private PatrolBean patrol;
 
@@ -40,6 +44,22 @@ public class ReportBean {
 
     public void setPatrol(PatrolBean patrol) {
         this.patrol = patrol;
+    }
+
+    public void setSmallImagesList(ArrayList<String> temp){
+        this.smallImagesList = temp;
+    }
+
+    public ArrayList<String> getSmallImagesList(){
+        return smallImagesList;
+    }
+
+    public void setSmallImages(String smallImages){
+        this.smallImages = smallImages;
+    }
+
+    public String getSmallImages(){
+        return this.smallImages;
     }
 
     public int getId() {

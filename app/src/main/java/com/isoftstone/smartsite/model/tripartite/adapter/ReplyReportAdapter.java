@@ -71,7 +71,7 @@ public class ReplyReportAdapter extends BaseAdapter {
 
     public void unRegister() {
         try {
-            Log.e(TAG,"yanlog unregister content observer");
+            Log.e(TAG, "yanlog unregister content observer");
             mContext.getContentResolver().unregisterContentObserver(mObserver);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,13 +111,23 @@ public class ReplyReportAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = null;
         ReportBean data = mData.get(position);
-        Log.e(TAG, "yanlog getView report:" + data.getFiles());
-        Log.d(TAG,"getView:HeaderPath:"+data.getCreator().getImageData());
-        if (data.getReportFiles() == null) {
-            Gson gson = new Gson();
-            ArrayList<String> temp = gson.fromJson(data.getFiles(), ArrayList.class);
-            data.setReportFiles(temp);
+        try {
+            if (data.getReportFiles() == null) {
+                Gson gson = new Gson();
+                ArrayList<String> temp = gson.fromJson(data.getFiles(), ArrayList.class);
+                data.setReportFiles(temp);
+            }
+
+            if (data.getSmallImagesList() == null && data.getSmallImages() != null) {
+                Gson gson = new Gson();
+                ArrayList<String> temp = gson.fromJson(data.getSmallImages(), ArrayList.class);
+                data.setSmallImagesList(temp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
         if (data.getCategory() == 3) {
             v = initCheckerReplyView(data);
         } else if (data.getCategory() == 1) {
@@ -169,7 +179,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         //init user head
         try {
             String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
-            ImageView imgView = (ImageView)v.findViewById(R.id.img_head_send_report);
+            ImageView imgView = (ImageView) v.findViewById(R.id.img_head_send_report);
             ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,7 +228,7 @@ public class ReplyReportAdapter extends BaseAdapter {
 
         try {
             String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
-            ImageView imgView = (ImageView)v.findViewById(R.id.img_head);
+            ImageView imgView = (ImageView) v.findViewById(R.id.img_head);
             ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
         } catch (Exception e) {
             e.printStackTrace();
@@ -262,7 +272,7 @@ public class ReplyReportAdapter extends BaseAdapter {
 
         try {
             String headUri = mHttpPost.getFileUrl(data.getCreator().getImageData());
-            ImageView imgView = (ImageView)v.findViewById(R.id.img_head);
+            ImageView imgView = (ImageView) v.findViewById(R.id.img_head);
             ImageUtils.loadImageWithPlaceHolder(mContext, imgView, headUri, R.drawable.default_head);
         } catch (Exception e) {
             e.printStackTrace();
@@ -300,33 +310,41 @@ public class ReplyReportAdapter extends BaseAdapter {
         }
         gridView.setLayoutParams(params);
         // }
+        Log.e(TAG, "yanlog initGridView:" + data.getSmallImagesList());
+        if (data.getSmallImagesList() == null) {
+            //当没有缩略图
+            for (String temp : relativePath) {
+                String formatPath = FilesUtils.getFormatString(temp);
+                if (TripartiteActivity.mImageList.contains(formatPath)) {
+                    String filePath = mHttpPost.getReportPath(data.getId(), temp);
+                    if (new File(filePath).exists()) {
+                        datas.add(mHttpPost.getReportPath(data.getId(), temp));
+                    } else {
+                        datas.add(TripartiteActivity.mAttach.get(".image"));
+                    }
 
-        for (String temp : relativePath) {
-            String formatPath = FilesUtils.getFormatString(temp);
-            if (TripartiteActivity.mImageList.contains(formatPath)) {
-                String filePath = mHttpPost.getReportPath(data.getId(), temp);
-                if (new File(filePath).exists()) {
-                    datas.add(mHttpPost.getReportPath(data.getId(), temp));
+                } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
+                    datas.add(TripartiteActivity.mAttach.get(".xls"));
+                } else if (TripartiteActivity.mDocList.contains(formatPath)) {
+                    datas.add(TripartiteActivity.mAttach.get(".doc"));
+                } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
+                    datas.add(TripartiteActivity.mAttach.get(".pdf"));
+                } else if (TripartiteActivity.mPptList.contains(formatPath)) {
+                    datas.add(TripartiteActivity.mAttach.get(".ppt"));
+                } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
+                    datas.add(TripartiteActivity.mAttach.get(".video"));
                 } else {
-                    datas.add(TripartiteActivity.mAttach.get(".image"));
+                    datas.add(TripartiteActivity.mAttach.get(".doc"));
                 }
-
-            } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
-                datas.add(TripartiteActivity.mAttach.get(".xls"));
-            } else if (TripartiteActivity.mDocList.contains(formatPath)) {
-                datas.add(TripartiteActivity.mAttach.get(".doc"));
-            } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
-                datas.add(TripartiteActivity.mAttach.get(".pdf"));
-            } else if (TripartiteActivity.mPptList.contains(formatPath)) {
-                datas.add(TripartiteActivity.mAttach.get(".ppt"));
-            } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
-                datas.add(TripartiteActivity.mAttach.get(".video"));
-            } else {
-                datas.add(TripartiteActivity.mAttach.get(".doc"));
+            }
+        } else {
+            ArrayList<String> smartPath = data.getSmallImagesList();
+            for (String temp : smartPath) {
+                Uri uri = Uri.parse(mHttpPost.getFileUrl(temp));
+                datas.add(uri);
             }
         }
-        //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        final AttachGridViewAdatper attachAdapter = new AttachGridViewAdatper(mContext, datas);
+        final AttachGridViewAdapter attachAdapter = new AttachGridViewAdapter(mContext, datas);
         gridView.setAdapter(attachAdapter);
         attachAdapter.setAllPath(relativePath);
 
@@ -372,31 +390,6 @@ public class ReplyReportAdapter extends BaseAdapter {
                 }.execute();
             }
         });
-
-//        new AsyncTask<Void, Void, Boolean>() {
-//            @Override
-//            protected Boolean doInBackground(Void... voids) {
-//                for (int i = 0; i < datas.size(); i++) {
-//                    Object object = datas.get(i);
-//                    if (object instanceof Integer) {
-//                        if ((Integer) object == TripartiteActivity.mAttach.get(".image")) {
-//                            Log.e(TAG,"yanlog begin to download image reportFile"+path.get(i) +" "+this);
-//                            mHttpPost.downloadReportFile(data.getId(), path.get(i));
-//                            datas.remove(i);
-//                            datas.add(i, mHttpPost.getReportPath(data.getId(), path.get(i)));
-//                        }
-//                    }
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Boolean aBoolean) {
-//                super.onPostExecute(aBoolean);
-//                Log.e(TAG,"notifyDatasetChanged "+this);
-//                attachAdapter.notifyDataSetChanged();
-//            }
-//        }.execute();
     }
 
     @Override
@@ -405,7 +398,7 @@ public class ReplyReportAdapter extends BaseAdapter {
     }
 
     public class AttachContentObserver extends ContentObserver {
-        HashMap<Long, AttachGridViewAdatper> mMap = new HashMap<>();
+        HashMap<Long, AttachGridViewAdapter> mMap = new HashMap<>();
         HashMap<Long, String> mPath = new HashMap<>();
 
         public AttachContentObserver() {
@@ -417,7 +410,7 @@ public class ReplyReportAdapter extends BaseAdapter {
          * @param adapter
          * @param oPath      相对路径
          */
-        public synchronized void addPath(Long downloadId, AttachGridViewAdatper adapter, String oPath) {
+        public synchronized void addPath(Long downloadId, AttachGridViewAdapter adapter, String oPath) {
             mMap.put(downloadId, adapter);
             mPath.put(downloadId, oPath);
         }
@@ -437,7 +430,7 @@ public class ReplyReportAdapter extends BaseAdapter {
                         if (relativePath.equals(mPath.get(uriId))) {
                             if (TripartiteActivity.mImageList.contains(formatStr)) {
                                 allData.remove(i);
-                                allData.add(i, uri.toString());
+                                allData.add(i, uri);
                                 mMap.get(uriId).notifyDataSetChanged();
                             }
                             ToastUtils.showShort("下载完成");

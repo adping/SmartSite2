@@ -2,6 +2,8 @@ package com.isoftstone.smartsite.model.tripartite.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -18,35 +23,28 @@ import java.util.ArrayList;
  * 附件界面的Adapter
  */
 
-public class AttachGridViewAdatper extends BaseAdapter {
+public class AttachGridViewAdapter extends BaseAdapter {
     private ArrayList<Object> mDatas = null;
     private Context mContext = null;
     private Resources mRes = null;
     private final static String TAG = "AttachGridViewAdapter";
-    private boolean mIsPath = false;
+    //private boolean mIsPath = false;
     private ArrayList<String> mAllPath = new ArrayList<>();
     private boolean mIsShowDelete = false;
-    private ArrayList<String> mPathList = null;
+    //private ArrayList<String> mPathList = null;
 
-    public AttachGridViewAdatper(Context context, ArrayList<Object> datas) {
+    public AttachGridViewAdapter(Context context, ArrayList<Object> datas) {
         mDatas = datas;
         mContext = context;
         mRes = mContext.getResources();
     }
 
-    public AttachGridViewAdatper(Context context, ArrayList<Object> datas, ArrayList<String> pathList) {
-        mDatas = datas;
-        mContext = context;
-        mRes = mContext.getResources();
-        mPathList = pathList;
-    }
-
-    public AttachGridViewAdatper(Context context, ArrayList<Object> datas, boolean isPath) {
-        mDatas = datas;
-        mContext = context;
-        mRes = mContext.getResources();
-        mIsPath = isPath;
-    }
+//    public AttachGridViewAdapter(Context context, ArrayList<Object> datas, ArrayList<String> pathList) {
+//        mDatas = datas;
+//        mContext = context;
+//        mRes = mContext.getResources();
+//        mPathList = pathList;
+//    }
 
     public void setmIsShowDelete(boolean showDelete) {
         mIsShowDelete = showDelete;
@@ -74,15 +72,19 @@ public class AttachGridViewAdatper extends BaseAdapter {
         }
         Object data = mDatas.get(position);
         ImageView imgView = (ImageView) convertView.findViewById(R.id.image);
+        Log.e(TAG, "yanlog GridView:data:" + data);
         if (data instanceof Integer) {
             ImageUtils.loadImageWithPlaceHolder(mContext, imgView, null, (Integer) data);
             //imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
+        } else if (data instanceof Uri) {
+            Uri uri = (Uri) data;
+            ImageUtils.loadImageWithPlaceHolder(mContext, imgView, uri.toString());
         } else {
             String str = (String) data;
-            if (mIsPath) {
+            if (isPic(str) && new File(str).exists()) {
                 ImageUtils.loadImageViewDiskCache(mContext, str, imgView);
             } else {
-                ImageUtils.loadImage(imgView, str);
+                ImageUtils.loadImageWithPlaceHolder(mContext, imgView, null, getShowPicId(str));
             }
         }
 
@@ -95,9 +97,6 @@ public class AttachGridViewAdatper extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     mDatas.remove(position);
-                    if (mPathList != null) {
-                        mPathList.remove(position);
-                    }
                     notifyDataSetChanged();
                 }
             });
@@ -117,5 +116,28 @@ public class AttachGridViewAdatper extends BaseAdapter {
         return mDatas;
     }
 
+    private boolean isPic(String path) {
+        String formatPath = FilesUtils.getFormatString(path);
+        return TripartiteActivity.mImageList.contains(formatPath);
+    }
+
+    private int getShowPicId(String path) {
+        String formatPath = FilesUtils.getFormatString(path);
+        if (TripartiteActivity.mImageList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".image");
+        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".xls");
+        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".image");
+        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".pdf");
+        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".ppt");
+        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
+            return TripartiteActivity.mAttach.get(".video");
+        } else {
+            return TripartiteActivity.mAttach.get(".doc");
+        }
+    }
 
 }
