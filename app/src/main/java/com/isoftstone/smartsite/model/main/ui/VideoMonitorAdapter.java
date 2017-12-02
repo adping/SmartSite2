@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
@@ -24,6 +25,8 @@ import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -155,10 +158,13 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 if(null != viewHolder) {
 
                     if (!NetworkUtils.isConnected()){
-                        ToastUtils.showShort("当前网络不可用，请检查您的网络设置。");
+                        ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
                         return;
                     } else if (!HttpPost.mVideoIsLogin) {
-                        ToastUtils.showShort("相关视频服务不可用，请尝试退出此界面后，重新进入。");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("resCode", devicesBean.getDeviceCoding());
+                        bundle.putInt("resSubType", devicesBean.getCameraType());
+                        Utils.showInitVideoServerDialog((BaseActivity)mContext, Utils.ENTER_REAL_TIME_VIDEO, bundle);
                         return;
                     }
 
@@ -177,10 +183,25 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 if (null != viewHolder) {
 
                     if (!NetworkUtils.isConnected()){
-                        ToastUtils.showShort("当前网络不可用，请检查您的网络设置。");
+                        ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
                         return;
                     } else if (!HttpPost.mVideoIsLogin) {
-                        ToastUtils.showShort("相关视频服务不可用，请尝试退出此界面后，重新进入。");
+                        Date now = new Date();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String beginTime = formatter.format(now) + " 00:00:00";
+                        String endTime = formatter2.format(now);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("resCode", devicesBean.getDeviceCoding());
+                        bundle.putString("beginTime", beginTime);
+                        bundle.putString("endTime", endTime);
+                        bundle.putString("resSubType", devicesBean.getCameraType()+"");
+                        bundle.putString("resName", devicesBean.getDeviceName());
+                        bundle.putBoolean("isOnline", devicesBean.getDeviceStatus().equals("0"));
+                        bundle.putInt("position", 0);
+
+                        Utils.showInitVideoServerDialog((BaseActivity)mContext, Utils.ENTER_HISTORICAL_VIDEO, bundle);
                         return;
                     }
 

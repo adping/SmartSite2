@@ -218,7 +218,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                         mRecvStreamThread.start();
                         Log.i(TAG,"--------------zyf----mRecvStreamThread---");
                     }else{
-                        Toast.makeText(VideoPlayActivity.this,errorDesc,Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort(errorDesc);
                     }
 
                 }
@@ -267,7 +267,11 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         if (null != mPlayer && !mPlayer.AVIsPlaying()) {
-            startLive(mCameraCode);
+            try {
+                startLive(mCameraCode);
+            } catch (Exception e) {
+                Log.i(TAG, "startLive video throw a exception : " + e.getMessage());
+            }
         }
         super.onResume();
     }
@@ -275,7 +279,11 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onPause() {
         if (null != mPlayer && mPlayer.AVIsPlaying()) {
-            stopLive();
+            try {
+                stopLive();
+            } catch (Exception e) {
+                Log.i(TAG, "stopLive video throw a exception : " + e.getMessage());
+            }
         }
         super.onPause();
     }

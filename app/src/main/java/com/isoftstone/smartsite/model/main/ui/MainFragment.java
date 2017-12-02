@@ -37,7 +37,9 @@ import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionSummaryActivity;
 import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
@@ -366,10 +368,21 @@ public class MainFragment extends BaseFragment {
 
     private void enterVideoMonitoring() {
         //进入视频监控
-        //Intent intent = new Intent(getActivity(), VideoMonitoringActivity.class);
-        //getActivity().startActivity(intent);
-        LogginVideoTask logginVideoTask = new LogginVideoTask(mContext);
-        logginVideoTask.execute();
+
+        if (!NetworkUtils.isConnected()){
+            ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+            return;
+        }
+
+        if (!HttpPost.mVideoIsLogin) {
+            //Utils.LogginVideoTask logginVideoTask = new Utils.LogginVideoTask((BaseActivity)getActivity(), Utils.ENTER_VIDEO_DEVICE_LIST, null);
+            //logginVideoTask.execute();
+            Utils.showInitVideoServerDialog((BaseActivity)mContext, Utils.ENTER_VIDEO_DEVICE_LIST, null);
+        } else {
+            Intent intent = new Intent(getActivity(), VideoMonitoringActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        }
     }
 
     /**
@@ -453,100 +466,4 @@ public class MainFragment extends BaseFragment {
         super.onDestroy();
     }
 
-
-    class LogginVideoTask extends AsyncTask<Void,Void,Integer> {
-        private Context context;
-        LogginVideoTask(Context context) {
-            this.context = context;
-        }
-
-        /**
-         * 运行在UI线程中，在调用doInBackground()之前执行
-         */
-        @Override
-        protected void onPreExecute() {
-            //Toast.makeText(context,"开始执行",Toast.LENGTH_SHORT).show();
-            ((BaseActivity)getActivity()).showDlg("正在初始化视频加载服务相关内容。");
-        }
-        /**
-         * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
-         */
-        @Override
-        protected Integer doInBackground(Void... params) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            try {
-
-                if(mHttpPost.getVideoConfig()){
-                    LoginParam param = new LoginParam();
-                    param.setServer(mHttpPost.mLoginBean.getmVideoParameter().getIp());
-                    param.setPort(Integer.parseInt(mHttpPost.mLoginBean.getmVideoParameter().getPort()));
-                    param.setUserName(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
-                    param.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginPass());
-                    //调用登录接口
-                    ServiceManager.login(param, new OnLoginListener(){
-
-                        @Override
-                        public void onLoginResult(long errorCode, String errorDesc) {
-                            if (errorCode == 0) {
-                                mLoginResultCode = LOGIN_RESULTS_SUCCESSFUL_CODE;
-                                startKeepaliveService();
-                                ((BaseActivity)getActivity()).closeDlg();
-
-                                Intent intent = new Intent(getActivity(), VideoMonitoringActivity.class);
-                                getActivity().startActivity(intent);
-                            } else {
-                                mLoginResultCode = LOGIN_RESULTS_FAILED_CODE;
-                                ((BaseActivity)getActivity()).closeDlg();
-                                ToastUtils.showShort("初始化视频加载服务相关内容失败。" + errorCode + "," + errorDesc);
-                            }
-                        }
-                    });
-                }else{
-                    mLoginResultCode = LOGIN_RESULTS_FAILED_CODE;
-                    ((BaseActivity)getActivity()).closeDlg();
-                    ToastUtils.showShort("初始化视频加载服务相关内容失败，请稍后重试。");
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG,"e : " + e.getMessage());
-                mLoginResultCode =  LOGIN_RESULTS_EXCEPTION_CODE;
-                ((BaseActivity)getActivity()).closeDlg();
-                ToastUtils.showShort("初始化视频加载服务相关内容失败，请稍后重试。" + e.getMessage());
-            }
-
-            return mLoginResultCode;
-        }
-
-        /**
-         * 运行在ui线程中，在doInBackground()执行完毕后执行
-         */
-        @Override
-        protected void onPostExecute(Integer resultsCode) {
-            super.onPostExecute(resultsCode);
-            //Toast.makeText(context,"执行完毕",Toast.LENGTH_SHORT).show();
-            //if (resultsCode == LOGIN_RESULTS_FAILED_CODE || resultsCode == LOGIN_RESULTS_EXCEPTION_CODE) {
-            //    ((BaseActivity)getActivity()).closeDlg();
-            //    ToastUtils.showShort("初始化视频加载服务相关内容失败，请稍后重试。");
-            //}
-        }
-
-        /**
-         * 在publishProgress()被调用以后执行，publishProgress()用于更新进度
-         */
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-    }
-
-    //启动保活服务
-    public void startKeepaliveService(){
-        Intent toService = new Intent(mContext, NewKeepAliveService.class);
-        mContext.startService(toService);
-    }
 }

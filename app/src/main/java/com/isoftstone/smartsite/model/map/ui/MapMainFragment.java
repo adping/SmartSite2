@@ -50,6 +50,7 @@ import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.common.AppManager;
@@ -74,7 +75,9 @@ import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.MapUtils;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -743,6 +746,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     Bundle bundle = new Bundle();
                     bundle.putString("resCode", currentVideoBean.getDeviceCoding());
                     bundle.putInt("resSubType", currentVideoBean.getCameraType());
+
+                    if (!NetworkUtils.isConnected()){
+                        ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+                        return;
+                    } else if (!HttpPost.mVideoIsLogin) {
+                        Utils.showInitVideoServerDialog((BaseActivity) getActivity(), Utils.ENTER_REAL_TIME_VIDEO, bundle);
+                        return;
+                    }
+
                     intent.putExtras(bundle);
                     intent.setClass(getActivity(), VideoPlayActivity.class);
                     startActivity(intent);
@@ -757,10 +769,12 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 break;
             case R.id.history:
                 if("历史监控".equals(tv_history.getText())){
+
                     Date now = new Date();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String beginTime = formatter.format(now) + " 00:00:00";
-                    String endTime = formatter.format(now) + " 23:59:59";
+                    String endTime = formatter2.format(now);
 
                     Intent intent1 = new Intent();
                     Bundle bundle1 = new Bundle();
@@ -771,6 +785,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     bundle1.putString("beginTime", beginTime);
                     bundle1.putString("endTime", endTime);
                     bundle1.putInt("position", 0);
+
+                    if (!NetworkUtils.isConnected()){
+                        ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+                        return;
+                    } else if (!HttpPost.mVideoIsLogin) {
+                        Utils.showInitVideoServerDialog((BaseActivity) getActivity(), Utils.ENTER_HISTORICAL_VIDEO, bundle1);
+                        return;
+                    }
+
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent1.putExtras(bundle1);
                     intent1.setClass(getActivity(), VideoRePlayActivity.class);

@@ -292,11 +292,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             @Override
             public void onQueryReplayResult(long errorCode, String errorDesc, List<RecordInfo> recordList) {
                 if (errorCode != 0 || recordList == null ){
-                    Toast.makeText(mContext,"error info: " + errorDesc, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, errorDesc, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (recordList.size() <= 0) {
-                    Toast.makeText(mContext,"此时段没有录像...",Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(mContext.getText(R.string.replay_video_error_for_no_list).toString());
                     return;
                 }
 
@@ -401,6 +401,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
     public void  stopReplay() {
         if(mPlayer != null) {
+
             //停止回放
             ServiceManager.stopReplay(mPlayer.getPlaySession(), new OnStopReplayListener() {
                 @Override
@@ -451,7 +452,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        stopReplay();
+        try {
+            stopReplay();
+        } catch (Exception e) {
+            Log.i(TAG, "stopReplay video throw a exception : " + e.getMessage());
+        }
+
         //销毁Player
         if (null != mPlayer) {
             mPlayer.AVFinalize();
