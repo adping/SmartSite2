@@ -178,8 +178,13 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_four_view1.setVisibility(View.VISIBLE);
                             fourView1.setVisibility(View.VISIBLE);
-                            int departmentId = Integer.parseInt(monthTasks.getList().get(1).get(0).getDepartmentId());
-                            tv_four_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                            try {
+                                int departmentId = Integer.parseInt(monthTasks.getList().get(1).get(0).getDepartmentId());
+                                tv_four_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                            }catch (Exception e){
+                                tv_four_view1.setText("");
+                            }
+
                         }
 
                         if(monthTasks.getList().get(0).size() == 0){
@@ -188,8 +193,13 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_four_view2.setVisibility(View.VISIBLE);
                             fourView2.setVisibility(View.VISIBLE);
-                            int departmentId = Integer.parseInt(monthTasks.getList().get(0).get(0).getDepartmentId());
-                            tv_four_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                            try{
+                                int departmentId = Integer.parseInt(monthTasks.getList().get(0).get(0).getDepartmentId());
+                                tv_four_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                            }catch (Exception e){
+                                tv_four_view2.setText("");
+                            }
+
                         }
                     }
 
@@ -219,8 +229,14 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_five_view1.setVisibility(View.VISIBLE);
                             fiveView1.setVisibility(View.VISIBLE);
-                            int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
-                            tv_five_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                            try{
+                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
+                                tv_five_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                            }catch (Exception e){
+                                tv_five_view1.setText("");
+                            }
+
+
                         }
 
                         if(fiveMonthTasks.getDate().get(0).size() == 0){
@@ -229,8 +245,12 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         } else {
                             tv_five_view2.setVisibility(View.VISIBLE);
                             fiveView2.setVisibility(View.VISIBLE);
-                            int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
-                            tv_five_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                            try{
+                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
+                                tv_five_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                            }catch (Exception e){
+                                tv_five_view2.setText("");
+                            }
                         }
                     }
 
@@ -660,6 +680,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     strs = new String[]{currentCompanyTotalCompareIdString2,currentCompanyTotalCompareIdString1};
                 }
                 monthTasks = httpPost.getDepartmentsMonthTasks(year + "-" + month,strs);
+                LogUtils.e(TAG,(monthTasks == null ? "null " : monthTasks.toString()));
                 if(monthTasks == null || (monthTasks.getData().size() == 0 && monthTasks.getList().size() == 0)){
                     mHandler.sendEmptyMessage(HANDLE_FOUR_CHART_FAIL);
                 }
@@ -681,6 +702,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     strs = new String[]{currentCompanyMonthIdString2,currentCompanyMonthIdString1};
                 }
                 fiveMonthTasks = httpPost.getDepartmentReport(year + "-" + month,strs);
+                LogUtils.e(TAG,fiveMonthTasks == null ? "five null " : fiveMonthTasks.toString());
                 LogUtils.e(TAG,(fiveMonthTasks.getDate().get(1) == null) + " .. ");
                 if(fiveMonthTasks == null || (fiveMonthTasks.getData().size() == 0 && fiveMonthTasks.getDate().size() == 0)){
                     mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
