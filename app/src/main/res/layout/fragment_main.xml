@@ -190,7 +190,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -225,6 +226,51 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="未查看消息"
+                    android:textColor="#ffffff"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/selector_common_press"
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_main_unhandlertask_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:src="@drawable/daichulirenwu" />
+
+                    <TextView
+                        android:id="@+id/lab_main_unhandlertask_num"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignTop="@id/img_main_unhandlertask_num"
+                        android:layout_marginLeft="-7dp"
+                        android:layout_marginTop="-5dp"
+                        android:layout_toRightOf="@id/img_main_unhandlertask_num"
+                        android:background="@drawable/shape_corner_msg_num"
+                        android:gravity="center"
+                        android:textColor="#ffffff"
+                        android:textSize="9dp" />
+                </RelativeLayout>
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="待处理任务"
                     android:textColor="#ffffff"
                     android:textSize="12dp" />
             </LinearLayout>

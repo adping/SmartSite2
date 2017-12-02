@@ -88,7 +88,7 @@ public class SplashActivity extends BaseActivity {
                     //apk_url = "http://download.sj.qq.com/upload/connAssitantDownload/upload/MobileAssistant_1.apk";
                     androidType = installBean.getAndroid_type();
                     apk_version = installBean.getAndroid_version();
-                    if (getAppVersionName() != null && !getAppVersionName().equals(versionName)) {
+                    if (getAppVersionName() != null && getAppVersionName().compareTo(versionName) < 0) {
                         mHandler.removeMessages(GO_TO_LOGIN);
                         mHandler.sendEmptyMessage(SHOW_UPDATE_APP_DIALOG);
                     }
@@ -151,8 +151,8 @@ public class SplashActivity extends BaseActivity {
 
     private void showToUpdateVersionDialog() {
         if (updateVersionDialog == null) {
-            //if(androidType != 1){
-            if (true) {
+            if(androidType != 1){
+            //if (true) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("版本更新检查");
                 builder.setMessage("发现新版本，是否更新？");

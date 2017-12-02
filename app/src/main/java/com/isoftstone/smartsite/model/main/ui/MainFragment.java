@@ -65,6 +65,7 @@ public class MainFragment extends BaseFragment {
     private TextView mWeatherTextView = null;
     private TextView mTemperatureTextView = null;
     private TextView lab_main_unread_num = null;  //未查看消息数目
+    private TextView lab_main_unHandlerTask_num = null;  //待处理任务数目
     private TextView lab_report_unread_num = null;  //未查看报告数目
     private TextView lab_vcr_unread_num = null;//视频监控设备数
     private TextView lab_air_unread_num = null;//环境监控数目
@@ -75,10 +76,11 @@ public class MainFragment extends BaseFragment {
     private View mInspectPlan = null;             //巡查计划
     private View mDircar = null;//渣土车监控
 
-    private LinearLayout mVideoMonitoringMsg = null;    //未查看消息点击区域
-    private LinearLayout mAirMonitoringMsg = null;      //待处理报告点击区域
-    private LinearLayout mUnCheckMsg = null;            //视频监控设备
-    private LinearLayout mUntreatedReport = null;       //环境监控设备
+    private LinearLayout mVideoMonitoringMsg = null;    //视频监控设备
+    private LinearLayout mAirMonitoringMsg = null;      //环境监控设备
+    //private LinearLayout mUnCheckMsg = null;            //未查看消息点击区域
+    private LinearLayout mUntreatedReport = null;       //待处理报告点击区域
+    private LinearLayout mUnHandlerTask = null;         //待处理任务点击
     private ListView mListView = null;
     private ImageView wuran_image = null;
     private ImageView wuran_icon = null;
@@ -112,8 +114,10 @@ public class MainFragment extends BaseFragment {
 
     private void initView() {
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
-        lab_main_unread_num = (TextView) rootView.findViewById(R.id.lab_main_unread_num);  //未查看消息数目
-        lab_main_unread_num.setVisibility(View.INVISIBLE);
+        lab_main_unHandlerTask_num = (TextView) rootView.findViewById(R.id.lab_main_unhandlertask_num);  //未查看消息数目
+        lab_main_unHandlerTask_num.setVisibility(View.INVISIBLE);
+        //lab_main_unread_num = (TextView) rootView.findViewById(R.id.lab_main_unread_num);  //未查看消息数目
+        //lab_main_unread_num.setVisibility(View.INVISIBLE);
         lab_report_unread_num = (TextView) rootView.findViewById(R.id.lab_report_unread_num);  //未查看报告数目
         lab_report_unread_num.setVisibility(View.INVISIBLE);
         lab_vcr_unread_num = (TextView) rootView.findViewById(R.id.lab_vcr_unread_num);//视频监控设备数
@@ -121,11 +125,19 @@ public class MainFragment extends BaseFragment {
         lab_air_unread_num = (TextView) rootView.findViewById(R.id.lab_air_unread_num);//环境监控数目
         lab_air_unread_num.setVisibility(View.INVISIBLE);
         mTemperatureTextView = (TextView) rootView.findViewById(R.id.text_temperature);
-        mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
+
+        /*mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
         mUnCheckMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterUnChekMsg();
+            }
+        });*/
+        mUnHandlerTask= (LinearLayout) rootView.findViewById(R.id.textView9);
+        mUnHandlerTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterPatrolMission();
             }
         });
         mUntreatedReport = (LinearLayout) rootView.findViewById(R.id.textView11);
@@ -289,10 +301,17 @@ public class MainFragment extends BaseFragment {
         if (mMobileHomeBean == null) {
             return;
         }
+        /*
         int unreadMessage = mMobileHomeBean.getUnreadMessages();
         if (unreadMessage > 0) {
             lab_main_unread_num.setVisibility(View.VISIBLE);
             lab_main_unread_num.setText(unreadMessage + "");
+        }
+        */
+        int unHandlerTask = mMobileHomeBean.getUnHandleTask();
+        if (unHandlerTask > 0) {
+            lab_main_unHandlerTask_num.setVisibility(View.VISIBLE);
+            lab_main_unHandlerTask_num.setText(unHandlerTask + "");
         }
         int unreadPatrols = mMobileHomeBean.getUntreatedPatrols();
         if (unreadPatrols > 0) {

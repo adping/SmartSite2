@@ -128,7 +128,7 @@ public class HttpPost {
 
     public static LoginBean mLoginBean = null;
     public static CookiesManager mCookiesManager = null;
-    private ArrayList<CompanyBean> companyNameList;
+    public static ArrayList<CompanyBean> companyNameList;
 
     public HttpPost() {
         if (mClient == null) {
@@ -484,6 +484,7 @@ public class HttpPost {
                     CompanyBean companyBean = companyNameList.get(i);
                     if (companyBean.getValue().equals(id + "")) {
                         companyName = companyBean.getContent();
+                        break;
                     }
                 }
             }
@@ -493,6 +494,7 @@ public class HttpPost {
                 CompanyBean companyBean = companyNameList.get(i);
                 if (companyBean.getValue().equals(id + "")) {
                     companyName = companyBean.getContent();
+                    break;
                 }
             }
         }

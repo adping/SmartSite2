@@ -13,6 +13,7 @@ public class MobileHomeBean {
     private int allVses;    //视频设备总数
     private int openEmes;   //开启的环境设备数
     private int allEmes;    //环境设备总数
+    private int unHandleTask; //待处理任务
     private int AQI;
     private ArrayList<MessageBean> messages;  //最新N条消息
     private DataQueryBean avgEqis;        //平均环境质量指数
@@ -87,5 +88,13 @@ public class MobileHomeBean {
 
     public void setAvgEqis(DataQueryBean avgEqis) {
         this.avgEqis = avgEqis;
+    }
+
+    public int getUnHandleTask() {
+        return unHandleTask;
+    }
+
+    public void setUnHandleTask(int unHandleTask) {
+        this.unHandleTask = unHandleTask;
     }
 }
