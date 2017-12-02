@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,13 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             public void run() {
                 PageableBean pageableBean = new PageableBean();
                 HttpPost httpPost = new HttpPost();
-                patrolTaskBeanPage = httpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);
-                patrolTaskBeanArrayList = patrolTaskBeanPage.getContent();
+                try {
+                    patrolTaskBeanPage = httpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);
+                    patrolTaskBeanArrayList = patrolTaskBeanPage.getContent();
+                } catch (NullPointerException e) {
+                    patrolTaskBeanArrayList = null;
+                    Log.i(TAG, "throw a  null point exception :" + e.getMessage());
+                }
                 handler.sendEmptyMessage(TIME_TO_INITVIEW);
             }
         }).start();
