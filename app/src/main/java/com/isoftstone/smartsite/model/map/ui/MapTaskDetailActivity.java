@@ -130,6 +130,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
     protected void afterCreated(Bundle savedInstanceState) {
         httpPost = new HttpPost();
         userTrackBean = (UserTrackBean) getIntent().getSerializableExtra("data");
+        LogUtils.e(TAG,"userTrackBean : " + (userTrackBean == null ? "null" : userTrackBean.toString()));
         taskId = userTrackBean.getTaskId();
 
         initToorBar();
@@ -163,7 +164,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(View view) {
                 int position = rv.getChildAdapterPosition(view);
                 recyclerViewAdapter.updateViews(position);
-                currentUserBean = userBeans.get(position);
+                currentUserBean = userTrackBean.getPatrolTask().getUsers().get(position);
                 updateUserGuiji();
             }
         });
@@ -333,7 +334,6 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
                     long userId = userTrackBean.getUser().getId();
-
                     for (int i = 0; i < userBeans.size(); i++) {
                         LogUtils.e(TAG,userBeans.get(i).toString());
                         if(userBeans.get(i).getId() == userId){
