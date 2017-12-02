@@ -139,12 +139,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         choiceLists = new ArrayList<String>();
-        choiceLists.add("光谷二路");
-        choiceLists.add("光谷四路");
-        choiceLists.add("光谷一路");
-        choiceLists.add("光谷五路");
-        choiceLists.add("光谷三路");
-        choiceLists.add("中心城");
         initMyPopuWindow();
         liuliang = (TextView) rootView.findViewById(R.id.liuliang);
         liuliangduibi = (TextView) rootView.findViewById(R.id.liuliangduibi);
@@ -330,6 +324,18 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
         SharedPreferencesUtils.saveBaseWidth(mContext, 0.000f);
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
+        int size = carInfoList.size();
+        for (int i = 0; i < size; i++) {
+            choiceLists.add(carInfoList.get(i).getArch().getName());
+            if (i == 0) {
+                String name = carInfoList.get(0).getArch().getName();
+                choice_load_one.setText(name);
+                baojinlv_duibi.setText(name);
+            }
+            if (i == 1) {
+                choice_load_two.setText(carInfoList.get(1).getArch().getName());
+            }
+        }
         //加载流量对比地址选择
         mCarInfoList = carInfoList;
         archName = null;
