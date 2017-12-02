@@ -11,6 +11,7 @@ public class LoginBean {
     private String mName = "";    //用户登录姓名
     private String mPassword = "";  //用户登录密码
     private VideoParameter mVideoParameter;
+    private String registerId = "";
     private UserBean mUserBean = null;      //用户详细信息
 
     public UserBean getmUserBean() {
@@ -76,6 +77,14 @@ public class LoginBean {
 
     public void setLoginSuccess(boolean loginSuccess) {
         isLoginSuccess = loginSuccess;
+    }
+
+    public String getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(String registerId) {
+        this.registerId = registerId;
     }
 
     public static  class VideoParameter{

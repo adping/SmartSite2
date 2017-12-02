@@ -40,6 +40,10 @@ public class MessageOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getMessage(strurl,mClient,title,type,status,module);
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
@@ -70,6 +74,11 @@ public class MessageOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                readMessage(strurl,mClient,id);
+                return;
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();

@@ -61,6 +61,10 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPatrolTaskList(strurl,mClient,userId,taskName,address,taskTimeStart,taskTimeEnd,pageableBean);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -110,6 +114,10 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPatrolTaskListAll(strurl,mClient,userId,planId,planStatus,taskType,taskStatus,taskTimeStart,taskTimeEnd,pageableBean);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -136,6 +144,10 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return patrolTaskSave(strurl,mClient,patrolTaskBean);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -162,6 +174,10 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return patrolTaskFindOne(strurl,mClient,taskId);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -191,6 +207,11 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                updateTaskStart(strurl,mClient,taskId,taskName);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -220,6 +241,11 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                executeTask(strurl,mClient,taskId,taskName);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -248,6 +274,11 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                updatePatrolPositionStatus(strurl,mClient,id,position);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -277,6 +308,11 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                userTrack(strurl,mClient,userId,taskId,longitude,latitude);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -301,6 +337,10 @@ public class PatrolTaskOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return findUserAll(strurl,mClient);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();

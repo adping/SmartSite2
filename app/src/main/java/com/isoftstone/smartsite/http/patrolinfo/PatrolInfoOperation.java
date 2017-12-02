@@ -40,6 +40,10 @@ public class PatrolInfoOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPatrolReportData(strurl,mClient,time);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -72,6 +76,10 @@ public class PatrolInfoOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getDepartmentUserTaskData(strurl,mClient,time,departmentId);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -103,6 +111,10 @@ public class PatrolInfoOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getDepartmentMonthDat(strurl,mClient,time,departmentId);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -136,6 +148,10 @@ public class PatrolInfoOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getDepartmentsMonthTasks(strurl,mClient,time,departmentIds);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -168,6 +184,10 @@ public class PatrolInfoOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getDepartmentReport(strurl,mClient,time,departmentIds);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();

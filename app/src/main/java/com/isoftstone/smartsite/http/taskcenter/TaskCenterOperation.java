@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.http.taskcenter;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
 import com.isoftstone.smartsite.utils.LogUtils;
 
@@ -30,6 +31,10 @@ public class TaskCenterOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return queryPendingPlan(strurl,mClient);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);

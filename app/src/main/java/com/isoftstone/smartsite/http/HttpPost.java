@@ -48,6 +48,7 @@ import okhttp3.OkHttpClient;
  */
 
 public class HttpPost {
+    public static final  int HTTP_LOGIN_TIME_OUT = 401;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient mClient = null;
     //public static String URL = "http://111.47.21.51:19090";//生产
@@ -149,6 +150,12 @@ public class HttpPost {
         return list;
     }
 
+    public static  void autoLogin(){
+        HttpPost httpPost = new HttpPost();
+        if(mLoginBean != null){}
+        httpPost.login(mLoginBean.getmName(),mLoginBean.getmPassword(),mLoginBean.getRegisterId());
+    }
+
 
     public static boolean isConnected() {
         return NetworkUtils.isConnected();
@@ -172,6 +179,7 @@ public class HttpPost {
                 mLoginBean.setLoginSuccess(true);
                 mLoginBean.setmName(username);
                 mLoginBean.setmPassword(password);
+                mLoginBean.setRegisterId(mobileDeviceId);
             } else {
                 mLoginBean.setmErrorCode(loginBean.getmErrorCode());
             }

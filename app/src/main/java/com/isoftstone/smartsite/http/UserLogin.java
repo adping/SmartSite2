@@ -31,12 +31,12 @@ import okhttp3.Response;
 public class UserLogin {
     private static String TAG = "UserLogin";
 
-    public static LoginBean login(String strurl, OkHttpClient mClient, String username, String password, String mobileDeviceId){
+    public static LoginBean login(String strurl, OkHttpClient mClient, String username, String password, String mobileDeviceId) {
         LoginBean loginBean = null;
         FormBody body = new FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
-                .add("registerId",mobileDeviceId)
+                .add("registerId", mobileDeviceId)
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)
@@ -45,18 +45,18 @@ public class UserLogin {
         Response response = null;
         try {
             response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,"login response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, "login response code " + response.code());
+            if (response.isSuccessful()) {
                 loginBean = new LoginBean();
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,"login response "+responsebody);
+                LogUtils.i(TAG, "login response " + responsebody);
                 JSONObject json = new JSONObject(responsebody);
                 boolean success = json.getBoolean("success");
-                if(success){
+                if (success) {
                     loginBean.setmName(username);
                     loginBean.setmPassword(password);
                     loginBean.setLoginSuccess(true);
-                }else{
+                } else {
                     int errorinfo = json.getInt("reason");
                     loginBean.setmErrorCode(errorinfo);
                     loginBean.setLoginSuccess(false);
@@ -70,7 +70,7 @@ public class UserLogin {
         return loginBean;
     }
 
-    public static LoginBean.VideoParameter getVideoConfig(String strurl, OkHttpClient mClient){
+    public static LoginBean.VideoParameter getVideoConfig(String strurl, OkHttpClient mClient) {
         LoginBean.VideoParameter videoParameter = null;
         String funName = "getVideoConfig";
         Request request = new Request.Builder()
@@ -80,12 +80,16 @@ public class UserLogin {
         Response response = null;
         try {
             response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getVideoConfig(strurl,mClient);
+            }
+            if (response.isSuccessful()) {
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 Gson gson = new Gson();
-                videoParameter = gson.fromJson(responsebody,LoginBean.VideoParameter.class);
+                videoParameter = gson.fromJson(responsebody, LoginBean.VideoParameter.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +98,7 @@ public class UserLogin {
     }
 
 
-    public static UserBean getLoginUser(String strurl, OkHttpClient mClient,BaseUserBean userBean){
+    public static UserBean getLoginUser(String strurl, OkHttpClient mClient, BaseUserBean userBean) {
         UserBean userBeanReturn = null;
         UserBean.Permission permission = null;
         String funName = "getLoginUser";
@@ -108,23 +112,27 @@ public class UserLogin {
                     .post(body)
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getLoginUser(strurl,mClient,userBean);
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 JSONObject object = new JSONObject(responsebody);
-                userBeanReturn = gson.fromJson(responsebody,UserBean.class);
+                userBeanReturn = gson.fromJson(responsebody, UserBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  userBeanReturn;
+        return userBeanReturn;
     }
 
-    public static UserBean getLoginUserById(String strurl, OkHttpClient mClient){
+    public static UserBean getLoginUserById(String strurl, OkHttpClient mClient) {
         UserBean userBeanReturn = new UserBean();
         String funName = "getLoginUserById";
         try {
@@ -133,13 +141,17 @@ public class UserLogin {
                     .get()
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getLoginUserById(strurl,mClient);
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 Gson gson = new Gson();
-                BaseUserBean user = gson.fromJson(responsebody,BaseUserBean.class);
+                BaseUserBean user = gson.fromJson(responsebody, BaseUserBean.class);
                 userBeanReturn.setLoginUser(user);
                 userBeanReturn.setmPermission(HttpPost.mLoginBean.getmUserBean().getmPermission());
             }
@@ -149,22 +161,26 @@ public class UserLogin {
         return userBeanReturn;
     }
 
-    public static BaseUserBean getUserById(String strurl, OkHttpClient mClient,long id){
+    public static BaseUserBean getUserById(String strurl, OkHttpClient mClient, long id) {
         BaseUserBean userBeanReturn = null;
         String funName = "getUserById";
         try {
             Request request = new Request.Builder()
-                    .url(strurl+id)
+                    .url(strurl + id)
                     .get()
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getUserById(strurl,mClient,id);
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 Gson gson = new Gson();
-                userBeanReturn = gson.fromJson(responsebody,BaseUserBean.class);
+                userBeanReturn = gson.fromJson(responsebody, BaseUserBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,7 +188,7 @@ public class UserLogin {
         return userBeanReturn;
     }
 
-    public static  void  userUpdate(String strurl, OkHttpClient mClient,BaseUserBean userBean){
+    public static void userUpdate(String strurl, OkHttpClient mClient, BaseUserBean userBean) {
 
         String funName = "userUpdate";
         try {
@@ -185,19 +201,23 @@ public class UserLogin {
                     .post(body)
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                userUpdate(strurl,mClient,userBean);
+                return;
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static  MobileHomeBean getMobileHomeData(String strurl, OkHttpClient mClient)
-    {
+    public static MobileHomeBean getMobileHomeData(String strurl, OkHttpClient mClient) {
         MobileHomeBean mobileHomeBean = null;
         String funName = "getMobileHomeData";
         try {
@@ -206,30 +226,34 @@ public class UserLogin {
                     .get()
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getMobileHomeData(strurl,mClient);
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 Gson gson = new Gson();
-                mobileHomeBean = gson.fromJson(responsebody,MobileHomeBean.class);
+                mobileHomeBean = gson.fromJson(responsebody, MobileHomeBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return  mobileHomeBean;
+        return mobileHomeBean;
     }
 
 
-    public static void  userImageUpload(String strurl, OkHttpClient mClient,Bitmap bit,Bitmap.CompressFormat format){
+    public static void userImageUpload(String strurl, OkHttpClient mClient, Bitmap bit, Bitmap.CompressFormat format) {
         String funName = "userImageUpload";
         try {
-            ByteArrayOutputStream bos=new ByteArrayOutputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bit.compress(format, 100, bos);//参数100表示不压缩
-            byte[] bytes=bos.toByteArray();
-            String strBase64 =  Base64.encodeToString(bytes, Base64.DEFAULT);
+            byte[] bytes = bos.toByteArray();
+            String strBase64 = Base64.encodeToString(bytes, Base64.DEFAULT);
             JSONObject json = new JSONObject();
-            json.put("base64",strBase64);
+            json.put("base64", strBase64);
             RequestBody body = RequestBody.create(HttpPost.JSON, json.toString());
 
             Request request = new Request.Builder()
@@ -237,11 +261,16 @@ public class UserLogin {
                     .post(body)
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                userImageUpload(strurl,mClient,bit,format);
+                return;
+            }
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -250,33 +279,33 @@ public class UserLogin {
         }
     }
 
-    public static InstallBean getSystemConifg(String strurl, OkHttpClient mClient){
+    public static InstallBean getSystemConifg(String strurl, OkHttpClient mClient) {
 
         InstallBean installBean = null;
         String funName = "getSystemConifg";
-        try{
+        try {
             Request request = new Request.Builder()
                     .url(strurl)
                     .get()
                     .build();
             Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 JSONArray jsonArray = new JSONArray(responsebody);
                 installBean = new InstallBean();
-                for (int i = 0; i <jsonArray.length(); i ++){
-                      JSONObject object = (JSONObject) jsonArray.get(i);
-                      String key = object.getString("key");
-                      if(key.equals("android_type")){
-                          installBean.setAndroid_type(object.getInt("value"));
-                      }
-                     if(key.equals("android_url")){
-                          installBean.setAndroid_url(object.getString("value"));
-                     }
-                    if(key.equals("android_version")){
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject object = (JSONObject) jsonArray.get(i);
+                    String key = object.getString("key");
+                    if (key.equals("android_type")) {
+                        installBean.setAndroid_type(object.getInt("value"));
+                    }
+                    if (key.equals("android_url")) {
+                        installBean.setAndroid_url(object.getString("value"));
+                    }
+                    if (key.equals("android_version")) {
                         installBean.setAndroid_version(object.getString("value"));
                     }
                 }
@@ -290,12 +319,12 @@ public class UserLogin {
         return installBean;
     }
 
-    public static ArrayList<CompanyBean> getCompanyList(String strurl, OkHttpClient mClient, String lang){
+    public static ArrayList<CompanyBean> getCompanyList(String strurl, OkHttpClient mClient, String lang) {
         String funName = "getCompanyList";
         ArrayList<CompanyBean> list = null;
         FormBody body = new FormBody.Builder()
                 .add("lang", lang)
-                .add("category","user.department")
+                .add("category", "user.department")
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)
@@ -304,12 +333,16 @@ public class UserLogin {
         Response response = null;
         try {
             response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getCompanyList(strurl,mClient,lang);
+            }
+            if (response.isSuccessful()) {
                 String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
                 String rawRecords = new JSONObject(responsebody).getString("rawRecords");
-                list = HttpPost.stringToList(rawRecords,CompanyBean.class);
+                list = HttpPost.stringToList(rawRecords, CompanyBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -318,8 +351,8 @@ public class UserLogin {
         }
         return list;
     }
-	
-    public  static  void feedback(String strurl, OkHttpClient mClient,long userId,String content){
+
+    public static void feedback(String strurl, OkHttpClient mClient, long userId, String content) {
         String funName = "feedback";
         try {
             JSONObject object = new JSONObject();
@@ -334,6 +367,11 @@ public class UserLogin {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                feedback(strurl,mClient,userId, content);
+                return;
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);

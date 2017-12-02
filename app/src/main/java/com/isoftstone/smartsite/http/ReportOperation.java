@@ -52,6 +52,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getPatrolReportList(strurl,mClient,status,departmentId,pageableBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -85,6 +89,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getCheckReportList(strurl,mClient,status,pageableBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -143,6 +151,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  addPatrolReport(strurl,mClient,reportBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -170,6 +182,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getPatrolReport(strurl,mClient,id);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -197,6 +213,11 @@ public class ReportOperation {
                     .build();
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                addPatrolVisit(strurl,mClient,reportBean);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -223,6 +244,11 @@ public class ReportOperation {
             LogUtils.i(TAG, "addPatrolReply:" + json);
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                addPatrolReply(strurl,mClient,reportBean);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -248,53 +274,11 @@ public class ReportOperation {
                     .build();
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
-            if (response.isSuccessful()) {
-
-                String responsebody = response.body().string();
-                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
-
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                addPatrolCheck(strurl,mClient,reportBean);
+                return;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void reportImageUpload(String strurl, OkHttpClient mClient, String filepath, int id) {
-
-        String funName = "reportImageUpload";
-        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), new File(filepath));
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", "test.png", fileBody)
-                .addFormDataPart("id", id + "")
-                .build();
-
-
-        ///                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\""),
-//                        RequestBody.create(MEDIA_TYPE_PNG, file))
-//                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"imagetype\""),
-//                        RequestBody.create(null, imageType))
-//                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"userphone\""),
-//                        RequestBody.create(null, userPhone))
-
-        /*RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), new File(filepath));
-
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addPart(Headers.of("Content-Disposition","form-data; name=\"id\""),RequestBody.create(null, ""+id))
-                .addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"test.png\""), fileBody)
-                .build();*/
-
-        Request request = new Request.Builder()
-                .url(strurl)
-                .post(body)
-                .build();
-        try {
-            Response response = mClient.newCall(request).execute();
-            LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -327,6 +311,11 @@ public class ReportOperation {
         try {
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                reportFileUpload(strurl,mClient,filepath,id);
+                return;
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -365,6 +354,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getDictionaryList(strurl,mClient,lang);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -391,6 +384,10 @@ public class ReportOperation {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPatrolAddress(strurl,mClient);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();

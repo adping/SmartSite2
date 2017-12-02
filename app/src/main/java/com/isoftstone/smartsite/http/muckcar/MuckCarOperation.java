@@ -131,6 +131,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getAlarmData(strurl,mClient,time,timeMonth,archIds,flag);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -166,6 +170,11 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                recForMobile(strurl,mClient,carLicence,recResult);
+                return;
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -197,6 +206,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getUnRecList(strurl,mClient,licence,pageableBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -231,6 +244,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getTrackList(strurl,mClient,licence,pageableBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -262,6 +279,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPhontoList(strurl,mClient,licence,photoType,takePhotoTime,deviceCoding);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -294,6 +315,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getEvidencePhotoList(strurl,mClient,licence,pageableBean);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -320,6 +345,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getEvidenceDateList(strurl,mClient,licence);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -347,6 +376,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getMapMarkers(strurl,mClient,licence,takePhotoTime);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -381,6 +414,10 @@ public class MuckCarOperation {
         try {
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return uploadPhotos(strurl,mClient,list);
+            }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
@@ -408,6 +445,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return addPhoto(strurl,mClient,updatePhotoInfoBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();

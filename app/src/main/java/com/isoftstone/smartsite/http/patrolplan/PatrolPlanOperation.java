@@ -51,6 +51,10 @@ public class PatrolPlanOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getPlanPaging(strurl,mClient,patrolPlanBean,pageableBean);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -78,6 +82,11 @@ public class PatrolPlanOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                planThrough(strurl,mClient,patrolPlanBean);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -104,6 +113,11 @@ public class PatrolPlanOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                planRefuse(strurl,mClient,patrolPlanBean);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -129,6 +143,11 @@ public class PatrolPlanOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                patrolPlanCommit(strurl,mClient,patrolPlanCommitBean);
+                return;
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
