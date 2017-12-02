@@ -680,7 +680,6 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     strs = new String[]{currentCompanyTotalCompareIdString2,currentCompanyTotalCompareIdString1};
                 }
                 monthTasks = httpPost.getDepartmentsMonthTasks(year + "-" + month,strs);
-                LogUtils.e(TAG,(monthTasks == null ? "null " : monthTasks.toString()));
                 if(monthTasks == null || (monthTasks.getData().size() == 0 && monthTasks.getList().size() == 0)){
                     mHandler.sendEmptyMessage(HANDLE_FOUR_CHART_FAIL);
                 }
@@ -702,8 +701,6 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                     strs = new String[]{currentCompanyMonthIdString2,currentCompanyMonthIdString1};
                 }
                 fiveMonthTasks = httpPost.getDepartmentReport(year + "-" + month,strs);
-                LogUtils.e(TAG,fiveMonthTasks == null ? "five null " : fiveMonthTasks.toString());
-                LogUtils.e(TAG,(fiveMonthTasks.getDate().get(1) == null) + " .. ");
                 if(fiveMonthTasks == null || (fiveMonthTasks.getData().size() == 0 && fiveMonthTasks.getDate().size() == 0)){
                     mHandler.sendEmptyMessage(HANDLER_FIRST_CHART_FAIL);
                 }
@@ -1043,11 +1040,15 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             //设置x轴的数据
             ArrayList<Float> xValues = new ArrayList<>();
             ArrayList<String> xVaulesName = new ArrayList<>();
-            for (int i = 0; i < all.size(); i++) {
-                xVaulesName.add((i + 1 < 10 ? "0" : "") + (i + 1));
+            for (int i = 1; i <= monthDays; i++) {
+                xVaulesName.add((i < 10 ? "0" : "") + i);
                 xValues.add((float) i);
             }
-            xAxis.setLabelCount(xValues.size(),false);
+            if(monthDays % 2 == 0){
+                xVaulesName.add(0,"0");
+                xValues.add(0,0f);
+            }
+//            xAxis.setLabelCount(xValues.size(),false);
             MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
             xAxis.setValueFormatter(xFormatter);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -1056,11 +1057,21 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             List<Entry> yValues1 = new ArrayList<>();
             List<Entry> yValues2 = new ArrayList<>();
 
-            for (int i = 0;i < all.size(); i++){
+            if(monthDays % 2 == 0){
+                for (int i = 0; i < all.size(); i++) {
+                    yValues1.add(new Entry(i + 1,all.get(i).getCount()));
+                    yValues2.add(new Entry(i + 1,off.get(i).getOff()));
+                }
+                yValues1.add(0,new Entry(0,0));
+                yValues2.add(0,new Entry(0,0));
+            } else {
+                for (int i = 0;i < all.size(); i++){
 //                yValues1.add(new Entry(i,all.get(i).getOff() + all.get(i).getUnCount()));
-                yValues1.add(new Entry(i,all.get(i).getCount()));
-                yValues2.add(new Entry(i,off.get(i).getOff()));
+                    yValues1.add(new Entry(i,all.get(i).getCount()));
+                    yValues2.add(new Entry(i,off.get(i).getOff()));
+                }
             }
+
 
 
             LineDataSet set1 = null;
@@ -1122,9 +1133,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
             xAxis.setAxisMaximum(xValues.size());
             xAxis.setAxisMinimum(0);
-            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
-            xAxis.setCenterAxisLabels(true);
-//            xAxis.setLabelCount(5,false);
+            xAxis.setLabelCount(xValues.size()/2,false);
             lineChart.invalidate();
         } else {
             lineChart.setData(null);
@@ -1211,6 +1220,10 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 xVaulesName.add((i < 10 ? "0" : "") + i);
                 xValues.add((float) i);
             }
+            if(month % 2 == 0){
+                xVaulesName.add(0,"0");
+                xValues.add(0,0f);
+            }
             xAxis.setLabelCount(xValues.size(),false);
             MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
             xAxis.setValueFormatter(xFormatter);
@@ -1221,18 +1234,37 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             List<Entry> yValues2 = new ArrayList<>();
             boolean drawY1 = false;
             boolean drawY2 = false;
-            for (int i = 0;i < month; i++){
-                int firstMin = first.get(i).getCount();
-                int secondMin = second.get(i).getCount();
-                if(firstMin != 0){
-                    drawY1 = true;
+            if(month % 2 == 0){
+                for (int i = 0;i < month; i++){
+                    int firstMin = first.get(i).getCount();
+                    int secondMin = second.get(i).getCount();
+                    if(firstMin != 0){
+                        drawY1 = true;
+                    }
+                    if(secondMin != 0){
+                        drawY2 = true;
+                    }
+                    yValues1.add(new Entry(i + 1,firstMin));
+                    yValues2.add(new Entry(i + 1,secondMin));
                 }
-                if(secondMin != 0){
-                    drawY2 = true;
+                yValues1.add(0,new Entry(0,0));
+                yValues2.add(0,new Entry(0,0));
+            } else {
+                for (int i = 0;i < month; i++){
+                    int firstMin = first.get(i).getCount();
+                    int secondMin = second.get(i).getCount();
+                    if(firstMin != 0){
+                        drawY1 = true;
+                    }
+                    if(secondMin != 0){
+                        drawY2 = true;
+                    }
+                    yValues1.add(new Entry(i,firstMin));
+                    yValues2.add(new Entry(i,secondMin));
                 }
-                yValues1.add(new Entry(i,firstMin));
-                yValues2.add(new Entry(i,secondMin));
             }
+
+
 
             LineDataSet set1 = null;
             LineDataSet set2 = null;
@@ -1305,7 +1337,8 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
             xAxis.setAxisMaximum(xValues.size());
             xAxis.setAxisMinimum(0);
-            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+//            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            xAxis.setLabelCount(xValues.size()/2,false);
             lineChart2.invalidate();
         } else {
             lineChart2.setData(null);
@@ -1393,6 +1426,10 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                 xVaulesName.add((i < 10 ? "0" : "") + i);
                 xValues.add((float) i);
             }
+            if(month % 2 == 0){
+                xVaulesName.add(0,"0");
+                xValues.add(0,0f);
+            }
             xAxis.setLabelCount(xValues.size(),false);
             MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
             xAxis.setValueFormatter(xFormatter);
@@ -1403,17 +1440,34 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             List<Entry> yValues2 = new ArrayList<>();
             boolean drawY1 = false;
             boolean drawY2 = false;
-            for (int i = 0;i < month; i++){
-                int firstMin = first.get(i).getCount();
-                int secondMin = second.get(i).getCount();
-                if(firstMin != 0){
-                    drawY1 = true;
+            if(month % 2 == 0){
+                for (int i = 0;i < month; i++){
+                    int firstMin = first.get(i).getCount();
+                    int secondMin = second.get(i).getCount();
+                    if(firstMin != 0){
+                        drawY1 = true;
+                    }
+                    if(secondMin != 0){
+                        drawY2 = true;
+                    }
+                    yValues1.add(new Entry(i + 1,firstMin));
+                    yValues2.add(new Entry(i + 1,secondMin));
                 }
-                if(secondMin != 0){
-                    drawY2 = true;
+                yValues1.add(0,new Entry(0,0));
+                yValues2.add(0,new Entry(0,0));
+            } else {
+                for (int i = 0;i < month; i++){
+                    int firstMin = first.get(i).getCount();
+                    int secondMin = second.get(i).getCount();
+                    if(firstMin != 0){
+                        drawY1 = true;
+                    }
+                    if(secondMin != 0){
+                        drawY2 = true;
+                    }
+                    yValues1.add(new Entry(i,firstMin));
+                    yValues2.add(new Entry(i,secondMin));
                 }
-                yValues1.add(new Entry(i,firstMin));
-                yValues2.add(new Entry(i,secondMin));
             }
 
             LineDataSet set1 = null;
@@ -1487,7 +1541,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
 
             xAxis.setAxisMaximum(xValues.size());
             xAxis.setAxisMinimum(0);
-            xAxis.setLabelCount(xValues.size() % 2 == 0 ? xValues.size()/2 : (int)(xValues.size()/2) + 1,false);
+            xAxis.setLabelCount(xValues.size() /2 ,false);
             lineChart3.invalidate();
         } else {
             lineChart3.setData(null);
