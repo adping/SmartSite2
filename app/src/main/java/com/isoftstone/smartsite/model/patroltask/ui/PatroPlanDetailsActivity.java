@@ -201,9 +201,8 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.work_status.setImageResource(R.drawable.chakanbaogao);
             }
             holder.reportor.setText(patrolTaskBean.getCreator().name);
-            holder.company_name.setText("湖北毅瑞公司");
+            holder.company_name.setText(new HttpPost().getCompanyNameByid(Integer.parseInt(patrolTaskBean.getCreator().getDepartmentId())));
             return convertView;
-
         }
 
         @Override
