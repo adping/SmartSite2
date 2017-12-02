@@ -34,12 +34,12 @@ public class MyPopuWindow extends PopupWindow {
     private OnDataCheckedListener onDataCheckedListener;
     private ArrayList<Integer> choice_data = new ArrayList<Integer>();
 
-    public MyPopuWindow(Context context, String title, ArrayList<String> data) {
+    public MyPopuWindow(Context context, String title, ArrayList<String> data,OnDataCheckedListener onDataCheckedListener) {
         super(context);
         this.context = context;
         this.title = title;
         this.data = data;
-        //this.onDataCheckedListener = onDataCheckedListener;
+        this.onDataCheckedListener = onDataCheckedListener;
         initView();
     }
 
@@ -50,25 +50,11 @@ public class MyPopuWindow extends PopupWindow {
         tv_ok = (TextView) rootView.findViewById(R.id.tv_ok);
         this.setContentView(rootView);
         this.setFocusable(true);
-        this.setOutsideTouchable(true);
+        this.setOutsideTouchable(false);
         this.update();
         tv_title.setText(title);
         tv_ok.setOnClickListener(clickListener);
         lv.setAdapter(new MyBaseAdapter(context, data));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("nie", "itemClickListener");
-                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-                if (checkBox.isChecked()) {
-                    choice_data.add(position);
-                    Log.e("nie", "if  position:" + position);
-                } else {
-                    choice_data.remove(position);
-                    Log.e("nie", "else position:" + position);
-                }
-            }
-        });
 
     }
 
@@ -80,12 +66,13 @@ public class MyPopuWindow extends PopupWindow {
                 int first = choice_data.get(0);
                 int second = choice_data.get(1);
                 if (first > second) {
-                    //onDataCheckedListener.onDataCheck(data.get(second), data.get(first), second, first);
+                    onDataCheckedListener.onDataCheck(data.get(second), data.get(first), second, first);
                 } else {
-                    //onDataCheckedListener.onDataCheck(data.get(first), data.get(second), first, second);
+                    onDataCheckedListener.onDataCheck(data.get(first), data.get(second), first, second);
                 }
             } else {
-                //ToastUtils.showShort("只能选择两个数据哦");
+                ToastUtils.showShort("只能选择两个数据哦");
+                return;
             }
             choice_data.clear();
             dismiss();
@@ -108,6 +95,7 @@ public class MyPopuWindow extends PopupWindow {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final int user_choice = position;
             MyHolderView myHolderView;
             if (convertView == null) {
                 myHolderView = new MyHolderView();
@@ -119,6 +107,17 @@ public class MyPopuWindow extends PopupWindow {
                 myHolderView = (MyHolderView) convertView.getTag();
             }
             myHolderView.textView.setText(data.get(position));
+            myHolderView.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        choice_data.add(user_choice);
+                    } else {
+                        choice_data.remove(user_choice);
+                    }
+                }
+            });
+            myHolderView.checkBox.setTag(position);
             return convertView;
         }
 
