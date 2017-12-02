@@ -148,7 +148,7 @@ public class Test {
 			/*
 
 			 */
-		    mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
+		    //mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
 
 		    /*
 		    mHttpPost.getArchMonthFlow("2017-11-17","2017-11",4L,1);
@@ -257,6 +257,7 @@ public class Test {
             /*PageableBean pageableBean = new PageableBean();
             mHttpPost.getPatrolTaskListAll("", "", "", "0", "", "", "", pageableBean);
             */
+            //mHttpPost.getBeforeNMessageList();
 
             }
         }.start();

@@ -1,4 +1,7 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.message;
+
+import com.isoftstone.smartsite.http.DataQueryBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
 
 import java.util.ArrayList;
 

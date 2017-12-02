@@ -2,7 +2,7 @@ package com.isoftstone.smartsite.utils;
 
 import android.util.Log;
 
-import com.isoftstone.smartsite.http.MessageBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 
 import java.text.SimpleDateFormat;

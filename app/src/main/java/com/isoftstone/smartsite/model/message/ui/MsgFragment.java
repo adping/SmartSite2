@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.MessageBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.utils.MsgUtils;
 

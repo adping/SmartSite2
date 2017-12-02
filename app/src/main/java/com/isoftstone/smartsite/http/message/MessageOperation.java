@@ -1,7 +1,9 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.message;
 
-import android.util.Log;
-
+import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -91,5 +93,35 @@ public class MessageOperation {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static BeforeNMessageBean getBeforeNMessageList(String strurl, OkHttpClient mClient){
+        BeforeNMessageBean beforeNMessageBean = null;
+        String funName = "getBeforeNMessageList";
+        FormBody body = new FormBody.Builder()
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getBeforeNMessageList(strurl,mClient);
+            }
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                beforeNMessageBean = gson.fromJson(responsebody,BeforeNMessageBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return beforeNMessageBean;
     }
 }

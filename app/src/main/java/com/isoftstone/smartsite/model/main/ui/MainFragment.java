@@ -1,8 +1,6 @@
 package com.isoftstone.smartsite.model.main.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,38 +11,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.isoftstone.smartsite.LoginActivity;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.common.NewKeepAliveService;
-import com.isoftstone.smartsite.http.pageable.PageableBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
-import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
-import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.model.patroltask.ui.PatroPlanDetailsActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.muckcar.ui.SlagcarInfoActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.DataQueryBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.MobileHomeBean;
+import com.isoftstone.smartsite.http.message.MobileHomeBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
-import com.isoftstone.smartsite.model.inspectplan.activity.SelectInspectorsActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMonitorMapActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionSummaryActivity;
-import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.utils.Utils;
-import com.uniview.airimos.listener.OnLoginListener;
-import com.uniview.airimos.manager.ServiceManager;
-import com.uniview.airimos.parameter.LoginParam;
-
-import java.util.ArrayList;
 
 
 /**

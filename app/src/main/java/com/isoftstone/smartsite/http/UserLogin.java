@@ -2,10 +2,9 @@ package com.isoftstone.smartsite.http;
 
 import android.graphics.Bitmap;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
+import com.isoftstone.smartsite.http.message.MobileHomeBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
@@ -14,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 

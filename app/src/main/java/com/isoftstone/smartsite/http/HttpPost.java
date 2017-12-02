@@ -9,6 +9,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
+import com.isoftstone.smartsite.http.message.MessageOperation;
+import com.isoftstone.smartsite.http.message.MobileHomeBean;
 import com.isoftstone.smartsite.http.muckcar.ArchMonthFlowBean;
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBeanPage;
 import com.isoftstone.smartsite.http.muckcar.CarInfoBean;
@@ -78,6 +82,7 @@ public class HttpPost {
 
     private String MESSAGE_LIST = URL + "/message/list";                //获取消息列表
     private String MESSAGE_ID_READ = URL + "/message/{id}/read";        //消息读取
+    private String MESSAGE_LIST_N = URL +"/message/types"; //获取前N调消息
 
     private String PATROL_LIST = URL + "/patrol/list";        //获取报告列表
     private String ADD_PATROL_REPORT = URL + "/patrol";      //新增巡查报告
@@ -756,5 +761,12 @@ public class HttpPost {
      */
     public ArrayList<PatrolTaskBean> getPatrolTaskListAll(String userId, String planId, String planStatus, String taskType, String taskStatus, String taskTimeStart, String taskTimeEnd, PageableBean pageableBean) {
         return PatrolTaskOperation.getPatrolTaskListAll(GET_PATROLTASK_LIST_ALL, mClient, userId, planId, planStatus, taskType, taskStatus, taskTimeStart, taskTimeEnd, pageableBean);
+    }
+
+    /*
+    获取前N条未读消息
+     */
+    public BeforeNMessageBean getBeforeNMessageList(){
+        return MessageOperation.getBeforeNMessageList(MESSAGE_LIST_N,mClient);
     }
 }

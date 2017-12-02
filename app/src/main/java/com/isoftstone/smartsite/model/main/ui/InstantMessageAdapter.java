@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.MessageBean;
-import com.isoftstone.smartsite.http.MessageListBean;
+import com.isoftstone.smartsite.http.message.MessageBean;
 
 import java.util.ArrayList;
 
