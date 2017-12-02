@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/16.
  */
@@ -12,7 +14,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 /*
 巡查任务的巡查点
  */
-public class PatrolPositionBean {
+public class PatrolPositionBean implements Serializable {
 
     private static final long serialVersionUID = 0x0008L;
 

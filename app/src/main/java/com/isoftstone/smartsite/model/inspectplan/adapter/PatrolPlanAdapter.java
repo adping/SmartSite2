@@ -50,7 +50,10 @@ public class PatrolPlanAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return null;
+		if(mList != null && mList.size() > position){
+			return mList.get(position);
+		}
+        return  null;
 	}
 
 	@Override
@@ -68,8 +71,8 @@ public class PatrolPlanAdapter extends BaseAdapter {
 			holder = (PatrolPlanAdapter.ViewHolder) convertView.getTag();
 		}
         holder.title.setText(mList.get(position).getTaskName());
-		holder.time.setText(mList.get(position).getTaskStart());
-		holder.address.setText(mList.get(position).getTaskEnd());
+		holder.time.setText(mList.get(position).getTaskTimeStart());
+		holder.address.setText(mList.get(position).getTaskTimeEnd());
 		switch (mList.get(position).getPlanStatus()){
 			case  3:
 				holder.zhuangtai.setImageResource(R.drawable.green);

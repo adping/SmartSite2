@@ -52,7 +52,7 @@
                 android:id="@+id/text_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="75dp"
                 android:layout_marginLeft="32dp"
                 android:text="26"
                 android:textColor="#ffffff"
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/text_temperature"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="70dp"
                 android:text="o"
                 android:textColor="#ffffff"
                 android:textSize="20dp" />
@@ -69,7 +69,7 @@
             <ImageView
                 android:layout_width="1dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="100dp"
                 android:layout_marginLeft="32dp"
                 android:layout_toRightOf="@id/text_temperature"
                 android:background="#ffffff" />
@@ -77,7 +77,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="100dp"
                 android:layout_marginLeft="44dp"
                 android:layout_toRightOf="@id/text_temperature"
                 android:orientation="vertical">
@@ -131,7 +131,7 @@
                 android:layout_width="64dp"
                 android:layout_height="70dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="80dp"
                 android:layout_marginRight="22dp"
                 android:background="@drawable/wuran_bg"
                 android:orientation="vertical">

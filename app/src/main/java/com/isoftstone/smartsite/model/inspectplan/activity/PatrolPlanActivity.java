@@ -8,6 +8,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,9 +24,11 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
+import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.http.user.SimpleUserBean;
 import com.isoftstone.smartsite.model.inspectplan.adapter.PatrolPlanAdapter;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
+import com.isoftstone.smartsite.model.map.ui.MapTaskDetailActivity;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import org.joda.time.LocalDate;
@@ -81,6 +84,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     private String taskTimeEnd;   //结束时间
     private long userId;   //用户id
     private CustomDatePicker customDatePicker;
+    private PatrolPlanAdapter adapter = null;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -96,9 +100,9 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                                 user_id = userId + "";
                             }
                             taskTimeStart = taskTimeStart + " 00:00";
-                            taskTimeEnd = taskTimeEnd + " 00:00";
+                            taskTimeEnd = taskTimeEnd + " 23:59";
                             PageableBean pageableBean = new PageableBean();
-                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "", "", taskTimeStart, taskTimeEnd, pageableBean);
+                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "0", "", taskTimeStart, taskTimeEnd, pageableBean);
                             mHandler.sendEmptyMessage(HANDLER_GET_WEEK_END);
                         }
                     }.start();
@@ -120,9 +124,9 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                                 user_id = userId + "";
                             }
                             taskTimeStart = taskTimeStart + " 00:00";
-                            taskTimeEnd = taskTimeEnd + " 00:00";
+                            taskTimeEnd = taskTimeEnd + " 23:29";
                             PageableBean pageableBean = new PageableBean();
-                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "", "", taskTimeStart, taskTimeEnd, pageableBean);
+                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "0", "", taskTimeStart, taskTimeEnd, pageableBean);
                             mHandler.sendEmptyMessage(HANDLER_GET_DAY_END);
                         }
                     }.start();
@@ -284,6 +288,13 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         });
 
         mListView = (ListView) findViewById(R.id.listview);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PatrolTaskBean patrolTaskBean =  mListData.get(position);
+                enterPatrolTask(patrolTaskBean);
+            }
+        });
         imageview_tuihui = (ImageView) findViewById(R.id.imageview_tuihui);   //退回按钮
         imageview_tuihui.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +383,11 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()){
+            mAddPatrolTask.setVisibility(View.INVISIBLE);
+        }else{
+            mAddPatrolTask.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
@@ -382,14 +398,12 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         //设置计划状态
         int state = 0;
         if (mListData != null && mListData.size() > 0) {
-
             state = mListData.get(0).getPlanStatus();
-
-            PatrolPlanAdapter adapter = new PatrolPlanAdapter(this);
+            adapter = new PatrolPlanAdapter(this);
             adapter.setList(mListData);
             mListView.setAdapter(adapter);
         } else {
-            PatrolPlanAdapter adapter = new PatrolPlanAdapter(this);
+            adapter = new PatrolPlanAdapter(this);
             mListView.setAdapter(adapter);
         }
 
@@ -507,7 +521,19 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         day_4.setText(today.plusDays(4).getDayOfMonth() + "");
         day_5.setText(today.plusDays(5).getDayOfMonth() + "");
         day_6.setText(today.plusDays(6).getDayOfMonth() + "");
+        //设置标题时间
+        mTitleTextView.setText(today.plusDays(6).toString().substring(0, 7));
+    }
 
-        mTitleTextView.setText(today.toString().substring(0, 7));
+    private void enterPatrolTask(PatrolTaskBean patrolTaskBean){
+        Intent intent = new Intent(this, MapTaskDetailActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        UserTrackBean userTrackBean = new UserTrackBean();
+        userTrackBean.setId(patrolTaskBean.getTaskId());
+        userTrackBean.setPatrolTask(patrolTaskBean);
+        userTrackBean.setUser(patrolTaskBean.getCreator());
+        //userTrackBean.setUserId(patrolTaskBean.getCreator().getId());
+        intent.putExtra("data",userTrackBean);
+        this.startActivity(intent);
     }
 }
