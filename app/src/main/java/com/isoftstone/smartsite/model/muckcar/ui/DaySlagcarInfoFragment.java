@@ -112,22 +112,29 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private MyPopuWindow.OnDataCheckedListener dataCheckedListener = new MyPopuWindow.OnDataCheckedListener() {
         @Override
         public void onDataCheck(String left, String right, int first_choice, int second_choice) {
+            myPopuWindow = null;
             choice_load_one.setText(left);
             choice_load_two.setText(right);
-           // ToastUtils.showShort("ok");
-            // if (mCarInfoList != null) {
-            //if (mCarInfoList.size() >= 2) {
-            // baojinglv_addressid = new long[2];
-            // baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
-            // baojinglv_addressid[1] = mCarInfoList.get(1).getArch().getId();
-            // } else {
-            // baojinglv_addressid = new long[1];
-            // baojinglv_addressid[0] = mCarInfoList.get(0).getArch().getId();
-            // }
-            // }
-            //((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
+            baojinlv_duibi.setText(left);
+            if (mCarInfoList != null) {
+                if (mCarInfoList.size() >= 2) {
+                    baojinglv_addressid = new long[2];
+                    baojinglv_addressid[0] = mCarInfoList.get(first_choice).getArch().getId();
+                    baojinglv_addressid[1] = mCarInfoList.get(second_choice).getArch().getId();
+                } else {
+                    baojinglv_addressid = new long[1];
+                    baojinglv_addressid[0] = mCarInfoList.get(first_choice).getArch().getId();
+                }
+            }
+            ((SlagcarInfoActivity) getActivity()).getBaojinglvData(mDayOrMonthFlag);
         }
     };
+
+    private void initMyPopuWindow() {
+        if (myPopuWindow == null) {
+            myPopuWindow = new MyPopuWindow(getActivity(), "请选择两个：", choiceLists, dataCheckedListener);
+        }
+    }
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
@@ -138,7 +145,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         choiceLists.add("光谷五路");
         choiceLists.add("光谷三路");
         choiceLists.add("中心城");
-        myPopuWindow = new MyPopuWindow(getActivity(), "请选择两个：", choiceLists);
+        initMyPopuWindow();
         liuliang = (TextView) rootView.findViewById(R.id.liuliang);
         liuliangduibi = (TextView) rootView.findViewById(R.id.liuliangduibi);
         baojinglv = (TextView) rootView.findViewById(R.id.baojinglv);
@@ -213,13 +220,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 customDatePicker3.show(now);
             }
         });
-        //baojinglv_address = (TextView) rootView.findViewById(R.id.load_name_3);
-        //baojinglv_address.setOnClickListener(new View.OnClickListener() {
-        // @Override
-        //public void onClick(View v) {
 
-        // }
-        //});
         //报警率,选择路段
 
         baojinlv_duibi = (TextView) layout_2.findViewById(R.id.baojinglv_duibi);
@@ -316,9 +317,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private View.OnClickListener baojinglvduiClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (myPopuWindow != null) {
-                myPopuWindow.showAtLocation(rootView.findViewById(R.id.scrollview), Gravity.CENTER, 0, 0);
-            }
+            initMyPopuWindow();
+            myPopuWindow.showAtLocation(rootView.findViewById(R.id.scrollview), Gravity.CENTER, 0, 0);
         }
     };
 
