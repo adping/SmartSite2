@@ -212,8 +212,6 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     protected void afterCreated(Bundle savedInstanceState) {
         //获取巡查计划ID
         patrolPlanBean = (PatrolPlanBean) getIntent().getSerializableExtra("patrolplan");
-        Log.e("test", "-------------" + patrolPlanBean.getStart());
-        Log.e("test", "-------------" + patrolPlanBean.getEndDate());
         if (patrolPlanBean != null) {
             userId = patrolPlanBean.getCreator().getId();   //用户id
         } else {
@@ -339,11 +337,8 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             public void handle(String time) { // 回调接口，获得选中的时间
                 //mTitleTextView.setText(time.substring(0,7));
                 LocalDate localDate = new LocalDate(time.substring(0, 7) + "-01");
-                Log.e("test", localDate.toString());
                 int minus = localDate.getDayOfWeek();
-                Log.e("test", " minus " + minus);
                 today = localDate.minusDays(minus - 1);
-                Log.e("test", " today " + today.toString());
                 selectindex = -1;
                 updateWidget();
                 taskTimeStart = today.toString(); //开始时间
@@ -434,7 +429,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 tijiaoshenpi_layout.setVisibility(View.GONE);
             }
         } else {
-            if (state == 1) {
+            if (state < 2) {
                 tuihuitonguo_layout.setVisibility(View.GONE);
                 tijiaoshenpi_layout.setVisibility(View.VISIBLE);
             } else {
