@@ -86,15 +86,13 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
         mContext = getApplicationContext();
 
         mListView = (PullToRefreshListView) findViewById(R.id.list_view);
-        mNetWorkMsgView = (TextView) findViewById(R.id.net_work_msg);
-        mNetWorkMsgView.setVisibility(NetworkUtils.isConnected() ? View.GONE : View.VISIBLE);
+        //mNetWorkMsgView = (TextView) findViewById(R.id.net_work_msg);
+        //mNetWorkMsgView.setVisibility(NetworkUtils.isConnected() ? View.GONE : View.VISIBLE);
 
         PullToRefreshListView.OnRefreshListener refreshListener = new PullToRefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if(!isRefreshing()) {
-                    //mListView.onRefreshComplete();
-                    //mCurPageNum = mCurPageNum++;
                     Log.e(TAG,".... onRefresh    mCurPageNum "+ mCurPageNum);
                     new QueryDataTask(mContext, false).execute();
                 }
@@ -103,8 +101,6 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
             @Override
             public void onLoadMore() {
                 if(!isRefreshing()) {
-                    //mListView.onLoadMoreComplete();
-                    //mCurPageNum = mCurPageNum++;
                     Log.e(TAG,".... onLoadMore    mCurPageNum "+ mCurPageNum);
                     new QueryDataTask(mContext, false).execute();
                 }
@@ -153,12 +149,12 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     @Override
     public void onNetChange(boolean isConnected) {
-        mNetWorkMsgView.setText("当前网络不可用，请检查您的网络设置");
+        //mNetWorkMsgView.setText("当前网络不可用，请检查您的网络设置");
         Log.i("zzz","onNetChange...........");
         if (isConnected) {
-            mNetWorkMsgView.setVisibility(View.GONE);
+            //mNetWorkMsgView.setVisibility(View.GONE);
         } else {
-            mNetWorkMsgView.setVisibility(View.VISIBLE);
+            //mNetWorkMsgView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -172,6 +168,10 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     @Override
     public void viewOnClickListener(InspectPlanBean inspectPlanBean) {
+        if (!NetworkUtils.isConnected()){
+            ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+            return;
+        }
         enterPatrolPlan(inspectPlanBean);
     }
 
