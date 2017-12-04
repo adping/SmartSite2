@@ -74,6 +74,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private final int NO_GUI_JI = 0x0004;
     private final int FINISH_TASK_POSITION = 0x0005;
     private final int FINISH_TASK = 0x0006;
+    private final int FINISH_TASK_POSITION_TOAST = 0x0007;
 
     private MapView mapView;
     private AMap aMap;
@@ -119,6 +120,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     updateRecyclerView();
                     updateTaskPoints();
                     updateUserGuiji();
+                    break;
                 case UPDATE_USER_GUIJI:
                     loadingDailog.dismiss();
                     addAndRemoveUserGuiJi();
@@ -129,6 +131,10 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     if(polyline != null){
                         polyline.remove();
                     }
+                    break;
+                case FINISH_TASK_POSITION_TOAST:
+                    ToastUtils.showShort("恭喜已经巡查完成,正在重新获取任务详情！");
+                    mPopWindow.dismiss();
                     break;
                 case FINISH_TASK_POSITION:
                     getData();
@@ -246,6 +252,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             @Override
             public void run() {
                 patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
+                LogUtils.e(TAG,patrolTaskBean == null ? " null " : patrolTaskBean.toString());
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -604,7 +611,6 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             @Override
             public void run() {
                 if(patrolTaskBean != null){
-                    LogUtils.e(TAG,"long : " + lon + ", " + " lat : " + lat + ",taskId : " + taskId + ", loginUserId : " + loginUseId);
                     httpPost.userTrack(loginUseId,taskId,lon,lat);
                 }
             }
@@ -624,10 +630,13 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             ToastUtils.showShort("您距离任务点的距离为" +(int)distance + "米,请在100米以内执行此操作！");
             return;
         } else {
+            loadingDailog.show();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     httpPost.updatePatrolPositionStatus(loginUseId,currentPatorPositionBean.getPosition());
+                    mHandler.sendEmptyMessage(FINISH_TASK_POSITION_TOAST);
+                    SystemClock.sleep(2000);
                     mHandler.sendEmptyMessage(FINISH_TASK_POSITION);
                 }
             }).start();
