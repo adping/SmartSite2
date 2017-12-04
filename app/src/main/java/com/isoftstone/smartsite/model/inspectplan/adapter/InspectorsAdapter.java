@@ -91,7 +91,7 @@ public class InspectorsAdapter extends BaseAdapter {
         holder.checkBox_ContactIsCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext,"点击了多选框",Toast.LENGTH_SHORT).show();
                 if(linearLayout_inspector_icon != null) {
                     linearLayout_inspector_icon.removeAllViews();
                 }
