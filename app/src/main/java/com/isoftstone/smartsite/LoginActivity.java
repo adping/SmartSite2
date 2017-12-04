@@ -311,6 +311,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			if(loginBean.isLoginSuccess()){
 				UserBean userBean = mHttpPost.getLoginUser();
 				HttpPost.mLoginBean.setmUserBean(userBean);
+				mHttpPost.getCompanyList("zh");
 				 try {
 					 Log.i(TAG, "保存用户列表");
 					 mUsers.clear();

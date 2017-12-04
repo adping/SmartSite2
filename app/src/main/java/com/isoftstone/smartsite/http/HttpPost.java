@@ -482,27 +482,18 @@ public class HttpPost {
     获取公司列表
      */
     public ArrayList<CompanyBean> getCompanyList(String lang) {
-        return UserLogin.getCompanyList(DICTIONARY_LIST, mClient, lang);
+        if(companyNameList == null || companyNameList.size() == 0){
+            companyNameList = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
+        }
+        return companyNameList;
     }
 
     /*
     通过公司id获取公司名称   对应用户为部门id
      */
     public String getCompanyNameByid(int id) {
-        String companyName = null;
-        if (companyNameList == null || companyNameList.size() == 0) {
-            companyNameList = UserLogin.getCompanyList(DICTIONARY_LIST, mClient, "zh");
-            if (companyNameList != null) {
-                for (int i = 0; i < companyNameList.size(); i++) {
-                    CompanyBean companyBean = companyNameList.get(i);
-                    if (companyBean.getValue().equals(id + "")) {
-                        companyName = companyBean.getContent();
-                        break;
-                    }
-                }
-            }
-
-        } else {
+        String companyName = "未找到公司，ID未："+id;
+        if (companyNameList != null) {
             for (int i = 0; i < companyNameList.size(); i++) {
                 CompanyBean companyBean = companyNameList.get(i);
                 if (companyBean.getValue().equals(id + "")) {
