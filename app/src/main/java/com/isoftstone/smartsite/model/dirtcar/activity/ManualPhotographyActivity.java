@@ -117,18 +117,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		};
 
 		mListView.setOnRefreshListener(refreshListener);
-		mAdapter = new ManualPhotographyAdapter(mContext, mListDate, ManualPhotographyActivity.this);
-		mListView.setAdapter(mAdapter);
+		setListViewData();
 		new QueryDataTask(mContext, true).execute();
 	}
 
 	private void setListViewData() {
-		setupViews();
-	}
-
-	private void setupViews() {
-
-		//mListView.setOnScrollListener(mScrollListener);
+		mAdapter = new ManualPhotographyAdapter(mContext, mListDate, ManualPhotographyActivity.this);
+		mListView.setAdapter(mAdapter);
 	}
 
 	/**OnScrollListener mScrollListener = new OnScrollListener() {
@@ -296,7 +291,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				pageableBean.setPage((mCurPageNum + 1) + "");
 				EvidencePhotoBeanPage evidencePhotoBeanPage = mHttpPost.getEvidencePhotoList(mLicence, pageableBean);
 				ArrayList<EvidencePhotoBean> arrayList = evidencePhotoBeanPage.getContent();
-				Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList   + "\\n"  +  " &" + evidencePhotoBeanPage.toString());
+				Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB"  +  " &" + evidencePhotoBeanPage.toString());
 				if (arrayList == null ||  arrayList.size() == 0) {
 
 					totalPages = evidencePhotoBeanPage.getTotalPages();
@@ -353,7 +348,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 			setListViewRefreshStatus(false);
 			//Toast.makeText(sContext,"执行完毕",Toast.LENGTH_SHORT).show();
 			if (resultsCode == QUERY_RESULTS_SUCCESSFUL_CODE) {
-				setListViewData();
+				//setListViewData();
 			} else if (resultsCode == QUERY_RESULTS_FAILED_CODE){
 				ToastUtils.showLong("获取列表为空。");
 			} else if (resultsCode == QUERY_RESULTS_EXCEPTION_CODE) {
