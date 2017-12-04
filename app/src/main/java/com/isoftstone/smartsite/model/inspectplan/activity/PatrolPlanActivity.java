@@ -194,6 +194,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 break;
                 case HANDLER_TIJIAO_END: {
                     selectindex = -1;
+                    Toast.makeText(PatrolPlanActivity.this,"提交成功",Toast.LENGTH_SHORT).show();
                     updateWidget();
                     mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
                     closeDlg();
@@ -330,7 +331,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             taskTimeStart = today.toString(); //开始时间
             taskTimeEnd = today.toString();   //结束时间
         }
-        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+
 
         updateWidget();
         customDatePicker = new CustomDatePicker(PatrolPlanActivity.this, new CustomDatePicker.ResultHandler() {
@@ -451,6 +452,12 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         }
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
     }
 
     @Override
