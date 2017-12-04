@@ -184,6 +184,7 @@ open class UpdatePhotoActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.e(TAG, "onActivityResult:" + requestCode)
+        var i = Intent()
         if (requestCode == FLAG_TARGET_CAMERA) {
             val uri = mUriImage
             if (uri != null && isTakePicOk(mCameraImage?.canonicalPath)) {
@@ -194,6 +195,7 @@ open class UpdatePhotoActivity : BaseActivity() {
                 }
                 mGridViewAdapter?.notifyDataSetChanged()
             } else if (mPathList.size == 0) {
+                setResult(Activity.RESULT_CANCELED, i)
                 finish()
                 Log.e(TAG, "file size == null")
             }
@@ -208,6 +210,7 @@ open class UpdatePhotoActivity : BaseActivity() {
                     mGridViewAdapter?.notifyDataSetChanged()
                 }
             } else if (mPathList.size == 0) {
+                setResult(Activity.RESULT_CANCELED, i)
                 finish()
             }
         } else if (requestCode == FLAG_TARGET_ADDRESS) {
@@ -335,6 +338,8 @@ open class UpdatePhotoActivity : BaseActivity() {
                 this@UpdatePhotoActivity.closeDlg()
                 if (result) {
                     ToastUtils.showShort("提交成功")
+                    var i = Intent()
+                    setResult(Activity.RESULT_OK, i)
                     finish()
                 } else {
                     ToastUtils.showShort("上传失败，请稍后重试")

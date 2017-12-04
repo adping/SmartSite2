@@ -8,30 +8,23 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
+import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.dirtcar.adapter.ManualPhotographyAdapter;
 import com.isoftstone.smartsite.model.dirtcar.bean.ManualPhotographyBean;
 import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
 import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog;
-import com.isoftstone.smartsite.model.system.ui.PhoneInfoUtils;
-import com.isoftstone.smartsite.model.system.ui.SystemFragment;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.utils.Utils;
 
@@ -44,11 +37,12 @@ import java.util.ArrayList;
 
 public class ManualPhotographyActivity extends BaseActivity  implements View.OnClickListener {
 
-	protected static final String TAG = "zzz_ManualPhotography";
 	/** Called when the activity is first created. */
-	private ListView mListView;
+	//private ListView mListView;
+	private PullToRefreshListView mListView;
 	private ManualPhotographyAdapter mAdapter;
 	ArrayList<ManualPhotographyBean> mListDate = new ArrayList<ManualPhotographyBean>();
+	ArrayList<ManualPhotographyBean> mOtherListDate = null;//new ArrayList<ManualPhotographyBean>();
 	private Context mContext;
 	private HttpPost mHttpPost;
 	private Bitmap mHeadBitmap;//裁剪后得图片
@@ -59,78 +53,21 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	private static final int QUERY_RESULTS_FAILED_CODE = 2;
 	/* 查询请求识别码 查询异常*/
 	private static final int QUERY_RESULTS_EXCEPTION_CODE = 3;
+	/* 查询请求识别码 已查询出所有*/
+	private static final int QUERY_RESULTS_MAX_PAGE_CODE = 4;
 
-	private static final int  HANDLER_MANUAL_PHOTPGRAPHY_START = 1;
-	private static  final int  HANDLER_MANUAL_PHOTPGRAPHY_END = 2;
+
+	/* 请求识别码 选择图库*/
+	private static final int IMAGE_REQUEST_CODE = 1;
+	/* 请求识别码 照相机*/
+	private static final int CAMERA_REQUEST_CODE = 2;
 
 	private String mLicence = "";
 
-	private Handler mHandler = new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what){
-				case HANDLER_MANUAL_PHOTPGRAPHY_START: {
-					Thread thread = new Thread(){
-						@Override
-						public void run() {
-							//mListDate =  mHttpPost.getDevices("1","","","");getEvidencePhotoList
-							//showDlg("zzzzzzzzzzzzzzzz");
-							try {
-								PageableBean pageableBean = new PageableBean();
-								ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList(mLicence, pageableBean).getContent();
-								//Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList);
-								if (arrayList != null) {
-									for (int i=0; i< arrayList.size(); i++) {
-										String urlStr = arrayList.get(i).getSmallPhotoSrc();
-										StringBuffer stringBuffer = new StringBuffer();
-										if (urlStr != null) {
-											String[] urlsStr = urlStr.split(",");
-											for (int j=0; j<urlsStr.length; j++) {
-												if (j == urlsStr.length -1) {
-													stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]));
-												} else {
-													stringBuffer.append(mHttpPost.getFileUrl(urlsStr[j]) + ",");
-												}
-											}
-										}
-										Log.i("zzz","BBBBBBBB  arrayList.size() = " + arrayList.size() + "  & " + i + "  && " + arrayList.get(i).toString());
-										Log.i("zzz","BBBBBBBB"  +  " mLicence = " +  mLicence  +   "    &&stringBuffer = " + stringBuffer.toString());
-										BaseUserBean  baseUserBean = arrayList.get(i).getTakePhoroUser();
-										ManualPhotographyBean manualPhotographyBean = null;
-										if (baseUserBean != null) {
-											manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  mHttpPost.getFileUrl(arrayList.get(i).getTakePhoroUser().getImageData()), arrayList.get(i).getTakePhoroUser().getName(), arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getTakePhoroUser().getDepartmentId())));
-										} else {
-											manualPhotographyBean = new ManualPhotographyBean(arrayList.get(i).getLicence(),  null, null, arrayList.get(i).getTakePhotoTime(),  arrayList.get(i).getAddr(),  stringBuffer.toString(),  null);
-										}
-										mListDate.add(manualPhotographyBean);
-									}
-
-								}
-							} catch (Exception e) {
-								Log.e(TAG,"e : " + e.getMessage());
-							}
-
-							/**for (int i=0; i < 3; i++) {
-								ManualPhotographyBean manualPhotographyBean = new ManualPhotographyBean("eA0000" + i, URLS[0], "李向双" + i , "2017-11-1" + i, "光谷五路和光谷六路交汇出", photoSrc, "湖北怡瑞有限公司" + i);
-								mListDate.add(manualPhotographyBean);
-							}*/
-							mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_END);
-						}
-					};
-					thread.start();
-				}
-				break;
-				case HANDLER_MANUAL_PHOTPGRAPHY_END:{
-					setListViewData();
-				}
-				break;
-			}
-		}
-	};
-
-	private void setListViewData() {
-		setupViews();
-	}
+	//listview分页参数
+	private int mCurPageNum = -1;
+	public boolean isLoading = false;
+	//public boolean isFirstLoading = true;
 
 	@Override
 	protected int getLayoutRes() {
@@ -148,24 +85,53 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	protected void onResume() {
 		super.onResume();
 
-		queryDataTask updateTextTask = new queryDataTask(this);
-		updateTextTask.execute();
+		//QueryDataTask queryDataTask = new QueryDataTask(this);
+		//queryDataTask.execute();
 	}
 
 	private void initView() {
 		mContext = getApplicationContext();
 		mHttpPost = new HttpPost();
-		mListView = (ListView) findViewById(R.id.main_lv_list);
-		//mHandler.sendEmptyMessage(HANDLER_MANUAL_PHOTPGRAPHY_START);
+		mListView = (PullToRefreshListView) findViewById(R.id.main_lv_list);
+
+		PullToRefreshListView.OnRefreshListener refreshListener = new PullToRefreshListView.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				if(!isRefreshing()) {
+					//mListView.onRefreshComplete();
+					//mCurPageNum = mCurPageNum++;
+					Log.e(TAG,".... onRefresh    mCurPageNum "+ mCurPageNum);
+					new QueryDataTask(mContext, false).execute();
+				}
+			}
+
+			@Override
+			public void onLoadMore() {
+				if(!isRefreshing()) {
+					//mListView.onLoadMoreComplete();
+					//mCurPageNum = mCurPageNum++;
+					Log.e(TAG,".... onLoadMore    mCurPageNum "+ mCurPageNum);
+					new QueryDataTask(mContext, false).execute();
+				}
+			}
+		};
+
+		mListView.setOnRefreshListener(refreshListener);
+		mAdapter = new ManualPhotographyAdapter(mContext, mListDate, ManualPhotographyActivity.this);
+		mListView.setAdapter(mAdapter);
+		new QueryDataTask(mContext, true).execute();
+	}
+
+	private void setListViewData() {
+		setupViews();
 	}
 
 	private void setupViews() {
-		mAdapter = new ManualPhotographyAdapter(mContext, mListDate, ManualPhotographyActivity.this);
-		mListView.setAdapter(mAdapter);
-		mListView.setOnScrollListener(mScrollListener);
+
+		//mListView.setOnScrollListener(mScrollListener);
 	}
 
-	OnScrollListener mScrollListener = new OnScrollListener() {
+	/**OnScrollListener mScrollListener = new OnScrollListener() {
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -190,7 +156,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				int visibleItemCount, int totalItemCount) {
 
 		}
-	};
+	};*/
 
 
 	@Override
@@ -210,6 +176,8 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 			mHeadBitmap = null;
 			System.gc();
 		}
+
+		//isFirstLoading = true;
 	}
 
 	private void initToolbar(){
@@ -244,7 +212,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
 										i.putExtra("target_flag",1);
 										i.putExtra("licence",mLicence);
-										startActivity(i);
+										startActivityForResult(i, CAMERA_REQUEST_CODE);
 									}
 								})
 						.addSheetItem(mContext.getText(R.string.album).toString(),
@@ -257,7 +225,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 										Intent i = new Intent(ManualPhotographyActivity.this,UpdatePhotoActivity.class);
 										i.putExtra("target_flag",2);
 										i.putExtra("licence",mLicence);
-										startActivity(i);
+										startActivityForResult(i, IMAGE_REQUEST_CODE);
 									}
 								}).show();
 
@@ -272,13 +240,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
-		if (resultCode != Activity.RESULT_CANCELED) {
-			switch (requestCode) {
-
-				default:
-					break;
-
+		if (resultCode == Activity.RESULT_OK) {
+			if (mListDate != null) {
+				mListDate.clear();
+				mCurPageNum = -1;
 			}
+			Log.i("zzz","aaaaaaaaa......" +  intent.getData());
+			new QueryDataTask(mContext, true).execute();
 			super.onActivityResult(requestCode, resultCode, intent);
 		}
 	}
@@ -289,10 +257,12 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		mContext.startActivity(intent);
 	}
 
-	class queryDataTask extends AsyncTask<Void,Void,Integer>{
-		private Context context;
-		queryDataTask(Context context) {
-			this.context = context;
+	class QueryDataTask extends AsyncTask<Void,Void,Integer>{
+		private Context sContext;
+		private boolean isReLoading;
+		QueryDataTask(Context context, boolean isFirstLoading) {
+			this.sContext = context;
+			this.isReLoading = isFirstLoading;
 		}
 
 		/**
@@ -300,12 +270,12 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		 */
 		@Override
 		protected void onPreExecute() {
-			//Toast.makeText(context,"开始执行",Toast.LENGTH_SHORT).show();
-			if (mListView != null) {
-				mListView.setAdapter(null);
-			}
+			Log.i("zzz","aaaaaaa11111111111111aa......isReLoading " +  isReLoading);
 
-			showDlg("正在获取列表");
+			setListViewRefreshStatus(true);
+			if (isReLoading) {
+				showDlg("正在获取列表");
+			}
 		}
 		/**
 		 * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
@@ -313,16 +283,31 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		@Override
 		protected Integer doInBackground(Void... params) {
 
-			if (mListDate != null) {
+			/*if (isReLoading) {
+				mListView.setAdapter(null);
 				mListDate.clear();
-			}
+			}*/
+
+			int totalPages = 0;
 
 			try {
 				PageableBean pageableBean = new PageableBean();
-				ArrayList<EvidencePhotoBean> arrayList = mHttpPost.getEvidencePhotoList(mLicence, pageableBean).getContent();
-				//Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList);
+				//pageableBean.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
+				pageableBean.setPage((mCurPageNum + 1) + "");
+				EvidencePhotoBeanPage evidencePhotoBeanPage = mHttpPost.getEvidencePhotoList(mLicence, pageableBean);
+				ArrayList<EvidencePhotoBean> arrayList = evidencePhotoBeanPage.getContent();
+				Log.i("zzz","BBBBBBBBBBBBBBBBBBBBB     arrayList = " + arrayList   + "\\n"  +  " &" + evidencePhotoBeanPage.toString());
 				if (arrayList == null ||  arrayList.size() == 0) {
-					return  QUERY_RESULTS_FAILED_CODE;
+
+					totalPages = evidencePhotoBeanPage.getTotalPages();
+
+					if (totalPages != 0 && totalPages == mCurPageNum + 1) {
+						return  QUERY_RESULTS_MAX_PAGE_CODE;
+					} else {
+						return  QUERY_RESULTS_FAILED_CODE;
+					}
+				} else {
+					mCurPageNum++;
 				}
 
 				for (int i=0; i< arrayList.size(); i++) {
@@ -350,8 +335,6 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 					}
 					mListDate.add(manualPhotographyBean);
 				}
-
-
 			} catch (Exception e) {
 				Log.e(TAG,"e : " + e.getMessage());
 				return QUERY_RESULTS_EXCEPTION_CODE;
@@ -366,15 +349,26 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		@Override
 		protected void onPostExecute(Integer resultsCode) {
 			super.onPostExecute(resultsCode);
-			closeDlg();
-			//Toast.makeText(context,"执行完毕",Toast.LENGTH_SHORT).show();
+			Log.i("zzz","aaaaaaa222222222aa......isReLoading " +  isReLoading);
+			setListViewRefreshStatus(false);
+			//Toast.makeText(sContext,"执行完毕",Toast.LENGTH_SHORT).show();
 			if (resultsCode == QUERY_RESULTS_SUCCESSFUL_CODE) {
 				setListViewData();
 			} else if (resultsCode == QUERY_RESULTS_FAILED_CODE){
 				ToastUtils.showLong("获取列表为空。");
 			} else if (resultsCode == QUERY_RESULTS_EXCEPTION_CODE) {
 				ToastUtils.showLong("获取列表失败，请稍后重试");
+			} else if (resultsCode == QUERY_RESULTS_MAX_PAGE_CODE) {
+				ToastUtils.showLong("已达到最大页");
 			}
+
+			if (isReLoading) {
+				closeDlg();
+			}
+			mListView.onLoadMoreComplete();
+			mListView.onRefreshComplete();
+			mAdapter.notifyDataSetChanged();
+
 		}
 
 		/**
@@ -386,6 +380,13 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 		}
 	}
 
+	public void setListViewRefreshStatus(boolean isLoading) {
+	    this.isLoading = isLoading;
+	}
+
+	public boolean isRefreshing() {
+		return this.isLoading;
+	}
 
 	private static final String photoSrc = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861321&di=7c603a9f41935d8051e35cdbce4fe154&imgtype=0&src=http%3A%2F%2Fc11.eoemarket.com%2Fapp0%2F119%2F119986%2Fscreen%2F1985845.png,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg,https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510765861322&di=1384fe7d8c1fdba219ab0439cc45402b&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F7aec54e736d12f2e3e656ddd4ac2d5628535682f.jpg";
 	private static final String[] URLS = {
