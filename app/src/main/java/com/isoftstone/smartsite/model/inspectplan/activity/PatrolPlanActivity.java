@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -143,6 +144,10 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                         @Override
                         public void run() {
                             mHttpPost.planRefuse(patrolPlanBean);
+                            //begin：审批成功需调用此方法 通知审批列表界面刷新数据状态
+                            Intent i = new Intent();
+                            setResult(Activity.RESULT_OK, i);
+                            //end：审批成功需调用此方法 通知审批列表界面刷新数据状态
                             mHandler.sendEmptyMessage(HANDLER_BOHUI_END);
                         }
                     }.start();
@@ -162,6 +167,10 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                         @Override
                         public void run() {
                             mHttpPost.planThrough(patrolPlanBean);
+                            //begin：审批成功需调用此方法 通知审批列表界面刷新数据状态
+                            Intent i = new Intent();
+                            setResult(Activity.RESULT_OK, i);
+                            //end：审批成功需调用此方法 通知审批列表界面刷新数据状态
                             mHandler.sendEmptyMessage(HANDLER_TONGUO_END);
                         }
                     }.start();

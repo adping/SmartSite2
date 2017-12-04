@@ -10,13 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
-import com.isoftstone.smartsite.model.dirtcar.activity.ManualPhotographyActivity;
-import com.isoftstone.smartsite.model.dirtcar.imagecache.ImageLoader;
-import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 
@@ -28,11 +24,17 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 	private static final String TAG = "LoaderAdapter";
 	private Context mContext;
 	private ArrayList<InspectPlanBean> mData = null;
+	private ApprovalPendingInspectPlansAdapter.AdapterViewOnClickListener mListener;
 
 
 	public ApprovalPendingInspectPlansAdapter(Context context, ArrayList<InspectPlanBean> data) {
 		this.mContext = context;
 		mData = data;
+		mListener = (ApprovalPendingInspectPlansAdapter.AdapterViewOnClickListener)context;
+	}
+
+	public interface AdapterViewOnClickListener {
+		public void viewOnClickListener(InspectPlanBean inspectPlanBean);
 	}
 
 	@Override
@@ -81,27 +83,11 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 		viewHolder.mPlanApprovalView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				enterPatrolPlan(inspectPlanBean);
+				mListener.viewOnClickListener(inspectPlanBean);
 			}
 		});
 
 		return convertView;
-	}
-
-	private void enterPatrolPlan(InspectPlanBean inspectPlanBean) {
-
-		PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
-		patrolPlanBean.setId(inspectPlanBean.getUserId());
-		patrolPlanBean.setEndDate(inspectPlanBean.getTaskTimeEnd());
-		patrolPlanBean.setStart(inspectPlanBean.getTaskTimeStart());
-		patrolPlanBean.setStatus(inspectPlanBean.getTaskStatus());
-		BaseUserBean baseUserBean = new BaseUserBean();
-		baseUserBean.setId(inspectPlanBean.getBaseUserBean().getId());
-		patrolPlanBean.setCreator(baseUserBean);
-		Intent intent = new Intent(mContext, PatrolPlanActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra("patrolplan",patrolPlanBean);
-		mContext.startActivity(intent);
 	}
 
 	static class ViewHolder {
