@@ -41,6 +41,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     public static final int WORK_IS_DOING = 1;
     public static final int WORK_HAS_DONE = 2;
     public static final int TIME_TO_INITVIEW = 4;
+    public static final int START_TASK_TO_ACTIVITY = 5;
     private ImageButton add_plan;
     private ArrayList<PatrolTaskBean> patrolTaskBeanArrayList;
     private PatrolTaskBeanPage patrolTaskBeanPage;
@@ -49,13 +50,17 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initData();
     }
 
     private void initData() {
+        showDlg("数据加载中，请稍等");
         new Thread(new Runnable() {
-
-
             @Override
             public void run() {
                 PageableBean pageableBean = new PageableBean();
@@ -70,7 +75,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 handler.sendEmptyMessage(TIME_TO_INITVIEW);
             }
         }).start();
-
     }
 
     @Override
@@ -123,6 +127,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 @Override
                 public void run() {
                     new HttpPost().updateTaskStart(selectPatrolTaskBean.getTaskId(),selectPatrolTaskBean.getTaskName());
+                    handler.sendEmptyMessage(START_TASK_TO_ACTIVITY);
                 }
             }).start();
 
@@ -150,6 +155,11 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             super.handleMessage(msg);
             if (msg.what == TIME_TO_INITVIEW) {
                 setData();
+                closeDlg();
+            }else if(msg.what == START_TASK_TO_ACTIVITY){
+                Bundle bundle=new Bundle();
+                bundle.putLong("taskId",selectPatrolTaskBean.getTaskId());
+                openActivity(ConstructionMontitoringMapActivity.class,bundle);
             }
         }
     };

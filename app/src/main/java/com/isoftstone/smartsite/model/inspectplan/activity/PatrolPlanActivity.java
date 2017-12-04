@@ -289,7 +289,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PatrolTaskBean patrolTaskBean =  mListData.get(position);
+                PatrolTaskBean patrolTaskBean = mListData.get(position);
                 enterPatrolTask(patrolTaskBean);
             }
         });
@@ -297,16 +297,17 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         imageview_tuihui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //审批通过
-                mHandler.sendEmptyMessage(HANDLER_TONGUO_START);
+                //审批拒绝
+                mHandler.sendEmptyMessage(HANDLER_BOHUI_START);
+
             }
         });
         imageview_tongguo = (ImageView) findViewById(R.id.imageview_tongguo);  //通过按钮
         imageview_tongguo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //审批拒绝
-                mHandler.sendEmptyMessage(HANDLER_BOHUI_START);
+                //审批通过
+                mHandler.sendEmptyMessage(HANDLER_TONGUO_START);
             }
         });
         tuihuitonguo_layout = (LinearLayout) findViewById(R.id.tuihuitonguo_layout);  //退回通过layout
@@ -378,9 +379,9 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
-        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()){
+        if (HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()) {
             mAddPatrolTask.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             mAddPatrolTask.setVisibility(View.VISIBLE);
         }
     }
@@ -520,7 +521,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         mTitleTextView.setText(today.plusDays(6).toString().substring(0, 7));
     }
 
-    private void enterPatrolTask(PatrolTaskBean patrolTaskBean){
+    private void enterPatrolTask(PatrolTaskBean patrolTaskBean) {
         Intent intent = new Intent(this, MapTaskDetailActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         UserTrackBean userTrackBean = new UserTrackBean();
@@ -528,7 +529,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         userTrackBean.setPatrolTask(patrolTaskBean);
         userTrackBean.setUser(patrolTaskBean.getCreator());
         //userTrackBean.setUserId(patrolTaskBean.getCreator().getId());
-        intent.putExtra("data",userTrackBean);
+        intent.putExtra("data", userTrackBean);
         this.startActivity(intent);
     }
 }
