@@ -1,13 +1,7 @@
 package com.isoftstone.smartsite.http.patroltask;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PatrolBean;
-import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
-import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBeanPage;
-import com.isoftstone.smartsite.http.pageable.PageBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;

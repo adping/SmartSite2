@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.cookies;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -8,16 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
-import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
-import com.isoftstone.smartsite.utils.LogUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;

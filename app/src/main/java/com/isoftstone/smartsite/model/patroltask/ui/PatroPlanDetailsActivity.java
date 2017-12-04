@@ -64,6 +64,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             @Override
             public void run() {
                 PageableBean pageableBean = new PageableBean();
+                pageableBean.setSize(100+"");
                 HttpPost httpPost = new HttpPost();
                 try {
                     patrolTaskBeanPage = httpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);

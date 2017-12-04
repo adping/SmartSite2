@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.cookies;
 
 import android.content.Context;
 
@@ -13,7 +13,7 @@ import okhttp3.HttpUrl;
  */
 
 public class CookiesManager implements CookieJar {
-    private  PersistentCookieStore cookieStore = null;
+    private PersistentCookieStore cookieStore = null;
 
     public CookiesManager(Context context){
         cookieStore = new PersistentCookieStore(context.getApplicationContext());

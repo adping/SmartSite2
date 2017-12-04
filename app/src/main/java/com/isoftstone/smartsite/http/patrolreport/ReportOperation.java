@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.patrolreport;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 

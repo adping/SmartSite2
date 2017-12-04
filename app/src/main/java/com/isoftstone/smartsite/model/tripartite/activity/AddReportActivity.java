@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.http.CompanyBean;
-import com.isoftstone.smartsite.http.DictionaryBean;
+import com.isoftstone.smartsite.http.user.CompanyBean;
+import com.isoftstone.smartsite.http.patrolreport.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.adapter.AddressDialogListViewAdapter;
 import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;

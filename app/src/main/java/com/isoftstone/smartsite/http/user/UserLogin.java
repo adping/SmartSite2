@@ -1,11 +1,11 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.user;
 
 import android.graphics.Bitmap;
 import android.util.Base64;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.MobileHomeBean;
-import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONArray;

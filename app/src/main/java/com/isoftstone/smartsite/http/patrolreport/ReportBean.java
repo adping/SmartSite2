@@ -1,5 +1,6 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.patrolreport;
 
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 import java.util.ArrayList;

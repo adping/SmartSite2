@@ -2,7 +2,6 @@ package com.isoftstone.smartsite.utils;
 
 import android.util.Log;
 
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 import net.sourceforge.pinyin4j.PinyinHelper;

@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.video;
 
 import java.io.Serializable;
 

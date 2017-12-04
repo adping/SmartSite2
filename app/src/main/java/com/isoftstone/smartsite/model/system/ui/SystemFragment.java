@@ -1,13 +1,9 @@
 package com.isoftstone.smartsite.model.system.ui;
 
-import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,11 +18,9 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.UserUtils;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.http.user.UserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
-import com.isoftstone.smartsite.utils.ToastUtils;
-import com.isoftstone.smartsite.utils.Utils;
 
 
 /**
