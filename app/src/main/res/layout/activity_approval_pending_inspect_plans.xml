@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-    <ListView
+    <com.isoftstone.smartsite.common.widget.PullToRefreshListView
         android:id="@+id/list_view"
         android:divider="@color/app_background"
         android:layout_width="match_parent"

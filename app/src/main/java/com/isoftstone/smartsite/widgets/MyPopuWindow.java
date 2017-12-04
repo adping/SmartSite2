@@ -111,9 +111,13 @@ public class MyPopuWindow extends PopupWindow {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        choice_data.add(user_choice);
+                        if (!choice_data.contains(user_choice)){
+                            choice_data.add((Integer) user_choice);
+                        }
                     } else {
-                        choice_data.remove(user_choice);
+                        if (choice_data.contains(user_choice)){
+                            choice_data.remove((Integer) user_choice);
+                        }
                     }
                 }
             });

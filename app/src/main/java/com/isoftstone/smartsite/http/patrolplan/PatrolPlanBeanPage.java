@@ -18,4 +18,17 @@ public class PatrolPlanBeanPage extends PageBean{
     public void setContent(ArrayList<PatrolPlanBean> content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "PatrolPlanBeanPage{" +
+                "first=" + first +
+                ", last=" + last +
+                ", number=" + number +
+                ", numberOfElements=" + numberOfElements +
+                ", size=" + size +
+                ", totalElements=" + totalElements +
+                ", totalPages=" + totalPages +
+                '}';
+    }
 }
