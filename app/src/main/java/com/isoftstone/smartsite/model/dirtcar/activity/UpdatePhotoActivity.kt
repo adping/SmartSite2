@@ -266,6 +266,7 @@ open class UpdatePhotoActivity : BaseActivity() {
 
     fun onClick_address(v: View) {
         var i = Intent(this, MapSearchTaskPositionActivity::class.java)
+        i.putExtra("zhuapai",100)
         startActivityForResult(i, FLAG_TARGET_ADDRESS)
         //mLocationService?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100L, 0.1F, mLocationListener, null)
     }
