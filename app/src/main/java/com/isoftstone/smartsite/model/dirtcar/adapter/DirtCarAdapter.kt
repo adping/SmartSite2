@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.dirtcar.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.provider.ContactsContract
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,9 @@ open class DirtCarAdapter(context: Context, datas: ArrayList<BayonetGrabInfoBean
             override fun onClick(v: View?) {
                 //ToastUtils.showShort("历史轨迹")
                 var i = Intent(mContext,MapTrackHistoryActivity::class.java)
+                var time = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(bean.dateTime) )
                 i.putExtra("licence",bean.licence)
+                i.putExtra("time",time);
                 mContext.startActivity(i)
             }
         })
@@ -52,6 +55,8 @@ open class DirtCarAdapter(context: Context, datas: ArrayList<BayonetGrabInfoBean
                 //ToastUtils.showShort("历史轨迹1")
                 var i = Intent(mContext,MapTrackHistoryActivity::class.java)
                 i.putExtra("licence",bean.licence)
+                var time = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(bean.dateTime) )
+                i.putExtra("time",time);
                 mContext.startActivity(i)
                 //跳转到MapTrackHistoryActivity，参数传licence就行了,intent.putExtra("licence",licence);
             }
