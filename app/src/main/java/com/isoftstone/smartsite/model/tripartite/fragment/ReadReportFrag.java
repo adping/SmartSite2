@@ -72,21 +72,24 @@ public class ReadReportFrag extends BaseFragment {
 
                 String developmentcompany = mData.getDevelopmentCompany();
                 if (TextUtils.isEmpty(developmentcompany)) {
-                    mBuildCompany.setText("无");
+                    View v = getActivity().findViewById(R.id.linear_build_company);
+                    v.setVisibility(View.GONE);
                 } else {
                     mBuildCompany.setText(mData.getDevelopmentCompany());
                 }
 
                 String cosCompany = mData.getConstructionCompany();
                 if (TextUtils.isEmpty(cosCompany)) {
-                    mCosCompany.setText("无");
+                    View v = getActivity().findViewById(R.id.linear_cos_company);
+                    v.setVisibility(View.GONE);
                 } else {
                     mCosCompany.setText(mData.getConstructionCompany());
                 }
 
                 String supCompany = mData.getSupervisionCompany();
                 if (TextUtils.isEmpty(supCompany)) {
-                    mSupCompany.setText("无");
+                    View v = getActivity().findViewById(R.id.linear_super_company);
+                    v.setVisibility(View.GONE);
                 } else {
                     mSupCompany.setText(mData.getSupervisionCompany());
                 }

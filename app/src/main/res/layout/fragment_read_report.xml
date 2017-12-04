@@ -73,6 +73,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linear_build_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -89,6 +90,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linear_cos_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -105,6 +107,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linear_super_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
