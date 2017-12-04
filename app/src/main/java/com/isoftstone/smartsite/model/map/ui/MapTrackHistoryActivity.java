@@ -104,11 +104,18 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         licence = getIntent().getStringExtra("licence");
+        String time = getIntent().getStringExtra("time");
+        if(!TextUtils.isEmpty(time)){
+            currentDate = time;
+            today = time;
+        }else {
+            getNowDate();
+        }
         if(TextUtils.isEmpty(licence)){
             ToastUtils.showLong("没有获取到渣土车信息！");
         }
         httpPost = new HttpPost();
-        getNowDate();
+
         initToolBar();
         initView();
         initLoadDialog();
