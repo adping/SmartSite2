@@ -130,7 +130,6 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
     protected void afterCreated(Bundle savedInstanceState) {
         httpPost = new HttpPost();
         userTrackBean = (UserTrackBean) getIntent().getSerializableExtra("data");
-        LogUtils.e(TAG,"userTrackBean : " + (userTrackBean == null ? "null" : userTrackBean.toString()));
         taskId = userTrackBean.getTaskId();
 
         initToorBar();
