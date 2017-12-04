@@ -41,6 +41,8 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
     public static final int RESULT_SAVE = 0x0001;
 
+    private int id = 0;
+
     private MapView mapView;
     private AMap aMap;
     private EditText et;
@@ -59,6 +61,8 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        id = getIntent().getIntExtra("zhuapai",0);
+
         initToolBar();
         et = (EditText) findViewById(R.id.et);
         et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -72,6 +76,9 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         });
         et.setOnClickListener(this);
 
+        if(id == 100){
+            et.setHint("请输入抓拍地点");
+        }
 
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
@@ -82,7 +89,12 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         findViewById(R.id.btn_back).setOnClickListener(this);
         findViewById(R.id.iv_add_task).setOnClickListener(this);
         TextView toolbar_title = (TextView) findViewById(R.id.toolbar_title);
-        toolbar_title.setText("任务地点");
+        if(id == 100){
+            toolbar_title.setText("抓拍地点");
+        }else {
+            toolbar_title.setText("任务地点");
+        }
+
         TextView tv_save = (TextView) findViewById(R.id.btn_icon_right);
         tv_save.setText("保存");
         tv_save.setOnClickListener(this);
