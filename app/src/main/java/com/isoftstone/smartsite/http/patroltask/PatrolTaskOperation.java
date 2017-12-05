@@ -128,6 +128,9 @@ public class PatrolTaskOperation {
         PatrolTaskBean patrolTask = null;
         String funName = "patrolTaskSave";
         try {
+            if(patrolTaskBean.getTaskType() == 0){
+                patrolTaskBean.setPlanStatus(1);
+            }
             Gson gson = new Gson();
             RequestBody body = RequestBody.create(HttpPost.JSON, gson.toJson(patrolTaskBean));
             Request request = new Request.Builder()

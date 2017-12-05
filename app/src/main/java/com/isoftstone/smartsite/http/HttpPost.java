@@ -665,7 +665,7 @@ public class HttpPost {
 
 
     /*
-    新增巡查任务，测试失败500
+    新增巡查任务
      */
     public PatrolTaskBean patrolTaskSave(PatrolTaskBean patrolTaskBean) {
         return PatrolTaskOperation.patrolTaskSave(ADD_PATROLTASK, mClient, patrolTaskBean);

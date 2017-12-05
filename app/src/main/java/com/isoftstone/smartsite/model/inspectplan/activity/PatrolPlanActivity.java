@@ -73,6 +73,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     private ArrayList<TextView> dayTextViewList = new ArrayList<TextView>();
     private ListView mListView = null;
     private ArrayList<PatrolTaskBean> mListData = null;
+    private ArrayList<PatrolTaskBean> mListData_week = new ArrayList<PatrolTaskBean>();
     private int planState = -1;
     private PatrolPlanBean patrolPlanBean = null;
     private ImageView imageview_tuihui;   //退回按钮
@@ -86,6 +87,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     private long userId;   //用户id
     private CustomDatePicker customDatePicker;
     private PatrolPlanAdapter adapter = null;
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -104,6 +106,13 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                             taskTimeEnd = taskTimeEnd + " 23:59";
                             PageableBean pageableBean = new PageableBean();
                             mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "0", "", taskTimeStart, taskTimeEnd, pageableBean);
+                            mListData_week.clear();
+                            if(mListData != null){
+                                for (int i = 0 ;i < mListData.size(); i ++){
+                                    PatrolTaskBean patrolTaskBean = mListData.get(i);
+                                    mListData_week.add(patrolTaskBean);
+                                }
+                            }
                             mHandler.sendEmptyMessage(HANDLER_GET_WEEK_END);
                         }
                     }.start();
@@ -116,6 +125,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
                 case HANDLER_GET_DAY_START: {
+                    /*
                     showDlg("数据加载中");
                     new Thread() {
                         @Override
@@ -131,11 +141,28 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                             mHandler.sendEmptyMessage(HANDLER_GET_DAY_END);
                         }
                     }.start();
+                    */
+                    if(mListData!=null){
+                        mListData.clear();
+                        for (int i = 0 ; i < mListData_week.size(); i ++){
+                            PatrolTaskBean patrolTaskBean = mListData_week.get(i);
+                            if(selectindex == -1){
+                                mListData.add(patrolTaskBean);
+                            }else{
+                                String start = patrolTaskBean.getTaskTimeStart().substring(0,10);
+                                String end = patrolTaskBean.getTaskTimeEnd().substring(0,10);
+                                if(start.compareTo(taskTimeStart) <= 0 && end.compareTo(taskTimeEnd) >= 0){
+                                    mListData.add(patrolTaskBean);
+                                }
+                            }
+                        }
+                        loadingData();
+                    }
                 }
                 break;
                 case HANDLER_GET_DAY_END: {
-                    loadingData();
-                    closeDlg();
+                    //loadingData();
+                    //closeDlg();
                 }
                 break;
                 case HANDLER_BOHUI_START: {
