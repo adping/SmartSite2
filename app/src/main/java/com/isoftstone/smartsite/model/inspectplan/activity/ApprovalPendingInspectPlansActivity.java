@@ -1,6 +1,8 @@
 package com.isoftstone.smartsite.model.inspectplan.activity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.adapter.ApprovalPendingInspectPlansAdapter;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
  * Created by zhang on 2017/11/18.
  */
 
-public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener, NetworkStateService.NetEventHandler{
+public class ApprovalPendingInspectPlansActivity extends BaseActivity implements View.OnClickListener, NetworkStateService.NetEventHandler, ApprovalPendingInspectPlansAdapter.AdapterViewOnClickListener{
     private static final String TAG = "zzz_InspectPlans";
     private PullToRefreshListView mListView = null;
     private ArrayList<InspectPlanBean> mListData = new ArrayList<InspectPlanBean>();
@@ -42,6 +45,9 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     private static final int QUERY_RESULTS_EXCEPTION_CODE = 3;
     /* 查询请求识别码 已查询出所有*/
     private static final int QUERY_RESULTS_MAX_PAGE_CODE = 4;
+
+    /* 请求识别码*/
+    public static final int REQUEST_CODE = 1;
 
     //listview分页参数
     private int mCurPageNum = -1;
@@ -80,15 +86,13 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
         mContext = getApplicationContext();
 
         mListView = (PullToRefreshListView) findViewById(R.id.list_view);
-        mNetWorkMsgView = (TextView) findViewById(R.id.net_work_msg);
-        mNetWorkMsgView.setVisibility(NetworkUtils.isConnected() ? View.GONE : View.VISIBLE);
+        //mNetWorkMsgView = (TextView) findViewById(R.id.net_work_msg);
+        //mNetWorkMsgView.setVisibility(NetworkUtils.isConnected() ? View.GONE : View.VISIBLE);
 
         PullToRefreshListView.OnRefreshListener refreshListener = new PullToRefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if(!isRefreshing()) {
-                    //mListView.onRefreshComplete();
-                    //mCurPageNum = mCurPageNum++;
                     Log.e(TAG,".... onRefresh    mCurPageNum "+ mCurPageNum);
                     new QueryDataTask(mContext, false).execute();
                 }
@@ -97,8 +101,6 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
             @Override
             public void onLoadMore() {
                 if(!isRefreshing()) {
-                    //mListView.onLoadMoreComplete();
-                    //mCurPageNum = mCurPageNum++;
                     Log.e(TAG,".... onLoadMore    mCurPageNum "+ mCurPageNum);
                     new QueryDataTask(mContext, false).execute();
                 }
@@ -118,6 +120,23 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        Log.i("zzz","aaaaaaaaa...aaaaaaaaaaaaaaaa..." +  intent);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (mListData != null) {
+                mListData.clear();
+                mCurPageNum = -1;
+            }
+            Log.i("zzz","aaaaaaaaa...aaaaaaaaaaaaa..." +  intent.getData());
+            new QueryDataTask(mContext, true).execute();
+            super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_back:
@@ -130,12 +149,12 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     @Override
     public void onNetChange(boolean isConnected) {
-        mNetWorkMsgView.setText("当前网络不可用，请检查您的网络设置");
+        //mNetWorkMsgView.setText("当前网络不可用，请检查您的网络设置");
         Log.i("zzz","onNetChange...........");
         if (isConnected) {
-            mNetWorkMsgView.setVisibility(View.GONE);
+            //mNetWorkMsgView.setVisibility(View.GONE);
         } else {
-            mNetWorkMsgView.setVisibility(View.VISIBLE);
+            //mNetWorkMsgView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -145,6 +164,31 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
 
     public boolean isRefreshing() {
         return this.isLoading;
+    }
+
+    @Override
+    public void viewOnClickListener(InspectPlanBean inspectPlanBean) {
+        if (!NetworkUtils.isConnected()){
+            ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+            return;
+        }
+        enterPatrolPlan(inspectPlanBean);
+    }
+
+    private void enterPatrolPlan(InspectPlanBean inspectPlanBean) {
+
+        PatrolPlanBean patrolPlanBean = new PatrolPlanBean();
+        patrolPlanBean.setId(inspectPlanBean.getUserId());
+        patrolPlanBean.setEndDate(inspectPlanBean.getTaskTimeEnd());
+        patrolPlanBean.setStart(inspectPlanBean.getTaskTimeStart());
+        patrolPlanBean.setStatus(inspectPlanBean.getTaskStatus());
+        BaseUserBean baseUserBean = new BaseUserBean();
+        baseUserBean.setId(inspectPlanBean.getBaseUserBean().getId());
+        patrolPlanBean.setCreator(baseUserBean);
+        Intent intent = new Intent(mContext, PatrolPlanActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("patrolplan",patrolPlanBean);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     class QueryDataTask extends AsyncTask<Void,Void,Integer> {

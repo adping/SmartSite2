@@ -2,22 +2,13 @@ package com.isoftstone.smartsite.model.video;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
-import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,24 +21,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.MediaScanner;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
-import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.listener.OnPtzCommandListener;
 import com.uniview.airimos.listener.OnStartLiveListener;
 import com.uniview.airimos.listener.OnStopLiveListener;
 import com.uniview.airimos.manager.ServiceManager;
-import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.parameter.PtzCommandParam;
 import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.thread.RecvStreamThread;
-
-import java.io.FileNotFoundException;
 
 /**
  * Created by gone on 2017/10/17.

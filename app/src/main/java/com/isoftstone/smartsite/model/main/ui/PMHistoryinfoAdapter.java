@@ -1,20 +1,14 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.DataQueryVoBean;
-import com.isoftstone.smartsite.http.PMDevicesDataBean;
-import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
-import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 
 import java.util.ArrayList;
 

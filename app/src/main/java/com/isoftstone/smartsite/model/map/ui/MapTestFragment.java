@@ -1,18 +1,8 @@
 package com.isoftstone.smartsite.model.map.ui;
 
-import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
-
-import com.amap.api.maps.SupportMapFragment;
-import com.amap.api.maps.TextureMapView;
-import com.amap.api.maps.model.MyLocationStyle;
 
 
 //import com.amap.api.maps2d.AMap;
@@ -23,12 +13,6 @@ import com.amap.api.maps.model.MyLocationStyle;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.http.DeviceBean;
-import com.isoftstone.smartsite.http.DevicesBean;
-import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.utils.LogUtils;
-
-import java.util.ArrayList;
 
 
 /**

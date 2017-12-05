@@ -9,6 +9,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
+import com.isoftstone.smartsite.http.aqi.EQIMonitoring;
+import com.isoftstone.smartsite.http.aqi.EQIRankingBean;
+import com.isoftstone.smartsite.http.aqi.MonthlyComparisonBean;
+import com.isoftstone.smartsite.http.aqi.WeatherConditionBean;
+import com.isoftstone.smartsite.http.aqi.WeatherLiveBean;
+import com.isoftstone.smartsite.http.cookies.CookiesManager;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.http.message.MessageOperation;
@@ -31,6 +38,10 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBeanPage;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanOperation;
+import com.isoftstone.smartsite.http.patrolreport.DictionaryBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.ReportBean;
+import com.isoftstone.smartsite.http.patrolreport.ReportOperation;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskOperation;
@@ -39,6 +50,12 @@ import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.http.taskcenter.TaskCenterOperation;
 import com.isoftstone.smartsite.http.taskcenter.TaskNumberBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
+import com.isoftstone.smartsite.http.user.CompanyBean;
+import com.isoftstone.smartsite.http.user.InstallBean;
+import com.isoftstone.smartsite.http.user.LoginBean;
+import com.isoftstone.smartsite.http.user.UserBean;
+import com.isoftstone.smartsite.http.user.UserLogin;
+import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
@@ -521,7 +538,9 @@ public class HttpPost {
         Log.e("test", archId + "  " + time + "  " + timeMonth + " " + flag);
         return MuckCarOperation.getArchMonthFlow(GET_ARCH_MONTH_FLOW, mClient, time, timeMonth, archId, flag);
     }
-
+    /*
+    获取渣土车流量路段对比
+     */
     public ArchMonthFlowBean getAlarmData(String time, String timeMonth, long[] archIds, int flag) {
         //
         return MuckCarOperation.getAlarmData(GET_ALARM_DATA, mClient, time, timeMonth, archIds, flag);

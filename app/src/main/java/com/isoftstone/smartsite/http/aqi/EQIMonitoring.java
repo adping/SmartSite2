@@ -1,8 +1,8 @@
-package com.isoftstone.smartsite.http;
-
-import android.util.Log;
+package com.isoftstone.smartsite.http.aqi;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.video.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -23,7 +23,7 @@ import okhttp3.Response;
 
 public class EQIMonitoring {
     private static  String TAG = "EQIMonitoring";
-    public static  EQIRankingBean eqiDataRanking(String strurl, OkHttpClient mClient,String archId,String time){
+    public static EQIRankingBean eqiDataRanking(String strurl, OkHttpClient mClient, String archId, String time){
         EQIRankingBean eqiRankingBean = null;
         String funName = "EQIMonitoring";
         try {
@@ -54,7 +54,7 @@ public class EQIMonitoring {
         return  eqiRankingBean;
     }
 
-    public static MonthlyComparisonBean carchMonthlyComparison(String strurl, OkHttpClient mClient,String archId,String time,String type){
+    public static MonthlyComparisonBean carchMonthlyComparison(String strurl, OkHttpClient mClient, String archId, String time, String type){
         MonthlyComparisonBean monthlyComparisonBean = null;
         try {
             //区域月度数据对比
@@ -125,7 +125,7 @@ public class EQIMonitoring {
         return list;
     }
 
-    public static  ArrayList<DataQueryVoBean> onePMDevicesDataList(String strurl, OkHttpClient mClient,String deviceIdsStr,String dataType,String beginTime,String endTime){
+    public static  ArrayList<DataQueryVoBean> onePMDevicesDataList(String strurl, OkHttpClient mClient, String deviceIdsStr, String dataType, String beginTime, String endTime){
         //2.2	单设备PM数据列表
         ArrayList<DataQueryVoBean> list = null;
         String funName = "onePMDevicesDataList";
@@ -214,7 +214,7 @@ public class EQIMonitoring {
     }
 
 
-    public static ArrayList<DevicesBean> getDevicesList(String strurl, OkHttpClient mClient,String deviceType,String deviceName,String archId,String deviceStatus){
+    public static ArrayList<DevicesBean> getDevicesList(String strurl, OkHttpClient mClient, String deviceType, String deviceName, String archId, String deviceStatus){
         //获取设备列表—文昊炅  ESS_DEVICE_LIST
         ArrayList<DevicesBean> list = null;
         String funName = "getDevicesList";
@@ -247,7 +247,7 @@ public class EQIMonitoring {
         return list;
     }
 
-    public static WeatherLiveBean getWeatherLive(String strurl, OkHttpClient mClient,String archId,String time){
+    public static WeatherLiveBean getWeatherLive(String strurl, OkHttpClient mClient, String archId, String time){
 
         WeatherLiveBean weatherLiveBean = null;
         String funName = "getWeatherLive";

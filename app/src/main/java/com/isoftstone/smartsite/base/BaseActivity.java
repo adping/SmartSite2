@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.common.AppManager;
-import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.utils.StatusViewUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {

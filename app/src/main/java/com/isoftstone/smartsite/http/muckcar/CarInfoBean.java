@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.http.muckcar;
 
 import com.isoftstone.smartsite.http.BaseBean.ArchBean;
-import com.isoftstone.smartsite.http.EQIRankingBean;
 
 /**
  * Created by gone on 2017/11/16.

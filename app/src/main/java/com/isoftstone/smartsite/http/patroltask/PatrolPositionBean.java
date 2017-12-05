@@ -2,7 +2,6 @@ package com.isoftstone.smartsite.http.patroltask;
 
 import android.graphics.Bitmap;
 
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 
 import java.io.Serializable;

@@ -18,7 +18,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.common.AppManager;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.InstallBean;
+import com.isoftstone.smartsite.http.user.InstallBean;
 import com.isoftstone.smartsite.model.map.service.DownloadAPKService;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 

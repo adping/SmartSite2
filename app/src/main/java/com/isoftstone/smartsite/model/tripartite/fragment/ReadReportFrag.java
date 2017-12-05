@@ -9,8 +9,8 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.http.DictionaryBean;
-import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.DictionaryBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 
 import java.util.ArrayList;
 

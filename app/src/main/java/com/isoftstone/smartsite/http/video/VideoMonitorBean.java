@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.video;
 
 /**
  * Created by gone on 2017/10/17.

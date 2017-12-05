@@ -13,13 +13,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.gjiazhe.wavesidebar.WaveSideBar;
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.adapter.InspectorsAdapter;
 import com.isoftstone.smartsite.model.inspectplan.adapter.InspectorsIconAdapter;
