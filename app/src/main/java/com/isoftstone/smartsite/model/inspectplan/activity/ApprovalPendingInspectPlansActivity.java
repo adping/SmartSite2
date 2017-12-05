@@ -244,6 +244,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                     inspectPlanBean.setTaskName(arrayList.get(i).getTitle());
                     inspectPlanBean.setTaskTimeStart(arrayList.get(i).getStart());
                     inspectPlanBean.setTaskTimeEnd(arrayList.get(i).getEndDate());
+                    inspectPlanBean.setTaskCreateTime(arrayList.get(i).getDate());
                     inspectPlanBean.setUserName(arrayList.get(i).getCreator().getName());
                     inspectPlanBean.setUserCompany(Utils.isEmptyStr(arrayList.get(i).getCreator().getDepartmentId()) ?  "" : mHttpPost.getCompanyNameByid(Integer.parseInt(arrayList.get(i).getCreator().getDepartmentId())));
                     inspectPlanBean.setTaskStatus(arrayList.get(i).getStatus());

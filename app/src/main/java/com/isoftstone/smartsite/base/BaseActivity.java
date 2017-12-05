@@ -29,9 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         StatusViewUtils.initStatusBar(this);
 
-        afterCreated(savedInstanceState);
-
         initLoginingDlg();
+
+        afterCreated(savedInstanceState);
 
     }
 

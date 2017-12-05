@@ -99,6 +99,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
             VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
             adapter.setData(list);
             mListView.setAdapter(adapter);
+            closeDlg();
         }
 
     }
@@ -119,6 +120,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
         init();
         //查询设备列表,并填充ListView数据
         //setResourceDate();
+        showDlg("正在获取设备列表");
         mHandler.sendEmptyMessage(HANDLER_GETDIVICES_START);
     }
 
