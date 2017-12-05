@@ -18,7 +18,7 @@ import com.isoftstone.smartsite.model.patroltask.ui.PatroPlanDetailsActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.muckcar.ui.SlagcarInfoActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.http.DataQueryBean;
+import com.isoftstone.smartsite.http.aqi.DataQueryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.MobileHomeBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.ApprovalPendingInspectPlansActivity;

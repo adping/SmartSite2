@@ -1,11 +1,9 @@
 package com.isoftstone.smartsite.widgets;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -14,7 +12,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.common.widget.OnItemClickListener;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -33,8 +30,9 @@ public class MyPopuWindow extends PopupWindow {
     private TextView tv_ok;
     private OnDataCheckedListener onDataCheckedListener;
     private ArrayList<Integer> choice_data = new ArrayList<Integer>();
+    private boolean mChecked;
 
-    public MyPopuWindow(Context context, String title, ArrayList<String> data,OnDataCheckedListener onDataCheckedListener) {
+    public MyPopuWindow(Context context, String title, ArrayList<String> data, OnDataCheckedListener onDataCheckedListener) {
         super(context);
         this.context = context;
         this.title = title;
@@ -42,6 +40,7 @@ public class MyPopuWindow extends PopupWindow {
         this.onDataCheckedListener = onDataCheckedListener;
         initView();
     }
+
 
     private void initView() {
         rootView = LayoutInflater.from(context).inflate(R.layout.layout_main_mypopuwindow, null);
@@ -111,16 +110,25 @@ public class MyPopuWindow extends PopupWindow {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        if (!choice_data.contains(user_choice)){
+                        if (!choice_data.contains(user_choice)) {
                             choice_data.add((Integer) user_choice);
                         }
                     } else {
-                        if (choice_data.contains(user_choice)){
+                        if (choice_data.contains(user_choice)) {
                             choice_data.remove((Integer) user_choice);
                         }
                     }
+                    if (choice_data.size()>2) {
+                        choice_data.remove(0);
+                    }
+                    notifyDataSetChanged();
                 }
             });
+            if (choice_data.contains(position)) {
+                myHolderView.checkBox.setChecked(true);
+            } else {
+                myHolderView.checkBox.setChecked(false);
+            }
             myHolderView.checkBox.setTag(position);
             return convertView;
         }

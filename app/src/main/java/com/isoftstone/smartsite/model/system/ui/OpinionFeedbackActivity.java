@@ -17,7 +17,6 @@
 package com.isoftstone.smartsite.model.system.ui;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 /**

@@ -10,7 +10,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;

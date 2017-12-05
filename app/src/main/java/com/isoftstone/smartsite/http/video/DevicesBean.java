@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.video;
 
 import java.io.Serializable;
 
@@ -10,16 +10,17 @@ public class DevicesBean implements Serializable{
 
     private static final long serialVersionUID = 0x0001L;
 
-    private  String  deviceId;
-    private  String  deviceCoding;
-    private  String  deviceName;
-    private  int  deviceType;
-    private  String  installTime;
     private  DevicesArch arch;
-    private String  deviceStatus;
-    private String  longitude;
-    private String  latitude;
     private int cameraType;
+    private String deviceId;		//设备ID
+    private String deviceCoding	;	//设备编码
+    private String deviceName;		//设备名称
+    private Integer deviceType;		//设备类型（0为PM10，1为监控）
+    private String installTime;	             //Date(yyyy-MM-dd HH:mm:ss)	安装时间
+    private String deviceStatus;		  //设备状态（0在线，1离线，2故障）
+    private String longitude;	      //设备精度
+    private String  latitude;		//设备纬度
+
 
     public void DevicesBean(String deviceCoding, String deviceName,int deviceType, String deviceStatus, int cameraType) {
         this.deviceCoding = deviceCoding;

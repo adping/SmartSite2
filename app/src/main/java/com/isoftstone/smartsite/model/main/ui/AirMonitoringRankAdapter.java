@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.EQIRankingBean;
+import com.isoftstone.smartsite.http.aqi.EQIRankingBean;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -11,7 +11,7 @@ import android.widget.ScrollView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.model.tripartite.fragment.ReadReportFrag;
 import com.isoftstone.smartsite.model.tripartite.fragment.ViewReplyReportFragment;
 

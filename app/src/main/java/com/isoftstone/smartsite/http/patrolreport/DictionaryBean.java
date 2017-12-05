@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.patrolreport;
 
 /**
  * Created by gone on 2017/11/6.

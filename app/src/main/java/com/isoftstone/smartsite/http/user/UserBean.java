@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.user;
 
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 

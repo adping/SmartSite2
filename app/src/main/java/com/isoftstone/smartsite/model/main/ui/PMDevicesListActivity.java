@@ -1,24 +1,19 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Layout;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.DataQueryVoBean;
-import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 
 import java.util.ArrayList;
 

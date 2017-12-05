@@ -1,30 +1,17 @@
 package com.isoftstone.smartsite.model.inspectplan.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.EQIRankingBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
-import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
-import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
-import com.isoftstone.smartsite.model.main.ui.AirMonitoringRankAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 public class PatrolPlanAdapter extends BaseAdapter {

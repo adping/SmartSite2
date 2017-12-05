@@ -1,15 +1,11 @@
 package com.isoftstone.smartsite.common;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.isoftstone.smartsite.LoginActivity;
-import com.isoftstone.smartsite.LoginActivity2;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.http.LoginBean;
+import com.isoftstone.smartsite.http.user.LoginBean;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;

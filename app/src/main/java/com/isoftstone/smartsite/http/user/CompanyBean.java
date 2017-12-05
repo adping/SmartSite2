@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.http;
+package com.isoftstone.smartsite.http.user;
 
 /**
  * Created by gone on 2017/11/16.

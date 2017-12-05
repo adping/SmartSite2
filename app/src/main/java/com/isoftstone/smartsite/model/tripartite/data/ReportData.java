@@ -1,6 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.data;
 
-import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.utils.DateUtils;
 

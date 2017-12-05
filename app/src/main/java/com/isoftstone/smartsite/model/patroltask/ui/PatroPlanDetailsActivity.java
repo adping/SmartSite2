@@ -64,6 +64,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             @Override
             public void run() {
                 PageableBean pageableBean = new PageableBean();
+                pageableBean.setSize(100+"");
                 HttpPost httpPost = new HttpPost();
                 try {
                     patrolTaskBeanPage = httpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);
@@ -184,7 +185,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(context).inflate(R.layout.patrol_plan_details, null);
-                holder.report = (TextView) convertView.findViewById(R.id.reporterName);
+                holder.report = (TextView) convertView.findViewById(R.id.reportNmme);
                 holder.report_status = (ImageView) convertView.findViewById(R.id.report_status);
                 holder.reportor = (TextView) convertView.findViewById(R.id.reporterName);
                 holder.company_name = (TextView) convertView.findViewById(R.id.comparyName);
