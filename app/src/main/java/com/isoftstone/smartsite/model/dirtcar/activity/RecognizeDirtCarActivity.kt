@@ -61,7 +61,7 @@ open class RecognizeDirtCarActivity : AppCompatActivity() {
             }
 
             var lab_speed = findViewById(R.id.lab_speed) as TextView
-            lab_speed.setText("" + bean.speed)
+            lab_speed.setText("" + bean.speed+" km/h")
 
             var imgUri = bean.imgList;
             var imageView = findViewById(R.id.img_view) as ImageView
