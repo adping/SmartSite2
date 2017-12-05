@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.map.ui;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -252,7 +253,6 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             @Override
             public void run() {
                 patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
-                LogUtils.e(TAG,patrolTaskBean == null ? " null " : patrolTaskBean.toString());
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -325,6 +325,20 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 .asBitmap();
 
         SimpleTarget<Bitmap> simpleTarget = new SimpleTarget<Bitmap>() {
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                super.onLoadFailed(e, errorDrawable);
+                View centerView = LayoutInflater.from(ConstructionMontitoringMapActivity.this).inflate(R.layout.layout_marker_with_icon,null);
+                CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
+                civ.setImageResource(R.drawable.default_head);
+                markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setAnchor(0.5f,1f);
+                marker.setObject(bean);
+                touXiangMarkers.add(marker);
+            }
+
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 View centerView = LayoutInflater.from(ConstructionMontitoringMapActivity.this).inflate(R.layout.layout_marker_with_icon,null);
@@ -467,8 +481,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
         Marker marker = aMap.addMarker(markerOption);
         marker.setAnchor(0.5f,0.5f);
-        marker.setClickable(false);
-//        marker.setObject(bean);
+        marker.setObject(bean);
         doneMarkers.add(marker);
     }
 
@@ -611,6 +624,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             @Override
             public void run() {
                 if(patrolTaskBean != null){
+                    LogUtils.e(TAG,"userid : " + loginUseId + ", taskId : " + taskId + ", lat : " + lat + ", lon :" + lon);
                     httpPost.userTrack(loginUseId,taskId,lon,lat);
                 }
             }
@@ -634,7 +648,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    httpPost.updatePatrolPositionStatus(loginUseId,currentPatorPositionBean.getPosition());
+                    httpPost.updatePatrolPositionStatus(currentPatorPositionBean.getId(),currentPatorPositionBean.getPosition());
                     mHandler.sendEmptyMessage(FINISH_TASK_POSITION_TOAST);
                     SystemClock.sleep(2000);
                     mHandler.sendEmptyMessage(FINISH_TASK_POSITION);
