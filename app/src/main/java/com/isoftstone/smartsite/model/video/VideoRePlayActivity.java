@@ -841,10 +841,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 dateText.setText(time.split(" ")[0]);
                 timeText.setText(time.split(" ")[1] + (isBeginDateTime ? ":00" : ":59"));
             }
-        }, "1970-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        }, "1970-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker.showSpecificTime(true); // 显示时和分
         //customDatePicker.showYearMonth();
         customDatePicker.setIsLoop(false); // 不允许循环滚动
+        customDatePicker.setShowType(1);
         customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
     }
 }
