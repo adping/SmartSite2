@@ -15,6 +15,7 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.inspectplan.bean.InspectPlanBean;
+import com.isoftstone.smartsite.utils.DateUtils;
 
 import java.util.ArrayList;
 
@@ -76,7 +77,7 @@ public class ApprovalPendingInspectPlansAdapter extends BaseAdapter{
 
 		viewHolder.mLabTitleView.setText(inspectPlanBean.getTaskName());
 		viewHolder.mLabStatusView.setImageDrawable(getStatusDictionariesToDrawable(inspectPlanBean.getTaskStatus()));
-		viewHolder.mLabTimeView.setText(inspectPlanBean.getTaskTimeEnd().toString());
+		viewHolder.mLabTimeView.setText(DateUtils.formatDate(inspectPlanBean.getTaskCreateTime()));
 		viewHolder.mLabNameView.setText(inspectPlanBean.getUserName());
 		viewHolder.mLabcompanView.setText(inspectPlanBean.getUserCompany());
 

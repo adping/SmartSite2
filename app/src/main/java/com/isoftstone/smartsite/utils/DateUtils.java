@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -242,4 +243,16 @@ public class DateUtils {
         Date date = new Date();
         return  format2.format(date).toString();
     }
+
+    public static String formatDate(String dateTimeStr) {
+        Date date = null;
+        try {
+            date = format_yyyy_MM_dd_HH_mm_ss.parse(dateTimeStr);
+            return format1.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateTimeStr.split(" ")[0];
+    }
+
 }
