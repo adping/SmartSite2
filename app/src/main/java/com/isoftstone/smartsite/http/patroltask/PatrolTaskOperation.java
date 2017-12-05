@@ -290,6 +290,7 @@ public class PatrolTaskOperation {
         String funName = "userTrack";
         try {
             JSONObject object = new JSONObject();
+            object.put("userId",userId);
             object.put("taskId", taskId);
             object.put("longitude", longitude);
             object.put("latitude", latitude);
