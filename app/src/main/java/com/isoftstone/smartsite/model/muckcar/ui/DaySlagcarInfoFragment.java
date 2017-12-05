@@ -396,7 +396,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             liuliangduibi_linechart.setTouchEnabled(true);
             liuliangduibi_linechart.setDragEnabled(false);  //是否可以缩放
             liuliangduibi_linechart.setScaleEnabled(false);  //是否可以缩放
-            liuliangduibi_linechart.setPinchZoom(true);
+            liuliangduibi_linechart.setPinchZoom(false);
             liuliangduibi_linechart.setExtraOffsets(10, 0, 10, 20);
 
             XAxis xAxis = liuliangduibi_linechart.getXAxis();
@@ -411,6 +411,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             leftAxis.enableGridDashedLine(10f, 0f, 0f);
             leftAxis.setDrawZeroLine(false);
             leftAxis.setDrawLimitLinesBehindData(false);
+            leftAxis.setAxisMinimum(0f);
 
 
             liuliangduibi_linechart.getAxisRight().setEnabled(false);
@@ -466,6 +467,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 set1.setHighlightEnabled(false);
                 set1.setDrawValues(false);
                 set1.setFillAlpha(255);
+                set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
                 set1.setFillColor(Color.parseColor("#4879df"));
 
                 if (Utils.getSDKInt() >= 18) {
@@ -515,6 +517,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
                 set2.setFillColor(Color.RED);
                 set2.setDrawCircles(false);
                 set2.setDrawValues(false);
+                set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
                 if (Utils.getSDKInt() >= 18) {
                     // fill drawable only supported on api level 18 and above
@@ -582,6 +585,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(false);
+        leftAxis.setAxisMinimum(0f);
 
         baojinglv_linechart.getAxisRight().setEnabled(false);
 
