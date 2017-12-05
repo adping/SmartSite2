@@ -1,6 +1,9 @@
 package com.isoftstone.smartsite;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
@@ -27,6 +30,23 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
 
     private Class[] fragments = new Class[]{MainFragment.class,MapFragment.class,
             MsgFragment.class, SystemMainFragment.class};
+    public static final String ACTION_CHANGE_TAB = "com.isoftstone.smartsite.change_tab";
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try{
+                String action = intent.getAction();
+                Log.d(TAG,"receive action:"+action);
+                if (ACTION_CHANGE_TAB.equals(action)) {
+                    int tab = intent.getIntExtra("tab",0);
+                    setCurrentTab(tab);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     protected int getLayoutRes() {
@@ -46,6 +66,9 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
         Intent i = new Intent(this, RecognizeDirtCarService.class);
         i.putExtra("sync",true);
         startService(i);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_CHANGE_TAB);
+        registerReceiver(mReceiver,filter);
         super.onStart();
     }
 
@@ -53,6 +76,12 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
         tabHost = (FragmentTabHost) findViewById(R.id.tab_host);
 
         initTabWidget();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(mReceiver);
+        super.onStop();
     }
 
     private void initTabWidget(){
