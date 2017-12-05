@@ -63,12 +63,15 @@ open class RecognizeDirtCarActivity : AppCompatActivity() {
             var lab_speed = findViewById(R.id.lab_speed) as TextView
             lab_speed.setText("" + bean.speed)
 
-            var imagePath = intent.getStringExtra("path")
-            Log.e(TAG, "yanlog imagePath:" + imagePath)
-            if (!TextUtils.isEmpty(imagePath)) {
-                var imageView = findViewById(R.id.img_view) as ImageView
-                ImageUtils.loadImageViewDiskCache(this, imagePath, imageView)
-            }
+            var imgUri = bean.imgList;
+            var imageView = findViewById(R.id.img_view) as ImageView
+            ImageUtils.loadImageWithPlaceHolder(this, imageView, imgUri, R.drawable.timg)
+//            var imagePath = intent.getStringExtra("path")
+//            Log.e(TAG, "yanlog imagePath:" + imagePath)
+//            if (!TextUtils.isEmpty(imagePath)) {
+//                var imageView = findViewById(R.id.img_view) as ImageView
+//                ImageUtils.loadImageViewDiskCache(this, imagePath, imageView)
+//            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

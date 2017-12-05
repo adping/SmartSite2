@@ -34,8 +34,8 @@ open class RecognizeDirtCarService : Service() {
     override fun onCreate() {
         Log.i(TAG, "yanlog onCreate")
         mDownloadObser = downloadObserver(this)
-        contentResolver.registerContentObserver(Uri.parse("content://downloads/my_downloads"), true,
-                mDownloadObser)
+        //contentResolver.registerContentObserver(Uri.parse("content://downloads/my_downloads"), true,
+           //     mDownloadObser)
         super.onCreate()
     }
 
@@ -65,10 +65,11 @@ open class RecognizeDirtCarService : Service() {
                     var pageBean = PageableBean()
                     pageBean.page = "1"
                     var list = mHttpPost.getUnRecList("", pageBean)
-                    Log.e(TAG, "yanlog queryData:" + list)
-                    if (list != null && list.rawRecords != null) {
+                    Log.e(TAG, "yanlog queryData:" + list.size)
+                    if (list != null && list.content != null) {
+                        Log.e(TAG,"yanlog list.rawRecords size:"+list.content.size)
                         mDataList.clear()
-                        mDataList.addAll(list.rawRecords)
+                        mDataList.addAll(list.content)
                         // mDataList.addAll(null)
                     }
                 } catch (e: Exception) {
@@ -88,7 +89,7 @@ open class RecognizeDirtCarService : Service() {
 
     override fun onDestroy() {
         Log.i(TAG, "yanlog onDestroy")
-        contentResolver.unregisterContentObserver(mDownloadObser)
+        //contentResolver.unregisterContentObserver(mDownloadObser)
         super.onDestroy()
     }
 
@@ -108,18 +109,16 @@ open class RecognizeDirtCarService : Service() {
                     var dataGson = gson.toJson(data)
                     var i = Intent(this@RecognizeDirtCarService, RecognizeDirtCarActivity::class.java)
                     i.putExtra("data", dataGson)
-                    if (TextUtils.isEmpty(data.imgList)) {
-                        return i
-                    }
-                    var juedui = mHttpPost.getReportPath(0, data.imgList)
-                    i.putExtra("path", juedui)
-                    if (File(juedui).exists()) {
-                        return i
-                    }
-                    var downloadId = mHttpPost.downloadReportFile(0, data.imgList)
-                    mDownloadObser?.addIntent(downloadId,i)
-                    //getReportPath
-                    return null
+                    Log.e(TAG,"yanlog dataGson:"+dataGson)
+                    return i
+//                    var juedui = mHttpPost.getReportPath(0, data.imgList)
+//                    Log.e(TAG,"yanlog juedui:"+juedui);
+//                    i.putExtra("path", juedui)
+//                    if (File(juedui).exists()) {
+//                        return i
+//                    }
+//                    var downloadId = mHttpPost.downloadReportFile(0, data.imgList)
+//                    mDownloadObser?.addIntent(downloadId,i)
                 }
                 return null
             }
