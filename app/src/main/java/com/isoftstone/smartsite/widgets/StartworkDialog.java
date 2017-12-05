@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -18,11 +19,12 @@ import org.apache.http.protocol.RequestConnControl;
 
 public class StartworkDialog extends Dialog implements View.OnClickListener {
 
-    private ImageView dialog_cancell;
+    private LinearLayout dialog_cancell;
     private TextView patrol_plan;
     private Button bt_start;
     private Context context;
     private OnStartworkLstener onStartworkLstener;
+    private String taskName = "";
 
     public StartworkDialog(Context context, OnStartworkLstener onStartworkLstener) {
         super(context);
@@ -39,10 +41,19 @@ public class StartworkDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
-        dialog_cancell = (ImageView) findViewById(R.id.dialog_cancll);
+        dialog_cancell = (LinearLayout) findViewById(R.id.dialog_cancll);
         bt_start = (Button) findViewById(R.id.bt_start);
         dialog_cancell.setOnClickListener(this);
         bt_start.setOnClickListener(this);
+        patrol_plan = (TextView) findViewById(R.id.patro_plan);
+        patrol_plan.setText(taskName);
+    }
+
+    public void setTaskName(String taskName){
+        this.taskName = taskName;
+        if(patrol_plan != null){
+            patrol_plan.setText(taskName);
+        }
     }
 
     @Override

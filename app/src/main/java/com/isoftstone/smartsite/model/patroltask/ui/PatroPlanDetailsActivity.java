@@ -107,6 +107,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             selectPatrolTaskBean = patrolTaskBeanArrayList.get(i);
             switch (selectPatrolTaskBean.getTaskStatus()) {
                 case WORK_WAIT_FOR_DOING:
+                    startworkDialog.setTaskName(selectPatrolTaskBean.getTaskName());
                     startworkDialog.show();
                     break;
                 case WORK_IS_DOING:

@@ -6,14 +6,19 @@
     android:background="@drawable/tanchubeijing"
     android:orientation="vertical">
 
-    <ImageView
+    <LinearLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/dialog_cancll"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/guanbi" />
+        android:layout_alignParentRight="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/guanbi" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/patro_plan"
