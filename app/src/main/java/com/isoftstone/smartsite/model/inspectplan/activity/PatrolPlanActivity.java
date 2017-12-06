@@ -47,6 +47,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
 
     private HttpPost mHttpPost = new HttpPost();
     private ImageButton mAddPatrolTask = null;   //新增巡查任务
+    private LinearLayout mTitleLayout = null;
     private TextView mTitleTextView = null;
     private LinearLayout weeks = null;
     private LinearLayout days = null;
@@ -373,7 +374,6 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         customDatePicker = new CustomDatePicker(PatrolPlanActivity.this, new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-                //mTitleTextView.setText(time.substring(0,7));
                 LocalDate localDate = new LocalDate(time.substring(0, 7) + "-01");
                 int minus = localDate.getDayOfWeek();
                 today = localDate.minusDays(minus - 1);
@@ -391,7 +391,8 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
 
     private void initToolbar() {
         mTitleTextView = (TextView) findViewById(R.id.toolbar_title);
-        mTitleTextView.setOnClickListener(new View.OnClickListener() {
+        mTitleLayout = (LinearLayout) findViewById(R.id.toolbar_title_layout);
+        mTitleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
