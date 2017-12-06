@@ -65,7 +65,7 @@ open class RecognizeDirtCarActivity : AppCompatActivity() {
 
             var imgUri = bean.imgList;
             var imageView = findViewById(R.id.img_view) as ImageView
-            ImageUtils.loadImageWithPlaceHolder(this, imageView, imgUri, R.drawable.timg)
+            ImageUtils.loadImageWithPlaceHolderLoading(this, imageView, imgUri, R.drawable.timg)
 //            var imagePath = intent.getStringExtra("path")
 //            Log.e(TAG, "yanlog imagePath:" + imagePath)
 //            if (!TextUtils.isEmpty(imagePath)) {
