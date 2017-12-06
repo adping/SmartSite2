@@ -10,7 +10,7 @@
         android:id="@+id/title"
         layout="@layout/layout_toolbar_one_icon"></include>
 
-    <ListView
+    <com.isoftstone.smartsite.common.widget.PullToRefreshListView
         android:id="@+id/patrol_detail_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,5 +18,5 @@
         android:layout_marginRight="18dp"
         android:layout_marginTop="10dp"
         android:divider="@color/app_background"
-        android:dividerHeight="10dp"></ListView>
+        android:dividerHeight="10dp"/>
 </LinearLayout>
