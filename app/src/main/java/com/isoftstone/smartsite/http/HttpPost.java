@@ -88,7 +88,6 @@ public class HttpPost {
     private String EQI_DATA_RANKING = URL + "/eqi/dataRanking";      //区域月度综合排名
     private String EQI_DATA_COMPARISON = URL + "/eqi/dataComparison";  //区域月度数据对比
     private String EQI_DAYS_PROPORTION = URL + "/eqi/daysProportion";  //优良天数占比
-    private String EQI_WEATHER_LIVE = URL + "/eqi/weatherLive";        //获取实时天气情况
     private String EQI_LIST = URL + "/eqi/list";                       //单设备PM数据列表
     private String EQI_BYDEVICE_HISTORY = URL + "/eqi/byDevice/history/";  //获取一台设备历史参数
     private String EQI_BYDEVICE_DAYS = URL + "/eqi/byDevice/days";        //获取一台设备24小时数据
@@ -292,15 +291,6 @@ public class HttpPost {
         }
         return flag;
     }
-
-
-    /*
-    天气实况  测试数据"47","2017-10"
-     */
-    public WeatherLiveBean getWeatherLive(String archId, String time) {
-        return EQIMonitoring.getWeatherLive(EQI_WEATHER_LIVE, mClient, archId, time);
-    }
-
 
     /*
      获取巡查报告列表  测试数据 1

@@ -246,35 +246,4 @@ public class EQIMonitoring {
         }
         return list;
     }
-
-    public static WeatherLiveBean getWeatherLive(String strurl, OkHttpClient mClient, String archId, String time){
-
-        WeatherLiveBean weatherLiveBean = null;
-        String funName = "getWeatherLive";
-        try {
-            //天气实况
-            JSONObject object = new JSONObject();
-            object.put("archId",archId);
-            object.put("time",time);
-            RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
-            Request request = new Request.Builder()
-                    .url(strurl)
-                    .post(body)
-                    .build();
-            Response response = null;
-            response = mClient.newCall(request).execute();
-            LogUtils.i(TAG,funName+" response code "+response.code());
-            if(response.isSuccessful()){
-                String responsebody = response.body().string();
-                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                Gson gson = new Gson();
-                weatherLiveBean = gson.fromJson(responsebody,WeatherLiveBean.class);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return  weatherLiveBean;
-    }
 }
