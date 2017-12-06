@@ -216,12 +216,13 @@ public class AddReportActivity extends BaseActivity {
                         try {
                             mTypesEditor.setText(mTypesList.get(position).getContent());
                             isSettedType = true;
-                            mTypes = position + 1 + "";
+                            //mTypes = position + 1 + "";
                             mLabTypes.setCompoundDrawables(mWattingChanged, null, null, null);
                             mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
-
+                            //mTypes = mTypesList.get(position)+"";
                             DictionaryBean bean = mTypesList.get(position);
                             int type = Integer.parseInt(bean.getValue());
+                            mTypes = type + "";
                             View v = AddReportActivity.this.findViewById(R.id.linear_company);
                             if (v != null && type / 100 == 2) {
                                 v.setVisibility(View.GONE);
@@ -374,20 +375,22 @@ public class AddReportActivity extends BaseActivity {
             try {
                 mAddressList = mHttpPost.getPatrolAddress();
                 ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-//                for (DictionaryBean temp : tempLists) {
-//                    Log.e(TAG,"yanlog dictionarybean temp:"+temp);
-//                    mTypesList.add(temp.getContent());
-//                }
+                if (tempLists != null) {
+                    for (DictionaryBean temp : tempLists) {
+                        Log.e(TAG, "yanlog dictionarybean temp:" + temp);
+                    }
+                }
                 if (tempLists != null && tempLists.size() > 0) {
                     mTypesList.clear();
                     mTypesList.addAll(tempLists);
                 }
 
+
                 ArrayList<CompanyBean> companyList = mHttpPost.getCompanyList("zh");
                 String myid = mHttpPost.mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
-                for (int i = 0 ; i < companyList.size(); i++){
+                for (int i = 0; i < companyList.size(); i++) {
                     String value = companyList.get(i).getValue();
-                    if(value != null && value.equals(myid+"")){
+                    if (value != null && value.equals(myid + "")) {
                         mCompanyName = companyList.get(i).getContent();
                     }
                 }

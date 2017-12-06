@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class ReadReportFrag extends BaseFragment {
     private TextView mSupCompany = null;
     private TextView mLabVisit = null;
     private View mView = null;
-    private ArrayList<String> mTypesList = new ArrayList<>();
+    private ArrayList<DictionaryBean> mTypesList = new ArrayList<>();
 
     @Override
     protected int getLayoutRes() {
@@ -56,7 +57,6 @@ public class ReadReportFrag extends BaseFragment {
         mCosCompany = (TextView) mView.findViewById(R.id.inspect_report_construction_company);
         mSupCompany = (TextView) mView.findViewById(R.id.inspect_report_supervision_company);
         mLabVisit = (TextView) mView.findViewById(R.id.lab_inspect_report_revisit_time);
-        new QueryReportTypeTask().execute();
     }
 
     private void initViewData() {
@@ -98,8 +98,9 @@ public class ReadReportFrag extends BaseFragment {
                     mLabVisit.setText(mData.getVisitDate());
                 }
 
-                int category = Integer.parseInt(mData.getCategory());
-                mLabTypes.setText(mTypesList.get(category - 1));
+//                int category = Integer.parseInt(mData.getCategory());
+//                Log.e(TAG,"yanlog category 1:"+category);
+//                mLabTypes.setText(mTypesList.get((category%100) - 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -109,6 +110,7 @@ public class ReadReportFrag extends BaseFragment {
     public void notifyDataChanged() {
         mData = mActivity.getReportData();
         initViewData();
+        new QueryReportTypeTask().execute();
     }
 
     private class QueryReportTypeTask extends AsyncTask<String, Integer, String> {
@@ -116,10 +118,17 @@ public class ReadReportFrag extends BaseFragment {
         protected String doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-            if(tempLists != null){
-                for (DictionaryBean temp : tempLists) {
-                    mTypesList.add(temp.getContent());
+            if (tempLists != null) {
+//                for (DictionaryBean temp : tempLists) {
+//                    mTypesList.add(temp);
+//                }
+                if (tempLists != null) {
+                    for (DictionaryBean temp : tempLists) {
+                        Log.e(TAG, "yanlog QueryReportTypeTask temp:" + temp);
+                    }
                 }
+                mTypesList.clear();
+                mTypesList.addAll(tempLists);
             }
             return null;
         }
@@ -128,7 +137,15 @@ public class ReadReportFrag extends BaseFragment {
         protected void onPostExecute(String s) {
             try {
                 int category = Integer.parseInt(mData.getCategory());
-                mLabTypes.setText(mTypesList.get(category -1 ));
+                Log.e(TAG, "yanlog category:" + category);
+                for (DictionaryBean bean : mTypesList) {
+                    Log.e(TAG, "yanlog bean:" + bean.getValue());
+                    if (bean.getValue().equals(category + "")) {
+                        mLabTypes.setText(bean.getContent());
+                        break;
+                    }
+                }
+                // mLabTypes.setText(mTypesList.get((category%100) -1 ));
             } catch (Exception e) {
                 e.printStackTrace();
             }
