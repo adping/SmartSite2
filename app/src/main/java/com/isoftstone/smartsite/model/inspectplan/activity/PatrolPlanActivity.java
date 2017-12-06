@@ -412,6 +412,9 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 //新增巡查任务
                 //Toast.makeText(PatrolPlanActivity.this,"添加任务",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PatrolPlanActivity.this, AddInspectPlan.class);
+                //Log.e(TAG,"yanlog startTime:"+taskTimeStart+ " endTime:"+taskTimeEnd);
+                intent.putExtra("taskTimeStart",taskTimeStart);
+                intent.putExtra("taskTimeEnd",taskTimeEnd);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
