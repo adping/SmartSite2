@@ -277,6 +277,7 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
                 break;
                 case HANDLER_GET_DAYS_PROPORTION_END:{
                     setPieChart();
+                    closeDlg();
                 }
                 break;
                 case HANDLER_GET_COMPARISON_START:{
