@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.patroltask.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,16 +19,25 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
+import com.isoftstone.smartsite.model.message.data.MsgData;
+import com.isoftstone.smartsite.model.tripartite.data.ReportData;
+import com.isoftstone.smartsite.model.tripartite.fragment.InspectReportMainFragment;
+import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by 2013020220 on 2017/11/19.
@@ -35,7 +45,10 @@ import java.util.ArrayList;
 
 public class PatroPlanDetailsActivity extends BaseActivity implements View.OnClickListener {
 
-    private ListView listview;
+    private int mCurPageNum = 0;  //当前页
+    private int mFlag; //0 首次进入    1 加载更多    2刷新
+    private HttpPost mHttpPost = new HttpPost();
+    private PullToRefreshListView listview;
     private ImageButton ibt_back;
     private TextView title;
     public static final int WORK_WAIT_FOR_DOING = 0;
@@ -43,11 +56,12 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     public static final int WORK_HAS_DONE = 2;
     public static final int TIME_TO_INITVIEW = 4;
     public static final int START_TASK_TO_ACTIVITY = 5;
+    public static final int GET_TASK_DATA = 6;
     private ImageButton add_plan;
-    private ArrayList<PatrolTaskBean> patrolTaskBeanArrayList;
+    private ArrayList<PatrolTaskBean> patrolTaskBeanArrayList = new ArrayList<PatrolTaskBean>();
     private PatrolTaskBeanPage patrolTaskBeanPage;
     private StartworkDialog startworkDialog = null;
-
+    private MyBaseAdapter adapter = null;
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initViews();
@@ -56,27 +70,9 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
-    }
-
-    private void initData() {
-        showDlg("数据加载中，请稍等");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PageableBean pageableBean = new PageableBean();
-                pageableBean.setSize(100+"");
-                HttpPost httpPost = new HttpPost();
-                try {
-                    patrolTaskBeanPage = httpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);
-                    patrolTaskBeanArrayList = patrolTaskBeanPage.getContent();
-                } catch (NullPointerException e) {
-                    patrolTaskBeanArrayList = null;
-                    Log.i(TAG, "throw a  null point exception :" + e.getMessage());
-                }
-                handler.sendEmptyMessage(TIME_TO_INITVIEW);
-            }
-        }).start();
+        mFlag = 0;
+        mCurPageNum = 0;
+        handler.sendEmptyMessage(GET_TASK_DATA);
     }
 
     @Override
@@ -91,17 +87,37 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         add_plan = (ImageButton) v.findViewById(R.id.btn_icon);
         add_plan.setImageResource(R.drawable.addreport);
         title.setText("巡查任务");
-        listview = (ListView) findViewById(R.id.patrol_detail_list);
+        listview = (PullToRefreshListView) findViewById(R.id.patrol_detail_list);
         ibt_back.setOnClickListener(this);
         add_plan.setOnClickListener(this);
         listview.setOnItemClickListener(itemClickListener);
+        listview.setOnRefreshListener(listviewlistener);
+        adapter = new MyBaseAdapter(this, patrolTaskBeanArrayList);
+        listview.setAdapter(adapter);
         startworkDialog = new StartworkDialog(this, listener);
     }
-    private  void setData(){
-        listview.setAdapter(new MyBaseAdapter(this, patrolTaskBeanArrayList));
+
+    private void setData() {
+        if(mFlag == 0){
+            patrolTaskBeanArrayList.clear();
+        }else if(mFlag == 1){
+            listview.onLoadMoreComplete();
+        }else if(mFlag == 2){
+            patrolTaskBeanArrayList.clear();
+            listview.onRefreshComplete();
+        }
+        if(patrolTaskBeanPage != null){
+            ArrayList<PatrolTaskBean> content = patrolTaskBeanPage.getContent();
+            if(content!=null){
+               for (int i = 0 ; i < content.size() ;i ++){
+                   patrolTaskBeanArrayList.add(content.get(i));
+               }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
-    private  PatrolTaskBean  selectPatrolTaskBean;
+    private PatrolTaskBean selectPatrolTaskBean;
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -113,9 +129,9 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                     break;
                 case WORK_IS_DOING:
                 case WORK_HAS_DONE:
-                    Bundle bundle=new Bundle();
-                    bundle.putLong("taskId",selectPatrolTaskBean.getTaskId());
-                    openActivity(ConstructionMontitoringMapActivity.class,bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
+                    openActivity(ConstructionMontitoringMapActivity.class, bundle);
                     break;
                 default:
                     break;
@@ -129,7 +145,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    new HttpPost().updateTaskStart(selectPatrolTaskBean.getTaskId(),selectPatrolTaskBean.getTaskName());
+                    new HttpPost().updateTaskStart(selectPatrolTaskBean.getTaskId(), selectPatrolTaskBean.getTaskName());
                     handler.sendEmptyMessage(START_TASK_TO_ACTIVITY);
                 }
             }).start();
@@ -141,8 +157,8 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_icon:
-                Intent intent=new Intent(PatroPlanDetailsActivity.this,AddInspectPlan.class);
-                intent.putExtra("taskType",1);
+                Intent intent = new Intent(PatroPlanDetailsActivity.this, AddInspectPlan.class);
+                intent.putExtra("taskType", 1);
                 startActivity(intent);
             case R.id.btn_back:
                 finish();
@@ -152,17 +168,69 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    PullToRefreshListView.OnRefreshListener listviewlistener = new PullToRefreshListView.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if(patrolTaskBeanPage.isFirst()){
+                mFlag = 2;
+                handler.sendEmptyMessage(GET_TASK_DATA);
+            }else {
+                listview.onRefreshComplete();
+            }
+        }
+
+        @Override
+        public void onLoadMore() {
+            if(!patrolTaskBeanPage.isLast()){
+                mFlag = 1;
+                handler.sendEmptyMessage(GET_TASK_DATA);
+            }else{
+                listview.onLoadMoreComplete();
+            }
+        }
+    };
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == TIME_TO_INITVIEW) {
-                setData();
-                closeDlg();
-            }else if(msg.what == START_TASK_TO_ACTIVITY){
-                Bundle bundle=new Bundle();
-                bundle.putLong("taskId",selectPatrolTaskBean.getTaskId());
-                openActivity(ConstructionMontitoringMapActivity.class,bundle);
+            switch (msg.what){
+                case GET_TASK_DATA: {
+                    if(mFlag == 0){
+                        showDlg("数据加载中，请稍等");
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            PageableBean pageableBean = new PageableBean();
+                            pageableBean.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
+                            if(mFlag == 0){
+                                mCurPageNum = 0;
+                            }else if(mFlag == 1){
+                                mCurPageNum = mCurPageNum +1 ;
+                            }else if(mFlag == 2){
+                                mCurPageNum = 0;
+                            }
+                            pageableBean.setPage(mCurPageNum+"");
+                            patrolTaskBeanPage = mHttpPost.getPatrolTaskList(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId(), "", "", "", "", pageableBean);
+                            handler.sendEmptyMessage(TIME_TO_INITVIEW);
+                        }
+                    }).start();
+                }
+                break;
+                case TIME_TO_INITVIEW:{
+                    setData();
+                    if(mFlag == 0){
+                        closeDlg();
+                    }
+                }
+                break;
+                case START_TASK_TO_ACTIVITY:{
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
+                    openActivity(ConstructionMontitoringMapActivity.class, bundle);
+                }
+                break;
             }
         }
     };
@@ -215,11 +283,11 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             }
             holder.reportor.setText(patrolTaskBean.getCreator().name);
             BaseUserBean userBean = patrolTaskBean.getCreator();
-            if(userBean != null){
+            if (userBean != null) {
                 String departmentId = userBean.getDepartmentId();
-                if(departmentId != null){
+                if (departmentId != null) {
                     holder.company_name.setText(new HttpPost().getCompanyNameByid(Integer.parseInt(departmentId)));
-                }else{
+                } else {
                     holder.company_name.setText("公司ID未空");
                 }
             }
