@@ -45,6 +45,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.map.adapter.MapTaskDetailRecyclerViewAdapter;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -163,7 +164,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(View view) {
                 int position = rv.getChildAdapterPosition(view);
                 recyclerViewAdapter.updateViews(position);
-                currentUserBean = userTrackBean.getPatrolTask().getUsers().get(position);
+                currentUserBean = userBeans.get(position);
                 updateUserGuiji();
             }
         });
@@ -267,8 +268,8 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
 
         Marker marker = aMap.addMarker(markerOption);
         marker.setAnchor(0.5f,0.5f);
-        marker.setClickable(false);
-//        marker.setObject(bean);
+        marker.setClickable(true);
+        marker.setObject(bean);
         doneMarkers.add(marker);
     }
 
@@ -334,7 +335,6 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
                     long userId = userTrackBean.getUser().getId();
                     for (int i = 0; i < userBeans.size(); i++) {
-                        LogUtils.e(TAG,userBeans.get(i).toString());
                         if(userBeans.get(i).getId() == userId){
                             currentUserBean = userBeans.get(i);
                         }
@@ -393,6 +393,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
         aMap.setOnMarkerClickListener(this);
+        addRoundLine();
     }
 
     @Override
@@ -525,5 +526,11 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         roundMarker = aMap.addMarker(markerOption1);
         roundMarker.setAnchor(0.5f,0.5f);
 
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 }

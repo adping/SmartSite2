@@ -29,6 +29,8 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.android.tu.loadingdialog.LoadingDailog;
 import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.Glide;
@@ -43,6 +45,7 @@ import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
 import com.isoftstone.smartsite.model.map.adapter.MapTaskAdapter;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -131,6 +134,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
         aMap.setOnMarkerClickListener(this);
+        addRoundLine();
     }
 
     private void initLocation(LatLng latLng){
@@ -358,5 +362,11 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         }
 
         return true;
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 }
