@@ -366,7 +366,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         } else {
             today = LocalDate.now();
             taskTimeStart = today.toString(); //开始时间
-            taskTimeEnd = today.toString();   //结束时间
+            taskTimeEnd = today.plusDays(6).toString();   //结束时间
         }
 
 
@@ -497,7 +497,12 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+        if(selectindex == -1){
+            mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+        }else {
+            mHandler.sendEmptyMessage(HANDLER_GET_DAY_START);
+        }
+
     }
 
     @Override
