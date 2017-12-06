@@ -280,7 +280,7 @@ public class CheckFragment extends BaseFragment {
         mLoginingDlg = new Dialog(getActivity(), R.style.loginingDlg);
         mLoginingDlg.setContentView(R.layout.dialog_submit);
 
-        mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
+        mLoginingDlg.setCanceledOnTouchOutside(false); // 设置点击Dialog外部任意区域关闭Dialog
     }
 
     /* 显示正在登录对话框 */

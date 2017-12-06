@@ -60,6 +60,9 @@ open class AddInspectPlan : BaseActivity() {
     var flow_layout_address: MyFlowLayout? = null
     var mHttpPost = HttpPost()
 
+    var taskTimeStart = ""
+    var taskTimeEnd = ""
+
     override fun getLayoutRes(): Int {
         return R.layout.activity_add_inspect_plan;
     }
@@ -73,7 +76,9 @@ open class AddInspectPlan : BaseActivity() {
 
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
 
-        mTaskType = intent.getIntExtra("taskType",0)
+        mTaskType = intent.getIntExtra("taskType", 0)
+        taskTimeStart = intent.getStringExtra("taskTimeStart")
+        taskTimeEnd = intent.getStringExtra("taskTimeEnd")
 
         initEditName()
         initBeginTime()
@@ -110,7 +115,7 @@ open class AddInspectPlan : BaseActivity() {
         labBeginTimeRight = findViewById(R.id.lab_begin_time) as TextView
         labBeginTimeRight?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                showDatePickerDialog(labBeginTimeRight, labTimeLeft)
+                showDatePickerDialog(labBeginTimeRight, labTimeLeft,taskTimeStart)
             }
         })
     }
@@ -119,7 +124,7 @@ open class AddInspectPlan : BaseActivity() {
         labEndTimeRight = findViewById(R.id.lab_end_time) as TextView
         labEndTimeRight?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                showDatePickerDialog(labEndTimeRight, labTimeLeft)
+                showDatePickerDialog(labEndTimeRight, labTimeLeft,taskTimeEnd)
             }
         })
     }
@@ -153,7 +158,7 @@ open class AddInspectPlan : BaseActivity() {
             override fun onClick(v: View?) {
                 var i = Intent(this@AddInspectPlan, SelectInspectorsActivity::class.java)
                 i.action = "action"
-                i.putExtra("list",mPeopleList)
+                i.putExtra("list", mPeopleList)
                 startActivityForResult(i, FLAG_TARGET_PEOPLE)
             }
         })
@@ -207,7 +212,7 @@ open class AddInspectPlan : BaseActivity() {
             if (peopleList != null) {
                 mPeopleList.clear()
                 mPeopleList.addAll(peopleList)
-                Log.e(TAG,"yanlog result:"+mPeopleList.size)
+                Log.e(TAG, "yanlog result:" + mPeopleList.size)
                 mAdapterPeople?.notifyDataSetChanged()
             }
         }
@@ -228,7 +233,7 @@ open class AddInspectPlan : BaseActivity() {
             var imgDelete = v.findViewById(R.id.img_delete) as ImageView
             imgDelete.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(tempV: View?) {
-                    Log.e(TAG,"yanlog imageDelte view")
+                    Log.e(TAG, "yanlog imageDelte view")
                     flow_layout_address?.removeView(v)
                     mAddressList.remove(str)
                 }
@@ -267,13 +272,13 @@ open class AddInspectPlan : BaseActivity() {
                     //peopleList.add(bean_1)
 
                     var peopleTempList = ArrayList<BaseUserBean>()
-                    Log.e(TAG,"yanlog submit people size:"+mPeopleList.size)
-                    for(temp in mPeopleList){
+                    Log.e(TAG, "yanlog submit people size:" + mPeopleList.size)
+                    for (temp in mPeopleList) {
                         var people = BaseUserBean()
                         people.id = temp.id
                         peopleTempList.add(people)
                     }
-                    Log.e(TAG,"yanlog peopleTempList size:"+peopleTempList.size)
+                    Log.e(TAG, "yanlog peopleTempList size:" + peopleTempList.size)
 
                     if (TextUtils.isEmpty(name) || !isOkTime(beginTime) || !isOkTime(endTime) ||
                             TextUtils.isEmpty(content) || addList.size == 0 || peopleTempList.size == 0) {
@@ -314,7 +319,7 @@ open class AddInspectPlan : BaseActivity() {
         submit.execute()
     }
 
-    fun showDatePickerDialog(editRight: TextView?, labLeft: TextView?) {
+    fun showDatePickerDialog(editRight: TextView?, labLeft: TextView?, defautTime: String) {
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
         val now = sdf.format(Date())
@@ -333,6 +338,12 @@ open class AddInspectPlan : BaseActivity() {
         //customDatePicker.showYearMonth();
         customDatePicker.setIsLoop(false) // 不允许循环滚动
         //customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
-        customDatePicker.show(DateUtils.format_yyyy_MM_dd_HH_mm.format(Date()))
+        var defTime = DateUtils.format_yyyy_MM_dd_HH_mm.format(Date())
+        try {
+            defTime = DateUtils.format_yyyy_MM_dd_HH_mm.format(DateUtils.format1.parse(defautTime))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        customDatePicker.show(defTime)
     }
 }

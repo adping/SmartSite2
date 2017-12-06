@@ -149,7 +149,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_sub_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
+            date = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,7 +210,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
+            date = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,7 +248,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
+            date = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
