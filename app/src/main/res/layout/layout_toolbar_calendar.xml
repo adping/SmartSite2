@@ -25,22 +25,28 @@
                 android:paddingRight="16dp"
                 android:src="@drawable/bigarrow" />
 
-            <TextView
-                android:id="@+id/toolbar_title"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/toolbar_title"
-                android:layout_centerVertical="true"
-                android:src="@drawable/zhankai"/>
-
+                android:id="@+id/toolbar_title_layout"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@+id/toolbar_title"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zhankai"/>
+            </LinearLayout>
             <ImageButton
                 android:id="@+id/btn_icon"
                 android:layout_width="wrap_content"

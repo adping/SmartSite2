@@ -48,6 +48,7 @@ import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.map.adapter.MapTaskDetailRecyclerViewAdapter;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -55,7 +56,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.amap.api.maps.model.MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE;
 import static com.amap.api.maps.model.MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER;
+import static com.amap.api.maps.model.MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER;
 
 /**
  * Created by zw on 2017/11/19.
@@ -101,6 +104,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private Location currentLocation;
 
     private long loginUseId = HttpPost.mLoginBean.getmUserBean().getLoginUser().getId();
+
+    private boolean isTaskCompleted = true;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -149,6 +154,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private Marker roundMarker;
 
     private int taskId = -1;
+    private MyLocationStyle myLocationStyle;
 
     @Override
     protected int getLayoutRes() {
@@ -170,7 +176,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         doneMarkers = new ArrayList<>();
         notDoneMarkers = new ArrayList<>();
         initMapView(savedInstanceState);
-        initLocation(aotiLatLon);
+//        initLocation(aotiLatLon);
         initLoadingDialog();
         initRecyclerView();
         initPopWindow();
@@ -199,6 +205,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
         aMap.setOnMarkerClickListener(this);
+        addRoundLine();
     }
 
     @Override
@@ -251,6 +258,16 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
+                    if(patrolPositionBeans != null && patrolPositionBeans.size() != 0){
+                        for (int i = 0; i < patrolPositionBeans.size(); i++) {
+                            int status = patrolPositionBeans.get(i).getStatus();
+                            if(status == 0){
+                                isTaskCompleted = false;
+                                break;
+                            }
+                        }
+                    }
+
                     mHandler.sendEmptyMessage(INIT_DATA);
                 } else {
                     mHandler.sendEmptyMessage(NO_DATA);
@@ -498,10 +515,10 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         notDoneMarkers.add(marker);
     }
 
+    private boolean isFirstIn = true;
     private void initNowLocation(){
-        MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.myLocationType(LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        myLocationStyle.myLocationType(LOCATION_TYPE_LOCATION_ROTATE);
         myLocationStyle.interval(30000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.strokeColor(Color.TRANSPARENT);
         myLocationStyle.radiusFillColor(Color.TRANSPARENT);
@@ -512,6 +529,12 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
+                if(isFirstIn){
+                    myLocationStyle.myLocationType(LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+                    aMap.setMyLocationStyle(myLocationStyle);
+                    initLocation(new LatLng(location.getLatitude(),location.getLongitude()));
+                    isFirstIn = false;
+                }
                 currentLocation = location;
                 updateNowLocation(location);
             }
@@ -538,6 +561,10 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                         ToastUtils.showShort("还有巡查点任务未完成，请先完成再执行此操作！");
                         return;
                     }
+                }
+                if(isTaskCompleted){
+                    ToastUtils.showShort("任务已完成，请勿重复操作！");
+                    return;
                 }
                 new Thread(new Runnable() {
                     @Override
@@ -679,5 +706,11 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         } else {
             ToastUtils.showLong("退出此界面将不会再获取您的实时位置！若要退出，请再点击一次！");
         }
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 }

@@ -22,6 +22,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
@@ -213,7 +214,15 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.work_status.setImageResource(R.drawable.chakanbaogao);
             }
             holder.reportor.setText(patrolTaskBean.getCreator().name);
-            holder.company_name.setText(new HttpPost().getCompanyNameByid(Integer.parseInt(patrolTaskBean.getCreator().getDepartmentId())));
+            BaseUserBean userBean = patrolTaskBean.getCreator();
+            if(userBean != null){
+                String departmentId = userBean.getDepartmentId();
+                if(departmentId != null){
+                    holder.company_name.setText(new HttpPost().getCompanyNameByid(Integer.parseInt(departmentId)));
+                }else{
+                    holder.company_name.setText("公司ID未空");
+                }
+            }
             return convertView;
         }
 
