@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.main.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -119,25 +120,25 @@ public class MainFragment extends BaseFragment {
                 enterUnChekMsg();
             }
         });*/
-        mUnHandlerTask= (LinearLayout) rootView.findViewById(R.id.textView9);
+        mUnHandlerTask = (LinearLayout) rootView.findViewById(R.id.textView9);
         mUnHandlerTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterPatrolMission();
+                enterPatrolMission(getActivity());
             }
         });
         mUntreatedReport = (LinearLayout) rootView.findViewById(R.id.textView11);
         mUntreatedReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterThirdPartReport();
+                enterThirdPartReport(getActivity());
             }
         });
         mVideoMonitoringMsg = (LinearLayout) rootView.findViewById(R.id.textView12);
         mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterVideoMonitoring();
+                enterVideoMonitoring(getActivity());
             }
         });
         mAirMonitoringMsg = (LinearLayout) rootView.findViewById(R.id.textView13);
@@ -152,7 +153,7 @@ public class MainFragment extends BaseFragment {
         mVideoMonitoring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterVideoMonitoring();
+                enterVideoMonitoring(getActivity());
             }
         });
         //环境监控
@@ -168,7 +169,7 @@ public class MainFragment extends BaseFragment {
         mThirdPartReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterThirdPartReport();
+                enterThirdPartReport(getActivity());
             }
         });
         // 渣土车监控
@@ -176,7 +177,7 @@ public class MainFragment extends BaseFragment {
         mDircar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterDircar();
+                enterDircar(getActivity());
             }
         });
         //巡查概况
@@ -198,7 +199,7 @@ public class MainFragment extends BaseFragment {
         rootView.findViewById(R.id.button_7).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterPatrolMission();
+                enterPatrolMission(getActivity());
             }
         });
         //巡查监控
@@ -206,7 +207,7 @@ public class MainFragment extends BaseFragment {
         mConstructionMonitor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterConstructionMonitor();
+                enterConstructionMonitor(getActivity());
             }
         });
 
@@ -342,44 +343,45 @@ public class MainFragment extends BaseFragment {
         getActivity().startActivity(intent);
     }
 
-    private void enterThirdPartReport() {
+    public static void enterThirdPartReport(Context context) {
         //进入三方协同
         /*((MainActivity)getActivity()).setCurrentTab(2);*/
         //yanyongjun 这个地方应该是进到三方协同界面，而不是到消息fragment页
-        Intent intent = new Intent(getActivity(), TripartiteActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(context, TripartiteActivity.class);
+        context.startActivity(intent);
     }
 
-    private void enterVideoMonitoring() {
+    public static void enterVideoMonitoring(Context context) {
         //进入视频监控
 
-        if (!NetworkUtils.isConnected()){
-            ToastUtils.showShort(mContext.getText(R.string.network_can_not_be_used_toast).toString());
+        if (!NetworkUtils.isConnected()) {
+            ToastUtils.showShort(context.getText(R.string.network_can_not_be_used_toast).toString());
             return;
         }
 
         if (!HttpPost.mVideoIsLogin) {
             //Utils.LogginVideoTask logginVideoTask = new Utils.LogginVideoTask((BaseActivity)getActivity(), Utils.ENTER_VIDEO_DEVICE_LIST, null);
             //logginVideoTask.execute();
-            Utils.showInitVideoServerDialog((BaseActivity)mContext, Utils.ENTER_VIDEO_DEVICE_LIST, null);
+            Utils.showInitVideoServerDialog((BaseActivity) context, Utils.ENTER_VIDEO_DEVICE_LIST, null);
         } else {
-            Intent intent = new Intent(getActivity(), VideoMonitoringActivity.class);
+            Intent intent = new Intent(context, VideoMonitoringActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getActivity().startActivity(intent);
+            context.startActivity(intent);
         }
     }
 
     /**
      * 进入渣土车监控
      */
-    private void enterDircar() {
-        Intent intent = new Intent(getActivity(), SlagcarInfoActivity.class);
-        getActivity().startActivity(intent);
+    public static void enterDircar(Context context) {
+        Intent intent = new Intent(context, SlagcarInfoActivity.class);
+        context.startActivity(intent);
     }
+
     /*
      进入巡查概况
      */
-    private void enterPatrolSurvey(){
+    private void enterPatrolSurvey() {
         Intent intent = new Intent(getActivity(), ConstructionSummaryActivity.class);
         getActivity().startActivity(intent);
     }
@@ -401,7 +403,7 @@ public class MainFragment extends BaseFragment {
         } catch (Exception e) {
 
             isHasPermission = false;
-            Log.i(TAG,"access permission exception : " + e.getMessage());
+            Log.i(TAG, "access permission exception : " + e.getMessage());
 
         } finally {
 
@@ -420,17 +422,17 @@ public class MainFragment extends BaseFragment {
         //getActivity().startActivity(intent);
     }
 
-    private void enterPatrolMission() {
+    public static void enterPatrolMission(Context context) {
         //进入巡查任务
-        Intent intent = new Intent(getActivity(), PatroPlanDetailsActivity.class);
-        getActivity().startActivity(intent);
+        Intent intent = new Intent(context, PatroPlanDetailsActivity.class);
+        context.startActivity(intent);
     }
 
-    private void enterConstructionMonitor() {
+    public static void enterConstructionMonitor(Context context) {
         //进入施工监控
-        Intent intent = new Intent(getActivity(), ConstructionMonitorMapActivity.class);
+        Intent intent = new Intent(context, ConstructionMonitorMapActivity.class);
 //        Intent intent = new Intent(getActivity(), MapSearchTaskPositionActivity.class);
-        getActivity().startActivity(intent);
+        context.startActivity(intent);
     }
 
 

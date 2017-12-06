@@ -32,6 +32,9 @@ open class RecognizeDirtCarActivity : AppCompatActivity() {
         AppManager.getAppManager().addToActivities(this)
 
         setContentView(R.layout.activity_recognize_dirt_car)
+        if(HttpPost.mLoginBean == null || !HttpPost.mLoginBean.isLoginSuccess){
+            finish()
+        }
         try {
             var gsonData = intent.getStringExtra("data")
             var gson = Gson()
