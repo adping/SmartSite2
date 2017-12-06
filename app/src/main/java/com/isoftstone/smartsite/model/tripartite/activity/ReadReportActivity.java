@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -63,16 +64,19 @@ public class ReadReportActivity extends BaseActivity {
             super.onPostExecute(aVoid);
             mReadReportFrag.notifyDataChanged();
             mViewReplyReportFrag.notifyDataSetChanged();
-
+            Log.e(TAG,"yanlog post delay");
+            final LinearLayout linear = (LinearLayout) findViewById(R.id.linear_frag_group);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    Log.e(TAG,"yanlog scrool to bottom");
                     ScrollView scrool = (ScrollView) findViewById(R.id.scrollview);
                     if (scrool != null) {
-                        scrool.fullScroll(ScrollView.FOCUS_DOWN);
+//                        scrool.pageScroll(ScrollView.FOCUS_DOWN);
+                        scrool.smoothScrollTo(0,linear.getMeasuredHeight()-scrool.getHeight());
                     }
                 }
-            }, 0);
+            },0);
         }
     }
 

@@ -74,7 +74,7 @@
                 android:id="@+id/frag_view_reply_inspect_report"
                 android:name="com.isoftstone.smartsite.model.tripartite.fragment.ViewReplyReportFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"></fragment>
 
         </LinearLayout>
