@@ -75,10 +75,13 @@ open class AddInspectPlan : BaseActivity() {
         mWattingChanged?.setBounds(0, 0, mWattingChanged?.getIntrinsicWidth()!!, mWattingChanged?.getIntrinsicHeight()!!)
 
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
-
-        mTaskType = intent.getIntExtra("taskType", 0)
-        taskTimeStart = intent.getStringExtra("taskTimeStart")
-        taskTimeEnd = intent.getStringExtra("taskTimeEnd")
+        try {
+            mTaskType = intent.getIntExtra("taskType", 0)
+            taskTimeStart = intent.getStringExtra("taskTimeStart")
+            taskTimeEnd = intent.getStringExtra("taskTimeEnd")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         initEditName()
         initBeginTime()
@@ -115,7 +118,7 @@ open class AddInspectPlan : BaseActivity() {
         labBeginTimeRight = findViewById(R.id.lab_begin_time) as TextView
         labBeginTimeRight?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                showDatePickerDialog(labBeginTimeRight, labTimeLeft,taskTimeStart)
+                showDatePickerDialog(labBeginTimeRight, labTimeLeft, taskTimeStart)
             }
         })
     }
@@ -124,7 +127,7 @@ open class AddInspectPlan : BaseActivity() {
         labEndTimeRight = findViewById(R.id.lab_end_time) as TextView
         labEndTimeRight?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                showDatePickerDialog(labEndTimeRight, labTimeLeft,taskTimeEnd)
+                showDatePickerDialog(labEndTimeRight, labTimeLeft, taskTimeEnd)
             }
         })
     }
