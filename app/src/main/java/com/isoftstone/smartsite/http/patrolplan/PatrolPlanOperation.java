@@ -26,7 +26,7 @@ import okhttp3.Response;
 
 public class PatrolPlanOperation {
     private static String TAG = "PatrolPlanOperation";
-    public  static PatrolPlanBeanPage getPlanPaging(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean, PageableBean pageableBean){
+    public  static PatrolPlanBeanPage getPlanPaging(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean, PageableBean pageableBean,String sort){
         String funName = "getUnRecList";
         PatrolPlanBeanPage patrolPlanBeanPage = null;
         try {
@@ -39,6 +39,9 @@ public class PatrolPlanOperation {
             }
             if(patrolPlanBean.getEndDate() != null && !patrolPlanBean.equals("")){
                 builder.add("endDate", patrolPlanBean.getEndDate());
+            }
+            if(!sort.equals("")){
+               builder.add("sort",sort);
             }
             builder.add("size", pageableBean.getSize());
             builder.add("page", pageableBean.getPage());
@@ -53,7 +56,7 @@ public class PatrolPlanOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                return getPlanPaging(strurl,mClient,patrolPlanBean,pageableBean);
+                return getPlanPaging(strurl,mClient,patrolPlanBean,pageableBean,"desc");
             }
             if (response.isSuccessful()) {
 

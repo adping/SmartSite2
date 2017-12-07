@@ -621,8 +621,8 @@ public class HttpPost {
     /*
     获取巡查计划列表
      */
-    public PatrolPlanBeanPage getPlanPaging(PatrolPlanBean patrolPlanBean, PageableBean pageableBean) {
-        return PatrolPlanOperation.getPlanPaging(GET_PATROL_PLAN_PAGING, mClient, patrolPlanBean, pageableBean);
+    public PatrolPlanBeanPage getPlanPaging(PatrolPlanBean patrolPlanBean, PageableBean pageableBean,String sort) {
+        return PatrolPlanOperation.getPlanPaging(GET_PATROL_PLAN_PAGING, mClient, patrolPlanBean, pageableBean,sort);
     }
 
     /*

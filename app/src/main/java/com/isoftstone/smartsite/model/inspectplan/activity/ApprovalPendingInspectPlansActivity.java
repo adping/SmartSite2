@@ -222,7 +222,7 @@ public class ApprovalPendingInspectPlansActivity extends BaseActivity implements
                 PageableBean pageableBean = new PageableBean();
                 //pageableBean.setSize(2 + "");
                 pageableBean.setPage((mCurPageNum + 1) + "");
-                PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean);
+                PatrolPlanBeanPage patrolPlanBeanPage = mHttpPost.getPlanPaging(patrolPlanBean,pageableBean,"desc");
                 ArrayList<PatrolPlanBean> arrayList = patrolPlanBeanPage.getContent();
                 Log.i("zzz","AAAAAAAAAAAAAAAAAAAAA     patrolPlanBeanPage = " + patrolPlanBeanPage.toString());
                 if (arrayList == null || arrayList.size() == 0) {

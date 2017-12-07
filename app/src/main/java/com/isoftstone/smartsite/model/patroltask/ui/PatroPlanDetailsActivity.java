@@ -121,7 +121,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            selectPatrolTaskBean = patrolTaskBeanArrayList.get(i);
+            selectPatrolTaskBean = patrolTaskBeanArrayList.get(i-1);
             switch (selectPatrolTaskBean.getTaskStatus()) {
                 case WORK_WAIT_FOR_DOING:
                     startworkDialog.setTaskName(selectPatrolTaskBean.getTaskName());
