@@ -164,7 +164,12 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(View view) {
                 int position = rv.getChildAdapterPosition(view);
                 recyclerViewAdapter.updateViews(position);
-                currentUserBean = userBeans.get(position);
+                if(userBeans != null) {
+                    currentUserBean = userBeans.get(position);
+                } else if(userTrackBean != null && userTrackBean.getPatrolTask() != null & userTrackBean.getPatrolTask().getUsers() != null){
+                    currentUserBean = userTrackBean.getPatrolTask().getUsers().get(position);
+                }
+
                 updateUserGuiji();
             }
         });
@@ -330,6 +335,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void run() {
                 patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
+
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -338,6 +344,9 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                         if(userBeans.get(i).getId() == userId){
                             currentUserBean = userBeans.get(i);
                         }
+                    }
+                    if(currentUserBean == null){
+                        currentUserBean = userBeans.get(0);
                     }
                     mHandler.sendEmptyMessage(AFTER_GET_USERS);
                 } else {

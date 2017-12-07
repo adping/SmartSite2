@@ -30,6 +30,7 @@ import com.isoftstone.smartsite.http.user.SimpleUserBean;
 import com.isoftstone.smartsite.model.inspectplan.adapter.PatrolPlanAdapter;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.model.map.ui.MapTaskDetailActivity;
+import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import org.joda.time.LocalDate;
@@ -577,7 +578,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         Intent intent = new Intent(this, MapTaskDetailActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         UserTrackBean userTrackBean = new UserTrackBean();
-        userTrackBean.setId(patrolTaskBean.getTaskId());
+        userTrackBean.setTaskId(patrolTaskBean.getTaskId());
         userTrackBean.setPatrolTask(patrolTaskBean);
         userTrackBean.setUser(patrolTaskBean.getCreator());
         //userTrackBean.setUserId(patrolTaskBean.getCreator().getId());
