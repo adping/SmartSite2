@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.map.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -22,11 +23,14 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.map.bean.TaskPositionBean;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -106,6 +110,7 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
         aMap = mapView.getMap();
         aMap.setOnMapClickListener(this);
         aMap.setOnMarkerClickListener(this);
+        addRoundLine();
     }
 
     private void initLocation(LatLng latLng){
@@ -344,6 +349,12 @@ public class MapSearchTaskPositionActivity extends BaseActivity implements View.
 
         deleteMarker = aMap.addMarker(markerOption);
         deleteMarker.setAnchor(0.5f,0.5f);
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 
 }
