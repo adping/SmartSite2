@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBeanPage;
 import com.isoftstone.smartsite.http.aqi.EQIMonitoring;
 import com.isoftstone.smartsite.http.aqi.EQIRankingBean;
 import com.isoftstone.smartsite.http.aqi.MonthlyComparisonBean;
@@ -210,7 +211,7 @@ public class HttpPost {
 
 
     /*
-     区域月度综合排名  测试object.put("archId",21); object.put("time","2017-10");
+     区域月度综合排名
    */
     public EQIRankingBean eqiDataRanking(String archId, String time) {
         return EQIMonitoring.eqiDataRanking(EQI_DATA_RANKING, mClient, archId, time);
@@ -218,7 +219,7 @@ public class HttpPost {
 
 
     /*
-     区域月度数据对比 测试数据 "29","2017-10","1"
+     区域月度数据对比
      */
     public MonthlyComparisonBean carchMonthlyComparison(String archId, String time, String type) {
         return EQIMonitoring.carchMonthlyComparison(EQI_DATA_COMPARISON, mClient, archId, time, type);
@@ -239,6 +240,9 @@ public class HttpPost {
         return EQIMonitoring.onePMDevicesDataList(EQI_LIST, mClient, deviceIdsStr, dataType, beginTime, endTime);
     }
 
+    public DataQueryVoBeanPage onePMDevicesDataListPage(String deviceIdsStr, String dataType, String beginTime, String endTime,PageableBean pageableBean) {
+        return EQIMonitoring.onePMDevicesDataListPage(EQI_LIST, mClient, deviceIdsStr, dataType, beginTime, endTime,pageableBean);
+    }
 
     /*
     2.3	单设备PM历史数据    测试数据 "1"

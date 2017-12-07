@@ -25,6 +25,7 @@ public class Test {
             @Override
             public void run() {
             //mHttpPost.login("admin", "bmeB4000", jpushId);
+            //mHttpPost.onePMDevicesDataListPage("","0","","",new PageableBean());
 
             /* String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
              Log.i("test",day);

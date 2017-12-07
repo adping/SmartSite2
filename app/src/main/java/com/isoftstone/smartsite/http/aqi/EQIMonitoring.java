@@ -1,6 +1,8 @@
 package com.isoftstone.smartsite.http.aqi;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.http.pageable.PageBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.LogUtils;
@@ -158,6 +160,41 @@ public class EQIMonitoring {
             e.printStackTrace();
         }
         return  list;
+    }
+
+
+    public static  DataQueryVoBeanPage onePMDevicesDataListPage(String strurl, OkHttpClient mClient, String deviceIdsStr, String dataType, String beginTime, String endTime, PageableBean pageableBean){
+        //2.2	单设备PM数据列表
+        DataQueryVoBeanPage dataQueryVoBeanPage = null;
+        String funName = "onePMDevicesDataListPage";
+        FormBody body = new FormBody.Builder()
+                .add("page",pageableBean.getPage()+"")
+                .add("size",pageableBean.getSize()+"")
+                .add("deviceIdsStr", deviceIdsStr)
+                .add("dataType",dataType)
+                .add("beginTime",beginTime)
+                .add("endTime",endTime)
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("X-Requested-With","X-Requested-With")
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                dataQueryVoBeanPage = gson.fromJson(responsebody,DataQueryVoBeanPage.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  dataQueryVoBeanPage;
     }
 
     public static ArrayList<DataQueryVoBean> getOneDevicesHistoryData(String strurl, OkHttpClient mClient,String id){
