@@ -867,9 +867,9 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             YAxis yRrightAxis = senondBarChart.getAxisRight();
             yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
             yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yLeftAxis.setAxisMinimum(0);
-            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yRrightAxis.setAxisMinimum(0);
             yRrightAxis.setDrawLabels(false);
             yLeftAxis.setLabelCount(5);
@@ -1024,7 +1024,7 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             YAxis yRrightAxis = lineChart.getAxisRight();
             yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
             yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-            yLeftAxis.setAxisMaximum((float) (allMax * 1.5));
+            yLeftAxis.setAxisMaximum((float) ((allMax > 5 ? allMax : 5 ) * 1.5));
             yLeftAxis.setAxisMinimum(0);
             yRrightAxis.setAxisMaximum(allMax);
             yRrightAxis.setAxisMinimum(0);
@@ -1200,9 +1200,9 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             YAxis yRrightAxis = lineChart2.getAxisRight();
             yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
             yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yLeftAxis.setAxisMinimum(0);
-            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yRrightAxis.setAxisMinimum(0);
             yRrightAxis.setDrawLabels(false);
             yLeftAxis.setLabelCount(5);
@@ -1406,9 +1406,9 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             YAxis yRrightAxis = lineChart3.getAxisRight();
             yLeftAxis.setAxisLineColor(Color.parseColor("#dddddd"));
             yRrightAxis.setAxisLineColor(Color.TRANSPARENT);
-            yLeftAxis.setAxisMaximum(maxCount);
+            yLeftAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yLeftAxis.setAxisMinimum(0);
-            yRrightAxis.setAxisMaximum(maxCount);
+            yRrightAxis.setAxisMaximum(maxCount > 5 ? maxCount : 5);
             yRrightAxis.setAxisMinimum(0);
             yRrightAxis.setDrawLabels(false);
             yLeftAxis.setLabelCount(5);

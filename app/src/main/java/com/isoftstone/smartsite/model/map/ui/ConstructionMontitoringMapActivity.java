@@ -377,6 +377,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         long userId = currentUserBean.getId();
         int intUserId = (int) userId;
         bean.setUserId(intUserId);
+        LogUtils.e(TAG,"userId : " + userId + " , taskId : " + patrolTaskBean.getTaskId());
         loadingDailog.show();
         new Thread(new Runnable() {
             @Override
