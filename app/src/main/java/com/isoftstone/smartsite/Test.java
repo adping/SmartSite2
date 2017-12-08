@@ -26,12 +26,14 @@ public class Test {
             public void run() {
             //mHttpPost.login("admin", "bmeB4000", jpushId);
             //mHttpPost.onePMDevicesDataListPage("","0","","",new PageableBean());
+            //mHttpPost.getDevicesListPage("1","","1","",new PageableBean());
+            //mHttpPost.getMessagePage("", "", "", "", new PageableBean());
 
             /* String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
              Log.i("test",day);
              */
             /*
-			int size = mHttpPost.getWeatherConditionDay("29","2017-10").size();
+            int size = mHttpPost.getWeatherConditionDay("29","2017-10").size();
 			Log.i("test",size+" size ");
 			*/
 
@@ -149,13 +151,13 @@ public class Test {
 			/*
 
 			 */
-		    //mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
+                //mHttpPost.getDayFlow("2017-11-17","1","2017-11",1);
 
 		    /*
 		    mHttpPost.getArchMonthFlow("2017-11-17","2017-11",4L,1);
 		    */
-		    //long[] ar = {4l,7l};
-		    //mHttpPost.getAlarmData("2017-11-17","2017-11",ar,1);
+                //long[] ar = {4l,7l};
+                //mHttpPost.getAlarmData("2017-11-17","2017-11",ar,1);
 
                 //mHttpPost.recForMobile("鄂A0001",1);
 
@@ -230,35 +232,35 @@ public class Test {
               PatrolTaskBean patrolTaskBean = patrolTaskBeanPage.getContent().get(0);
               mHttpPost.patrolTaskSave(patrolTaskBean);*/
 
-            //mHttpPost.patrolTaskFindOne(64);
+                //mHttpPost.patrolTaskFindOne(64);
 
-            //mHttpPost.updateTaskStart(64,"巡查任务20171117");
+                //mHttpPost.updateTaskStart(64,"巡查任务20171117");
 
-            //mHttpPost.executeTask(64,"巡查任务20171117");
+                //mHttpPost.executeTask(64,"巡查任务20171117");
 
-            //mHttpPost.updatePatrolPositionStatus(95,"0101");
+                //mHttpPost.updatePatrolPositionStatus(95,"0101");
 
-            //mHttpPost.userTrack(1,64,114.504424,30.477807);
+                //mHttpPost.userTrack(1,64,114.504424,30.477807);
 
-            //mHttpPost.queryPendingPlan();
+                //mHttpPost.queryPendingPlan();
 
-            //mHttpPost.feedback(1,"ceshi");
+                //mHttpPost.feedback(1,"ceshi");
 
-            //mHttpPost.findUserAll();
+                //mHttpPost.findUserAll();
 
-            //mHttpPost.getCompanyNameByid(1);
+                //mHttpPost.getCompanyNameByid(1);
 
-            //mHttpPost.getPatrolReportData("2017-11");
-            //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
-            //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
-            //String[] id = {"1","2"};
-            //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
-            //mHttpPost.getDepartmentReport("2017-11",id);
+                //mHttpPost.getPatrolReportData("2017-11");
+                //mHttpPost.getDepartmentUserTaskData("2017-11",1+"");
+                //mHttpPost.getDepartmentMonthDat("2017-11",1+"");
+                //String[] id = {"1","2"};
+                //mHttpPost.getDepartmentsMonthTasks("2017-11",id);
+                //mHttpPost.getDepartmentReport("2017-11",id);
 
             /*PageableBean pageableBean = new PageableBean();
             mHttpPost.getPatrolTaskListAll("", "", "", "0", "", "", "", pageableBean);
             */
-            //mHttpPost.getBeforeNMessageList();
+                //mHttpPost.getBeforeNMessageList();
 
             }
         }.start();

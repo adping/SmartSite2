@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -60,6 +61,45 @@ public class MessageOperation {
             e.printStackTrace();
         }
         return  list;
+    }
+
+
+    public static MessageBeanPage  getMessagePage(String strurl, OkHttpClient mClient, String title, String type, String status, String module, PageableBean pageableBean){
+        //获取消息列表  MESSAGE_LIST
+        MessageBeanPage messageBeanPage = null;
+        String funName = "getMessage";
+        FormBody body = new FormBody.Builder()
+                .add("title", title)
+                .add("type", type)
+                .add("status", status)
+                .add("module", module)
+                .add("page",pageableBean.getPage())
+                .add("size",pageableBean.getSize())
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return getMessagePage(strurl,mClient,title,type,status,module,pageableBean);
+            }
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                String content = null;
+                Gson gson = new Gson();
+                messageBeanPage = gson.fromJson(responsebody,MessageBeanPage.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  messageBeanPage;
     }
 
     public static  void readMessage(String strurl, OkHttpClient mClient, String id){

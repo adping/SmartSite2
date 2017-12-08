@@ -19,6 +19,7 @@ import com.isoftstone.smartsite.http.aqi.WeatherLiveBean;
 import com.isoftstone.smartsite.http.cookies.CookiesManager;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
+import com.isoftstone.smartsite.http.message.MessageBeanPage;
 import com.isoftstone.smartsite.http.message.MessageOperation;
 import com.isoftstone.smartsite.http.message.MobileHomeBean;
 import com.isoftstone.smartsite.http.muckcar.ArchMonthFlowBean;
@@ -41,6 +42,7 @@ import com.isoftstone.smartsite.http.patrolplan.PatrolPlanCommitBean;
 import com.isoftstone.smartsite.http.patrolplan.PatrolPlanOperation;
 import com.isoftstone.smartsite.http.patrolreport.DictionaryBean;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
+import com.isoftstone.smartsite.http.patrolreport.PatrolBeanPage;
 import com.isoftstone.smartsite.http.patrolreport.ReportBean;
 import com.isoftstone.smartsite.http.patrolreport.ReportOperation;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
@@ -57,6 +59,7 @@ import com.isoftstone.smartsite.http.user.LoginBean;
 import com.isoftstone.smartsite.http.user.UserBean;
 import com.isoftstone.smartsite.http.user.UserLogin;
 import com.isoftstone.smartsite.http.video.DevicesBean;
+import com.isoftstone.smartsite.http.video.DevicesBeanPage;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
@@ -266,6 +269,9 @@ public class HttpPost {
     public ArrayList<DevicesBean> getDevices(String deviceType, String deviceName, String archId, String deviceStatus) {
         return EQIMonitoring.getDevicesList(ESS_DEVICE_LIST, mClient, deviceType, deviceName, archId, deviceStatus);
     }
+    public DevicesBeanPage getDevicesListPage(String deviceType, String deviceName, String archId, String deviceStatus, PageableBean pageableBean) {
+        return EQIMonitoring.getDevicesListPage(ESS_DEVICE_LIST, mClient, deviceType, deviceName, archId, deviceStatus,pageableBean);
+    }
 
     /*
      //获取消息列表   测试"","","","2"
@@ -273,6 +279,11 @@ public class HttpPost {
     public ArrayList<MessageBean> getMessage(String title, String type, String status, String module) {
 
         return MessageOperation.getMessage(MESSAGE_LIST, mClient, title, type, status, module);
+    }
+
+    public MessageBeanPage getMessagePage(String title, String type, String status, String module,PageableBean pageableBean) {
+
+        return MessageOperation.getMessagePage(MESSAGE_LIST, mClient, title, type, status, module,pageableBean);
     }
 
     /*

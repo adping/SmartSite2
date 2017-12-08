@@ -5,6 +5,7 @@ import com.isoftstone.smartsite.http.pageable.PageBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.video.DevicesBeanPage;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -41,6 +42,10 @@ public class EQIMonitoring {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  eqiDataRanking(strurl,mClient,archId,time);
+            }
             if(response.isSuccessful()){
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
@@ -73,6 +78,10 @@ public class EQIMonitoring {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  carchMonthlyComparison(strurl,mClient,archId,time,type);
+            }
             if(response.isSuccessful()){
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
@@ -113,6 +122,10 @@ public class EQIMonitoring {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getWeatherConditionDay(strurl,mClient,archId,time);
+            }
             if(response.isSuccessful()){
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
@@ -147,6 +160,10 @@ public class EQIMonitoring {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  onePMDevicesDataList(strurl,mClient,deviceIdsStr,dataType,beginTime,endTime);
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
@@ -184,6 +201,10 @@ public class EQIMonitoring {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  onePMDevicesDataListPage(strurl,mClient,deviceIdsStr,dataType,beginTime,endTime,pageableBean);
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
@@ -209,6 +230,10 @@ public class EQIMonitoring {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getOneDevicesHistoryData(strurl,mClient,id);
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
@@ -238,6 +263,10 @@ public class EQIMonitoring {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  onePMDevices24Data(strurl,mClient,deviceId,pushTime);
+            }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
@@ -270,6 +299,10 @@ public class EQIMonitoring {
         try {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getDevicesList(strurl,mClient,deviceType,deviceName,archId,deviceStatus);
+            }
             if(response.isSuccessful()){
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
@@ -282,5 +315,41 @@ public class EQIMonitoring {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static DevicesBeanPage getDevicesListPage(String strurl, OkHttpClient mClient, String deviceType, String deviceName, String archId, String deviceStatus, PageableBean pageableBean){
+        //获取设备列表—文昊炅  ESS_DEVICE_LIST
+        DevicesBeanPage devicesBeanPage = null;
+        String funName = "getDevicesList";
+        FormBody  body = new FormBody.Builder()
+                .add("deviceType", deviceType)
+                .add("deviceName", deviceName)
+                .add("archId", archId)
+                .add("size",pageableBean.getSize())
+                .add("page",pageableBean.getPage())
+                .add("deviceStatus", deviceStatus)
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getDevicesListPage(strurl,mClient,deviceType,deviceName,archId,deviceStatus,pageableBean);
+            }
+            if(response.isSuccessful()){
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                devicesBeanPage = gson.fromJson(responsebody,DevicesBeanPage.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return devicesBeanPage;
     }
 }

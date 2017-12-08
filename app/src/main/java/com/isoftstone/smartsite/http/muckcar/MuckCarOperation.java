@@ -57,6 +57,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getDayFlow(strurl,mClient,time,parentId,timeMonth,flag);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
@@ -91,6 +95,10 @@ public class MuckCarOperation {
             Response response = null;
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                return  getArchMonthFlow(strurl,mClient,time,timeMonth,archId,flag);
+            }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
