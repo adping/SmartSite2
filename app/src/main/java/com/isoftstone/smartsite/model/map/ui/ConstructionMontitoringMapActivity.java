@@ -142,6 +142,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     break;
                 case FINISH_TASK:
                     ToastUtils.showShort("恭喜，任务已完成！");
+                    iv_status.setVisibility(View.INVISIBLE);
+                    isTaskCompleted = true;
                     break;
             }
         }
@@ -263,6 +265,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                             int status = patrolPositionBeans.get(i).getStatus();
                             if(status == 0){
                                 isTaskCompleted = false;
+                                iv_status.setVisibility(View.VISIBLE);
                                 break;
                             }
                         }

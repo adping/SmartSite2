@@ -172,6 +172,9 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                         fourView1.setVisibility(View.INVISIBLE);
                         fourView2.setVisibility(View.INVISIBLE);
                     } else {
+                        for (int i = 0; i < monthTasks.getList().size(); i++) {
+                            LogUtils.e(TAG,monthTasks.getList().get(i).toString());
+                        }
                         if(monthTasks.getList().get(1).size() == 0){
                             tv_four_view1.setVisibility(View.INVISIBLE);
                             fourView1.setVisibility(View.INVISIBLE);
@@ -179,8 +182,15 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                             tv_four_view1.setVisibility(View.VISIBLE);
                             fourView1.setVisibility(View.VISIBLE);
                             try {
-                                int departmentId = Integer.parseInt(monthTasks.getList().get(1).get(0).getDepartmentId());
-                                tv_four_view1.setText(httpPost.getCompanyNameByid(departmentId));
+//                                int departmentId = Integer.parseInt(monthTasks.getList().get(1).get(0).getDepartmentId());
+//                                tv_four_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                                if(oldFourClickedId1 == -1){
+                                    fourView1.setVisibility(View.INVISIBLE);
+                                    tv_four_view1.setText("");
+                                } else {
+                                    fourView1.setVisibility(View.VISIBLE);
+                                    tv_four_view1.setText(personRankList.get(oldFourClickedId1));
+                                }
                             }catch (Exception e){
                                 tv_four_view1.setText("");
                             }
@@ -191,11 +201,17 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                             tv_four_view2.setVisibility(View.INVISIBLE);
                             fourView2.setVisibility(View.INVISIBLE);
                         } else {
-                            tv_four_view2.setVisibility(View.VISIBLE);
-                            fourView2.setVisibility(View.VISIBLE);
                             try{
-                                int departmentId = Integer.parseInt(monthTasks.getList().get(0).get(0).getDepartmentId());
-                                tv_four_view2.setText(httpPost.getCompanyNameByid(departmentId));
+//                                int departmentId = Integer.parseInt(monthTasks.getList().get(0).get(0).getDepartmentId());
+//                                tv_four_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                                if(oldFourClickedId2 == -1){
+                                    fourView2.setVisibility(View.INVISIBLE);
+                                    tv_four_view2.setText("");
+                                } else {
+                                    tv_four_view2.setVisibility(View.VISIBLE);
+                                    tv_four_view2.setText(personRankList.get(oldFourClickedId2));
+                                }
+
                             }catch (Exception e){
                                 tv_four_view2.setText("");
                             }
@@ -227,11 +243,16 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                             tv_five_view1.setVisibility(View.INVISIBLE);
                             fiveView1.setVisibility(View.INVISIBLE);
                         } else {
-                            tv_five_view1.setVisibility(View.VISIBLE);
-                            fiveView1.setVisibility(View.VISIBLE);
                             try{
-                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
-                                tv_five_view1.setText(httpPost.getCompanyNameByid(departmentId));
+//                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(1).get(0).getDepartmentId());
+//                                tv_five_view1.setText(httpPost.getCompanyNameByid(departmentId));
+                                if(oldFiveClickedId1 == -1){
+                                    fiveView1.setVisibility(View.INVISIBLE);
+                                    tv_five_view1.setText("");
+                                }else {
+                                    fiveView1.setVisibility(View.VISIBLE);
+                                    tv_five_view1.setText(personRankList.get(oldFiveClickedId1));
+                                }
                             }catch (Exception e){
                                 tv_five_view1.setText("");
                             }
@@ -243,11 +264,16 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
                             tv_five_view2.setVisibility(View.INVISIBLE);
                             fiveView2.setVisibility(View.INVISIBLE);
                         } else {
-                            tv_five_view2.setVisibility(View.VISIBLE);
-                            fiveView2.setVisibility(View.VISIBLE);
                             try{
-                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
-                                tv_five_view2.setText(httpPost.getCompanyNameByid(departmentId));
+//                                int departmentId = Integer.parseInt(fiveMonthTasks.getDate().get(0).get(0).getDepartmentId());
+//                                tv_five_view2.setText(httpPost.getCompanyNameByid(departmentId));
+                                if(oldFiveClickedId2 == -1){
+                                    fiveView2.setVisibility(View.INVISIBLE);
+                                    tv_five_view2.setText("");
+                                } else {
+                                    fiveView2.setVisibility(View.VISIBLE);
+                                    tv_five_view2.setText(personRankList.get(oldFiveClickedId2));
+                                }
                             }catch (Exception e){
                                 tv_five_view2.setText("");
                             }
