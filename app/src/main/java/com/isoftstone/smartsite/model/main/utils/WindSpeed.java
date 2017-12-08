@@ -5,7 +5,7 @@ package com.isoftstone.smartsite.model.main.utils;
  */
 
 public class WindSpeed {
-    public  static  String getWindSpeed(String windDirection,int windspeed){
+    public  static  String getWindSpeed(String windDirection,double windspeed){
         String ws = "";
         if(windspeed < 1 ){
            ws = "0级";

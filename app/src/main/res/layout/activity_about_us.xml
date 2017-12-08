@@ -48,7 +48,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="24dp"
             android:textColor="@color/des_text_color"
-            android:text="☭ 2017 光谷中心城 ALL Rights Reserved"/>
+            android:text="© 2017 光谷中心城 ALL Rights Reserved"/>
 
     </RelativeLayout>
 
