@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.ui;
+package com.isoftstone.smartsite.model.main.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
+import com.isoftstone.smartsite.model.main.ui.PMHistoryInfoActivity;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.utils.LogUtils;
 

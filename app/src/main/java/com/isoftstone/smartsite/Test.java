@@ -202,7 +202,12 @@ public class Test {
 
 
                 //ArrayList<UserTrackBean> list =  mHttpPost.getUserTrack();
-                //mHttpPost.findByUserIdAndTaskId(list.get(0));
+                /*
+                UserTrackBean userTrackBean = new UserTrackBean();
+                userTrackBean.setUserId(1);
+                userTrackBean.setTaskId(1590);
+                mHttpPost.findByUserIdAndTaskId(userTrackBean);
+                */
 
 
 

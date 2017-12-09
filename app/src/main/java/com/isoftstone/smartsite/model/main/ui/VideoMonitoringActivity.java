@@ -20,6 +20,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.main.adapter.VideoMonitorAdapter;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.bean.AlbumInfo;
@@ -169,20 +170,9 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
             startRePlayListActivity();
 
         } else if (requestType == REQUEST_FOR_THREE_TYPE_CODE) {
-
-            //打开系统相册浏览照片  
-            /**Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
-             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-             startActivity(intent);*/
-            /**Intent intent = new Intent();
-             intent.setClass(mContext, ManualPhotographyActivity.class);
-             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-             mContext.startActivity(intent);*/
-
             mListImageInfo.clear();
             mlistPhotoInfo.clear();
             new ImageAsyncTask().execute();
-
         }
 
     }
@@ -196,22 +186,6 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
         String beginTime = formatter.format(now) + " 00:00:00";
         String endTime = formatter2.format(now);
 
-        /*Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-
-        bundle.putString("resCode", mDevicesBean.getDeviceCoding());
-        bundle.putInt("resSubType", mDevicesBean.getCameraType());
-        bundle.putString("resName", mDevicesBean.getDeviceName());
-        boolean isOnLine = mDevicesBean.getDeviceStatus().equals("0");
-        bundle.putBoolean("isOnline", isOnLine);
-
-        bundle.putString("beginTime", beginTime);
-        bundle.putString("endTime", endTime);
-        //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
-        intent.putExtras(bundle);
-        intent.setClass(mContext, VideoRePlayListActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);*/
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("resCode", mDevicesBean.getDeviceCoding());

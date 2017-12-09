@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.ui;
+package com.isoftstone.smartsite.model.index.ui;
 
 import android.Manifest;
 import android.content.DialogInterface;

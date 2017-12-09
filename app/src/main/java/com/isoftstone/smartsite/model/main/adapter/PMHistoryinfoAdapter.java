@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.ui;
+package com.isoftstone.smartsite.model.main.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

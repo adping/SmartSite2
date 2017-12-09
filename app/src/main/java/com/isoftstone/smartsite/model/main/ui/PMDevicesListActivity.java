@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter;
 
 import java.util.ArrayList;
 

@@ -17,6 +17,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.main.adapter.PMHistoryinfoAdapter;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 
 import java.util.ArrayList;
