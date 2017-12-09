@@ -78,11 +78,11 @@ public class MessageListActivity extends BaseActivity {
             title.setText("视频监控消息");
         } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTY)) {
             title.setText("三方协同消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_WATCH_CAR)) {
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_DIRTCAR)) {
             title.setText("渣土车监控消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTH_WATCH)) {
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_TASK)) {
             title.setText("巡查任务消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTH_BUILD_WATCH)) {
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_PLAN)) {
             title.setText("巡查计划消息");
         }
     }

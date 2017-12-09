@@ -34,24 +34,24 @@ public class MyReceiver extends BroadcastReceiver {
     public static final String TURN_TO_PATROL_TASK = "app.cp.patrolTask";
 
     public static final String SEARCH_CODE_ENVIRON = "1|"; //环境检测
-    public static final String SEARCH_CODE_PM10_EXCEED = "1|1|";//PM10指数超标
-    public static final String SEARCH_CODE_PM10_UP_DOWN = "1|2|";//PM10上下线
+    public static final String SEARCH_CODE_ENVIRON_PM10_EXCEED = "1|1|";//PM10指数超标
+    public static final String SEARCH_CODE_ENVIRON_PM10_LIMIT = "1|2|";//PM10上下线
     public static final String SEARCH_CODE_VEDIO = "2|";//视频监控
-    public static final String SEARCH_CODE_OFFLINE = "2|1|";//视频监控离线
+    public static final String SEARCH_CODE_VEDIO_OFFLINE = "2|1|";//视频监控离线
     public static final String SEARCH_CODE_THREE_PARTY = "3|"; //第三方协同工作
     public static final String SEARCH_CODE_THREE_PARTY_CHECK = "3|1|";//验收报告
     public static final String SEARCH_CODE_THREE_PARTY_CHECK_PASS = "3|2|";//验收报告通过
     public static final String SEARCH_CODE_THREE_PARTY_CHECK_REJECT = "3|3|";//报告退回
     public static final String SEARCH_CODE_THREE_PARTY_CHECK_REPLY = "3|4|"; //报告回复
-    public static final String SEARCH_CODE_WATCH_CAR = "4|"; //渣土车监控
-    public static final String SEARCH_CODE_WATCH_CAR_RECO = "4|1|";//人工识别
-    public static final String SEARCH_CODE_WATCH_CAR_ZUIZONG = "4|2|";//渣土车追踪
-    public static final String SEARCH_CODE_THREE_PARTH_WATCH = "7|"; //第三方巡查监控
-    public static final String SEARCH_CODE_PLAN = "7|1|";//巡查任务
-    public static final String SEARCH_CODE_THREE_PARTH_BUILD_WATCH = "110|";//第三方施工巡查
+    public static final String SEARCH_CODE_DIRTCAR = "4|"; //渣土车监控
+    public static final String SEARCH_CODE_DIRTCAR_RECO = "4|1|";//人工识别
+    public static final String SEARCH_CODE_DIRTCAR_ZUIZONG = "4|2|";//渣土车追踪
+    public static final String SEARCH_CODE_TASK = "7|"; //第三方巡查监控
+    public static final String SEARCH_CODE_TASK_1 = "7|1|";//巡查任务
+    public static final String SEARCH_CODE_PLAN = "110|";//第三方施工巡查
     public static final String SEARCH_CODE_PLAN_APPROVAL = "110|1|";//审批计划
-    public static final String SEARCH_CODE_PAN_APPROVAL_PASS = "110|2|";//计划通过
-    public static final String SEARCH_CODE_PAN_APPROVAL_REJECT = "110|3|";//计划退回
+    public static final String SEARCH_CODE_PLAN_PASS = "110|2|";//计划通过
+    public static final String SEARCH_CODE_PLAN_REJECT = "110|3|";//计划退回
 
 
     @Override
@@ -94,18 +94,18 @@ public class MyReceiver extends BroadcastReceiver {
                     //环境检测 //TODO please check
                     Intent i = new Intent(context, AirMonitoringActivity.class);
                     context.startActivity(i);
-                } else if (SEARCH_CODE_PM10_EXCEED.equals(searchCode)) {
+                } else if (SEARCH_CODE_ENVIRON_PM10_EXCEED.equals(searchCode)) {
                     //PM10指数超标 //TODO please check
                     Intent i = new Intent(context, AirMonitoringActivity.class);
                     context.startActivity(i);
-                } else if (SEARCH_CODE_PM10_UP_DOWN.equals(searchCode)) {
+                } else if (SEARCH_CODE_ENVIRON_PM10_LIMIT.equals(searchCode)) {
                     //PM10上下线  //TODO please check
                     Intent i = new Intent(context, AirMonitoringActivity.class);
                     context.startActivity(i);
                 } else if (SEARCH_CODE_VEDIO.equals(searchCode)) {
                     //视频监控//TODO please check
                     MainFragment.enterVideoMonitoring(context);
-                } else if (SEARCH_CODE_OFFLINE.equals(searchCode)) {
+                } else if (SEARCH_CODE_VEDIO_OFFLINE.equals(searchCode)) {
                     //视频监控离线//TODO please check
                     MainFragment.enterVideoMonitoring(context);
                 } else if (SEARCH_CODE_THREE_PARTY.equals(searchCode)) {
@@ -155,22 +155,22 @@ public class MyReceiver extends BroadcastReceiver {
                     }
                     i.putExtra("_id", id);
                     context.startActivity(i);
-                } else if (SEARCH_CODE_WATCH_CAR.equals(searchCode)) {
+                } else if (SEARCH_CODE_DIRTCAR.equals(searchCode)) {
                     //渣土车监控 //TODO please check
                     MainFragment.enterDircar(context);
-                } else if (SEARCH_CODE_WATCH_CAR_RECO.equals(searchCode)) {
+                } else if (SEARCH_CODE_DIRTCAR_RECO.equals(searchCode)) {
                     //人工识别
                     //忽略
-                } else if (SEARCH_CODE_WATCH_CAR_ZUIZONG.equals(searchCode)) {
+                } else if (SEARCH_CODE_DIRTCAR_ZUIZONG.equals(searchCode)) {
                     //渣土车追踪  //TODO please check
                     MainFragment.enterDircar(context);
-                } else if (SEARCH_CODE_THREE_PARTH_WATCH.equals(searchCode)) {
+                } else if (SEARCH_CODE_TASK.equals(searchCode)) {
                     //第三方巡查监控//TODO please check
                     MainFragment.enterConstructionMonitor(context);
-                } else if (SEARCH_CODE_PLAN.equals(searchCode)) {
+                } else if (SEARCH_CODE_TASK_1.equals(searchCode)) {
                     //巡查任务//TODO please check
                     MainFragment.enterPatrolMission(context);
-                } else if (SEARCH_CODE_THREE_PARTH_BUILD_WATCH.equals(searchCode)) {
+                } else if (SEARCH_CODE_PLAN.equals(searchCode)) {
                     //第三方施工巡查//TODO please check
                     Intent i = new Intent(com.isoftstone.smartsite.MainActivity.ACTION_CHANGE_TAB);
                     i.setPackage("com.isoftstone.smartsite");
@@ -182,13 +182,13 @@ public class MyReceiver extends BroadcastReceiver {
                     i.setPackage("com.isoftstone.smartsite");
                     i.putExtra("tab", 2);
                     context.sendBroadcast(i);
-                } else if (SEARCH_CODE_PAN_APPROVAL_PASS.equals(searchCode)) {
+                } else if (SEARCH_CODE_PLAN_PASS.equals(searchCode)) {
                     //计划通过//TODO please check
                     Intent i = new Intent(com.isoftstone.smartsite.MainActivity.ACTION_CHANGE_TAB);
                     i.setPackage("com.isoftstone.smartsite");
                     i.putExtra("tab", 2);
                     context.sendBroadcast(i);
-                } else if (SEARCH_CODE_PAN_APPROVAL_REJECT.equals(searchCode)) {
+                } else if (SEARCH_CODE_PLAN_REJECT.equals(searchCode)) {
                     //计划退回//TODO please check
                     Intent i = new Intent(com.isoftstone.smartsite.MainActivity.ACTION_CHANGE_TAB);
                     i.setPackage("com.isoftstone.smartsite");

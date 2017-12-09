@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -16,8 +15,6 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
-import com.isoftstone.smartsite.model.message.data.MsgData;
-import com.isoftstone.smartsite.utils.MsgUtils;
 
 import java.util.ArrayList;
 
@@ -108,7 +105,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_WATCH_CAR);
+                i.putExtra("type", MyReceiver.SEARCH_CODE_DIRTCAR);
                 mActivity.startActivity(i);
             }
         });
@@ -119,7 +116,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_THREE_PARTH_WATCH);
+                i.putExtra("type", MyReceiver.SEARCH_CODE_TASK);
                 mActivity.startActivity(i);
             }
         });
@@ -130,7 +127,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_THREE_PARTH_BUILD_WATCH);
+                i.putExtra("type", MyReceiver.SEARCH_CODE_PLAN);
                 mActivity.startActivity(i);
             }
         });
