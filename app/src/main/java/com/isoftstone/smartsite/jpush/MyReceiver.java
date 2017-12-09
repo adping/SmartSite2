@@ -11,7 +11,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.dirtcar.Service.RecognizeDirtCarService;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.model.main.ui.MainFragment;
-import com.isoftstone.smartsite.model.main.ui.SplashActivity;
+import com.isoftstone.smartsite.model.index.ui.SplashActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.ReadReportActivity;
 
 import org.json.JSONException;

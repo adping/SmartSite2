@@ -1,20 +1,16 @@
 package com.isoftstone.smartsite.model.map.ui;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -38,9 +34,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
@@ -49,15 +42,11 @@ import com.isoftstone.smartsite.http.patrolinfo.DepartmentMonthDataBean;
 import com.isoftstone.smartsite.http.patrolinfo.DepartmentsMonthTasks;
 import com.isoftstone.smartsite.http.patrolinfo.ReportDataBean;
 import com.isoftstone.smartsite.http.patrolinfo.UserTaskCountBean;
-import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
-import com.isoftstone.smartsite.model.main.ui.SplashActivity;
 import com.isoftstone.smartsite.model.map.adapter.PersonRankArrayAdapter;
 import com.isoftstone.smartsite.model.map.bean.MyValueFomatter;
 import com.isoftstone.smartsite.model.map.bean.MyXFormatter;
 import com.isoftstone.smartsite.model.map.bean.PersonRankCompare;
 import com.isoftstone.smartsite.model.map.bean.ReportDataBeanCompare;
-import com.isoftstone.smartsite.model.map.service.DownloadAPKService;
-import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -71,7 +60,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * Created by zw on 2017/11/25.

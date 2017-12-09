@@ -58,13 +58,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_0;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_150;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_250;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_350;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_420;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_50;
-import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_600;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_0;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_150;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_250;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_350;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_420;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_50;
+import static com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter.COLOR_600;
 
 public class VideoMonitorMapActivity extends BaseActivity implements View.OnClickListener, AMap.OnMarkerClickListener {
 

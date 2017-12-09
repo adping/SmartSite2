@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.main.adapter.InstantMessageAdapter;
 import com.isoftstone.smartsite.model.main.utils.WindSpeed;
 import com.isoftstone.smartsite.model.patroltask.ui.PatroPlanDetailsActivity;
 import com.isoftstone.smartsite.R;

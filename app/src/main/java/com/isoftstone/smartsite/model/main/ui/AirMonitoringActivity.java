@@ -49,6 +49,7 @@ import com.isoftstone.smartsite.http.aqi.EQIRankingBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.aqi.MonthlyComparisonBean;
 import com.isoftstone.smartsite.http.aqi.WeatherConditionBean;
+import com.isoftstone.smartsite.model.main.adapter.AirMonitoringRankAdapter;
 import com.isoftstone.smartsite.model.tripartite.view.MyListView;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 

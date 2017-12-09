@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.ui;
+package com.isoftstone.smartsite.model.main.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.main.ui.VideoMonitoringActivity;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;

@@ -348,7 +348,7 @@
         <activity android:name=".model.map.ui.MapSearchActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".model.main.ui.SplashActivity"
+        <activity android:name=".model.index.ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
