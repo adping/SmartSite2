@@ -239,7 +239,7 @@
         <activity android:name=".model.tripartite.activity.CheckReportActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.message.ui.VcrActivity"
+        <activity android:name=".model.message.ui.MessageListActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.EnvironActivity"

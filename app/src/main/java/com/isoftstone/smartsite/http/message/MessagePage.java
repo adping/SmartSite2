@@ -8,6 +8,10 @@ import java.util.ArrayList;
  * Created by gone on 2017/12/2.
  */
 
-public class MessagePage extends PageableBean{
+public class MessagePage extends PageableBean {
     private ArrayList<MessageBean> content;
+
+    public ArrayList<MessageBean> getContent() {
+        return content;
+    }
 }

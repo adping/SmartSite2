@@ -1,16 +1,19 @@
 package com.isoftstone.smartsite.model.message.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.MessageBean;
+import com.isoftstone.smartsite.jpush.MyReceiver;
 import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.utils.MsgUtils;
@@ -24,7 +27,7 @@ import java.util.Date;
  * Created by yanyongjun on 2017/10/15.
  */
 
-public class VcrActivity extends BaseActivity {
+public class MessageListActivity extends BaseActivity {
     //listview中各item项的名称
     public static final String ITEM_DATE = "lab_time";
     public static final String ITEM_TITLE = "lab_title";
@@ -35,8 +38,9 @@ public class VcrActivity extends BaseActivity {
     private ArrayList<MsgData> mDatas = new ArrayList<>();
 
     private HttpPost mHttpPost = null;
-    private QueryMsgTask mTask = new QueryMsgTask();
     private BaseAdapter mAdapter = null;
+
+    private String mQueryMsgType = "1|";
 
     private static final boolean isDebug = false;
 
@@ -56,24 +60,47 @@ public class VcrActivity extends BaseActivity {
         mAdapter = new MsgListAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
         mHttpPost = new HttpPost();
+
+        Intent intent = getIntent();
+        try {
+            mQueryMsgType = intent.getStringExtra("type");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        initTitleName();
+    }
+
+    private void initTitleName() {
+        TextView title = (TextView) findViewById(R.id.lab_title_name);
+        if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_ENVIRON)) {
+            title.setText("环境监控消息");
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_VEDIO)) {
+            title.setText("视频监控消息");
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTY)) {
+            title.setText("三方协同消息");
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_WATCH_CAR)) {
+            title.setText("渣土车监控消息");
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTH_WATCH)) {
+            title.setText("巡查任务消息");
+        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTH_BUILD_WATCH)) {
+            title.setText("巡查计划消息");
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mTask.execute();
+        new QueryMsgTask().execute();
         new ReadMsgTask().execute();
     }
+
 
     private class QueryMsgTask extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... params) {
-            ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", "2");
-            if(msgs != null){
-                if (isDebug) {
-                    insertDebugData(msgs);
-                }
+            ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", mQueryMsgType);
+            if (msgs != null) {
                 Collections.sort(msgs, new Comparator<MessageBean>() {
                     @Override
                     public int compare(MessageBean o1, MessageBean o2) {
@@ -104,86 +131,11 @@ public class VcrActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             for (MsgData temp : mDatas) {
-                if(temp.getStatus() == MsgData.STATUS_UNREAD) {
+                if (temp.getStatus() == MsgData.STATUS_UNREAD) {
                     mHttpPost.readMessage(temp.getId());
                 }
             }
             return null;
         }
-    }
-
-    private void insertDebugData(ArrayList<MessageBean> datas) {
-        MessageBean data = new MessageBean();
-        data.setInfoId("1");
-        data.setUpdateTime("2017-10-3 13:35:00");
-        data.setTitle("这是测试消息1");
-        data.setContent("这是测试消息的内容");
-        data.setStatus(MsgData.STATUS_READ);
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("2");
-        data.setUpdateTime("2017-10-3 13:35:00");
-        data.setTitle("这是测试消息2");
-        data.setContent("这是测试消息的内容");
-        data.setStatus(MsgData.STATUS_READ);
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("3");
-        data.setUpdateTime("2016-10-3 13:35:00");
-        data.setTitle("这是测试消息3");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("4");
-        data.setUpdateTime("2017-11-3 13:35:00");
-        data.setTitle("这是测试消息4");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("5");
-        data.setUpdateTime("2017-11-2 13:35:00");
-        data.setTitle("这是测试消息5");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("6");
-        data.setUpdateTime("2005-10-3 13:35:00");
-        data.setTitle("这是测试消息6");
-        data.setContent("这是测试消息的内容");
-        data.setStatus(MsgData.STATUS_UNREAD);
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("7");
-        data.setUpdateTime("2017-10-2 11:35:00");
-        data.setTitle("这是测试消息7");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("8");
-        data.setUpdateTime("2015-9-3 13:35:00");
-        data.setTitle("这是测试消息8");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("9");
-        data.setUpdateTime("2014-10-3 13:35:00");
-        data.setTitle("这是测试消息9");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
-
-        data = new MessageBean();
-        data.setInfoId("10");
-        data.setUpdateTime("2014-10-1 13:35:00");
-        data.setTitle("这是测试消息10");
-        data.setContent("这是测试消息的内容");
-        datas.add(data);
     }
 }
