@@ -38,6 +38,29 @@ public class MsgUtils {
         return result;
     }
 
+    public static ArrayList<MsgData> toMsgData(ArrayList<MessageBean> list) {
+        ArrayList<MsgData> result = new ArrayList<>();
+        if (list == null) {
+            return result;
+        }
+        result.clear();
+        Log.e(TAG, "list size:" + list.size());
+        MsgData curData = null;
+        MsgData lastData = null;
+        for (MessageBean msg : list) {
+            lastData = curData;
+            curData = new MsgData(msg.getInfoId(), msg.getUpdateTime(), msg.getTitle(), msg.getContent(), msg.getStatus());
+            if (lastData != null && !curData.isSameYear(lastData)) {
+                MsgData temp = new MsgData(MsgData.TYPE_YEAR);
+                temp.setDataString(curData.getYear());
+                result.add(temp);
+            }
+            Log.e(TAG, "msgData:" + curData);
+            result.add(curData);
+        }
+        return result;
+    }
+
     public static MsgData toMsgData(MessageBean msg) {
         if (msg == null) {
             return null;

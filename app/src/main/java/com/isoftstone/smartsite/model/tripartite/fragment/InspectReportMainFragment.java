@@ -29,12 +29,6 @@ import java.util.Date;
  */
 
 public class InspectReportMainFragment extends BaseFragment {
-    public static final String ITEM_TITLE = "lab_title";
-    public static final String ITEM_NAME = "lab_name";
-    public static final String ITEM_TIME = "lab_time";
-    public static final String ITEM_COMPANY = "lab_company";
-    public static final String ITEM_STATS = "lab_status";
-
     private TripartiteActivity mActivity = null;
     private PullToRefreshListView mListView = null;
     private ArrayList<ReportData> mDatas = new ArrayList<>();
@@ -56,38 +50,6 @@ public class InspectReportMainFragment extends BaseFragment {
         mActivity = (TripartiteActivity) getActivity();
         mHttpPost = new HttpPost();
         init();
-    }
-
-    public void onDataSetChanged() {
-        Log.e(TAG, "onDataSetChanged");
-        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
-            return;
-        }
-//        new AsyncTask<Void, Void, Void>() {
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                try {
-//                    mDatas.clear();
-//                    if (mAccountName == null || mAccountName.equals("")) {
-//                        mAccountName = mHttpPost.mLoginBean.getmName();
-//                    }
-//                    ArrayList<ReportData> sourceData = mActivity.getDatas();
-//                    for (ReportData temp : sourceData) {
-//                        mDatas.add(temp);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }.execute();
     }
 
     //分页代码
