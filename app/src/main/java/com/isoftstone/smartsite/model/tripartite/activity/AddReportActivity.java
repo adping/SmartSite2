@@ -72,6 +72,7 @@ public class AddReportActivity extends BaseActivity {
     String mCompanyName = "";
 
     public boolean isShowCompany = true;
+    public final static boolean IS_COMPANY_SWITCH = false;
 
 
     @Override
@@ -223,13 +224,15 @@ public class AddReportActivity extends BaseActivity {
                             DictionaryBean bean = mTypesList.get(position);
                             int type = Integer.parseInt(bean.getValue());
                             mTypes = type + "";
-                            View v = AddReportActivity.this.findViewById(R.id.linear_company);
-                            if (v != null && type / 100 == 2) {
-                                v.setVisibility(View.GONE);
-                                isShowCompany = false;
-                            } else {
-                                v.setVisibility(View.VISIBLE);
-                                isShowCompany = true;
+                            if (IS_COMPANY_SWITCH) {
+                                View v = AddReportActivity.this.findViewById(R.id.linear_company);
+                                if (v != null && type / 100 == 2) {
+                                    v.setVisibility(View.GONE);
+                                    isShowCompany = false;
+                                } else {
+                                    v.setVisibility(View.VISIBLE);
+                                    isShowCompany = true;
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

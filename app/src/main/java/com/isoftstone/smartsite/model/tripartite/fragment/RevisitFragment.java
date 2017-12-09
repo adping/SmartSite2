@@ -256,19 +256,19 @@ public class RevisitFragment extends BaseFragment {
                         return;
                     }
 
-                    if (mAddReportActivity.isShowCompany && (TextUtils.isEmpty(constructionCompany) ||
-                            TextUtils.isEmpty(supervisionCompany) || TextUtils.isEmpty(developmentCompany))) {
-                        Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
-                        return;
+                    if (AddReportActivity.IS_COMPANY_SWITCH) {
+                        if (mAddReportActivity.isShowCompany && (TextUtils.isEmpty(constructionCompany) ||
+                                TextUtils.isEmpty(supervisionCompany) || TextUtils.isEmpty(developmentCompany))) {
+                            Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
 
                     reportData.setAddress(address);
                     reportData.setCompany(company);
-                    if (mAddReportActivity.isShowCompany) {
-                        reportData.setDevelopmentCompany(developmentCompany);
-                        reportData.setConstructionCompany(constructionCompany);
-                        reportData.setSupervisionCompany(supervisionCompany);
-                    }
+                    reportData.setDevelopmentCompany(developmentCompany);
+                    reportData.setConstructionCompany(constructionCompany);
+                    reportData.setSupervisionCompany(supervisionCompany);
                     reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                     reportData.setCategory(mAddReportActivity.mTypes);
                     //

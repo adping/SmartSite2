@@ -12,6 +12,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.patrolreport.DictionaryBean;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
+import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 
 import java.util.ArrayList;
 
@@ -71,7 +72,7 @@ public class ReadReportFrag extends BaseFragment {
                 mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
 
                 String developmentcompany = mData.getDevelopmentCompany();
-                if (TextUtils.isEmpty(developmentcompany)) {
+                if (TextUtils.isEmpty(developmentcompany) && AddReportActivity.IS_COMPANY_SWITCH) {
                     View v = getActivity().findViewById(R.id.linear_build_company);
                     v.setVisibility(View.GONE);
                 } else {
@@ -79,7 +80,7 @@ public class ReadReportFrag extends BaseFragment {
                 }
 
                 String cosCompany = mData.getConstructionCompany();
-                if (TextUtils.isEmpty(cosCompany)) {
+                if (TextUtils.isEmpty(cosCompany) && AddReportActivity.IS_COMPANY_SWITCH) {
                     View v = getActivity().findViewById(R.id.linear_cos_company);
                     v.setVisibility(View.GONE);
                 } else {
@@ -87,7 +88,7 @@ public class ReadReportFrag extends BaseFragment {
                 }
 
                 String supCompany = mData.getSupervisionCompany();
-                if (TextUtils.isEmpty(supCompany)) {
+                if (TextUtils.isEmpty(supCompany) && AddReportActivity.IS_COMPANY_SWITCH) {
                     View v = getActivity().findViewById(R.id.linear_super_company);
                     v.setVisibility(View.GONE);
                 } else {
