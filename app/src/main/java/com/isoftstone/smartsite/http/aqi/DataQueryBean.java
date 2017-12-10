@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http.aqi;
 
+import com.isoftstone.smartsite.http.util.DataUtils;
+
 /**
  * Created by gone on 2017/11/1.
  */
@@ -112,7 +114,7 @@ public class DataQueryBean {
     }
 
     public double getAirTemperature() {
-        return airTemperature;
+        return DataUtils.doubleToString(airTemperature,1);
     }
 
     public void setAirTemperature(double airTemperature) {
@@ -120,7 +122,7 @@ public class DataQueryBean {
     }
 
     public double getAirHumidity() {
-        return airHumidity;
+        return DataUtils.doubleToString(airHumidity,2);
     }
 
     public void setAirHumidity(double airHumidity) {

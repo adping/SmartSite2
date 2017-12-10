@@ -1,9 +1,11 @@
 package com.isoftstone.smartsite.base;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -83,6 +85,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initLoginingDlg() {
 
         mLoginingDlg = new Dialog(this, R.style.loginingDlg);
+        mLoginingDlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                return true;
+            }
+        });
         mLoginingDlg.setContentView(R.layout.logining_dlg);
         dlg_textview = (TextView) mLoginingDlg.findViewById(R.id.dlg_textview);
         mLoginingDlg.setCanceledOnTouchOutside(false); // 设置点击Dialog外部任意区域关闭Dialog
@@ -98,7 +106,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /* 关闭正在登录对话框 */
     public void closeDlg() {
-        if (mLoginingDlg != null && mLoginingDlg.isShowing())
+        if (mLoginingDlg != null && mLoginingDlg.isShowing()){
             mLoginingDlg.dismiss();
+        }
     }
 }
