@@ -117,6 +117,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     ToastUtils.showLong("没有获取到任务详情！");
                     break;
                 case INIT_DATA:
+                    if(!isTaskCompleted){
+                        iv_status.setVisibility(View.VISIBLE);
+                    }
                     loadingDailog.dismiss();
                     updateRecyclerView();
                     updateTaskPoints();
@@ -265,7 +268,6 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                             int status = patrolPositionBeans.get(i).getStatus();
                             if(status == 0){
                                 isTaskCompleted = false;
-                                iv_status.setVisibility(View.VISIBLE);
                                 break;
                             }
                         }
