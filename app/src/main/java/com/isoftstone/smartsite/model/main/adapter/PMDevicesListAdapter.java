@@ -170,6 +170,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                         intent.putExtra("devices",mData);
                         intent.putExtra("position",map_position);
                         intent.putExtra("id",devices.getDeviceId());
+                        intent.putExtra("devicesCode",devices.getDeviceCoding());
                         intent.putExtra("address","设备名称"+devices.getDeviceName());
                         intent.setClass(mContext, PMDataInfoActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -196,6 +197,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     intent.putExtra("devices",mData);
                     intent.putExtra("position",map_position);
                     intent.putExtra("id",devices.getDeviceId());
+                    intent.putExtra("devicesCode",devices.getDeviceCoding());
                     intent.putExtra("address","设备名称"+devices.getDeviceName());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);

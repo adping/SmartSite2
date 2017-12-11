@@ -123,12 +123,12 @@
             android:id="@+id/jiange_name"/>
     </LinearLayout>
 
-    <ListView
+    <com.isoftstone.smartsite.common.widget.PullToRefreshListView
         android:background="@color/white"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listview"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
-    </ListView>
+    </com.isoftstone.smartsite.common.widget.PullToRefreshListView>
 </LinearLayout>

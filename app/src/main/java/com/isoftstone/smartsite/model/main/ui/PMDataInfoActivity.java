@@ -75,6 +75,7 @@ public class PMDataInfoActivity extends BaseActivity {
     private String begintime = "";
     private int position;
     private ArrayList<DataQueryVoBean> mData  = null;
+    private String devicesCode;
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_pmdatainfo;
@@ -84,6 +85,7 @@ public class PMDataInfoActivity extends BaseActivity {
     protected void afterCreated(Bundle savedInstanceState) {
         DataQueryVoBean dataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
         position = getIntent().getIntExtra("position",0);
+        devicesCode = getIntent().getStringExtra("devicesCode");
         mData = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
         if(dataQueryVoBean != null){
             devicesId = dataQueryVoBean.getDeviceId();
@@ -122,6 +124,7 @@ public class PMDataInfoActivity extends BaseActivity {
         mLineChart = (LineChart)findViewById(R.id.chart3);
 
         mDevicesName = (TextView)findViewById(R.id.textView1);
+        mDevicesName.setText(devicesCode);
         mMap = (TextView)findViewById(R.id.textView4);
 
         text_pm10 = (TextView)findViewById(R.id.text_pm10);
@@ -254,7 +257,6 @@ public class PMDataInfoActivity extends BaseActivity {
         if(dataQueryVoBean == null){
             return;
         }
-        mDevicesName.setText(dataQueryVoBean.getDeviceName());
 
         text_pm10.setText("PM10:"+doubleToString(dataQueryVoBean.getPm10()));
         text_pm25.setText("PM2.5:"+doubleToString(dataQueryVoBean.getPm2_5()));
