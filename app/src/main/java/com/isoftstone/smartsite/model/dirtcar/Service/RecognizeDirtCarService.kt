@@ -109,6 +109,7 @@ open class RecognizeDirtCarService : Service() {
                     var dataGson = gson.toJson(data)
                     var i = Intent(this@RecognizeDirtCarService, RecognizeDirtCarActivity::class.java)
                     i.putExtra("data", dataGson)
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     Log.e(TAG,"yanlog dataGson:"+dataGson)
                     return i
 //                    var juedui = mHttpPost.getReportPath(0, data.imgList)
