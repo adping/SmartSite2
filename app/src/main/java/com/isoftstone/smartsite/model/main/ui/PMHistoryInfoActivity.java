@@ -15,8 +15,11 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBeanPage;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.model.main.adapter.PMHistoryinfoAdapter;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 
@@ -31,21 +34,24 @@ public class PMHistoryInfoActivity extends BaseActivity {
     private ImageButton mImageView_icon = null;
     private TextView toolbar_title = null;
 
-    private ListView mListView = null;
+    private PullToRefreshListView mListView = null;
     private TextView mDevicesName = null;
     private TextView mMap = null;
     private LinearLayout mGotoMap = null;
     public static  final  int HANDLER_GET_DATA_START = 1;
     public static  final  int HANDLER_GET_DATA_END = 2;
     private HttpPost mHttpPost = new HttpPost();
-    ArrayList<DataQueryVoBean> list = null;
+    private ArrayList<DataQueryVoBean> list = new ArrayList<DataQueryVoBean>();
     private int devicesId ;
     private String address;
     private String[] data = {"5分钟","1小时","24小时","1个月"};
     private Spinner mJiangeSpinner;
     private int position;
     private ArrayList<DataQueryVoBean> mData  = null;
-
+    private PMHistoryinfoAdapter pmHistoryinfoAdapter = null;
+    private DataQueryVoBeanPage mDataQueryVoBeanPage = null;
+    private int mCurPageNum = 0;
+    private String devicesCode;
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_pmhistoryinfo;
@@ -57,6 +63,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
         mData = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
         devicesId = getIntent().getIntExtra("id",0);
         address = getIntent().getStringExtra("address");
+        devicesCode = getIntent().getStringExtra("devicesCode");
         init();
         setOnCliceked();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
@@ -82,7 +89,11 @@ public class PMHistoryInfoActivity extends BaseActivity {
             }
         });
 
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = (PullToRefreshListView)findViewById(R.id.listview);
+        pmHistoryinfoAdapter = new PMHistoryinfoAdapter(getBaseContext());
+        pmHistoryinfoAdapter.setData(list);
+        mListView.setAdapter(pmHistoryinfoAdapter);
+        mListView.setOnRefreshListener(listviewlistener);
         mDevicesName = (TextView)findViewById(R.id.textView1);
         mMap = (TextView)findViewById(R.id.textView4);
         mMap.setText(address);
@@ -109,14 +120,38 @@ public class PMHistoryInfoActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(),PMDataInfoActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("devicesbean",list.get(posit));
+                    intent.putExtra("devicesbean",list.get(posit-1));
                     intent.putExtra("devices",mData);
                     intent.putExtra("position",position);
                     getApplicationContext().startActivity(intent);
                 }
             }
         });
+        mDevicesName.setText(devicesCode);
     }
+
+    PullToRefreshListView.OnRefreshListener listviewlistener = new PullToRefreshListView.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if(mDataQueryVoBeanPage.isFirst()){
+                mCurPageNum = 0;
+                list.clear();
+                mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+            }else {
+                mListView.onRefreshComplete();
+            }
+        }
+
+        @Override
+        public void onLoadMore() {
+            if(!mDataQueryVoBeanPage.isLast()){
+                mCurPageNum = mCurPageNum + 1;
+                mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+            }else{
+                mListView.onLoadMoreComplete();
+            }
+        }
+    };
 
     private void setOnCliceked(){
 
@@ -143,7 +178,6 @@ public class PMHistoryInfoActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HANDLER_GET_DATA_START:{
-                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -155,7 +189,8 @@ public class PMHistoryInfoActivity extends BaseActivity {
                 break;
                 case  HANDLER_GET_DATA_END:{
                     setmListViewData();
-                    closeDlg();
+                    mListView.onRefreshComplete();
+                    mListView.onLoadMoreComplete();
                 }
                 break;
             }
@@ -164,17 +199,23 @@ public class PMHistoryInfoActivity extends BaseActivity {
 
     private void getDevices(){
         int index = mJiangeSpinner.getSelectedItemPosition();
-        list = mHttpPost.onePMDevicesDataList("["+devicesId+"]",(index+1)+"","","");
+        PageableBean pageableBean = new PageableBean();
+        pageableBean.setPage(mCurPageNum+"");
+        mDataQueryVoBeanPage = mHttpPost.onePMDevicesDataListPage("["+devicesId+"]",(index+1)+"","","",pageableBean);
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
     private void setmListViewData(){
 
         if(list != null && list.size() > 0){
-            mDevicesName.setText(list.get(0).getDeviceName());
-            PMHistoryinfoAdapter adapter = new PMHistoryinfoAdapter(getBaseContext());
-            adapter.setData(list);
-            mListView.setAdapter(adapter);
+
         }
+        ArrayList<DataQueryVoBean> contest = mDataQueryVoBeanPage.getContent();
+        if(contest != null){
+            for (int i = 0 ; i < contest.size(); i ++){
+                list.add(contest.get(i));
+            }
+        }
+        pmHistoryinfoAdapter.notifyDataSetChanged();
 
     }
 
