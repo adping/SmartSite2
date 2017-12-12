@@ -91,8 +91,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder.address = (TextView)convertView.findViewById(R.id.textView4);
             holder.PM10 = (TextView)convertView.findViewById(R.id.text_pm10);
             holder.PM25 = (TextView)convertView.findViewById(R.id.text_pm25);
-            holder.SO2 = (TextView)convertView.findViewById(R.id.text_so2);
-            holder.NO2 = (TextView)convertView.findViewById(R.id.text_no2);
+            holder.CO2 = (TextView)convertView.findViewById(R.id.text_co2);
             holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
             holder.iv_data = (ImageView) convertView.findViewById(R.id.iv_data);
             holder.tv_data = (TextView) convertView.findViewById(R.id.tv_data);
@@ -130,8 +129,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
         double d_pm25 = devices.getPm2_5() == null ? 0 : devices.getPm2_5();
         int pm_25 = (int) d_pm25;
 
-        double d_so2 = devices.getCo2() == null ? 0 : devices.getPm2_5();
-        int pm_so2 = (int) d_so2;
+        double d_co2 = devices.getCo2() == null ? 0 : devices.getCo2();
+        int pm_co2 = (int) d_co2;
 
 
         if(pm_10 < 50){
@@ -151,10 +150,9 @@ public class PMDevicesListAdapter extends BaseAdapter {
         holder.PM10.setText(Html.fromHtml(pm10));
         String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25+ "</font>";
         holder.PM25.setText(Html.fromHtml(pm25));
-        String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-        holder.SO2.setText(Html.fromHtml(so2));
-        String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-        holder.NO2.setText(Html.fromHtml(no2));
+        String co2 = "CO2：<font color='" + COLOR_0 + "'>" + pm_co2 + "</font>";
+        holder.CO2.setText(Html.fromHtml(co2));
+
 
         final int map_position = position;
         if(devices.getDeviceStatus() == 0){
@@ -230,8 +228,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
         public TextView  address;//安装日期
         public TextView  PM10;//PM10
         public TextView  PM25;//PM2.5
-        public TextView  SO2;//SO2
-        public TextView  NO2;//NO2
+        public TextView  CO2;//CO2
 
         public LinearLayout button_1;//实时数据
         public ImageView iv_data;

@@ -101,8 +101,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     private View eviorment_view;
     private TextView tv_pm10;
     private TextView tv_pm25;
-    private TextView tv_pmso2;
-    private TextView tv_pmno2;
+    private TextView tv_pmco2;
     private View background_line;
 
     private boolean isHasData = false;
@@ -281,8 +280,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             double d_pm25 = currentEnvirDevice.getPm2_5() == null ? 0 : currentEnvirDevice.getPm2_5();
             int pm_25 = (int) d_pm25;
 
-            double d_so2 = currentEnvirDevice.getCo2() == null ? 0 : currentEnvirDevice.getCo2();
-            int pm_so2 = (int) d_so2;
+            double d_co2 = currentEnvirDevice.getCo2() == null ? 0 : currentEnvirDevice.getCo2();
+            int pm_co2 = (int) d_co2;
 
             if(pm_10 < 50){
                 pm10 = "PM10：<font color='" + COLOR_50 + "'>" + pm_10 + "</font>";
@@ -301,10 +300,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             tv_pm10.setText(Html.fromHtml(pm10));
             String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25 + "</font>";
             tv_pm25.setText(Html.fromHtml(pm25));
-            String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-            tv_pmso2.setText(Html.fromHtml(so2));
-            String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-            tv_pmno2.setText(Html.fromHtml(no2));
+            String co2 = "CO2：<font color='" + COLOR_0 + "'>" + pm_co2 + "</font>";
+            tv_pmco2.setText(Html.fromHtml(co2));
             initLocation(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()),Double.parseDouble(currentEnvirDevice.getLongitude())));
         }
 
@@ -489,8 +486,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
         tv_pm10 = (TextView) popWindowView.findViewById(R.id.text_pm10);
         tv_pm25 = (TextView) popWindowView.findViewById(R.id.text_pm25);
-        tv_pmso2 = (TextView) popWindowView.findViewById(R.id.text_so2);
-        tv_pmno2 = (TextView) popWindowView.findViewById(R.id.text_no2);
+        tv_pmco2 = (TextView) popWindowView.findViewById(R.id.text_co2);
         background_line = popWindowView.findViewById(R.id.background_line);
         if(type == TYPE_CAMERA){
             eviorment_view.setVisibility(View.GONE);
@@ -839,8 +835,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 double d_pm25 = device.getPm2_5() == null ? 0 : device.getPm2_5();
                 int pm_25 = (int) d_pm25;
 
-                double d_so2 = device.getCo2() == null ? 0 : device.getCo2();
-                int pm_so2 = (int) d_so2;
+                double d_co2 = device.getCo2() == null ? 0 : device.getCo2();
+                int pm_co2 = (int) d_co2;
 
                 if(pm_10 < 50){
                     pm10 = "PM10：<font color='" + COLOR_50 + "'>" + pm_10 + "</font>";
@@ -859,10 +855,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 tv_pm10.setText(Html.fromHtml(pm10));
                 String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25 + "</font>";
                 tv_pm25.setText(Html.fromHtml(pm25));
-                String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-                tv_pmso2.setText(Html.fromHtml(so2));
-                String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
-                tv_pmno2.setText(Html.fromHtml(no2));
+                String co2 = "CO2：<font color='" + COLOR_0 + "'>" + pm_co2 + "</font>";
+                tv_pmco2.setText(Html.fromHtml(co2));
                 initLocation(new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude())));
             }
             addAndRemoveRoundMarker();

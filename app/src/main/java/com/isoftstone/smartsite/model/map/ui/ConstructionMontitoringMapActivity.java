@@ -117,7 +117,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     ToastUtils.showLong("没有获取到任务详情！");
                     break;
                 case INIT_DATA:
-                    if(!isTaskCompleted){
+                    if(isTaskCompleted){
+                        iv_status.setVisibility(View.INVISIBLE);
+                    } else {
                         iv_status.setVisibility(View.VISIBLE);
                     }
                     loadingDailog.dismiss();
@@ -263,14 +265,11 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
-                    if(patrolPositionBeans != null && patrolPositionBeans.size() != 0){
-                        for (int i = 0; i < patrolPositionBeans.size(); i++) {
-                            int status = patrolPositionBeans.get(i).getStatus();
-                            if(status == 0){
-                                isTaskCompleted = false;
-                                break;
-                            }
-                        }
+                    int status = patrolTaskBean.getTaskStatus();
+                    if(status == 2){
+                        isTaskCompleted = true;
+                    } else {
+                        isTaskCompleted = false;
                     }
 
                     mHandler.sendEmptyMessage(INIT_DATA);
@@ -589,6 +588,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             PatrolPositionBean bean = (PatrolPositionBean) marker.getObject();
             currentPatorPositionBean = bean;
             tv_task_name.setText(bean.getPosition());
+            //0未巡查  1已巡查
             if(bean.getStatus() == 0){
                 iv_start_task.setVisibility(View.VISIBLE);
                 content_parent.setVisibility(View.GONE);
@@ -648,15 +648,19 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
     private void updateNowLocation(Location location){
         final double lat = location.getLatitude();
         final double lon = location.getLongitude();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(patrolTaskBean != null){
-                    LogUtils.e(TAG,"userid : " + loginUseId + ", taskId : " + taskId + ", lat : " + lat + ", lon :" + lon);
-                    httpPost.userTrack(loginUseId,taskId,lon,lat);
+        if(lat != 0 && lon != 0){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if(patrolTaskBean != null){
+                        httpPost.userTrack(loginUseId,taskId,lon,lat);
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        } else {
+            ToastUtils.showShort("没有获取到您当前的位置信息，无法上传您的位置信息！");
+        }
+
     }
 
     //检查是否在附近以及完成任务

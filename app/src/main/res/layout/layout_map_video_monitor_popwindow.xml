@@ -145,25 +145,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="SO2：6"
+                    android:text="CO2：6"
                     android:textSize="12sp"
                     android:textColor="#000000"
-                    android:id="@+id/text_so2"/>
-                <View
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_width="3px"
-                    android:layout_height="match_parent"
-                    android:background="@color/gray_f2f2"
-                    ></View>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="NO2：49"
-                    android:textSize="12sp"
-                    android:textColor="#000000"
-                    android:id="@+id/text_no2"/>
+                    android:id="@+id/text_co2"/>
+
             </LinearLayout>
 
             <View
