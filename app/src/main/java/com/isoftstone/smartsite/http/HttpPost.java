@@ -514,7 +514,7 @@ public class HttpPost {
     通过公司id获取公司名称   对应用户为部门id
      */
     public String getCompanyNameByid(int id) {
-        String companyName = "未找到公司，ID未："+id;
+        String companyName = "未找到公司，ID为："+id;
         if (companyNameList != null) {
             for (int i = 0; i < companyNameList.size(); i++) {
                 CompanyBean companyBean = companyNameList.get(i);

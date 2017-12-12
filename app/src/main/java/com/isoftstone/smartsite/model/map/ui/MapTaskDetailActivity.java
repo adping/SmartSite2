@@ -501,7 +501,13 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
                 tv_time.setText(bean.getExecutionTime());
             }
             tv_person.setText(bean.getUser().name);
-            tv_address.setText(bean.getUser().address);
+            try{
+                String id = bean.getUser().getDepartmentId();
+                tv_address.setText(httpPost.getCompanyNameByid(Integer.parseInt(id)));
+            }catch (Exception e){
+                tv_address.setText("未获取到部门信息");
+            }
+
             if(currentClickMarker != null){
                 currentClickMarker.setVisible(false);
             }
