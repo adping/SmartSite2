@@ -104,6 +104,8 @@ public class PMHistoryInfoActivity extends BaseActivity {
         mJiangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mCurPageNum = 0;
+                list.clear();
                 mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
             }
 
@@ -205,10 +207,6 @@ public class PMHistoryInfoActivity extends BaseActivity {
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
     private void setmListViewData(){
-
-        if(list != null && list.size() > 0){
-
-        }
         ArrayList<DataQueryVoBean> contest = mDataQueryVoBeanPage.getContent();
         if(contest != null){
             for (int i = 0 ; i < contest.size(); i ++){

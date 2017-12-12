@@ -71,8 +71,8 @@ public class InstantMessageAdapter extends BaseAdapter {
         holder.info.setText(messageBean.getContent());
         holder.map.setText(messageBean.getTitle());
         int length = messageBean.getUpdateTime().length();
-        if(length > 5){
-            holder.time.setText(messageBean.getUpdateTime().substring(length-5));
+        if(length > 16){
+            holder.time.setText(messageBean.getUpdateTime().substring(5,16));
         }else {
             holder.time.setText(messageBean.getUpdateTime());
         }

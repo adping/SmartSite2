@@ -71,7 +71,7 @@ public class PMDataInfoActivity extends BaseActivity {
     private TextView text_precipitation ;
 
     private Spinner shujuSpinner = null;
-    private String[] name = {"PM2.5","PM10","co2"};
+    private String[] name = {"PM2.5","PM10","CO2"};
     private String begintime = "";
     private int position;
     private ArrayList<DataQueryVoBean> mData  = null;
