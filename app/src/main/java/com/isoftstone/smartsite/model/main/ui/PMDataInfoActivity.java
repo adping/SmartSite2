@@ -83,6 +83,8 @@ public class PMDataInfoActivity extends BaseActivity {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        init();
+
         DataQueryVoBean dataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
         position = getIntent().getIntExtra("position",0);
         devicesCode = getIntent().getStringExtra("devicesCode");
@@ -96,16 +98,20 @@ public class PMDataInfoActivity extends BaseActivity {
             address = getIntent().getStringExtra("address");
             begintime = "";
         }
-        init();
+
         setOnCliceked();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+        if(dataQueryVoBean == null){
+            toolbar_title.setText("实时数据");
+        }else {
+            toolbar_title.setText("历史数据详情");
+        }
     }
 
     private void init(){
         mImageView_back = (ImageButton)findViewById(R.id.btn_back);
         mImageView_icon = (ImageButton)findViewById(R.id.btn_icon);
         toolbar_title = (TextView) findViewById(R.id.toolbar_title);
-        toolbar_title.setText("实时数据");
         mImageView_icon.setVisibility(View.INVISIBLE);
         mImageView_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +215,7 @@ public class PMDataInfoActivity extends BaseActivity {
         if(begintime.equals("")){
             list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","0","","");
         }else{
-            list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","4",begintime,"");
+            list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","0",begintime,"");
         }
 
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
