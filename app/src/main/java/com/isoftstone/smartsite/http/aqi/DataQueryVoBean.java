@@ -34,7 +34,7 @@ public class DataQueryVoBean implements Serializable{
     private Double co2;//	Double 	二氧化碳
     private Double radiation;//	Double 	有效辐射
     private Double surfaceTemperature;//	Double 	表面温度
-    private Double pm10;//	Double 	PM10
+    private Double pm1_0;//	Double 	PM10
     private Double aqiAchieveDays;//	Double	AQI达标天数
     private Double aqiVaildDays;//	Double 	AQI有效天数
     private Double aqiAchieveRate;//	Double 	AQI达标率
@@ -234,11 +234,11 @@ public class DataQueryVoBean implements Serializable{
     }
 
     public Double getPm10() {
-        return pm10;
+        return pm1_0;
     }
 
     public void setPm10(Double pm10) {
-        this.pm10 = pm10;
+        this.pm1_0 = pm10;
     }
 
     public Double getAqiAchieveDays() {
@@ -300,7 +300,7 @@ public class DataQueryVoBean implements Serializable{
                 ", co2=" + co2 +
                 ", radiation=" + radiation +
                 ", surfaceTemperature=" + surfaceTemperature +
-                ", pm10=" + pm10 +
+                ", pm10=" + pm1_0 +
                 ", aqiAchieveDays=" + aqiAchieveDays +
                 ", aqiVaildDays=" + aqiVaildDays +
                 ", aqiAchieveRate=" + aqiAchieveRate +

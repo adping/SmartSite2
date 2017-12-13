@@ -75,6 +75,7 @@ public class PMDataInfoActivity extends BaseActivity {
     private String begintime = "";
     private int position;
     private ArrayList<DataQueryVoBean> mData  = null;
+    private DataQueryVoBean mDataQueryVoBean;
     private String devicesCode;
     @Override
     protected int getLayoutRes() {
@@ -85,14 +86,14 @@ public class PMDataInfoActivity extends BaseActivity {
     protected void afterCreated(Bundle savedInstanceState) {
         init();
 
-        DataQueryVoBean dataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
+        mDataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
         position = getIntent().getIntExtra("position",0);
         devicesCode = getIntent().getStringExtra("devicesCode");
         mData = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
-        if(dataQueryVoBean != null){
-            devicesId = dataQueryVoBean.getDeviceId();
-            address = dataQueryVoBean.getDeviceName();
-            begintime = dataQueryVoBean.getPushTime();
+        if(mDataQueryVoBean != null){
+            devicesId = mDataQueryVoBean.getDeviceId();
+            address = mDataQueryVoBean.getDeviceName();
+            begintime = mDataQueryVoBean.getPushTime();
         }else{
             devicesId = getIntent().getIntExtra("id",0);
             address = getIntent().getStringExtra("address");
@@ -100,11 +101,21 @@ public class PMDataInfoActivity extends BaseActivity {
         }
 
         setOnCliceked();
-        mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
-        if(dataQueryVoBean == null){
+
+        if(mDataQueryVoBean == null){
             toolbar_title.setText("实时数据");
         }else {
             toolbar_title.setText("历史数据详情");
+        }
+        if(devicesCode != null){
+            mDevicesName.setText(devicesCode);
+        }
+
+        if(mDataQueryVoBean == null){
+            mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+        }else {
+            setData();
+            mHandler.sendEmptyMessage(HANDLER_GET_24DATA_START);
         }
     }
 
@@ -125,12 +136,8 @@ public class PMDataInfoActivity extends BaseActivity {
 
             }
         });
-
-
         mLineChart = (LineChart)findViewById(R.id.chart3);
-
         mDevicesName = (TextView)findViewById(R.id.textView1);
-        mDevicesName.setText(devicesCode);
         mMap = (TextView)findViewById(R.id.textView4);
 
         text_pm10 = (TextView)findViewById(R.id.text_pm10);
@@ -256,14 +263,19 @@ public class PMDataInfoActivity extends BaseActivity {
         if(address != null){
             mMap.setText(address);
         }
-        if(list == null || list.size() <= 0){
-            return;
+
+        DataQueryVoBean dataQueryVoBean =null;
+        if(mDataQueryVoBean != null){
+            dataQueryVoBean = mDataQueryVoBean;
+        }else{
+            if(list == null || list.size() <= 0){
+                return;
+            }
+            dataQueryVoBean = list.get(0);
         }
-        DataQueryVoBean dataQueryVoBean = list.get(0);
         if(dataQueryVoBean == null){
             return;
         }
-
         text_pm10.setText("PM10:"+doubleToString(dataQueryVoBean.getPm10()));
         text_pm25.setText("PM2.5:"+doubleToString(dataQueryVoBean.getPm2_5()));
         text_so2.setText("O2:");

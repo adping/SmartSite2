@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:textSize="12dp"
             android:textColor="@color/main_text_color"
+            android:visibility="gone"
             android:layout_marginLeft="8dp"/>
     </LinearLayout>
 </LinearLayout>

@@ -125,6 +125,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
                     intent.putExtra("devicesbean",list.get(posit-1));
                     intent.putExtra("devices",mData);
                     intent.putExtra("position",position);
+                    intent.putExtra("devicesCode",devicesCode);
                     getApplicationContext().startActivity(intent);
                 }
             }
