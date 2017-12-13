@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
+import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
 
 import java.util.ArrayList;
@@ -120,6 +121,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 case WORK_HAS_DONE:
                     Bundle bundle = new Bundle();
                     bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
+                    LogUtils.e(TAG,"zw taskId1 : " + selectPatrolTaskBean.getTaskId());
                     openActivity(ConstructionMontitoringMapActivity.class, bundle);
                     break;
                 default:

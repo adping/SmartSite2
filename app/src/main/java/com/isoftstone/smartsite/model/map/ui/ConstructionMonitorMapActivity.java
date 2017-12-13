@@ -66,7 +66,6 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
     private AMap aMap;
     private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
     private TextView tv_person;
-    private ImageView iv_status;
     private TextView tv_company;
     private PopupWindow mPopWindow;
 
@@ -219,7 +218,6 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
         tv_no_task = (TextView) popRootView.findViewById(R.id.tv_no_task);
         popRootView.findViewById(R.id.iv_dismiss).setOnClickListener(this);
         tv_person = (TextView) popRootView.findViewById(R.id.tv_person);
-        iv_status = (ImageView) popRootView.findViewById(R.id.iv_status);
         tv_company = (TextView) popRootView.findViewById(R.id.tv_company);
         lv = (ListView) popRootView.findViewById(R.id.lv);
         lv.setDivider(new ColorDrawable(Color.parseColor("#eeeeee")));
@@ -230,6 +228,7 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 UserTrackBean bean = userTrackBeans.get(position);
+                LogUtils.e(TAG,bean.toString());
                 Intent intent = new Intent(ConstructionMonitorMapActivity.this,MapTaskDetailActivity.class);
                 intent.putExtra("data",bean);
                 startActivity(intent);
@@ -342,7 +341,12 @@ public class ConstructionMonitorMapActivity extends BaseActivity implements View
             UserTrackBean bean = (UserTrackBean) marker.getObject();
             PatrolTaskBean taskBean = bean.getPatrolTask();
             tv_person.setText(bean.getUser().name);
-            tv_company.setText(bean.getUser().address);
+            try{
+                String id = bean.getUser().getDepartmentId();
+                tv_company.setText(httpPost.getCompanyNameByid(Integer.parseInt(id)));
+            } catch (Exception e){
+                tv_company.setText("未获取到部门信息");
+            }
             currentPatrolPositionBeans = bean.getPatrolTask().getPatrolPositions();
             if(taskBean == null ){
                 lv.setVisibility(View.INVISIBLE);

@@ -335,7 +335,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void run() {
                 patrolTaskBean= httpPost.patrolTaskFindOne(taskId);
-
+                LogUtils.e(TAG,"haha : " + patrolTaskBean.toString());
                 if(patrolTaskBean != null){
                     userBeans = patrolTaskBean.getUsers();
                     patrolPositionBeans = patrolTaskBean.getPatrolPositions();
@@ -360,6 +360,7 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
         if(currentUserBean == null) return;
 
         final UserTrackBean bean = new UserTrackBean();
+        LogUtils.e(TAG,"userTrackBean.getTaskId() : " + userTrackBean.getTaskId());
         bean.setTaskId(userTrackBean.getTaskId());
         long userId = currentUserBean.getId();
         int intUserId = (int) userId;

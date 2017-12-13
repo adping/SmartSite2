@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -54,6 +55,15 @@ public class MapTaskAdapter extends BaseAdapter{
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_task_item,parent,false);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.tv_task_name);
+        ImageView iv = (ImageView) convertView.findViewById(R.id.iv_status);
+        int status = beans.get(position).getTaskStatus();
+        if(status == 0){
+            iv.setImageResource(R.drawable.daizhixing);
+        } else if(status == 1){
+            iv.setImageResource(R.drawable.zhixingzhong);
+        } else {
+            iv.setImageResource(R.drawable.yiwancheng);
+        }
         tv.setText(beans.get(position).getTaskName());
 
         return convertView;
