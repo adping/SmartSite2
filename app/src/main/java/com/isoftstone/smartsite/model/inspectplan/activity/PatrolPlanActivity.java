@@ -498,12 +498,10 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        if(selectindex == -1){
-            mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
-        }else {
-            mHandler.sendEmptyMessage(HANDLER_GET_DAY_START);
-        }
-
+        selectindex = -1;
+        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+        taskTimeStart = today.plusDays(0).toString(); //开始时间
+        taskTimeEnd = today.plusDays(6).toString();   //结束时间
     }
 
     @Override

@@ -79,12 +79,18 @@ public class InstantMessageAdapter extends BaseAdapter {
 
         MessageBean.InfoType  infoType =  messageBean.getInfoType();
         if (infoType != null) {
-            if(infoType.getInfoTypeCode().startsWith("1")){
+            if(infoType.getInfoTypeParentCode().startsWith("1")){
                 holder.type.setBackground(mContext.getDrawable(R.drawable.main_huanjing_icon));
-            }else if(infoType.getInfoTypeCode().startsWith("2")){
+            }else if(infoType.getInfoTypeParentCode().startsWith("2")){
                 holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
-            }else if(infoType.getInfoTypeCode().startsWith("3")){
+            }else if(infoType.getInfoTypeParentCode().startsWith("3")){
                 holder.type.setBackground(mContext.getDrawable(R.drawable.thirdmessage));
+            }else if(infoType.getInfoTypeParentCode().startsWith("4")){
+                holder.type.setBackground(mContext.getDrawable(R.drawable.main_zatuche_icon));
+            }else if(infoType.getInfoTypeParentCode().startsWith("7")){
+                holder.type.setBackground(mContext.getDrawable(R.drawable.main_renwu_icon));
+            }else if(infoType.getInfoTypeParentCode().startsWith("110")){
+                holder.type.setBackground(mContext.getDrawable(R.drawable.main_jihua_icon));
             }
         } else {
             //throw an exception....

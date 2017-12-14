@@ -40,6 +40,7 @@ public class ReportOperation {
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
+                .add("sort","desc")
                 .add("status", "" + status)
                 .add("size", "" + pageableBean.getSize())
                 .add("page", "" + pageableBean.getPage())
