@@ -72,7 +72,7 @@ public class ReadReportFrag extends BaseFragment {
                 mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
 
                 String developmentcompany = mData.getDevelopmentCompany();
-                if (TextUtils.isEmpty(developmentcompany) && AddReportActivity.IS_COMPANY_SWITCH) {
+                if (TextUtils.isEmpty(developmentcompany)) {
                     View v = getActivity().findViewById(R.id.linear_build_company);
                     v.setVisibility(View.GONE);
                 } else {
@@ -80,7 +80,7 @@ public class ReadReportFrag extends BaseFragment {
                 }
 
                 String cosCompany = mData.getConstructionCompany();
-                if (TextUtils.isEmpty(cosCompany) && AddReportActivity.IS_COMPANY_SWITCH) {
+                if (TextUtils.isEmpty(cosCompany)) {
                     View v = getActivity().findViewById(R.id.linear_cos_company);
                     v.setVisibility(View.GONE);
                 } else {
@@ -88,7 +88,7 @@ public class ReadReportFrag extends BaseFragment {
                 }
 
                 String supCompany = mData.getSupervisionCompany();
-                if (TextUtils.isEmpty(supCompany) && AddReportActivity.IS_COMPANY_SWITCH) {
+                if (TextUtils.isEmpty(supCompany)) {
                     View v = getActivity().findViewById(R.id.linear_super_company);
                     v.setVisibility(View.GONE);
                 } else {

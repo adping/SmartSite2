@@ -245,12 +245,6 @@
         <activity android:name=".model.message.ui.EnvironActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.message.ui.TripartiteMsgActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"></activity>
-        <activity android:name=".model.message.ui.UnReadMsgActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.activity.AddReportActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
