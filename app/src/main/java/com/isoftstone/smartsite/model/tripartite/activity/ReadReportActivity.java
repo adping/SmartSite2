@@ -56,15 +56,16 @@ public class ReadReportActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             mData = mHttpPost.getPatrolReport(mId + ""); //TODO
+            Log.e(TAG,"yanlog mData:"+mData);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.e(TAG,"yanlog post delay");
             mReadReportFrag.notifyDataChanged();
             mViewReplyReportFrag.notifyDataSetChanged();
-            Log.e(TAG,"yanlog post delay");
             final LinearLayout linear = (LinearLayout) findViewById(R.id.linear_frag_group);
             mHandler.postDelayed(new Runnable() {
                 @Override

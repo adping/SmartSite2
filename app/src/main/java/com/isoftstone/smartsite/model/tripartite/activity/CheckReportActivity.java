@@ -7,6 +7,7 @@ package com.isoftstone.smartsite.model.tripartite.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
@@ -55,13 +56,15 @@ public class CheckReportActivity extends BaseActivity {
     private class QueryBaseData extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            mData = mHttpPost.getPatrolReport(mId+""); //TODO
+            mData = mHttpPost.getPatrolReport(mId+"");
+            Log.e(TAG,"yanlog mData:"+mData);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.e(TAG,"yanlog notifyData changed");
             mReadReportFrag.notifyDataChanged();
             mViewReplyReportFrag.notifyDataSetChanged();
             mCheckFrag.notifyDataSetChanged();

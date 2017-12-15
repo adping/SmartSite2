@@ -110,6 +110,7 @@ public class ReadReportFrag extends BaseFragment {
 
     public void notifyDataChanged() {
         mData = mActivity.getReportData();
+        Log.e(TAG,"yanlog mData:"+mData);
         initViewData();
         new QueryReportTypeTask().execute();
     }

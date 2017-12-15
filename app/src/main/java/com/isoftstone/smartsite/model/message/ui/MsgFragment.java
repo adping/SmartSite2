@@ -15,6 +15,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
+import com.isoftstone.smartsite.model.message.MessageUtils;
 
 import java.util.ArrayList;
 
@@ -72,7 +73,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_ENVIRON);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_ENVIRON);
                 mActivity.startActivity(i);
             }
         });
@@ -83,7 +84,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_VEDIO);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_VEDIO);
                 mActivity.startActivity(i);
             }
         });
@@ -94,7 +95,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_THREE_PARTY);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_THREE_PARTY);
                 mActivity.startActivity(i);
             }
         });
@@ -105,7 +106,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_DIRTCAR);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_DIRTCAR);
                 mActivity.startActivity(i);
             }
         });
@@ -116,7 +117,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_TASK);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_TASK);
                 mActivity.startActivity(i);
             }
         });
@@ -127,7 +128,7 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MyReceiver.SEARCH_CODE_PLAN);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_PLAN);
                 mActivity.startActivity(i);
             }
         });

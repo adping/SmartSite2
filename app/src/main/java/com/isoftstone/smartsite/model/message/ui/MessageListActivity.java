@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.isoftstone.smartsite.http.message.MessageBeanPage;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
+import com.isoftstone.smartsite.model.message.MessageUtils;
 import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
 import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
@@ -38,11 +41,12 @@ public class MessageListActivity extends BaseActivity {
     private Activity mActivity = null;
     private PullToRefreshListView mListView = null;
     private ArrayList<MsgData> mDatas = new ArrayList<>();
+    private ArrayList<MessageBean> mDataBeans = new ArrayList<>();
 
     private HttpPost mHttpPost = null;
     private BaseAdapter mAdapter = null;
 
-    private String mQueryMsgType = MyReceiver.SEARCH_CODE_ENVIRON;
+    private String mQueryMsgType = MessageUtils.SEARCH_CODE_ENVIRON;
     //分页开始
     private int mCurPageNum = -1;
     public boolean isLoading = false;
@@ -95,22 +99,28 @@ public class MessageListActivity extends BaseActivity {
         mListView.setOnRefreshListener(listener);
         mAdapter = new MsgListAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MessageUtils.enterActivity(MessageListActivity.this,mDataBeans.get(position));
+            }
+        });
         new QueryMsgTask(true).execute();
     }
 
     private void initTitleName() {
         TextView title = (TextView) findViewById(R.id.lab_title_name);
-        if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_ENVIRON)) {
+        if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_ENVIRON)) {
             title.setText("环境监控消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_VEDIO)) {
+        } else if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_VEDIO)) {
             title.setText("视频监控消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_THREE_PARTY)) {
+        } else if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_THREE_PARTY)) {
             title.setText("三方协同消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_DIRTCAR)) {
+        } else if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_DIRTCAR)) {
             title.setText("渣土车监控消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_TASK)) {
+        } else if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_TASK)) {
             title.setText("巡查任务消息");
-        } else if (mQueryMsgType.equals(MyReceiver.SEARCH_CODE_PLAN)) {
+        } else if (mQueryMsgType.equals(MessageUtils.SEARCH_CODE_PLAN)) {
             title.setText("巡查计划消息");
         }
     }
@@ -160,11 +170,13 @@ public class MessageListActivity extends BaseActivity {
                     ArrayList<MsgData> temp = MsgUtils.toMsgData(msgs);
                     if (mIsReLoad) {
                         mDatas.clear();
+                        mDataBeans.clear();
                     }
                     if (msgs != null && msgs.size() > 0) {
                         mCurPageNum++;
                     }
                     mDatas.addAll(temp);
+                    mDataBeans.addAll(msgs);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

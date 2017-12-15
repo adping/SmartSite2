@@ -6,14 +6,14 @@ package com.isoftstone.smartsite.http.message;
 
 public class MessageBean {
 
-    private  String infoId;
-    private  String title;
-    private  String content ;
-    private  String turnTo;
-    private  int status;
-    private  String updateTime;
-    private  String userId;
-    private  InfoType infoType;
+    private String infoId;
+    private String title;
+    private String content;
+    private String turnTo;
+    private int status;
+    private String updateTime;
+    private String userId;
+    private InfoType infoType;
 
     public String getInfoId() {
         return infoId;
@@ -79,7 +79,7 @@ public class MessageBean {
         this.infoType = infoType;
     }
 
-    public static  class  InfoType{
+    public static class InfoType {
         private String infoTypeId;
         private String infoTypeName;
         private String infoTypeCode;
@@ -161,5 +161,16 @@ public class MessageBean {
         public void setThresholdSet(String thresholdSet) {
             this.thresholdSet = thresholdSet;
         }
+
+        @Override
+        public String toString() {
+            return "infoTypeId:" + infoTypeId + " infoTypeName:" + infoTypeName + " infoTypeCode:" + infoTypeCode + " level:" + level + " hasChild:" + hasChild +
+                    " infoTypeParentCode:" + infoTypeParentCode + " searchCode:" + searchCode + " filterTime:" + filterTime + " thresholdSet" + thresholdSet;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "infoId:" + infoId + " title:" + title + " content:" + content + " turnTo:" + turnTo + " status:" + status + " updateTime:" + updateTime + " userId:" + userId + " infoType:" + infoType;
     }
 }
