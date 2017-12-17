@@ -89,8 +89,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		}
 		mHttpPost = new HttpPost();
 		HttpPost.mLoginBean = null;
-		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
-		Test.otTest(mJpushId);
+		//mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
+		//Test.otTest(mJpushId);
 	}
 
 
@@ -256,7 +256,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 					new Thread(){
 						@Override
 						public void run() {
-							loggin(mIdString,mPwdString,mJpushId);
+							loggin(mIdString,mPwdString);
 							if(isLogin_1){
 								//logginVideo();
 								/**Intent intent = new Intent();
@@ -294,10 +294,18 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 		}
 	};
-	private void loggin(String mIdString,String mPwdString,String jpushId){
+	private void loggin(String mIdString,String mPwdString){
+		     mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
+		     if(mJpushId == null || mJpushId.equals("")){
+				 mLoginResult = "登录失败";
+				 isLogin_1 = false;
+				 mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+				 mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+				 return;
+			 }
 		     // 启动登录
 			 LoginBean loginBean = null;
-			 loginBean = mHttpPost.login(mIdString,mPwdString,jpushId);
+			 loginBean = mHttpPost.login(mIdString,mPwdString,mJpushId);
 			if(loginBean.isLoginSuccess()){
 				UserBean userBean = mHttpPost.getLoginUser();
 				HttpPost.mLoginBean.setmUserBean(userBean);

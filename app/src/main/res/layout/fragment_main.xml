@@ -416,8 +416,8 @@
 
     <!-- 视频播放   环境监控   三方系统按钮 -->
     <LinearLayout
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_height="96dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal">
@@ -432,10 +432,11 @@
 
             <ImageButton
                 android:id="@+id/button_1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/shipinjiankong"
                 android:onClick="onClicked"/>
         </LinearLayout>
 
@@ -449,6 +450,8 @@
 
             <ImageButton
                 android:id="@+id/button_2"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -466,6 +469,8 @@
 
             <ImageButton
                 android:id="@+id/button_3"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -482,6 +487,8 @@
 
             <ImageButton
                 android:id="@+id/button_4"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -491,8 +498,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_height="96dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal">
@@ -507,6 +514,8 @@
 
             <ImageButton
                 android:id="@+id/button_5"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -523,6 +532,8 @@
 
             <ImageButton
                 android:id="@+id/button_6"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -539,6 +550,8 @@
 
             <ImageButton
                 android:id="@+id/button_7"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -556,6 +569,8 @@
 
             <ImageButton
                 android:id="@+id/button_8"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"

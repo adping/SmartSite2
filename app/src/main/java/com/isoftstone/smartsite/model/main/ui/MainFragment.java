@@ -33,6 +33,8 @@ import com.isoftstone.smartsite.utils.NetworkUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.utils.Utils;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by zw on 2017/10/11.
@@ -59,11 +61,14 @@ public class MainFragment extends BaseFragment {
     private TextView lab_vcr_unread_num = null;//视频监控设备数
     private TextView lab_air_unread_num = null;//环境监控数目
     private HttpPost mHttpPost = new HttpPost();
-    private View mVideoMonitoring = null; //视频监控
-    private View mAirMonitoring = null;                //环境监测
-    private View mThirdPartReport = null;             //三方协同按钮
-    private View mInspectPlan = null;             //巡查计划
-    private View mDircar = null;//渣土车监控
+    private View mImageButton_1 = null;
+    private View mImageButton_2 = null;
+    private View mImageButton_3 = null;
+    private View mImageButton_4 = null;
+    private View mImageButton_5 = null;
+    private View mImageButton_6 = null;
+    private View mImageButton_7 = null;
+    private View mImageButton_8 = null;
 
     private LinearLayout mVideoMonitoringMsg = null;    //视频监控设备
     private LinearLayout mAirMonitoringMsg = null;      //环境监控设备
@@ -81,7 +86,6 @@ public class MainFragment extends BaseFragment {
     public static final int HANDLER_GET_HOME_DATA_START = 1;
     public static final int HANDLER_GET_HOME_DATA_END = 2;
     private MobileHomeBean mMobileHomeBean = null;
-    private View mConstructionMonitor;
 
     /* 查询请求识别码 登陆成功*/
     private static final int LOGIN_RESULTS_SUCCESSFUL_CODE = 1;
@@ -91,6 +95,8 @@ public class MainFragment extends BaseFragment {
     private static final int LOGIN_RESULTS_EXCEPTION_CODE = 3;
     private int mLoginResultCode = 0;
 
+    ArrayList<View> mViewsList = new ArrayList<>();
+
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_main;
@@ -99,6 +105,7 @@ public class MainFragment extends BaseFragment {
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
+        permissionCheck();
     }
 
     private void initView() {
@@ -147,71 +154,34 @@ public class MainFragment extends BaseFragment {
         mAirMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterAirMonitoringMsg();
+                enterAirMonitoringMsg(getActivity());
             }
         });
-        //视频监控
-        mVideoMonitoring = rootView.findViewById(R.id.button_1);
-        mVideoMonitoring.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterVideoMonitoring(getActivity());
-            }
-        });
-        //环境监控
-        mAirMonitoring = rootView.findViewById(R.id.button_2);
-        mAirMonitoring.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterAirMonitoring();
-            }
-        });
-        //三方协同
-        mThirdPartReport = rootView.findViewById(R.id.button_3);
-        mThirdPartReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterThirdPartReport(getActivity());
-            }
-        });
-        // 渣土车监控
-        mDircar = rootView.findViewById(R.id.button_4);
-        mDircar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterDircar(getActivity());
-            }
-        });
-        //巡查概况
-        rootView.findViewById(R.id.button_5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterPatrolSurvey();
-            }
-        });
-        //巡查计划
-        mInspectPlan = rootView.findViewById(R.id.button_6);
-        mInspectPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterInspectPlan();
-            }
-        });
-        //巡查任务
-        rootView.findViewById(R.id.button_7).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterPatrolMission(getActivity());
-            }
-        });
-        //巡查监控
-        mConstructionMonitor = rootView.findViewById(R.id.button_8);
-        mConstructionMonitor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterConstructionMonitor(getActivity());
-            }
-        });
+
+        mImageButton_1 = rootView.findViewById(R.id.button_1);
+        mImageButton_1.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_1);
+        mImageButton_2 = rootView.findViewById(R.id.button_2);
+        mImageButton_2.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_2);
+        mImageButton_3 = rootView.findViewById(R.id.button_3);
+        mImageButton_3.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_3);
+        mImageButton_4 = rootView.findViewById(R.id.button_4);
+        mImageButton_4.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_4);
+        mImageButton_5 = rootView.findViewById(R.id.button_5);
+        mImageButton_5.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_5);
+        mImageButton_6 = rootView.findViewById(R.id.button_6);
+        mImageButton_6.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_6);
+        mImageButton_7 = rootView.findViewById(R.id.button_7);
+        mImageButton_7.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_7);
+        mImageButton_8 = rootView.findViewById(R.id.button_8);
+        mImageButton_8.setOnClickListener(viewOnClick);
+        mViewsList.add(mImageButton_8);
 
         mListView = (ListView) rootView.findViewById(R.id.list);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -228,7 +198,94 @@ public class MainFragment extends BaseFragment {
         fengxiang_textview = (TextView) rootView.findViewById(R.id.fengxiang_textview);
     }
 
+    private void permissionCheck(){
+        //配置权限
+        mVideoMonitoringMsg.setVisibility(View.VISIBLE);    //视频监控设备
+        mAirMonitoringMsg.setVisibility(View.VISIBLE);      //环境监控设备
+        mUntreatedReport.setVisibility(View.VISIBLE);       //待处理报告点击区域
+        mUnHandlerTask.setVisibility(View.VISIBLE);         //待处理任务点击
+        //配置权限
+        ArrayList<String> descriptionList = new ArrayList<String>();
+        descriptionList.add("enterVideoMonitoring");
+        descriptionList.add("enterAirMonitoring");
+        descriptionList.add("enterThirdPartReport");
+        descriptionList.add("enterDircar");
+        descriptionList.add("enterPatrolSurvey");
+        descriptionList.add("enterInspectPlan");
+        descriptionList.add("enterPatrolMission");
+        descriptionList.add("enterConstructionMonitor");
 
+        for (int i = 0 ; i < mViewsList.size() ; i ++){
+            mViewsList.get(i).setVisibility(View.GONE);
+        }
+        for (int i = 0 ; i < descriptionList.size() ; i ++){
+            String str = descriptionList.get(i);
+            if(str.equals("enterVideoMonitoring")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.shipinjiankong);
+                mViewsList.get(i).setContentDescription("enterVideoMonitoring");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterAirMonitoring")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.huanjingjiance);
+                mViewsList.get(i).setContentDescription("enterAirMonitoring");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterThirdPartReport")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.sanfangxietong);
+                mViewsList.get(i).setContentDescription("enterThirdPartReport");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterDircar")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.zhatuchejiankong);
+                mViewsList.get(i).setContentDescription("enterDircar");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterPatrolSurvey")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.xunchagaikuang);
+                mViewsList.get(i).setContentDescription("enterPatrolSurvey");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterInspectPlan")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.xunchajihua);
+                mViewsList.get(i).setContentDescription("enterInspectPlan");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterPatrolMission")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.xuncharenwu);
+                mViewsList.get(i).setContentDescription("enterPatrolMission");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+            if(str.equals("enterConstructionMonitor")){
+                mViewsList.get(i).setBackgroundResource(R.drawable.huanjingjiance);
+                mViewsList.get(i).setContentDescription("enterConstructionMonitor");
+                mViewsList.get(i).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    View.OnClickListener viewOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getContentDescription().equals("enterVideoMonitoring")){
+                enterVideoMonitoring(getActivity());
+            }else  if(v.getContentDescription().equals("enterAirMonitoring")){
+                enterAirMonitoring(getActivity());
+            }else  if(v.getContentDescription().equals("enterThirdPartReport")){
+                enterThirdPartReport(getActivity());
+            }else  if(v.getContentDescription().equals("enterDircar")){
+                enterDircar(getActivity());
+            }else  if(v.getContentDescription().equals("enterPatrolSurvey")){
+                enterPatrolSurvey(getActivity());
+            }else  if(v.getContentDescription().equals("enterInspectPlan")){
+                enterInspectPlan(getActivity());
+            }else  if(v.getContentDescription().equals("enterPatrolMission")){
+                enterPatrolMission(getActivity());
+            }else  if(v.getContentDescription().equals("enterConstructionMonitor")){
+                enterConstructionMonitor(getActivity());
+            }
+
+        }
+    };
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -341,14 +398,13 @@ public class MainFragment extends BaseFragment {
         ((MainActivity) getActivity()).setCurrentTab(2);
     }
 
-    private void enterAirMonitoringMsg() {
-        Intent intent = new Intent(getActivity(), PMDevicesListActivity.class);
-        getActivity().startActivity(intent);
+    private static void enterAirMonitoringMsg(Context context) {
+        Intent intent = new Intent(context, PMDevicesListActivity.class);
+        context.startActivity(intent);
     }
 
     public static void enterThirdPartReport(Context context) {
         //进入三方协同
-        /*((MainActivity)getActivity()).setCurrentTab(2);*/
         //yanyongjun 这个地方应该是进到三方协同界面，而不是到消息fragment页
         Intent intent = new Intent(context, TripartiteActivity.class);
         context.startActivity(intent);
@@ -384,18 +440,18 @@ public class MainFragment extends BaseFragment {
     /*
      进入巡查概况
      */
-    private void enterPatrolSurvey() {
-        Intent intent = new Intent(getActivity(), ConstructionSummaryActivity.class);
-        getActivity().startActivity(intent);
+    private static void enterPatrolSurvey(Context context) {
+        Intent intent = new Intent(context, ConstructionSummaryActivity.class);
+        context.startActivity(intent);
     }
 
-    private void enterAirMonitoring() {
+    private static void enterAirMonitoring(Context context) {
         //进入环境监控
-        Intent intent = new Intent(getActivity(), AirMonitoringActivity.class);
-        getActivity().startActivity(intent);
+        Intent intent = new Intent(context, AirMonitoringActivity.class);
+        context.startActivity(intent);
     }
 
-    private void enterInspectPlan() {
+    private static void enterInspectPlan(Context context) {
         //进入巡查计划
         boolean isHasPermission = false;
 
@@ -406,35 +462,32 @@ public class MainFragment extends BaseFragment {
         } catch (Exception e) {
 
             isHasPermission = false;
-            Log.i(TAG, "access permission exception : " + e.getMessage());
+            //Log.i(TAG, "access permission exception : " + e.getMessage());
 
         } finally {
 
             if (isHasPermission) {
                 //有审批计划权限
-                Intent intent = new Intent(getActivity(), ApprovalPendingInspectPlansActivity.class);
-                getActivity().startActivity(intent);
+                Intent intent = new Intent(context, ApprovalPendingInspectPlansActivity.class);
+                context.startActivity(intent);
             } else {
                 //没有审批计划权限
-                Intent intent = new Intent(getActivity(), PatrolPlanActivity.class);
-                getActivity().startActivity(intent);
+                Intent intent = new Intent(context, PatrolPlanActivity.class);
+                context.startActivity(intent);
             }
 
         }
-        //Intent intent = new Intent(getActivity(), SelectInspectorsActivity.class);
-        //getActivity().startActivity(intent);
     }
 
-    public static void enterPatrolMission(Context context) {
+    public  static void enterPatrolMission(Context context) {
         //进入巡查任务
         Intent intent = new Intent(context, PatroPlanDetailsActivity.class);
         context.startActivity(intent);
     }
 
-    public static void enterConstructionMonitor(Context context) {
+    public  static void enterConstructionMonitor(Context context) {
         //进入施工监控
         Intent intent = new Intent(context, ConstructionMonitorMapActivity.class);
-//        Intent intent = new Intent(getActivity(), MapSearchTaskPositionActivity.class);
         context.startActivity(intent);
     }
 
