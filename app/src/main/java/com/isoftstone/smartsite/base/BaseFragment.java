@@ -16,7 +16,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 
 public abstract class BaseFragment extends Fragment {
 
-    protected String TAG = this.getClass().getSimpleName();
+    protected  String TAG = this.getClass().getSimpleName();
 
     protected View rootView;
 

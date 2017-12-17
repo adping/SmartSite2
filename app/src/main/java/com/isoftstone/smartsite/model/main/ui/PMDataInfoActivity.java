@@ -376,9 +376,9 @@ public class PMDataInfoActivity extends BaseActivity {
             for (int i = 0; i < beforeMonthSize; i++) {
                 String value = "";
                 if(index == 0){
-                    value =list_24.get(i).getPm10().toString();
+                    value =list_24.get(i).getPm2_5().toString();
                 }else if(index == 1){
-                    value = list_24.get(i).getPm2_5().toString();
+                    value = list_24.get(i).getPm10().toString();
                 }else if(index == 2){
                     value =list_24.get(i).getCo2().toString();
                 }

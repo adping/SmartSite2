@@ -11,12 +11,11 @@
         android:visibility="gone"
         android:id="@+id/serch"/>
 
-    <ListView
+    <com.isoftstone.smartsite.common.widget.PullToRefreshListView
         android:id="@+id/list"
         android:divider="@color/app_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_margin="16dp"
         android:dividerHeight="10dp"/>
 

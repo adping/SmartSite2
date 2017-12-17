@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,8 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBeanPage;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.model.main.adapter.PMDevicesListAdapter;
 
 import java.util.ArrayList;
@@ -22,13 +27,15 @@ import java.util.ArrayList;
  * Created by gone on 2017/10/21.
  */
 
-public class PMDevicesListActivity extends Activity implements View.OnClickListener {
+public class PMDevicesListActivity extends BaseActivity {
 
-    private ListView mListView = null;
+    private PullToRefreshListView mListView = null;
+    private PMDevicesListAdapter adapter;
     public static  final  int HANDLER_GET_DATA_START = 1;
     public static  final  int HANDLER_GET_DATA_END = 2;
+    public static  final  int HANDLER_LOAD_MORE = 3;
     private HttpPost mHttpPost = new HttpPost();
-    private ArrayList<DataQueryVoBean> mList = null;
+    private ArrayList<DataQueryVoBean> mList = new ArrayList<DataQueryVoBean>();
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_serch = null;
@@ -39,12 +46,17 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
     private TextView mtitleTextView = null;
     private ImageButton search_btn_search = null;
     private EditText search_edit_text = null;
+    private DataQueryVoBeanPage mDataQueryVoBeanPage;
+    private int mCurrentPage = 0;
+    private int mFlag = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pmdeviceslist);
+    protected int getLayoutRes() {
+        return R.layout.activity_pmdeviceslist;
+    }
 
+    @Override
+    protected void afterCreated(Bundle savedInstanceState) {
         init();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
     }
@@ -61,19 +73,48 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
         search_edit_text = (EditText)findViewById(R.id.search_edit_text);
         mtitleTextView.setText("设备列表");
         mImageView_serch.setImageResource(R.drawable.search);
-        mImageView_back.setOnClickListener(this);
-        mImageView_serch.setOnClickListener(this);
-        mSearch_back.setOnClickListener(this);
-        mSearch_cancel.setOnClickListener(this);
-        search_btn_search.setOnClickListener(this);
+        mImageView_back.setOnClickListener(listener);
+        mImageView_serch.setOnClickListener(listener);
+        mSearch_back.setOnClickListener(listener);
+        mSearch_cancel.setOnClickListener(listener);
+        search_btn_search.setOnClickListener(listener);
 
 
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = (PullToRefreshListView)findViewById(R.id.listview);
+        adapter = new PMDevicesListAdapter(getBaseContext());
+        adapter.setData(mList);
+        mListView.setAdapter(adapter);
+        mListView.setOnRefreshListener(mOnRefreshListener);
 
         mImageView_serch.setVisibility(View.INVISIBLE);
     }
 
+    PullToRefreshListView.OnRefreshListener mOnRefreshListener = new PullToRefreshListView.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            //下拉刷新
+            if( mDataQueryVoBeanPage.isFirst()){
+                mCurrentPage = 0;
+                mFlag = 1;
+                mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+            }else{
+                mListView.onRefreshComplete();
+            }
+        }
 
+        @Override
+        public void onLoadMore() {
+            //上拉刷新
+            if(!mDataQueryVoBeanPage.isLast()){
+                mCurrentPage = mCurrentPage + 1;
+                mFlag = 2;
+                mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+            }else {
+                Log.e("testy","mListView.onLoadMoreComplete();");
+                mHandler.sendEmptyMessage(HANDLER_LOAD_MORE);
+            }
+        }
+    };
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -92,49 +133,69 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
                     setmListViewData();
                 }
                 break;
+                case HANDLER_LOAD_MORE:{
+                    mListView.onLoadMoreComplete();
+                }
+                break;
             }
         }
     };
 
     private  void getDevices(){
-//        mList = mHttpPost.getDevices("0","","","");
-        mList = mHttpPost.onePMDevicesDataList("","0","","");
+        PageableBean pageableBean = new PageableBean();
+        pageableBean.setPage(mCurrentPage+"");
+        mDataQueryVoBeanPage = mHttpPost.onePMDevicesDataListPage("","0","","",pageableBean);
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
 
     private void setmListViewData(){
-        PMDevicesListAdapter adapter = new PMDevicesListAdapter(getBaseContext());
-        adapter.setData(mList);
-        mListView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.btn_back:{
-                finish();
-            }
-                break;
-            case R.id.btn_icon:{
-                oneIconLayout.setVisibility(View.GONE);
-                searchLayout.setVisibility(View.VISIBLE);
-            }
-                break;
-            case R.id.search_btn_back:{
-                finish();
-            }
-                break;
-            case R.id.search_btn_icon_right:{
-                oneIconLayout.setVisibility(View.VISIBLE);
-                searchLayout.setVisibility(View.GONE);
-            }
-                break;
-            case R.id.search_btn_search:{
-                String serch = search_edit_text.getText().toString();
-                Toast.makeText(getBaseContext(),"搜索内容为:"+serch,2000).show();
-            }
-               break;
+        if(mFlag == 1){
+            mList.clear();
+            mListView.onRefreshComplete();
         }
+        if(mFlag == 2){
+            mListView.onLoadMoreComplete();
+        }
+        if(mDataQueryVoBeanPage != null){
+            ArrayList<DataQueryVoBean> list =mDataQueryVoBeanPage.getContent();
+            if(list != null){
+               for (int i = 0 ; i < list.size() ;i ++){
+                   mList.add(list.get(i));
+               }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
+    View.OnClickListener listener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId())
+            {
+                case R.id.btn_back:{
+                    finish();
+                }
+                break;
+                case R.id.btn_icon:{
+                    oneIconLayout.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                }
+                break;
+                case R.id.search_btn_back:{
+                    finish();
+                }
+                break;
+                case R.id.search_btn_icon_right:{
+                    oneIconLayout.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.GONE);
+                }
+                break;
+                case R.id.search_btn_search:{
+                    String serch = search_edit_text.getText().toString();
+                    Toast.makeText(getBaseContext(),"搜索内容为:"+serch,2000).show();
+                }
+                break;
+            }
+        }
+    };
 }

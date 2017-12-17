@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,8 +19,12 @@ import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
+import com.isoftstone.smartsite.http.aqi.DataQueryVoBean;
+import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.video.DevicesBeanPage;
 import com.isoftstone.smartsite.model.main.adapter.VideoMonitorAdapter;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
@@ -56,7 +61,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
     private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
     private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
 
-    private ListView mListView = null;
+    private PullToRefreshListView mListView = null;
     private Context mContext;
     private DevicesBean mDevicesBean;
 
@@ -72,7 +77,12 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
 
     private static final int  HANDLER_GETDIVICES_START = 1;
     private static  final int  HANDLER_GETDIVICES_END = 2;
-    private ArrayList<DevicesBean> list = null;
+    public static  final  int HANDLER_LOAD_MORE = 3;
+    private ArrayList<DevicesBean> list = new ArrayList<DevicesBean>();
+    private int mCurrentPage = 0;
+    private int mFlag = -1;
+    private DevicesBeanPage mDevicesBeanPage = null;
+    private VideoMonitorAdapter adapter;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -81,7 +91,9 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
-                            list =  mHttpPost.getDevices("1","","","");
+                            PageableBean pageableBean = new PageableBean();
+                            pageableBean.setPage(mCurrentPage+"");
+                            mDevicesBeanPage =  mHttpPost.getDevicesListPage("1","","","",pageableBean);
                             mHandler.sendEmptyMessage(HANDLER_GETDIVICES_END);
                         }
                     };
@@ -92,14 +104,31 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
                      setListViewData();
                 }
                 break;
+                case HANDLER_LOAD_MORE:{
+                    mListView.onLoadMoreComplete();
+                }
+                break;
             }
         }
     };
     private void setListViewData(){
         if( list!=null ){
-            VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
-            adapter.setData(list);
-            mListView.setAdapter(adapter);
+            if(mFlag == 1){
+                list.clear();
+                mListView.onRefreshComplete();
+            }
+            if(mFlag == 2){
+                mListView.onLoadMoreComplete();
+            }
+            if(mDevicesBeanPage != null){
+                ArrayList<DevicesBean> lt =mDevicesBeanPage.getContent();
+                if(lt != null){
+                    for (int i = 0 ; i < lt.size() ;i ++){
+                        list.add(lt.get(i));
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
             closeDlg();
         }
 
@@ -144,10 +173,39 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
         mSearch_cancel.setOnClickListener(this);
         search_btn_search.setOnClickListener(this);
 
-        mListView = (ListView) findViewById(R.id.list);
-
+        mListView = (PullToRefreshListView) findViewById(R.id.list);
+        mListView.setOnRefreshListener(mOnRefreshListener);
+        adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
+        adapter.setData(list);
+        mListView.setAdapter(adapter);
         mImageView_serch.setVisibility(View.INVISIBLE);
     }
+
+    PullToRefreshListView.OnRefreshListener mOnRefreshListener = new PullToRefreshListView.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            //下拉刷新
+            if( mDevicesBeanPage.isFirst()){
+                mCurrentPage = 0;
+                mFlag = 1;
+                mHandler.sendEmptyMessage(HANDLER_GETDIVICES_START);
+            }else{
+                mListView.onRefreshComplete();
+            }
+        }
+
+        @Override
+        public void onLoadMore() {
+            //上拉刷新
+            if(!mDevicesBeanPage.isLast()){
+                mCurrentPage = mCurrentPage + 1;
+                mFlag = 2;
+                mHandler.sendEmptyMessage(HANDLER_GETDIVICES_START);
+            }else {
+                mHandler.sendEmptyMessage(HANDLER_LOAD_MORE);
+            }
+        }
+    };
 
     @Override
     public void viewOnClickListener(DevicesBean devicesBean, int requestType) {
