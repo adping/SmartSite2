@@ -51,6 +51,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
     private PMHistoryinfoAdapter pmHistoryinfoAdapter = null;
     private DataQueryVoBeanPage mDataQueryVoBeanPage = null;
     private int mCurPageNum = 0;
+    private int mFlag = -1;
     private String devicesCode;
     @Override
     protected int getLayoutRes() {
@@ -104,6 +105,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
         mJiangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mFlag = -1;
                 mCurPageNum = 0;
                 list.clear();
                 mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
@@ -138,7 +140,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
         public void onRefresh() {
             if(mDataQueryVoBeanPage.isFirst()){
                 mCurPageNum = 0;
-                list.clear();
+                mFlag = 1;
                 mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
             }else {
                 mListView.onRefreshComplete();
@@ -149,6 +151,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
         public void onLoadMore() {
             if(!mDataQueryVoBeanPage.isLast()){
                 mCurPageNum = mCurPageNum + 1;
+                mFlag = 2;
                 mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
             }else{
                 mListView.onLoadMoreComplete();
@@ -192,8 +195,6 @@ public class PMHistoryInfoActivity extends BaseActivity {
                 break;
                 case  HANDLER_GET_DATA_END:{
                     setmListViewData();
-                    mListView.onRefreshComplete();
-                    mListView.onLoadMoreComplete();
                 }
                 break;
             }
@@ -208,6 +209,17 @@ public class PMHistoryInfoActivity extends BaseActivity {
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
     private void setmListViewData(){
+        if(mFlag == -1){
+            mListView.onRefreshComplete();
+            mListView.onLoadMoreComplete();
+        }
+        if(mFlag == 1){
+            list.clear();
+            mListView.onRefreshComplete();
+        }
+        if(mFlag == 2){
+            mListView.onLoadMoreComplete();
+        }
         ArrayList<DataQueryVoBean> contest = mDataQueryVoBeanPage.getContent();
         if(contest != null){
             for (int i = 0 ; i < contest.size(); i ++){

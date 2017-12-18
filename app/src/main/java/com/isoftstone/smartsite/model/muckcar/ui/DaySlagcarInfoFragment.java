@@ -403,7 +403,12 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             xAxis.enableGridDashedLine(10f, 10f, 0f);
             xAxis.setDrawGridLines(false);
             xAxis.setDrawAxisLine(false);
-            xAxis.setAxisMaximum(31);
+            if(mDayOrMonthFlag == 1){
+                xAxis.setAxisMaximum(31);
+            }else  if(mDayOrMonthFlag == 0){
+                xAxis.setAxisMaximum(23);
+            }
+
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
             YAxis leftAxis = liuliangduibi_linechart.getAxisLeft();
@@ -573,7 +578,11 @@ public class DaySlagcarInfoFragment extends BaseFragment {
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
-        xAxis.setAxisMaximum(31);
+        if(mDayOrMonthFlag == 1){
+            xAxis.setAxisMaximum(31);
+        }else  if(mDayOrMonthFlag == 0){
+            xAxis.setAxisMaximum(23);
+        }
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
 

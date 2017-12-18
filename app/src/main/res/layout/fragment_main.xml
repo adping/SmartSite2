@@ -454,8 +454,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/huanjingjiance" />
+                android:background="@null" />
 
         </LinearLayout>
 
@@ -473,8 +472,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/sanfangxietong" />
+                android:background="@null" />
         </LinearLayout>
 
         <LinearLayout
@@ -491,8 +489,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/zhatuchejiankong" />
+                android:background="@null" />
         </LinearLayout>
 
     </LinearLayout>
@@ -518,8 +515,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/xunchagaikuang" />
+                android:background="@null" />
         </LinearLayout>
 
         <LinearLayout
@@ -536,8 +532,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/xunchajihua" />
+                android:background="@null" />
         </LinearLayout>
 
         <LinearLayout
@@ -554,8 +549,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/xuncharenwu" />
+                android:background="@null" />
 
         </LinearLayout>
 
@@ -573,8 +567,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/xunchajiankong" />
+                android:background="@null" />
 
         </LinearLayout>
 

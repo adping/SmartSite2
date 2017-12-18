@@ -201,15 +201,33 @@ public class MainFragment extends BaseFragment {
     private void permissionCheck(){
         //配置权限
         mVideoMonitoringMsg.setVisibility(View.VISIBLE);    //视频监控设备
-        mAirMonitoringMsg.setVisibility(View.VISIBLE);      //环境监控设备
-        mUntreatedReport.setVisibility(View.VISIBLE);       //待处理报告点击区域
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW_DATAQUERY()){
+            mAirMonitoringMsg.setVisibility(View.VISIBLE);      //环境监控设备
+        }else{
+            mAirMonitoringMsg.setVisibility(View.GONE);      //环境监控设备
+        }
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()
+                || HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()){
+            mUntreatedReport.setVisibility(View.VISIBLE);       //待处理报告点击区域
+        }else {
+            mUntreatedReport.setVisibility(View.GONE);       //待处理报告点击区域
+        }
+
         mUnHandlerTask.setVisibility(View.VISIBLE);         //待处理任务点击
         //配置权限
         ArrayList<String> descriptionList = new ArrayList<String>();
         descriptionList.add("enterVideoMonitoring");
-        descriptionList.add("enterAirMonitoring");
-        descriptionList.add("enterThirdPartReport");
-        descriptionList.add("enterDircar");
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW_DATAQUERY()){
+            descriptionList.add("enterAirMonitoring");
+        }
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()
+                || HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
+            descriptionList.add("enterThirdPartReport");
+        }
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isMUCKCAR_MONITOR()
+                || HttpPost.mLoginBean.getmUserBean().getmPermission().isMUCKCAR_TRACK()) {
+            descriptionList.add("enterDircar");
+        }
         descriptionList.add("enterPatrolSurvey");
         descriptionList.add("enterInspectPlan");
         descriptionList.add("enterPatrolMission");
@@ -256,7 +274,7 @@ public class MainFragment extends BaseFragment {
                 mViewsList.get(i).setVisibility(View.VISIBLE);
             }
             if(str.equals("enterConstructionMonitor")){
-                mViewsList.get(i).setBackgroundResource(R.drawable.huanjingjiance);
+                mViewsList.get(i).setBackgroundResource(R.drawable.xunchajiankong);
                 mViewsList.get(i).setContentDescription("enterConstructionMonitor");
                 mViewsList.get(i).setVisibility(View.VISIBLE);
             }
