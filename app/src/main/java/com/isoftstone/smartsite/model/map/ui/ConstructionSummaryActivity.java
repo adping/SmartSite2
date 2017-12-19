@@ -785,8 +785,14 @@ public class ConstructionSummaryActivity extends BaseActivity implements View.On
             ArrayList<String> xVaulesName = new ArrayList<>();
             for (int i = 0; i < dataCount; i++) {
                 xValues.add((float) i);
-                xVaulesName.add(personRankList.get(i));
+                if(personRankList.size() >= 5){
+                    xVaulesName.add(personRankList.get(4 - i));
+                } else {
+                    xVaulesName.add(personRankList.get(personRankList.size() - 1 - i));
+                }
+
             }
+
             xAxis.setLabelCount(xValues.size() - 1,false);
             MyXFormatter xFormatter = new MyXFormatter(xVaulesName);
             xAxis.setValueFormatter(xFormatter);
