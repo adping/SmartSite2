@@ -82,6 +82,33 @@ public class UserBean implements Serializable{
         private boolean VS = false;
         private boolean M_CPPA = false;   //巡查计划审批
         private boolean M_CPP = false;    //巡查计划
+        private boolean M_CPT = false;    //巡查任务
+        private boolean M_CPINFO = false; //巡查概况
+        private boolean M_CPM = false;   //巡查监控
+
+        public boolean isM_CPM() {
+            return M_CPM;
+        }
+
+        public void setM_CPM(boolean m_CPM) {
+            M_CPM = m_CPM;
+        }
+
+        public boolean isM_CPINFO() {
+            return M_CPINFO;
+        }
+
+        public void setM_CPINFO(boolean m_CPINFO) {
+            M_CPINFO = m_CPINFO;
+        }
+
+        public boolean isM_CPT() {
+            return M_CPT;
+        }
+
+        public void setM_CPT(boolean m_CPT) {
+            M_CPT = m_CPT;
+        }
 
         public boolean isB_USER_ADD() {
             return B_USER_ADD;

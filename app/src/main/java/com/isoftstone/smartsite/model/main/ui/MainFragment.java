@@ -200,8 +200,12 @@ public class MainFragment extends BaseFragment {
 
     private void permissionCheck(){
         //配置权限
-        mVideoMonitoringMsg.setVisibility(View.VISIBLE);    //视频监控设备
-        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW_DATAQUERY()){
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isVS()){
+            mVideoMonitoringMsg.setVisibility(View.VISIBLE);    //视频监控设备
+        }else {
+            mVideoMonitoringMsg.setVisibility(View.GONE);    //视频监控设备
+        }
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW()){
             mAirMonitoringMsg.setVisibility(View.VISIBLE);      //环境监控设备
         }else{
             mAirMonitoringMsg.setVisibility(View.GONE);      //环境监控设备
@@ -212,26 +216,39 @@ public class MainFragment extends BaseFragment {
         }else {
             mUntreatedReport.setVisibility(View.GONE);       //待处理报告点击区域
         }
-
-        mUnHandlerTask.setVisibility(View.VISIBLE);         //待处理任务点击
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPT()){
+            mUnHandlerTask.setVisibility(View.VISIBLE);      //待处理任务点击
+        }else{
+            mUnHandlerTask.setVisibility(View.GONE);      //待处理任务点击
+        }
         //配置权限
         ArrayList<String> descriptionList = new ArrayList<String>();
-        descriptionList.add("enterVideoMonitoring");
-        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW_DATAQUERY()){
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isVS()) {
+            descriptionList.add("enterVideoMonitoring");
+        }
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isENVIRMENT_VIEW()){
             descriptionList.add("enterAirMonitoring");
         }
         if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()
                 || HttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
             descriptionList.add("enterThirdPartReport");
         }
-        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isMUCKCAR_MONITOR()
-                || HttpPost.mLoginBean.getmUserBean().getmPermission().isMUCKCAR_TRACK()) {
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isMUCKCAR_MONITOR()) {
             descriptionList.add("enterDircar");
         }
-        descriptionList.add("enterPatrolSurvey");
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPINFO()){
+            descriptionList.add("enterPatrolSurvey");
+        }
+
         descriptionList.add("enterInspectPlan");
-        descriptionList.add("enterPatrolMission");
-        descriptionList.add("enterConstructionMonitor");
+
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPT()) {
+            descriptionList.add("enterPatrolMission");
+        }
+
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPM()){
+            descriptionList.add("enterConstructionMonitor");
+        }
 
         for (int i = 0 ; i < mViewsList.size() ; i ++){
             mViewsList.get(i).setVisibility(View.GONE);
