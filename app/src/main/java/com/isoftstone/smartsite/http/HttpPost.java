@@ -76,7 +76,7 @@ public class HttpPost {
     public static final  int HTTP_LOGIN_TIME_OUT = 401;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient mClient = null;
-    //public static String URL = "http://111.47.21.51:19090";//生产
+//    public static String URL = "http://111.47.21.51:19090";//生产
     public static String URL = "http://61.160.82.83:19090/ctess";//龙云
 
     private String LOGIN_URL = URL + "/login";                        //登录

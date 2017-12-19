@@ -234,7 +234,9 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
 
     private void addGuiji(){
         addStartMarker();
-        addEndMarker();
+        if(mapMarkersVoBeans != null && mapMarkersVoBeans.size() > 1){
+            addEndMarker();
+        }
         addTrail();
     }
 
@@ -310,7 +312,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
 
         Marker marker = aMap.addMarker(markerOption);
         marker.setObject(bean);
-        startMarker.setAnchor(0.5f,1f);
+        startMarker.setAnchor(0.5f,0.5f);
         markerList.add(marker);
     }
 
