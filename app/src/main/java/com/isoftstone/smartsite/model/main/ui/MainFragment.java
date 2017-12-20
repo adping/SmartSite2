@@ -240,7 +240,10 @@ public class MainFragment extends BaseFragment {
             descriptionList.add("enterPatrolSurvey");
         }
 
-        descriptionList.add("enterInspectPlan");
+        if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPP()
+                ||HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPPA()){
+            descriptionList.add("enterInspectPlan");
+        }
 
         if(HttpPost.mLoginBean.getmUserBean().getmPermission().isM_CPT()) {
             descriptionList.add("enterPatrolMission");
