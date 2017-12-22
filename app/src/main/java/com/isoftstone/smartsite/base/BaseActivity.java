@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.common.AppManager;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
@@ -17,9 +18,9 @@ import com.isoftstone.smartsite.utils.StatusViewUtils;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected String TAG = this.getClass().getSimpleName();
-    private Dialog mLoginingDlg; // 显示正在登录的Dialog
     private TextView dlg_textview = null;
     public static final String DEFAULT_PAGE_SIZE = "20";
+    private LoadingDailog loadingDailog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         StatusViewUtils.initStatusBar(this);
 
-        initLoginingDlg();
 
         afterCreated(savedInstanceState);
 
@@ -71,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 点击返回按钮
      */
     public void onBackBtnClick(View v){
-        finish();;
+        finish();
     }
 
     /**
@@ -82,32 +82,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         return null;
     }
 
-    private void initLoginingDlg() {
-
-        mLoginingDlg = new Dialog(this, R.style.loginingDlg);
-        mLoginingDlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                return true;
-            }
-        });
-        mLoginingDlg.setContentView(R.layout.logining_dlg);
-        dlg_textview = (TextView) mLoginingDlg.findViewById(R.id.dlg_textview);
-        mLoginingDlg.setCanceledOnTouchOutside(false); // 设置点击Dialog外部任意区域关闭Dialog
-    }
 
     /* 显示正在登录对话框 */
     public void showDlg(String text) {
-        if (mLoginingDlg != null){
-            dlg_textview.setText(text);
-            mLoginingDlg.show();
+        if(loadingDailog == null){
+            loadingDailog = new LoadingDailog.Builder(this)
+                    .setMessage(text)
+                    .setCancelable(true)
+                    .setCancelOutside(false).create();
         }
+        loadingDailog.show();
     }
 
     /* 关闭正在登录对话框 */
     public void closeDlg() {
-        if (mLoginingDlg != null && mLoginingDlg.isShowing()){
-            mLoginingDlg.dismiss();
+        if (loadingDailog != null && loadingDailog.isShowing()){
+            loadingDailog.dismiss();
         }
     }
 }
