@@ -126,6 +126,34 @@ public class DateUtils {
         return position;
     }
 
+    public static int getProgress(String videoBeginDateTime, String videoEndDateTime, String crrentDateTime) {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long diffTime = 0L;
+        int position = 0;
+        try {
+            Date begin = dfs.parse(videoBeginDateTime);
+            Date end = dfs.parse(videoEndDateTime);
+            Date crrent = dfs.parse(crrentDateTime);
+
+            diffTime =  crrent.getTime() - begin.getTime();
+
+            float num= ((float)(diffTime) / (float)((end.getTime() - begin.getTime())));
+            DecimalFormat df = new DecimalFormat("0.00");//格式化小数，.后跟几个零代表几位小数
+            String positionStr = df.format(num);//返回的是String类型
+            //获取格式化对象
+            NumberFormat nt = NumberFormat.getPercentInstance();
+            //设置百分数精确度2即保留两位小数
+            nt.setMinimumFractionDigits(2);
+            //nt.format(Double.valueOf(positionStr));
+            Log.i("zzz", "&&&&& " + nt.format(Double.valueOf(positionStr)));
+            position = (int)(Double.valueOf(positionStr) * 100);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return position;
+    }
+
     public static String getProgressTime(String videoBeginDateTime, String videoEndDateTime, int seekBarProgress) {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String resultTime = videoBeginDateTime;

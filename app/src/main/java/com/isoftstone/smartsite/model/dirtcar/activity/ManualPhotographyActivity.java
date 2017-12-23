@@ -269,7 +269,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 			setListViewRefreshStatus(true);
 			if (isReLoading) {
-				showDlg("正在获取列表");
+				showDlg(getText(R.string.dialog_load_messgae).toString());
 			}
 		}
 		/**

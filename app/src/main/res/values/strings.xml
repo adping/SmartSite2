@@ -216,10 +216,15 @@
     <string name="network_can_not_be_used_toast">当前网络不可用，请检查您的网络设置。</string>
     <string name="init_video_service_dialog_title">视频服务组件检测</string>
     <string name="init_video_service_dialog_msg">检测到视频服务组件未完成初始化，视频服务相关组件初始化完成后，才能使用此功能。是否现在初始化视频服务组件？</string>
-    <string name="init_video_service_task_msg">正在初始化视频加载服务相关内容。</string>
+    <string name="init_video_service_task_msg">初始化中...</string>
     <string name="init_video_service_task_faided_msg">初始化视频加载服务相关内容失败，请稍后重试。</string>
     <string name="init_video_service_task_exception_msg">初始化视频加载服务相关内容出现异常，请稍后重试。</string>
     <string name="replay_video_error_for_no_list">此时间段不存在历史监控记录。</string>
+    <string name="video_definition_d1">高清</string>
+    <string name="video_definitdion_cif4">标清</string>
+    <string name="video_definition_cif">流畅</string>
+
+    <string name="dialog_load_messgae">加载中...</string>
     <!--           video end       -->
 
     <!--           insectplan begin       -->

@@ -37,6 +37,7 @@ import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnDragReplayListener;
+import com.uniview.airimos.listener.OnGetReplayPosListener;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnStartReplayListener;
 import com.uniview.airimos.listener.OnStopReplayListener;
@@ -78,9 +79,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private static final int SYSTEM_TIME_CHANED = 0x115;   //系统时间发生改变时
     private static final int START_REPLAY_VIDEO = 0x116;   //开始播放历史视频
     private static final int STOP_REPLAY_VIDEO = 0x117;    //停止播放视频
+    private static final int PAUSE_REPLAY_VIDEO = 0x118;    //暂停播放视频
+    private static final int RESTART_REPLAY_VIDEO = 0x119;    //继续播放视频
 
     private static final int PLAY = 0;
-    //private static final int PAUSE = 1;
+    private static final int PAUSE = 1;
     private static final int STOP = 2;
     private int mVideoState = STOP; //播放状态
 
@@ -88,6 +91,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private long mStartDateTime;
     private long mEndDateTime;
     private String mCurrentTime;
+    private int mCurrentProgress;
     private String mVideoBeginTime;
     private String mVideoEndTime;
 
@@ -120,6 +124,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private boolean isDraged = false;
     private String mDragTime;
     private boolean isStoped = false;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -228,6 +233,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 bundle.putInt("seekBarProgress", seekBar.getProgress());
                 message.setData(bundle);
                 message.what = SEEKBAR_TOUCHED;
+
+                if (mHandler.hasMessages(SEEKBAR_TOUCHED)) {
+                    mHandler.removeMessages(SEEKBAR_TOUCHED);
+                }
+
                 mHandler.sendMessage(message);
             }
         });
@@ -246,12 +256,25 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Message message = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putInt("seekBarProgress", seekBar.getProgress());
-                message.setData(bundle);
-                message.what = SEEKBAR_TOUCHED;
-                mHandler.sendMessage(message);
+                if (seekBar.getProgress() == 100) {
+                    isDraged = false;
+                    if (mHandler.hasMessages(STOP_REPLAY_VIDEO)) {
+                        mHandler.removeMessages(STOP_REPLAY_VIDEO);
+                    }
+                    mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
+                } else {
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("seekBarProgress", seekBar.getProgress());
+                    message.setData(bundle);
+                    message.what = SEEKBAR_TOUCHED;
+
+                    if (mHandler.hasMessages(SEEKBAR_TOUCHED)) {
+                        mHandler.removeMessages(SEEKBAR_TOUCHED);
+                    }
+
+                    mHandler.sendMessage(message);
+                }
             }
         });
 
@@ -267,6 +290,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         //if (null != mPlayer && mPlayer.AVIsPlaying()) {
                             //mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
                         //} else {
+                            if (mHandler.hasMessages(START_REPLAY_VIDEO)) {
+                                mHandler.hasMessages(START_REPLAY_VIDEO);
+                            }
                             mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
                         //}
                         break;
@@ -328,7 +354,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 p.setCameraCode(cameraCode);
                 p.setRecodeInfo(currentRecord);
                 p.setBitrate(64 * 8);  //64KB码率
-                p.setFramerate(15);     //15帧率
+                p.setFramerate(18);     //15帧率
                 p.setResolution(2);     //4CIF分辨率
 
 
@@ -360,6 +386,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         mSurfaceView.setOnTouchListener(null);
                         changeState(PLAY);
 
+                        mLandSeekBar.setProgress(0);
+                        mPortSeekBar.setProgress(0);
+                        isStoped = false;
+
                         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                             mPlaySeekbarPortLayout.setVisibility(View.GONE);
                         } else {
@@ -383,12 +413,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                                 return false;
                             }
                         });
-                        mLandSeekBar.setProgress(0);
-                        mPortSeekBar.setProgress(0);
-                        isStoped = false;
                     }
                 };
 
+
+                Log.i("zzz", "startReplay..........");
                 //启动回放
                 ServiceManager.startReplay(p, listener);
             }
@@ -450,6 +479,87 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         //mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
     }
 
+
+    public void  pauseReplay() {
+
+        //isStoped = true;
+
+        if(mPlayer != null && mPlayer.AVIsPlaying()) {
+            //停止播放解码
+            mPlayer.AVStopPlay();
+            mEndDateTime = getNowDateTime();
+            mStartPlayView.setEnabled(true);
+            mStartPlayView.setTextColor(getResources().getColor(R.color.mainColor));
+            mPortStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.litplay));
+            mLandStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.litplay));
+        }
+
+        changeState(STOP);
+        isDraged = false;
+        //mPortSeekBar.setEnabled(false);
+        //mLandSeekBar.setEnabled(false);
+        mPortSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        mLandSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        //mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
+    }
+
+    public void  reStartReplay() {
+        Log.i("zzz", "reStartReplay.....222.....");
+        if (mPlayer != null) {
+
+            mPlayer.AVStartPlay();
+
+            ServiceManager.dragReplay(mPlayer.getPlaySession(), mCurrentTime, new OnDragReplayListener() {
+                @Override
+                public void onDragReplayResult(long errorCode, String errorDesc) {
+                    if (errorCode == 0) {
+
+                        changeState(PLAY);
+
+                        mStartDateTime = getNowDateTime();
+
+                        mStartPlayView.setEnabled(false);
+                        mStartPlayView.setTextColor(getResources().getColor(R.color.hit_text_color));
+
+                        mPortStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.video_stop));
+                        mLandStopPlayView.setImageDrawable(getResources().getDrawable(R.drawable.video_stop));
+
+                        mPortSeekBar.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return false;
+                            }
+                        });
+
+                        mLandSeekBar.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return false;
+                            }
+                        });
+
+                    } else {
+                        ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                    }
+
+                }
+            });
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         try {
@@ -464,6 +574,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             mPlayer = null;
         }
 
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
         super.onDestroy();
     }
 
@@ -526,7 +640,13 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 break;
             case R.id.start_play_view:
                 if (mStartPlayView.isEnabled()) {
-                    mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+
+                    if (mRecvStreamThread == null) {
+                        mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+                    } else {
+                        mHandler.sendEmptyMessage(RESTART_REPLAY_VIDEO);
+                    }
+
                 }
                 break;
             case R.id.begin_date_time_layout:
@@ -537,10 +657,32 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 break;
             case R.id.video_stop_for_land:
             case R.id.video_stop_for_port:
-                if (mPlayer!=null && mPlayer.AVIsPlaying()) {
-                    mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
-                } else if (mPlayer!=null && !mPlayer.AVIsPlaying()) {
+
+                if (isStoped) {
+
+                    if (mHandler.hasMessages(START_REPLAY_VIDEO)) {
+                        mHandler.removeMessages(START_REPLAY_VIDEO);
+                    }
+
                     mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+                } else {
+                    if (mPlayer!=null && mPlayer.AVIsPlaying()) {
+                        //mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
+
+                        if (mHandler.hasMessages(PAUSE_REPLAY_VIDEO)) {
+                            mHandler.removeMessages(PAUSE_REPLAY_VIDEO);
+                        }
+
+                        mHandler.sendEmptyMessage(PAUSE_REPLAY_VIDEO);
+                    } else if (mPlayer!=null && !mPlayer.AVIsPlaying()) {
+                        //mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+
+                        if (mHandler.hasMessages(RESTART_REPLAY_VIDEO)) {
+                            mHandler.removeMessages(RESTART_REPLAY_VIDEO);
+                        }
+
+                        mHandler.sendEmptyMessage(RESTART_REPLAY_VIDEO);
+                    }
                 }
 
                 break;
@@ -719,6 +861,13 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     //mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
                     stopReplay();
                     break;
+                case PAUSE_REPLAY_VIDEO:
+                     pauseReplay();
+                    break;
+
+                case RESTART_REPLAY_VIDEO:
+                    reStartReplay();
+                    break;
             }
         }
     };
@@ -741,8 +890,25 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         return;
                     }
 
-                    int progress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(getNowDateTime(), mStartDateTime));
-                    Log.i("zzz", "progress : "  + progress + "");
+                    //mCurrentProgress = 0;//DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(getNowDateTime(), mStartDateTime));
+                    Log.i("zzz", "progress : "  + mCurrentProgress + "");
+
+                    ServiceManager.getReplayPos(mPlayer.getPlaySession(), new OnGetReplayPosListener() {
+                        @Override
+                        public void onGetReplayResult(String replayPos, long errorCode, String errorDesc) {
+
+                            if (0 == errorCode) {
+                                //Toast.makeText(VideoRePlayActivity.this, "当前播放时间" + replayPos, Toast.LENGTH_SHORT).show();
+                                mCurrentTime = replayPos;
+                                mCurrentProgress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, mCurrentTime);
+                                Log.i("zzz", "progress 222222222222222222222: "  + mCurrentProgress +   "     isStoped = " + isStoped);
+                            } else {
+                                //Toast.makeText(VideoRePlayActivity.this, errorDesc, Toast.LENGTH_SHORT).show();
+                                //mCurrentProgress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(getNowDateTime(), mStartDateTime));
+                            }
+
+                        }
+                    });
 
                     if (isDraged) {
                         try {
@@ -750,6 +916,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                             long endTime = dfs.parse(mDragTime).getTime();
                             long stratTime = dfs.parse(mVideoBeginTime).getTime();
                             int newprogress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(endTime, stratTime) + DateUtils.getTimeDifference(getNowDateTime(), mStartDateTime));
+                            Log.i("zzz", "progress 33333333333333333: "  + newprogress +   "     isStoped = " + isStoped);
+
+                            if (Math.abs(newprogress - mCurrentProgress) < 5) {
+                                mCurrentProgress = newprogress;
+                            }
+
                             mLandSeekBar.setProgress(newprogress);
                             mPortSeekBar.setProgress(newprogress);
                         } catch (ParseException e) {
@@ -757,19 +929,27 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         }
                     } else {
                         if (!isStoped) {
-                            mLandSeekBar.setProgress(progress);
-                            mPortSeekBar.setProgress(progress);
+                            Log.i("zzz", "progress 444444444444: "  + mCurrentProgress +   "     isStoped = " + isStoped);
+                            mLandSeekBar.setProgress(mCurrentProgress);
+                            mPortSeekBar.setProgress(mCurrentProgress);
                         }
                     }
+
                     if (mPlayer.AVIsPlaying()) {
-                        if (progress <= 100) {
+                        if (mCurrentProgress < 100) {
                             mHandler.postDelayed(this, 1000);
                         }
-                        if(progress == 100) {
+                        if(mCurrentProgress >= 100) {
                             isDraged = false;
+
+                            if (mHandler.hasMessages(STOP_REPLAY_VIDEO)) {
+                                mHandler.removeMessages(STOP_REPLAY_VIDEO);
+                            }
+
                             mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
                         }
                     }
+
                 }
             });
         } else  if (state == STOP) {

@@ -16,12 +16,17 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
+import com.isoftstone.smartsite.model.system.ui.ActionSheetDialog;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.MediaScanner;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -29,10 +34,13 @@ import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnPtzCommandListener;
 import com.uniview.airimos.listener.OnStartLiveListener;
 import com.uniview.airimos.listener.OnStopLiveListener;
+import com.uniview.airimos.listener.OnStreamChangeListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.PtzCommandParam;
 import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.thread.RecvStreamThread;
+import com.uniview.airimos.parameter.StreamParam;
+import com.uniview.airimos.util.StreamUtil;
 
 /**
  * Created by gone on 2017/10/17.
@@ -67,7 +75,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private boolean isZoomTeleTouched = false;
     private boolean isZoomWideTouched = false;
 
-
+    private TextView mDefinitionView;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -147,6 +155,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         });
 
 
+        mDefinitionView = (TextView) findViewById(R.id.video_definition_view);
+        mDefinitionView.setOnClickListener(this);
+
 
         /*获取Intent中的Bundle对象*/
         if(bundle == null) {
@@ -183,6 +194,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 @Override
                 public void onStartLiveResult(long errorCode, String errorDesc, String playSession) {
                     if (errorCode == 0){
+                        //将播放会话设给Player
+                        mPlayer.setPlaySession(playSession);
 
                         //先停掉别的接收流线程
                         if (mRecvStreamThread != null) {
@@ -191,8 +204,6 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                             mRecvStreamThread = null;
                         }
 
-                        //将播放会话设给Player
-                        mPlayer.setPlaySession(playSession);
                         //启动播放解码
                         mPlayer.AVStartPlay();
                         //修改監控界面大小為當前屏幕大小
@@ -214,9 +225,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             StartLiveParam p = new StartLiveParam();
             p.setCameraCode(cameraCode);
             p.setUseSecondStream(true); //使用辅流
-            p.setBitrate(64* 8);   //32KB的码率
-            p.setFramerate(15);     //15帧率
-            p.setResolution(2);     //4CIF分辨率
+            p.setBitrate(32* 8);   //32KB的码率
+            p.setFramerate(18);     //18帧率
+            p.setResolution(StreamParam.ResolutionType.CIF4);     //4CIF分辨率
 
             //启动实况
             ServiceManager.startLive(p, listener);
@@ -559,9 +570,81 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                     }
                 }, 300);
                 break;
+            case R.id.video_definition_view:
+                new ActionSheetDialog(VideoPlayActivity.this)
+                        .builder(false)
+                        .setCancelable(true)
+                        .setCanceledOnTouchOutside(true)
+                        .addSheetItem(mContext.getText(R.string.video_definition_d1).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        if (mDefinitionView.getText().toString().equals(mContext.getText(R.string.video_definition_d1).toString())) {
+                                            //ToastUtils.showShort("当前视频清晰度已为" + mContext.getText(R.string.video_definition_d1).toString() + "，无需切换。");
+                                            return;
+                                        }
+                                        changeVideoStream(StreamUtil.STREAM_TYPE_C);
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.video_definitdion_cif4).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        if (mDefinitionView.getText().toString().equals(mContext.getText(R.string.video_definitdion_cif4).toString())) {
+                                            //ToastUtils.showShort("当前视频清晰度已为" + mContext.getText(R.string.video_definitdion_cif4).toString() + "，无需切换。");
+                                            return;
+                                        }
+                                        changeVideoStream(StreamUtil.STREAM_TYPE_B);
+
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.video_definition_cif).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        if (mDefinitionView.getText().toString().equals(mContext.getText(R.string.video_definition_cif).toString())) {
+                                            //ToastUtils.showShort("当前视频清晰度已为" + mContext.getText(R.string.video_definition_cif).toString() + "，无需切换。");
+                                            return;
+                                        }
+                                        changeVideoStream(StreamUtil.STREAM_TYPE_F);
+                                        mDefinitionView.setText(R.string.video_definition_cif);
+                                    }
+                                }).show();
+                break;
             default:
                 break;
         }
+
+    }
+
+    private void changeVideoStream(final int streamType) {
+
+        StreamParam streamParam = StreamUtil.getStreamInfo(streamType, VideoPlayActivity.this);//D1 清晰码流
+
+        ServiceManager.changeStream(mPlayer.getPlaySession(), streamParam, new OnStreamChangeListener() {
+            @Override
+            public void onStreamChangeResult(StreamParam streamParam, long errorCode, String errorDesc) {
+                if (0 == errorCode) {
+                    //Toast.makeText(VideoPlayActivity.this, "清晰度切换成功！", Toast.LENGTH_SHORT).show();
+                    if (streamType == StreamUtil.STREAM_TYPE_C) {
+                        mDefinitionView.setText(R.string.video_definition_d1);
+                    } else if (streamType == StreamUtil.STREAM_TYPE_B){
+                        mDefinitionView.setText(R.string.video_definitdion_cif4);
+                    } else {
+                        mDefinitionView.setText(R.string.video_definition_cif);
+                    }
+
+                } else {
+                    Toast.makeText(VideoPlayActivity.this, errorDesc, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 

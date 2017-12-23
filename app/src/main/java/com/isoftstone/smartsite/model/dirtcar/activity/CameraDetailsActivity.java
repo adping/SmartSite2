@@ -267,7 +267,7 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 			//if (mListView != null) {
 			//    mListView.setAdapter(null);
 			//}
-			showDlg("正在获取列表");
+			showDlg(getText(R.string.dialog_load_messgae).toString());
 		}
 		/**
 		 * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
