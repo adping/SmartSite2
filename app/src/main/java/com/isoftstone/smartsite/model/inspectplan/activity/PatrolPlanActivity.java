@@ -269,18 +269,25 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         days = (LinearLayout) findViewById(R.id.days);
         day_0 = (TextView) findViewById(R.id.day_0);
         day_0.setOnClickListener(this);
+        day_0.setOnTouchListener(onTouchListener);
         day_1 = (TextView) findViewById(R.id.day_1);
         day_1.setOnClickListener(this);
+        day_1.setOnTouchListener(onTouchListener);
         day_2 = (TextView) findViewById(R.id.day_2);
         day_2.setOnClickListener(this);
+        day_2.setOnTouchListener(onTouchListener);
         day_3 = (TextView) findViewById(R.id.day_3);
         day_3.setOnClickListener(this);
+        day_3.setOnTouchListener(onTouchListener);
         day_4 = (TextView) findViewById(R.id.day_4);
         day_4.setOnClickListener(this);
+        day_4.setOnTouchListener(onTouchListener);
         day_5 = (TextView) findViewById(R.id.day_5);
         day_5.setOnClickListener(this);
+        day_5.setOnTouchListener(onTouchListener);
         day_6 = (TextView) findViewById(R.id.day_6);
         day_6.setOnClickListener(this);
+        day_6.setOnTouchListener(onTouchListener);
         dayTextViewList.add(day_0);
         dayTextViewList.add(day_1);
         dayTextViewList.add(day_2);
@@ -289,40 +296,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         dayTextViewList.add(day_5);
         dayTextViewList.add(day_6);
 
-        days.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        touchX = event.getX();
-                    }
-                    return true;
-                    case MotionEvent.ACTION_UP: {
-                        float X = event.getX();
-                        if (touchX - X > 40) {
-                            //下一周
-                            today = today.plusDays(7);
-                            selectindex = -1;
-                            updateWidget();
-                            taskTimeStart = today.toString(); //开始时间
-                            taskTimeEnd = today.plusDays(6).toString();   //结束时间
-                            mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
-                        }
-
-                        if (X - touchX > 40) {
-                            //上一周
-                            today = today.minusDays(7);
-                            selectindex = -1;
-                            updateWidget();
-                            taskTimeStart = today.toString(); //开始时间
-                            taskTimeEnd = today.plusDays(6).toString();   //结束时间
-                            mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
-                        }
-                    }
-                }
-                return PatrolPlanActivity.super.onTouchEvent(event);
-            }
-        });
+        days.setOnTouchListener(onTouchListener);
 
         mListView = (ListView) findViewById(R.id.listview);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -389,7 +363,50 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         customDatePicker.setIsLoop(false); // 不允许循环滚动
     }
 
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener(){
 
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    touchX = event.getRawX();
+                    Log.e("test","setOnTouchListener   down "+touchX);
+                    if(v.getId() == R.id.day_0 ||v.getId() == R.id.day_1 ||v.getId() == R.id.day_2 ||
+                            v.getId() == R.id.day_3 ||v.getId() == R.id.day_4 ||v.getId() == R.id.day_5 ||v.getId() == R.id.day_6){
+                        return  false;
+                    }else {
+                        return  true;
+                    }
+                }
+                case MotionEvent.ACTION_UP: {
+                    float X = event.getRawX();
+                    Log.e("test","setOnTouchListener   up  "+X);
+                    if (touchX - X > 40) {
+                        //下一周
+                        today = today.plusDays(7);
+                        selectindex = -1;
+                        updateWidget();
+                        taskTimeStart = today.toString(); //开始时间
+                        taskTimeEnd = today.plusDays(6).toString();   //结束时间
+                        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+                    }
+
+                    if (X - touchX > 40) {
+                        //上一周
+                        today = today.minusDays(7);
+                        selectindex = -1;
+                        updateWidget();
+                        taskTimeStart = today.toString(); //开始时间
+                        taskTimeEnd = today.plusDays(6).toString();   //结束时间
+                        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
+                    }
+                }
+                break;
+            }
+            return v.onTouchEvent(event);
+        }
+    };
     private void initToolbar() {
         mTitleTextView = (TextView) findViewById(R.id.toolbar_title);
         mTitleLayout = (LinearLayout) findViewById(R.id.toolbar_title_layout);
@@ -435,8 +452,10 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         //根据计划状态来加载背景  是否显示审批按钮
         //设置计划状态
         int state = 0;
+        if(mListData_week.size() > 0){
+            state = mListData_week.get(0).getPlanStatus();
+        }
         if (mListData != null && mListData.size() > 0) {
-            state = mListData.get(0).getPlanStatus();
             adapter = new PatrolPlanAdapter(this);
             adapter.setList(mListData);
             mListView.setAdapter(adapter);

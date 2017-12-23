@@ -102,8 +102,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_0"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_1"
@@ -117,8 +118,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_1"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_2"
@@ -132,8 +134,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_2"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_3"
@@ -147,8 +150,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_3"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_4"
@@ -162,8 +166,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_4"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_5"
@@ -177,8 +182,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:id="@+id/daymargin_5"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/day_6"
