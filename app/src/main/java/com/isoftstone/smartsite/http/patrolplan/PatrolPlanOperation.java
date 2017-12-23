@@ -27,7 +27,7 @@ import okhttp3.Response;
 public class PatrolPlanOperation {
     private static String TAG = "PatrolPlanOperation";
     public  static PatrolPlanBeanPage getPlanPaging(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean, PageableBean pageableBean,String sort){
-        String funName = "getUnRecList";
+        String funName = "getPlanPaging";
         PatrolPlanBeanPage patrolPlanBeanPage = null;
         try {
             FormBody.Builder builder = new FormBody.Builder();

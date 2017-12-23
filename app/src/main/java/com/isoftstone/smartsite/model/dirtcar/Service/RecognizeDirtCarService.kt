@@ -63,7 +63,7 @@ open class RecognizeDirtCarService : Service() {
             override fun doInBackground(vararg params: Void?): Boolean {
                 try {
                     var pageBean = PageableBean()
-                    pageBean.page = "1"
+                    pageBean.page = "0"
                     var list = mHttpPost.getUnRecList("", pageBean)
                     Log.e(TAG, "yanlog queryData:" + list.size)
                     if (list != null && list.content != null) {
