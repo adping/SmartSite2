@@ -102,7 +102,8 @@ public class MessageListActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MessageUtils.enterActivity(MessageListActivity.this,mDataBeans.get(position));
+                Log.e(TAG, "yanlog postion:" + position);
+                MessageUtils.enterActivity(MessageListActivity.this, mDataBeans.get(position - 1));
             }
         });
         new QueryMsgTask(true).execute();
