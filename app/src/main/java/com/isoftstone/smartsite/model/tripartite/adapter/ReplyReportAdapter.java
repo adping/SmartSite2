@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.http.patrolreport.ReportBean;
+import com.isoftstone.smartsite.model.tripartite.activity.ReadImgActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReplyReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
@@ -352,14 +353,18 @@ public class ReplyReportAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.e(TAG, "yanlog click:" + position);
+                final String absPath = mHttpPost.getReportPath(data.getId(), relativePath.get(position));
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... voids) {
                         try {
-                            String absPath = mHttpPost.getReportPath(data.getId(), relativePath.get(position));
+
                             if (new File(absPath).exists()) {
-                                Intent intent = FilesUtils.getOpenIntent(mContext, new File(absPath), absPath);
-                                mContext.startActivity(intent);
+                                String formatPath = FilesUtils.getFormatString(absPath);
+                                if (!TripartiteActivity.mImageList.contains(formatPath)) {
+                                    Intent intent = FilesUtils.getOpenIntent(mContext, new File(absPath), absPath);
+                                    mContext.startActivity(intent);
+                                }
                                 return absPath;
                             } else {
                                 mHandler.post(new Runnable() {
@@ -388,6 +393,15 @@ public class ReplyReportAdapter extends BaseAdapter {
                         }
                     }
                 }.execute();
+                String formatPath = FilesUtils.getFormatString(absPath);
+                if (TripartiteActivity.mImageList.contains(formatPath)) {
+                    Intent intent = new Intent(mContext, ReadImgActivity.class);
+                    Gson gson = new Gson();
+                    String reportBean = gson.toJson(data);
+                    intent.putExtra("reportBean", reportBean);
+                    intent.putExtra("position", position);
+                    mContext.startActivity(intent);
+                }
             }
         });
     }

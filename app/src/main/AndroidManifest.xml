@@ -322,6 +322,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".model.tripartite.activity.ReadImgActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"
