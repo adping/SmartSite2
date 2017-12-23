@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.http.patroltask;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
@@ -188,8 +189,8 @@ public class PatrolTaskOperation {
     }
 
 
-    public static void updateTaskStart(String strurl, OkHttpClient mClient, long taskId, String taskName) {
-
+    public static ResultBean updateTaskStart(String strurl, OkHttpClient mClient, long taskId, String taskName) {
+        ResultBean resultBean = null;
         String funName = "getPhontoList";
         try {
             JSONObject object = new JSONObject();
@@ -206,24 +207,26 @@ public class PatrolTaskOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                updateTaskStart(strurl,mClient,taskId,taskName);
-                return;
+                return updateTaskStart(strurl,mClient,taskId,taskName);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
 
-    public static void executeTask(String strurl, OkHttpClient mClient, long taskId, String taskName) {
-
+    public static ResultBean executeTask(String strurl, OkHttpClient mClient, long taskId, String taskName) {
+        ResultBean resultBean = null;
         String funName = "executeTask";
         try {
             JSONObject object = new JSONObject();
@@ -240,23 +243,25 @@ public class PatrolTaskOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                executeTask(strurl,mClient,taskId,taskName);
-                return;
+                return executeTask(strurl,mClient,taskId,taskName);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
-    public static void updatePatrolPositionStatus(String strurl, OkHttpClient mClient, long id, String position) {
-
+    public static ResultBean updatePatrolPositionStatus(String strurl, OkHttpClient mClient, long id, String position) {
+        ResultBean resultBean = null;
         String funName = "updatePatrolPositionStatus";
         try {
             JSONObject object = new JSONObject();
@@ -273,23 +278,26 @@ public class PatrolTaskOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                updatePatrolPositionStatus(strurl,mClient,id,position);
-                return;
+                return updatePatrolPositionStatus(strurl,mClient,id,position);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
 
-    public static void userTrack(String strurl, OkHttpClient mClient, long userId, long taskId, double longitude, double latitude) {
+    public static ResultBean userTrack(String strurl, OkHttpClient mClient, long userId, long taskId, double longitude, double latitude) {
+        ResultBean resultBean = null;
         String funName = "userTrack";
         try {
             JSONObject object = new JSONObject();
@@ -308,19 +316,21 @@ public class PatrolTaskOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                userTrack(strurl,mClient,userId,taskId,longitude,latitude);
-                return;
+                return userTrack(strurl,mClient,userId,taskId,longitude,latitude);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
     public static ArrayList<BaseUserBean> findUserAll(String strurl, OkHttpClient mClient) {

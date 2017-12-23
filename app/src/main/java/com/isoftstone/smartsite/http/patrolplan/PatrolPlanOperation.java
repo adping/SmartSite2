@@ -6,6 +6,7 @@ import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBeanPage;
 import com.isoftstone.smartsite.http.muckcar.EvidencePhotoBean;
 import com.isoftstone.smartsite.http.pageable.PageBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -71,7 +72,8 @@ public class PatrolPlanOperation {
         return patrolPlanBeanPage;
     }
 
-    public static void  planThrough(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
+    public static ResultBean  planThrough(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
+        ResultBean resultBean = null;
         String funName = "planThrough";
         try {
             JSONObject object = new JSONObject();
@@ -87,22 +89,25 @@ public class PatrolPlanOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                planThrough(strurl,mClient,patrolPlanBean);
-                return;
+                return planThrough(strurl,mClient,patrolPlanBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
-    public static void  planRefuse(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
+    public static ResultBean  planRefuse(String strurl, OkHttpClient mClient, PatrolPlanBean patrolPlanBean){
+        ResultBean resultBean = null;
         String funName = "planRefuse";
         try {
             JSONObject object = new JSONObject();
@@ -118,22 +123,24 @@ public class PatrolPlanOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                planRefuse(strurl,mClient,patrolPlanBean);
-                return;
+                return planRefuse(strurl,mClient,patrolPlanBean);
             }
             if (response.isSuccessful()) {
-
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
-    public static  void   patrolPlanCommit(String strurl, OkHttpClient mClient, PatrolPlanCommitBean patrolPlanCommitBean){
+    public static  ResultBean   patrolPlanCommit(String strurl, OkHttpClient mClient, PatrolPlanCommitBean patrolPlanCommitBean){
+        ResultBean resultBean = null;
         String funName = "patrolPlanCommit";
         try {
             Gson gson = new Gson();
@@ -148,16 +155,17 @@ public class PatrolPlanOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                patrolPlanCommit(strurl,mClient,patrolPlanCommitBean);
-                return;
+                return patrolPlanCommit(strurl,mClient,patrolPlanCommitBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 }

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -202,7 +203,8 @@ public class ReportOperation {
         return patrolReportBean;
     }
 
-    public static void addPatrolVisit(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+    public static ResultBean addPatrolVisit(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+        ResultBean resultBean = null;
         String funName = "addVisitReport";
         try {
             Gson gson = new Gson();
@@ -218,23 +220,23 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                addPatrolVisit(strurl,mClient,reportBean);
-                return;
+                return addPatrolVisit(strurl,mClient,reportBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
-
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
-    public static void addPatrolReply(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+    public static ResultBean addPatrolReply(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+        ResultBean resultBean = null;
         String funName = "addVisitReport";
-
         try {
             Gson gson = new Gson();
             String json = gson.toJson(reportBean);
@@ -249,23 +251,23 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                addPatrolReply(strurl,mClient,reportBean);
-                return;
+                return addPatrolReply(strurl,mClient,reportBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
-
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
-    public static void addPatrolCheck(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+    public static ResultBean addPatrolCheck(String strurl, OkHttpClient mClient, ReportBean reportBean) {
+        ResultBean resultBean = null;
         String funName = "addVisitReport";
-
         try {
             Gson gson = new Gson();
             String json = gson.toJson(reportBean);
@@ -279,23 +281,23 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                addPatrolCheck(strurl,mClient,reportBean);
-                return;
+                return addPatrolCheck(strurl,mClient,reportBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
-
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
 
-    public static void reportFileUpload(String strurl, OkHttpClient mClient, String filepath, int id) {
-
+    public static ResultBean reportFileUpload(String strurl, OkHttpClient mClient, String filepath, int id) {
+        ResultBean resultBean = null;
         String funName = "reportFileUpload";
         MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
         File file = new File(filepath);
@@ -316,16 +318,18 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                reportFileUpload(strurl,mClient,filepath,id);
-                return;
+                return reportFileUpload(strurl,mClient,filepath,id);
             }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
     public static long downloadfile(String downloadUrl, String storagePath, String imageName) {

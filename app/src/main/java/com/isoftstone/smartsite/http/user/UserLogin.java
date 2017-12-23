@@ -6,6 +6,7 @@ import android.util.Base64;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.MobileHomeBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONArray;
@@ -15,6 +16,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.transform.Result;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -186,9 +189,10 @@ public class UserLogin {
         return userBeanReturn;
     }
 
-    public static void userUpdate(String strurl, OkHttpClient mClient, BaseUserBean userBean) {
+    public static ResultBean userUpdate(String strurl, OkHttpClient mClient, BaseUserBean userBean) {
 
         String funName = "userUpdate";
+        ResultBean resultBean = null;
         try {
             Gson gson = new Gson();
             String json = gson.toJson(userBean);
@@ -202,17 +206,18 @@ public class UserLogin {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                userUpdate(strurl,mClient,userBean);
-                return;
+                return userUpdate(strurl,mClient,userBean);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
     public static MobileHomeBean getMobileHomeData(String strurl, OkHttpClient mClient) {
@@ -243,8 +248,9 @@ public class UserLogin {
     }
 
 
-    public static void userImageUpload(String strurl, OkHttpClient mClient, Bitmap bit, Bitmap.CompressFormat format) {
+    public static ResultBean userImageUpload(String strurl, OkHttpClient mClient, Bitmap bit, Bitmap.CompressFormat format) {
         String funName = "userImageUpload";
+        ResultBean resultBean = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bit.compress(format, 100, bos);//参数100表示不压缩
@@ -262,19 +268,21 @@ public class UserLogin {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                userImageUpload(strurl,mClient,bit,format);
-                return;
+                return userImageUpload(strurl,mClient,bit,format);
             }
             if (response.isSuccessful()) {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
     public static InstallBean getSystemConifg(String strurl, OkHttpClient mClient) {
@@ -350,8 +358,9 @@ public class UserLogin {
         return list;
     }
 
-    public static void feedback(String strurl, OkHttpClient mClient, long userId, String content) {
+    public static ResultBean feedback(String strurl, OkHttpClient mClient, long userId, String content) {
         String funName = "feedback";
+        ResultBean resultBean = null;
         try {
             JSONObject object = new JSONObject();
             object.put("userId", userId);
@@ -367,18 +376,20 @@ public class UserLogin {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                feedback(strurl,mClient,userId, content);
-                return;
+                return  feedback(strurl,mClient,userId, content);
             }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
 }

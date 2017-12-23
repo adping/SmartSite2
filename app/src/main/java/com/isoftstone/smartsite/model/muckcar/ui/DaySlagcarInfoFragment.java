@@ -648,8 +648,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             set1.setDrawIcons(false);
             // set the line to be drawn like this "- - - - - -"
             //set1.enableDashedLine(10f, 10f, 0f);
-            set1.setColor(Color.parseColor("#ff9e5d"));
-            set1.setCircleColor(Color.parseColor("#ff9e5d"));
+            set1.setColor(Color.RED);
+            set1.setCircleColor(Color.RED);
             set1.setLineWidth(1f);
             set1.setCircleRadius(4f);//设置焦点圆心的大小
             set1.setDrawCircleHole(true);

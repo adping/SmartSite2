@@ -5,6 +5,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -102,8 +103,8 @@ public class MessageOperation {
         return  messageBeanPage;
     }
 
-    public static  void readMessage(String strurl, OkHttpClient mClient, String id){
-        ArrayList<MessageBean> list = null;
+    public static  ResultBean readMessage(String strurl, OkHttpClient mClient, String id){
+        ResultBean resultBean = null;
         String funName = "readMessage";
         FormBody body = new FormBody.Builder()
                 .build();
@@ -118,21 +119,19 @@ public class MessageOperation {
             LogUtils.i(TAG,funName+" response code "+response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                readMessage(strurl,mClient,id);
-                return;
+                return readMessage(strurl,mClient,id);
             }
             if(response.isSuccessful()){
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                /*String content = null;
-                content = new JSONObject(responsebody).getString("content");
-                list = HttpPost.stringToList(content,MessageBean.class);
-                */
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
     public static BeforeNMessageBean getBeforeNMessageList(String strurl, OkHttpClient mClient){

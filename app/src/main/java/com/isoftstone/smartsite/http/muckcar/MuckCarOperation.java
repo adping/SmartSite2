@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONArray;
@@ -161,9 +162,9 @@ public class MuckCarOperation {
 
 
     //渣土车识别
-    public static void recForMobile(String strurl, OkHttpClient mClient, String carLicence, int recResult) {
+    public static ResultBean recForMobile(String strurl, OkHttpClient mClient, String carLicence, int recResult) {
+        ResultBean resultBean = null;
         String funName = "getAlarmData";
-
         try {
             JSONObject object = new JSONObject();
             object.put("carLicence", carLicence);
@@ -180,18 +181,20 @@ public class MuckCarOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                recForMobile(strurl,mClient,carLicence,recResult);
-                return;
+                return recForMobile(strurl,mClient,carLicence,recResult);
             }
             if (response.isSuccessful()) {
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+                Gson gson = new Gson();
+                resultBean = gson.fromJson(responsebody,ResultBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return resultBean;
     }
 
 

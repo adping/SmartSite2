@@ -50,6 +50,7 @@ import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskOperation;
 import com.isoftstone.smartsite.http.patroluser.PatrolUserOperation;
 import com.isoftstone.smartsite.http.patroluser.UserTrackBean;
+import com.isoftstone.smartsite.http.result.ResultBean;
 import com.isoftstone.smartsite.http.taskcenter.TaskCenterOperation;
 import com.isoftstone.smartsite.http.taskcenter.TaskNumberBean;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
@@ -76,7 +77,7 @@ public class HttpPost {
     public static final  int HTTP_LOGIN_TIME_OUT = 401;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient mClient = null;
-//    public static String URL = "http://111.47.21.51:19090";//生产
+    //public static String URL = "http://111.47.21.51:19090";//生产
     public static String URL = "http://61.160.82.83:19090/ctess";//龙云
 
     private String LOGIN_URL = URL + "/login";                        //登录
@@ -289,8 +290,8 @@ public class HttpPost {
     /*
     消息阅读已经完成
      */
-    public void readMessage(String id) {
-        MessageOperation.readMessage(MESSAGE_ID_READ, mClient, id);
+    public ResultBean readMessage(String id) {
+        return MessageOperation.readMessage(MESSAGE_ID_READ, mClient, id);
     }
 
     /*
@@ -343,29 +344,29 @@ public class HttpPost {
     /*
     新增巡查回访
      */
-    public void addPatrolVisit(ReportBean reportBean) {
-        ReportOperation.addPatrolVisit(ADD_REPORT, mClient, reportBean);
+    public ResultBean addPatrolVisit(ReportBean reportBean) {
+        return ReportOperation.addPatrolVisit(ADD_REPORT, mClient, reportBean);
     }
 
     /*
     新增巡查回复
      */
-    public void addPatrolReply(ReportBean reportBean) {
-        ReportOperation.addPatrolReply(ADD_REPORT, mClient, reportBean);
+    public ResultBean addPatrolReply(ReportBean reportBean) {
+        return ReportOperation.addPatrolReply(ADD_REPORT, mClient, reportBean);
     }
 
     /*
     新增巡查验收
      */
-    public void addPatrolCheck(ReportBean reportBean) {
-        ReportOperation.addPatrolCheck(ADD_REPORT, mClient, reportBean);
+    public ResultBean addPatrolCheck(ReportBean reportBean) {
+        return  ReportOperation.addPatrolCheck(ADD_REPORT, mClient, reportBean);
     }
 
     /*
     报告上传文件
      */
-    public void reportFileUpload(String filepath, int id) {
-        ReportOperation.reportFileUpload(IMAGE_UPLOAD, mClient, filepath, id);
+    public ResultBean reportFileUpload(String filepath, int id) {
+        return ReportOperation.reportFileUpload(IMAGE_UPLOAD, mClient, filepath, id);
     }
 
 
@@ -412,13 +413,13 @@ public class HttpPost {
     }
 
     //更改用户信息
-    public void userUpdate(BaseUserBean userBean) {
-        UserLogin.userUpdate(USER_UPDATE, mClient, userBean);
+    public ResultBean userUpdate(BaseUserBean userBean) {
+        return  UserLogin.userUpdate(USER_UPDATE, mClient, userBean);
     }
 
     //上传用户头像
-    public void userImageUpload(Bitmap bit, Bitmap.CompressFormat format) {
-        UserLogin.userImageUpload(USER_UPLOAD, mClient, bit, format);
+    public ResultBean userImageUpload(Bitmap bit, Bitmap.CompressFormat format) {
+        return UserLogin.userImageUpload(USER_UPLOAD, mClient, bit, format);
     }
 
     //下载用户图片  服务器获取的到路径
@@ -551,8 +552,8 @@ public class HttpPost {
         return MuckCarOperation.getAlarmData(GET_ALARM_DATA, mClient, time, timeMonth, archIds, flag);
     }
 
-    public void recForMobile(String carLicence, int recResult) {
-        MuckCarOperation.recForMobile(REC_FOR_MOBILE, mClient, carLicence, recResult);
+    public ResultBean recForMobile(String carLicence, int recResult) {
+        return  MuckCarOperation.recForMobile(REC_FOR_MOBILE, mClient, carLicence, recResult);
     }
 
     /*
@@ -643,22 +644,22 @@ public class HttpPost {
     /*
     计划审批通过 计划ID非常重要
      */
-    public void planThrough(PatrolPlanBean patrolPlanBean) {
-        PatrolPlanOperation.planThrough(PATROL_PLAN_THROUGHT, mClient, patrolPlanBean);
+    public ResultBean planThrough(PatrolPlanBean patrolPlanBean) {
+        return PatrolPlanOperation.planThrough(PATROL_PLAN_THROUGHT, mClient, patrolPlanBean);
     }
 
     /*
     计划审批拒绝  计划ID非常重要
      */
-    public void planRefuse(PatrolPlanBean patrolPlanBean) {
-        PatrolPlanOperation.planRefuse(PATROL_PLAN_REFUSE, mClient, patrolPlanBean);
+    public ResultBean planRefuse(PatrolPlanBean patrolPlanBean) {
+        return PatrolPlanOperation.planRefuse(PATROL_PLAN_REFUSE, mClient, patrolPlanBean);
     }
 
     /*
     计划提交，目前存在问题
      */
-    public void patrolPlanCommit(PatrolPlanCommitBean patrolPlanCommitBean) {
-        PatrolPlanOperation.patrolPlanCommit(PATROL_PLAN_COMMIT, mClient, patrolPlanCommitBean);
+    public ResultBean patrolPlanCommit(PatrolPlanCommitBean patrolPlanCommitBean) {
+        return PatrolPlanOperation.patrolPlanCommit(PATROL_PLAN_COMMIT, mClient, patrolPlanCommitBean);
     }
 
     /*
@@ -687,29 +688,29 @@ public class HttpPost {
     /*
     开始一个巡查任务
      */
-    public void updateTaskStart(long taskId, String taskName) {
-        PatrolTaskOperation.updateTaskStart(UPDATE_TASK_START, mClient, taskId, taskName);
+    public ResultBean updateTaskStart(long taskId, String taskName) {
+        return PatrolTaskOperation.updateTaskStart(UPDATE_TASK_START, mClient, taskId, taskName);
     }
 
     /*
     结束一个巡查任务
      */
-    public void executeTask(long taskId, String taskName) {
-        PatrolTaskOperation.executeTask(UPDATE_TASK_END, mClient, taskId, taskName);
+    public ResultBean executeTask(long taskId, String taskName) {
+        return PatrolTaskOperation.executeTask(UPDATE_TASK_END, mClient, taskId, taskName);
     }
 
     /*
     巡查点完成
      */
-    public void updatePatrolPositionStatus(long id, String position) {
-        PatrolTaskOperation.updatePatrolPositionStatus(UPDATE_PATROL_POSITION_STATUS, mClient, id, position);
+    public ResultBean updatePatrolPositionStatus(long id, String position) {
+        return  PatrolTaskOperation.updatePatrolPositionStatus(UPDATE_PATROL_POSITION_STATUS, mClient, id, position);
     }
 
     /*
     上报巡查轨迹
      */
-    public void userTrack(long userId, long taskId, double longitude, double latitude) {
-        PatrolTaskOperation.userTrack(USER_TRACK, mClient, userId, taskId, longitude, latitude);
+    public ResultBean userTrack(long userId, long taskId, double longitude, double latitude) {
+        return PatrolTaskOperation.userTrack(USER_TRACK, mClient, userId, taskId, longitude, latitude);
     }
 
 
@@ -724,8 +725,8 @@ public class HttpPost {
     /*
     用户提交建议
      */
-    public void feedback(long userId, String content) {
-        UserLogin.feedback(FEEDBACK, mClient, userId, content);
+    public ResultBean feedback(long userId, String content) {
+        return UserLogin.feedback(FEEDBACK, mClient, userId, content);
     }
 
     /*
