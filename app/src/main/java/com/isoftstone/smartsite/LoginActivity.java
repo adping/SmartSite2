@@ -89,6 +89,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		}
 		mHttpPost = new HttpPost();
 		HttpPost.mLoginBean = null;
+		JPushInterface.init(getApplication());
 		//mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
 		//Test.otTest(mJpushId);
 	}
@@ -297,7 +298,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	private void loggin(String mIdString,String mPwdString){
 		     mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
 		     if(mJpushId == null || mJpushId.equals("")){
-				 mLoginResult = "登录失败";
+				 mLoginResult = "极光注册失败，请重新登录。";
 				 isLogin_1 = false;
 				 mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 				 mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
