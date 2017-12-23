@@ -322,6 +322,9 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
+        if(carInfoList == null){
+            return;
+        }
         SharedPreferencesUtils.saveBaseWidth(mContext, 0.000f);
         handler.sendEmptyMessage(TIME_INIT_TEXTVIEW_LIST);
         int size = carInfoList.size();

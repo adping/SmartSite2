@@ -295,11 +295,12 @@ public class CameraDetailsActivity extends BaseActivity  implements View.OnClick
 						}
 
 						if (urlStr != null) {
-							if (i == arrayList.size() -1) {
+							/**if (i == arrayList.size() -1) {
 								stringBuffer.append(mHttpPost.getFileUrl(urlStr));
 							} else {
 								stringBuffer.append(mHttpPost.getFileUrl(urlStr) + ",");
-							}
+							}*/
+							stringBuffer.append(urlStr);
 						}
 					}
 					Log.i("zzz","CCCCCCC  stringBuffer = " + stringBuffer.toString());
