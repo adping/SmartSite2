@@ -600,7 +600,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 content_parent.setVisibility(View.VISIBLE);
                 iv_task_status.setImageResource(R.drawable.yiwancheng);
                 if(bean.getExecutionTime().length() >=10){
-                    tv_time.setText(bean.getExecutionTime().substring(0,10));
+
+                    tv_time.setText(bean.getExecutionTime());
                 }else {
                     tv_time.setText(bean.getExecutionTime());
                 }

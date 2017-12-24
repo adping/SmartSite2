@@ -121,7 +121,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 case WORK_HAS_DONE:
                     Bundle bundle = new Bundle();
                     bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
-                    LogUtils.e(TAG,"zw taskId1 : " + selectPatrolTaskBean.getTaskId());
                     openActivity(ConstructionMontitoringMapActivity.class, bundle);
                     break;
                 default:
