@@ -636,6 +636,9 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         if(bitmap != null){
             civ.setVisibility(View.VISIBLE);
             civ.setImageBitmap(bitmap);
+        } else {
+            civ.setVisibility(View.VISIBLE);
+            civ.setImageResource(R.drawable.default_head);
         }
 
         markerOption1.icon(BitmapDescriptorFactory.fromView(centerView));
@@ -651,9 +654,13 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
     //30秒间隔上传一次用户的坐标
     private void updateNowLocation(Location location){
+        if(isTaskCompleted) {
+            return;
+        }
+
         final double lat = location.getLatitude();
         final double lon = location.getLongitude();
-        if(lat != 0 && lon != 0){
+        if(lat != 0 && lon != 0 ){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
