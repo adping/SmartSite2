@@ -421,8 +421,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                             Log.i(TAG, "throws a exception: "  + e.getMessage());
                             e.printStackTrace();
                         }
+                        Fragment systemFragment = new SystemFragment();
+                        changeToAnotherFragment(mCurrentFrame, systemFragment);
                     }
                 }.start();
+                break;
             case R.id.btn_back:
                 //back toolbar click
                 Fragment systemFragment = new SystemFragment();

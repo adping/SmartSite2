@@ -404,13 +404,6 @@ public class HttpPost {
         return userBean;
     }
 
-    /*
-    获取用户信息通过用户ID
-     */
-    public BaseUserBean getUserById(long userid) {
-        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient, userid);
-    }
-
     //更改用户信息
     public ResultBean userUpdate(BaseUserBean userBean) {
         return  UserLogin.userUpdate(USER_UPDATE, mClient, userBean);
