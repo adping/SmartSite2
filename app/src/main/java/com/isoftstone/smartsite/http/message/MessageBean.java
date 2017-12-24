@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http.message;
 
+import com.google.gson.Gson;
+
 /**
  * Created by gone on 2017/10/29.
  */
@@ -12,8 +14,49 @@ public class MessageBean {
     private String turnTo;
     private int status;
     private String updateTime;
+    private String extraParam;
     private String userId;
     private InfoType infoType;
+
+    public String getExtraParam() {
+        return extraParam;
+    }
+
+    public Object getExtra(){
+        Object object = null;
+        Gson gson = new Gson();
+        if(infoType.getSearchCode().equals("1|1|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("1|2|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("2|1|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("3|1|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("3|2|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("3|3|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("3|4|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("4|1|")){
+
+        }else  if(infoType.getSearchCode().equals("4|2|")){
+
+        }else  if(infoType.getSearchCode().equals("7|1|")){
+            object = gson.fromJson(extraParam,ExtraParamBean.class);
+        }else  if(infoType.getSearchCode().equals("110|1|")){
+
+        }else  if(infoType.getSearchCode().equals("110|2|")){
+
+        }else  if(infoType.getSearchCode().equals("110|3|")){
+
+        }
+        return  object;
+    }
+    public void setExtraParam(String extraParam) {
+        this.extraParam = extraParam;
+    }
 
     public String getInfoId() {
         return infoId;
