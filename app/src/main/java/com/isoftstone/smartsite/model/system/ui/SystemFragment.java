@@ -209,7 +209,11 @@ public class SystemFragment extends BaseFragment{
         //}
         String urlString = mHttpPost.getFileUrl(userBean.getLoginUser().getImageData());
         //ToastUtils.showShort("system urlString = " + urlString);
+        Log.i("zyf", "SystemFragment......... "  + userBean.getLoginUser().getImageData());
         //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
+        mHeadImageView.setImageURI(null);
+        mHeadImageView.setImageDrawable(null);
+        mHeadImageView.setImageBitmap(null);
         ImageUtils.loadImageWithPlaceHolder2(mContext, mHeadImageView, urlString, R.drawable.default_head);
         mHeadImageView.invalidate();
     }

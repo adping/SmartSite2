@@ -146,7 +146,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mHttpPost = new HttpPost();
         mPermissionsChecker = new PermissionsChecker(getActivity().getApplicationContext());
 
-        picPath = Environment.getExternalStorageDirectory() + "/smartsite/";
+        picPath = Environment.getExternalStorageDirectory() + "/isoftstone/";
         mHeadImageView = (ImageView) rootView.findViewById(R.id.head_iv_new);
         mUserNameView = (EditText) rootView.findViewById(R.id.user_name);
         mUserName = (ImageView) rootView.findViewById(R.id.img_edit_2);
@@ -195,10 +195,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                     if (intent != null) {
                         Bundle extras = intent.getExtras();
                         mHeadBitmap = extras.getParcelable("data");
-                        Log.i("zzz","mHeadBitmap = " +  mHeadBitmap);
-                        mHeadImageView.setImageURI(null);
-                        mHeadImageView.setImageBitmap(mHeadBitmap);
-                        mHeadImageView.invalidate();
                         if (mHeadBitmap != null) {
                             setPicToView(mHeadBitmap);//保存在SD卡中
                         }
@@ -261,8 +257,12 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         }
         FileOutputStream b = null;
         File file = new File(picPath);
-        // 创建文件夹
-        file.mkdirs();
+
+        if (!file.exists()) {
+            // 创建文件夹
+            file.mkdirs();
+        }
+
         String fileName = picPath + SystemFragment.HEAD_IMAGE_NAME;//图片名字
         try {
             b = new FileOutputStream(fileName);
@@ -277,6 +277,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                     b.close();
                 }
                 mUploadHeadBitmap = bitmap;
+                Log.i("zyf","mHeadBitmap = " +  mUploadHeadBitmap);
+                mHeadImageView.setImageURI(null);
+                mHeadImageView.setImageBitmap(null);
+                mHeadImageView.setImageBitmap(mUploadHeadBitmap);
+                mHeadImageView.invalidate();
                 //toUploadHeadFile(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -417,12 +422,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                             } else {
                                 updateUserInfo(getUpdateUserBean(null));
                             }
+
+                            Fragment systemFragment = new SystemFragment();
+                            changeToAnotherFragment(mCurrentFrame, systemFragment);
+
                         } catch (Exception e) {
                             Log.i(TAG, "throws a exception: "  + e.getMessage());
                             e.printStackTrace();
+                            ToastUtils.showShort("保存数据失败，请稍后尝试...");
                         }
-                        Fragment systemFragment = new SystemFragment();
-                        changeToAnotherFragment(mCurrentFrame, systemFragment);
                     }
                 }.start();
                 break;
@@ -501,7 +509,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserAccountView.setText(userBean.getLoginUser().getAccount());
         mUserPwdView.setText(userBean.getLoginUser().getPassword());
         mUserPhoneNumView.setText(userBean.getLoginUser().getTelephone());
-        mUserCompanyView.setText(userBean.getLoginUser().getDepartmentId());
+        mUserCompanyView.setText(mHttpPost.getCompanyNameByid(Integer.parseInt(userBean.getLoginUser().getDepartmentId())));
         mUserAutographView.setText(userBean.getLoginUser().getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
 
@@ -515,9 +523,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         String urlString = mHttpPost.getFileUrl(userBean.getLoginUser().getImageData());
         //ToastUtils.showShort("urlString = " + urlString);
         //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
-        Log.i("zzz"," initUserInfo urlString--->" + urlString);
-        ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
+        Log.i("zyf"," initUserInfo urlString--->" + urlString);
 
+        mHeadImageView.setImageURI(null);
+        mHeadImageView.setImageDrawable(null);
+        mHeadImageView.setImageBitmap(null);
+        ImageUtils.loadImageWithPlaceHolder2(mContext, mHeadImageView, urlString, R.drawable.default_head);
+        mHeadImageView.invalidate();
 
 
         if (SEX_MALE_CODE.equals(mUserSexView.getText().toString())) {
@@ -540,6 +552,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         userBean.setId(mUserId);
         //userBean.setAccount("admin");
         //userBean.setPassword("bmeB4000");
+        Log.i("zyf", "getUpdateUserBean   imageData = " + imageData);
         if (null != imageData) {
             userBean.setImageData(imageData);
         }
@@ -569,9 +582,9 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         if (null !=  mUserPhoneNumView.getText()) {
             userBean.setTelephone(mUserPhoneNumView.getText().toString());
         }
-        if (null !=  mUserCompanyView.getText()) {
-           userBean.setDepartmentId(mUserCompanyView.getText().toString());
-        }
+        //if (null !=  mUserCompanyView.getText()) {
+        //   userBean.setDepartmentId(mUserCompanyView.getText().toString());
+       //}
         if (null !=  mUserAutographView.getText()) {
             userBean.setDescription(mUserAutographView.getText().toString());
         }
