@@ -86,7 +86,7 @@ public class DisplayPhotoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void showPhoto() {
-        showDlg("正在加载图片中......");
+        showDlg(getText(R.string.dialog_load_messgae).toString());
         //创建网络请求对象
         AsyncHttpClient client= new AsyncHttpClient();
         client.get(mImageUrl, new AsyncHttpResponseHandler() {

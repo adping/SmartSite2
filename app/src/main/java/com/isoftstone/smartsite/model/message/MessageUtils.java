@@ -2,14 +2,18 @@ package com.isoftstone.smartsite.model.message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.isoftstone.smartsite.http.message.ExtraParamBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.model.main.ui.AirMonitoringActivity;
 import com.isoftstone.smartsite.model.main.ui.MainFragment;
+import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.CheckReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.ReadReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.ReplyReportActivity;
+import com.isoftstone.smartsite.utils.LogUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -85,25 +89,45 @@ public class MessageUtils {
                 }
                 case SEARCH_CODE_THREE_PARTY_CHECK://验收报告
                 {
-                    int id = Integer.parseInt(bean.getInfoId());
+                    int id = -1;
+                    ExtraParamBean extraParamBean = (ExtraParamBean)bean.getExtra();
+                    String strid = extraParamBean.getId();
+                    if(strid!=null && !strid.equals("")){
+                        id = Integer.parseInt(strid);
+                    }
                     enterTHREE_PARTY_CHECK(context, id);
                     break;
                 }
                 case SEARCH_CODE_THREE_PARTY_CHECK_PASS://验收报告通过
                 {
-                    int id = Integer.parseInt(bean.getInfoId());
+                    int id = -1;
+                    ExtraParamBean extraParamBean = (ExtraParamBean)bean.getExtra();
+                    String strid = extraParamBean.getId();
+                    if(strid!=null && !strid.equals("")){
+                        id = Integer.parseInt(strid);
+                    }
                     enterTHREE_PARTY_CHECK_PASS(context, id);
                     break;
                 }
                 case SEARCH_CODE_THREE_PARTY_CHECK_REJECT://验收报告退回
                 {
-                    int id = Integer.parseInt(bean.getInfoId());
+                    int id = -1;
+                    ExtraParamBean extraParamBean = (ExtraParamBean)bean.getExtra();
+                    String strid = extraParamBean.getId();
+                    if(strid!=null && !strid.equals("")){
+                        id = Integer.parseInt(strid);
+                    }
                     enterTHREE_PARTY_CHECK_REJECT(context, id);
                     break;
                 }
                 case SEARCH_CODE_THREE_PARTY_CHECK_REPLY://报告回复
                 {
-                    int id = Integer.parseInt(bean.getInfoId());
+                    int id = -1;
+                    ExtraParamBean extraParamBean = (ExtraParamBean)bean.getExtra();
+                    String strid = extraParamBean.getId();
+                    if(strid!=null && !strid.equals("")){
+                        id = Integer.parseInt(strid);
+                    }
                     enterTHREE_PARTY_CHECK_REPLY(context, id);
                     break;
                 }
@@ -129,7 +153,7 @@ public class MessageUtils {
                 }
                 case SEARCH_CODE_TASK_1://巡查任务
                 {
-                    enterTASK_1(context);
+                    enterTASK_1(context,bean.getExtra());
                     break;
                 }
                 case SEARCH_CODE_PLAN://第三方施工巡查
@@ -245,7 +269,7 @@ public class MessageUtils {
                 }
                 case SEARCH_CODE_TASK_1://巡查任务
                 {
-                    enterTASK_1(context);
+                    //enterTASK_1(context);
                     break;
                 }
                 case SEARCH_CODE_PLAN://第三方施工巡查
@@ -325,34 +349,46 @@ public class MessageUtils {
 
     //"3|1|";验收报告
     public static void enterTHREE_PARTY_CHECK(Context context, int id) {
-//        Intent i = new Intent(context, CheckReportActivity.class);
-//        i.putExtra("_id", id);
-//        context.startActivity(i);
-        MainFragment.enterThirdPartReport(context);
+        if(id == -1){
+            MainFragment.enterThirdPartReport(context);
+        }else {
+            Intent i = new Intent(context, CheckReportActivity.class);
+            i.putExtra("_id", id);
+            context.startActivity(i);
+        }
     }
 
     //"3|2|";验收报告通过
     public static void enterTHREE_PARTY_CHECK_PASS(Context context, int id) {
-//        Intent i = new Intent(context, ReadReportActivity.class);
-//        i.putExtra("_id", id);
-//        context.startActivity(i);
-        MainFragment.enterThirdPartReport(context);
+        if(id == -1){
+            MainFragment.enterThirdPartReport(context);
+        }else {
+            Intent i = new Intent(context, ReadReportActivity.class);
+            i.putExtra("_id", id);
+            context.startActivity(i);
+        }
     }
 
     //"3|3|";报告退回
     public static void enterTHREE_PARTY_CHECK_REJECT(Context context, int id) {
-//        Intent i = new Intent(context, ReplyReportActivity.class);
-//        i.putExtra("_id", id);
-//        context.startActivity(i);
-        MainFragment.enterThirdPartReport(context);
+        if(id == -1){
+            MainFragment.enterThirdPartReport(context);
+        }else {
+            Intent i = new Intent(context, ReplyReportActivity.class);
+            i.putExtra("_id", id);
+            context.startActivity(i);
+        }
     }
 
     //"3|4|"; 报告回复
     public static void enterTHREE_PARTY_CHECK_REPLY(Context context, int id) {
-//        Intent i = new Intent(context, ReadReportActivity.class);
-//        i.putExtra("_id", id);
-//        context.startActivity(i);
-        MainFragment.enterThirdPartReport(context);
+        if(id == -1){
+            MainFragment.enterThirdPartReport(context);
+        }else {
+            Intent i = new Intent(context, ReadReportActivity.class);
+            i.putExtra("_id", id);
+            context.startActivity(i);
+        }
     }
 
     //"4|";渣土车监控//TODO please check it
@@ -376,8 +412,14 @@ public class MessageUtils {
     }
 
     //"7|1|";巡查任务//TODO please check it
-    public static void enterTASK_1(Context context) {
-        MainFragment.enterPatrolMission(context);
+    public static void enterTASK_1(Context context,Object bean) {
+        ExtraParamBean extraParamBean = (ExtraParamBean) bean;
+        String taskId = extraParamBean.getId();
+        Intent intent = new Intent();
+        intent.putExtra("taskId",Long.valueOf(taskId));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(context,ConstructionMontitoringMapActivity.class);
+        context.startActivity(intent);
     }
 
     //"110|";第三方施工巡查//TODO please check it

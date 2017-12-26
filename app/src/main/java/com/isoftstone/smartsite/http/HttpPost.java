@@ -302,7 +302,6 @@ public class HttpPost {
         LoginBean.VideoParameter videoParameter = UserLogin.getVideoConfig(GET_VIDEO_CONFIG, mClient);
         if (videoParameter != null) {
             mLoginBean.setmVideoParameter(videoParameter);
-            Log.i("zyf", videoParameter.toString());
             flag = true;
         }
         return flag;
@@ -403,13 +402,6 @@ public class HttpPost {
         }
         mLoginBean.setmUserBean(userBean);
         return userBean;
-    }
-
-    /*
-    获取用户信息通过用户ID
-     */
-    public BaseUserBean getUserById(long userid) {
-        return UserLogin.getUserById(GET_LOGIN_USER_BYID, mClient, userid);
     }
 
     //更改用户信息

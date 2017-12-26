@@ -77,6 +77,24 @@ public class ImageUtils {
     }
 
     /**
+     * 加载图片，在加载过程中不会显示占位图，失败也会显示占位图
+     * @param context    Context
+     * @param imageView  ImageView
+     * @param imageUrl   图片地址
+     */
+    public static void loadImageWithPlaceHolder2 (Context context, ImageView imageView, String imageUrl, int resId) {
+        Glide.with(context)
+                .load(imageUrl)
+                //.placeholder(R.mipmap.pic_loading)
+                .error(resId)
+                .dontAnimate()
+                //.diskCacheStrategy(DiskCacheStrategy.ALL)
+                //.skipMemoryCache(false)
+                .into(imageView);
+    }
+
+
+    /**
      * 加载图片，在加载过程中会显示占位图，失败也会显示占位图
      * @param context    Context
      * @param imageView  ImageView

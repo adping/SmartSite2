@@ -269,7 +269,7 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 
 			setListViewRefreshStatus(true);
 			if (isReLoading) {
-				showDlg("正在获取列表");
+				showDlg(getText(R.string.dialog_load_messgae).toString());
 			}
 		}
 		/**
@@ -306,8 +306,8 @@ public class ManualPhotographyActivity extends BaseActivity  implements View.OnC
 				}
 
 				for (int i=0; i< arrayList.size(); i++) {
-					String urlStr = arrayList.get(i).getSmallPhotoSrc();
-					//String urlStr = arrayList.get(i).getPhotoSrc();
+					//String urlStr = arrayList.get(i).getSmallPhotoSrc();
+					String urlStr = arrayList.get(i).getPhotoSrc();
 					StringBuffer stringBuffer = new StringBuffer();
 					if (urlStr != null) {
 						String[] urlsStr = urlStr.split(",");
