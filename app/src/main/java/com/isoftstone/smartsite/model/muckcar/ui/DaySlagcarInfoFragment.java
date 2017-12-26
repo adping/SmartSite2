@@ -624,6 +624,62 @@ public class DaySlagcarInfoFragment extends BaseFragment {
 
         if (archMonthFlowBean.getMcFlows().get(0).size() >= 1) {
             ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(0);
+            {
+                ArrayList<Entry> values_2 = new ArrayList<Entry>();
+                for (int i = 0; i < list.size(); i++) {
+                    McFlowBean mcFlowBean = list.get(i);
+                    if (mDayOrMonthFlag == 1) {
+                        LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
+                        int day = date.getDayOfMonth();
+                        String value = mcFlowBean.getFlow() + "";
+                        Entry entry = new Entry(day, Float.parseFloat(value));
+                        values_2.add(entry);
+                    } else if (mDayOrMonthFlag == 0) {
+                        int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
+                        String value = mcFlowBean.getFlow() + "";
+                        Entry entry = new Entry(index, Float.parseFloat(value));
+                        values_2.add(entry);
+                    }
+                }
+
+
+                LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+                set2.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
+                set2.setColor(Color.parseColor("#599fff"));
+                set2.setCircleColor(Color.parseColor("#599fff"));
+                set2.setDrawCircleHole(false);
+                set2.setFormLineWidth(1f);
+                set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set2.setFormSize(15.f);
+                set2.setLineWidth(1f);//设置线宽
+
+                set2.setCircleRadius(4f);//设置焦点圆心的大小
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+                set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+                set2.setHighlightEnabled(false);//是否禁用点击高亮线
+                set2.setValueTextSize(9f);//设置显示值的文字大小
+                set2.setDrawFilled(false);//设置禁用范围背景填充
+                set2.setDrawValues(false);
+
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                } else {
+                    set2.setFillColor(Color.BLACK);
+                }
+
+                dataSets.add(set2); // add the datasets
+            }
+        }
+
+        if (archMonthFlowBean.getMcFlows().get(1).size() >= 2) {
+            ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(1);
             ArrayList<Entry> values = new ArrayList<Entry>();
             for (int i = 0; i < list.size(); i++) {
                 McFlowBean mcFlowBean = list.get(i);
@@ -677,62 +733,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             dataSets.add(set1); // add the datasets
         }
 
-
-        if (archMonthFlowBean.getMcFlows().get(0).size() >= 2) {
-            ArrayList<McFlowBean> list = archMonthFlowBean.getMcFlows().get(1);
-            {
-                ArrayList<Entry> values_2 = new ArrayList<Entry>();
-                for (int i = 0; i < list.size(); i++) {
-                    McFlowBean mcFlowBean = list.get(i);
-                    if (mDayOrMonthFlag == 1) {
-                        LocalDate date = new LocalDate(mcFlowBean.getDataTimeDay());
-                        int day = date.getDayOfMonth();
-                        String value = mcFlowBean.getFlow() + "";
-                        Entry entry = new Entry(day, Float.parseFloat(value));
-                        values_2.add(entry);
-                    } else if (mDayOrMonthFlag == 0) {
-                        int index = Integer.parseInt(mcFlowBean.getDataTimeDay());
-                        String value = mcFlowBean.getFlow() + "";
-                        Entry entry = new Entry(index, Float.parseFloat(value));
-                        values_2.add(entry);
-                    }
-                }
-
-
-                LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
-                set2.setDrawIcons(false);
-                // set the line to be drawn like this "- - - - - -"
-                set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
-                set2.setColor(Color.parseColor("#599fff"));
-                set2.setDrawCircleHole(false);
-                set2.setFormLineWidth(1f);
-                set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-                set2.setFormSize(15.f);
-                set2.setLineWidth(1f);//设置线宽
-                set2.setCircleColor(Color.parseColor("#599fff"));
-                set2.setCircleRadius(4f);//设置焦点圆心的大小
-                set2.setDrawCircleHole(true);
-                set2.setCircleHoleRadius(2);
-                set2.setCircleColorHole(Color.WHITE);
-                set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-                set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-                set2.setHighlightEnabled(false);//是否禁用点击高亮线
-                set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-                set2.setValueTextSize(9f);//设置显示值的文字大小
-                set2.setDrawFilled(false);//设置禁用范围背景填充
-                set2.setDrawValues(false);
-
-                if (Utils.getSDKInt() >= 18) {
-                    // fill drawable only supported on api level 18 and above
-                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                    //set1.setFillDrawable(drawable);
-                } else {
-                    set2.setFillColor(Color.BLACK);
-                }
-
-                dataSets.add(set2); // add the datasets
-            }
-        }
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
         // set data

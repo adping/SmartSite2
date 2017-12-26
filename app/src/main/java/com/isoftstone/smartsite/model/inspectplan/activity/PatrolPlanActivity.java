@@ -127,23 +127,6 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
                 case HANDLER_GET_DAY_START: {
-                    /*
-                    showDlg("数据加载中");
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            String user_id = "";
-                            if (userId >= 0) {
-                                user_id = userId + "";
-                            }
-                            taskTimeStart = taskTimeStart + " 00:00";
-                            taskTimeEnd = taskTimeEnd + " 23:29";
-                            PageableBean pageableBean = new PageableBean();
-                            mListData = mHttpPost.getPatrolTaskListAll(user_id, "", "", "0", "", taskTimeStart, taskTimeEnd, pageableBean);
-                            mHandler.sendEmptyMessage(HANDLER_GET_DAY_END);
-                        }
-                    }.start();
-                    */
                     if(mListData!=null){
                         mListData.clear();
                         for (int i = 0 ; i < mListData_week.size(); i ++){
@@ -511,16 +494,16 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             dayTextViewList.get(selectindex).setTextColor(getResources().getColor(R.color.mainColor));
         }
 
-
+        updateWidget();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         selectindex = -1;
-        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
         taskTimeStart = today.plusDays(0).toString(); //开始时间
         taskTimeEnd = today.plusDays(6).toString();   //结束时间
+        mHandler.sendEmptyMessage(HANDLER_GET_WEEK_START);
     }
 
     @Override
