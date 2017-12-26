@@ -76,26 +76,47 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:background="@null"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@null"
-                android:src="@drawable/dircar_no"
-                android:onClick="onClick_no"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginRight="9dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_submit_dircar"
+                android:onClick="onClick_no"
+                android:text="非渣土车"
+                android:textColor="#fe3f3f"
+                android:textSize="13sp" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@null"
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="9dp"
+                android:layout_marginRight="9dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_submit_dircar"
+                android:onClick="onClick_yes"
                 android:src="@drawable/dircar_yes"
-                android:onClick="onClick_yes"/>
+                android:text="渣土车"
+                android:textColor="#3464dd"
+                android:textSize="13sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="9dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_submit_dircar"
+                android:onClick="onClick_cannotReg"
+                android:src="@drawable/dircar_yes"
+                android:text="无法识别"
+                android:textColor="#999999"
+                android:textSize="13sp" />
+
+
         </LinearLayout>
     </LinearLayout>
 

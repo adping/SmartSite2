@@ -88,6 +88,10 @@ open class RecognizeDirtCarActivity : AppCompatActivity() {
         markResult(0)
     }
 
+    fun onClick_cannotReg(v:View){
+        markResult(2)
+    }
+
     override fun onDestroy() {
         var i = Intent(this, RecognizeDirtCarService::class.java)
         i.putExtra("sync", false)
