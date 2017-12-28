@@ -326,7 +326,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
         final MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
-        markerOption.visible(true);
+//        markerOption.visible(true);
 
         markerOption.draggable(false);//设置Marker可拖动
 
@@ -334,8 +334,17 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         markerOption.setFlat(true);//设置marker平贴地图效果
         final String url = HttpPost.URL + "/" + baseUserBean.imageData;
 
+        /*View centerView = LayoutInflater.from(ConstructionMontitoringMapActivity.this).inflate(R.layout.layout_marker_with_icon,null);
+        CircleImageView civ = (CircleImageView) centerView.findViewById(R.id.civ);
+        civ.setImageResource(R.drawable.default_head);
+        markerOption.icon(BitmapDescriptorFactory.fromView(centerView));
+        Marker marker = aMap.addMarker(markerOption);
+        marker.setAnchor(0.5f,1f);
+        marker.setObject(bean);
+        touXiangMarkers.add(marker);*/
 
-//        markerOption.icon(BitmapDescriptorFactory.fromBitmap(setGeniusIcon(url)));
+        //------------------------------------
+
 
         BitmapTypeRequest<String> bitmapTypeRequest = Glide.with(getApplicationContext()).load(url)
                 .asBitmap();
@@ -498,7 +507,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
 
         Marker marker = aMap.addMarker(markerOption);
         marker.setAnchor(0.5f,0.5f);
-        marker.setObject(bean);
+        //它不用点击效果
+//        marker.setObject(bean);
         doneMarkers.add(marker);
     }
 
@@ -590,11 +600,13 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
             tv_task_name.setText(bean.getPosition());
             //0未巡查  1已巡查
             if(bean.getStatus() == 0){
+                currentClickMarker = marker;
                 iv_start_task.setVisibility(View.VISIBLE);
                 content_parent.setVisibility(View.GONE);
                 iv_task_status.setImageResource(R.drawable.weiwancheng);
                 tv_time.setText("");
             } else if(bean.getStatus() == 1){
+                LogUtils.e(TAG,"marker  1 ");
                 currentClickMarker = marker;
                 iv_start_task.setVisibility(View.GONE);
                 content_parent.setVisibility(View.VISIBLE);
@@ -614,6 +626,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                 }
             }
             if(currentClickMarker != null){
+                LogUtils.e(TAG,"marker  2 ");
                 currentClickMarker.setVisible(false);
             }
             addAndRemoveRoundMarker(new LatLng(bean.getLatitude(),bean.getLongitude()),bean.bitmap);
