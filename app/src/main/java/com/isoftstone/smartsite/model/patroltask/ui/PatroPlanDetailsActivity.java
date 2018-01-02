@@ -23,6 +23,7 @@ import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean;
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBeanPage;
 import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.model.inspectplan.activity.AddInspectPlan;
+import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.map.ui.ConstructionMontitoringMapActivity;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.widgets.StartworkDialog;
@@ -80,7 +81,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         listview = (PullToRefreshListView) findViewById(R.id.patrol_detail_list);
         ibt_back.setOnClickListener(this);
         add_plan.setOnClickListener(this);
-        listview.setOnItemClickListener(itemClickListener);
         listview.setOnRefreshListener(listviewlistener);
         adapter = new MyBaseAdapter(this, patrolTaskBeanArrayList);
         listview.setAdapter(adapter);
@@ -111,21 +111,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            selectPatrolTaskBean = patrolTaskBeanArrayList.get(i-1);
-            switch (selectPatrolTaskBean.getTaskStatus()) {
-                case WORK_WAIT_FOR_DOING:
-                    startworkDialog.setTaskName(selectPatrolTaskBean.getTaskName());
-                    startworkDialog.show();
-                    break;
-                case WORK_IS_DOING:
-                case WORK_HAS_DONE:
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
-                    openActivity(ConstructionMontitoringMapActivity.class, bundle);
-                    break;
-                default:
-                    break;
-            }
+
 
         }
     };
@@ -225,6 +211,32 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         }
     };
 
+    public void workStateClicked(PatrolTaskBean patrolTaskBean){
+        selectPatrolTaskBean = patrolTaskBean;
+        switch (selectPatrolTaskBean.getTaskStatus()) {
+            case WORK_WAIT_FOR_DOING:
+                startworkDialog.setTaskName(selectPatrolTaskBean.getTaskName());
+                startworkDialog.show();
+                break;
+            case WORK_IS_DOING:
+            case WORK_HAS_DONE:
+                Bundle bundle = new Bundle();
+                bundle.putLong("taskId", selectPatrolTaskBean.getTaskId());
+                openActivity(ConstructionMontitoringMapActivity.class, bundle);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void workCopyClicked(PatrolTaskBean patrolTaskBean){
+        //进入新增任务界面
+        Intent intent = new Intent(PatroPlanDetailsActivity.this, AddInspectPlan.class);
+        intent.putExtra("taskId",patrolTaskBean.getTaskId());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     public class MyBaseAdapter extends BaseAdapter {
         private Context context;
         private ArrayList<PatrolTaskBean> patrolPlanBeanLists;
@@ -240,8 +252,8 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         }
 
         @Override
-        public View getView(int i, View convertView, ViewGroup viewGroup) {
-            ViewHolder holder;
+        public View getView(final int i, View convertView, ViewGroup viewGroup) {
+            final ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(context).inflate(R.layout.patrol_plan_details, null);
@@ -251,11 +263,12 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.company_name = (TextView) convertView.findViewById(R.id.comparyName);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
                 holder.work_status = (ImageView) convertView.findViewById(R.id.work_status);
+                holder.work_copy = (ImageView) convertView.findViewById(R.id.work_copy);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            PatrolTaskBean patrolTaskBean = patrolPlanBeanLists.get(i);
+            final PatrolTaskBean patrolTaskBean = patrolPlanBeanLists.get(i);
             holder.report.setText(patrolTaskBean.getTaskName());
             int status = patrolTaskBean.getTaskStatus();
             if (status == 0) {
@@ -271,6 +284,24 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.data.setText(patrolTaskBean.getTaskEnd());
                 holder.work_status.setImageResource(R.drawable.chakanbaogao);
             }
+            holder.work_status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    workStateClicked(patrolTaskBean);
+                }
+            });
+            long userid = patrolTaskBean.getCreator().getId();
+            if(HttpPost.mLoginBean.getmUserBean().getLoginUser().getId()==userid){
+                holder.work_copy.setVisibility(View.VISIBLE);
+            }else {
+                holder.work_copy.setVisibility(View.GONE);
+            }
+            holder.work_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    workCopyClicked(patrolTaskBean);
+                }
+            });
             holder.reportor.setText(patrolTaskBean.getCreator().name);
             BaseUserBean userBean = patrolTaskBean.getCreator();
             if (userBean != null) {
@@ -302,5 +333,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         public TextView company_name;//公司名字
         public TextView data;//时间
         public ImageView work_status;//开始执行，查看报告
+        public ImageView work_copy; //任务复制
     }
 }
