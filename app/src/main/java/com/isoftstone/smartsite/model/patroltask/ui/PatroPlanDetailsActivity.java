@@ -108,13 +108,6 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
     }
 
     private PatrolTaskBean selectPatrolTaskBean;
-    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-        }
-    };
     private StartworkDialog.OnStartworkLstener listener = new StartworkDialog.OnStartworkLstener() {
         @Override
         public void onStartwork() {
