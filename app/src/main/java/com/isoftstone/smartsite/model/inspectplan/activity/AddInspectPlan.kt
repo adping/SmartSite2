@@ -28,6 +28,8 @@ import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity
 import com.isoftstone.smartsite.utils.DateUtils
 import com.isoftstone.smartsite.utils.ToastUtils
 import com.isoftstone.smartsite.widgets.CustomDatePicker
+import kotlinx.android.synthetic.main.activity_add_inspect_plan.*
+import kotlinx.android.synthetic.main.view_input_inspect_time.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,6 +91,8 @@ open class AddInspectPlan : BaseActivity() {
         initMsg()
         initAddressGridView()
         initPeopleGridView()
+
+        queryTask(intent.getLongExtra("taskId", -1))
     }
 
     fun initEditName() {
@@ -252,6 +256,43 @@ open class AddInspectPlan : BaseActivity() {
             return false;
         }
         return true
+    }
+
+    fun queryTask(id: Long) {
+        if (id == -1L) {
+            return
+        }
+        val tempId = id
+        var query = object : AsyncTask<Void, Void, PatrolTaskBean>() {
+            override fun doInBackground(vararg params: Void?): PatrolTaskBean {
+                var bean = mHttpPost.patrolTaskFindOne(tempId)
+                return bean
+            }
+
+            override fun onPostExecute(bean: PatrolTaskBean?) {
+                try {
+                    if (bean != null) {
+                        edit_name.setText(bean.taskName)
+                        mAddressList.clear()
+                        mAddressList.addAll(bean.patrolPositions)
+
+                        mPeopleList.clear()
+                        mPeopleList.addAll(bean.users)
+
+                        lab_begin_time.setText(bean.taskTimeStart)
+                        lab_end_time.setText(bean.taskTimeEnd)
+
+                        edit_report_msg?.setText(bean.taskContent)
+
+                        mAdapterPeople?.notifyDataSetChanged()
+                        addAddressView()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        query.execute()
     }
 
     fun onClick_submit(v: View) {
