@@ -11,7 +11,8 @@ public class DevicesBean implements Serializable{
     private static final long serialVersionUID = 0x0001L;
 
     private  DevicesArch arch;
-    private int cameraType;
+    private int cameraType;   //摄像头类型   1固定摄像头   2云台摄像机   3 高清固定摄像头   4高清云台摄像机
+    //5车载摄像机   6不可控标清摄像机    7不可控高清摄像机
     private String deviceId;		//设备ID
     private String deviceCoding	;	//设备编码
     private String deviceName;		//设备名称

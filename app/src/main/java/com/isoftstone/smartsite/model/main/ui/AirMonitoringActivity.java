@@ -53,6 +53,8 @@ import com.isoftstone.smartsite.model.main.adapter.AirMonitoringRankAdapter;
 import com.isoftstone.smartsite.model.tripartite.view.MyListView;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
+import org.joda.time.LocalDate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -507,12 +509,13 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setLineChart(){
+        float max = 0;
         String time = mTongqiTime.getText().toString();
-
-        text_before.setVisibility(View.GONE);
-        text_before_0.setVisibility(View.GONE);
-        text_pushtime.setVisibility(View.GONE);
-        text_pushtime_0.setVisibility(View.GONE);
+        text_pushtime.setText(time);
+        LocalDate date = new LocalDate();
+        date.toString(time);
+        String befortime = date.plusYears(-1).toString().substring(0,7);
+        text_before.setText(befortime);
 
         if(mMonthlyComparisonBean == null){
             return;
@@ -546,36 +549,13 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
 
-        //Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
-        /*
-        LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-        ll1.setLineWidth(4f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll1.setTextSize(10f);
-        //ll1.setTypeface(tf);
-        LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-        ll2.setLineWidth(4f);
-        ll2.enableDashedLine(10f, 10f, 0f);
-        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        ll2.setTextSize(10f);
-        //ll2.setTypeface(tf);
-        */
-
         YAxis leftAxis = mLineChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        //leftAxis.addLimitLine(ll1);
-        //leftAxis.addLimitLine(ll2);
-        //leftAxis.setAxisMaximum(200f);
-        //leftAxis.setAxisMinimum(0f);
-        //leftAxis.setYOffset(20f);
-        //leftAxis.setEnabled(false);
         leftAxis.enableGridDashedLine(10f, 0f, 0f);
         leftAxis.setDrawZeroLine(false);
-
-        // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(false);
+        leftAxis.setAxisMinimum(0f);
+
 
         mLineChart.getAxisRight().setEnabled(false);
 
@@ -602,22 +582,16 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         if(mMonthlyComparisonBean != null){
             int beforeMonthSize = mMonthlyComparisonBean.getBeforeMonth().size();
             if(beforeMonthSize > 0){
-                text_before.setVisibility(View.VISIBLE);
-                text_before_0.setVisibility(View.VISIBLE);
-                String beforetime =mMonthlyComparisonBean.getBeforeMonth().get(0).getPushTimeMonth();
-                text_before.setText(beforetime);
-
                 ArrayList<Entry> values = new ArrayList<Entry>();
                 for (int i = 0; i < beforeMonthSize; i++) {
                     String value = mMonthlyComparisonBean.getBeforeMonth().get(i).getAqi();
-                    Entry entry = new Entry(i,Float.parseFloat(value));
+                    float v = Float.parseFloat(value);
+                    if(v > max){
+                        max = v;
+                    }
+                    Entry entry = new Entry(i+1,v);
                     values.add(entry);
                 }
-            /*for (int i = 0; i < 30; i++) {
-                double val = (Math.random() * 88) + 3;
-                Entry entry = new Entry(i,(float) val);
-                values.add(entry);
-            }*/
 
                 LineDataSet set1 = new LineDataSet(values, "DataSet 1");
                 set1.setDrawIcons(false);
@@ -654,14 +628,15 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         if(mMonthlyComparisonBean != null){
             int pushtimeMonthSize = mMonthlyComparisonBean.getCurrentMonth().size();
             if(pushtimeMonthSize > 0){
-                text_pushtime.setVisibility(View.VISIBLE);
-                text_pushtime_0.setVisibility(View.VISIBLE);
-                text_pushtime.setText(time);
                 ArrayList<Entry> values_2 = new ArrayList<Entry>();
 
                 for (int i = 0; i < pushtimeMonthSize; i++) {
                     String value = mMonthlyComparisonBean.getCurrentMonth().get(i).getAqi();
-                    Entry entry = new Entry(i,Float.parseFloat(value));
+                    float v = Float.parseFloat(value);
+                    if(v > max){
+                        max = v;
+                    }
+                    Entry entry = new Entry(i+1,v);
                     values_2.add(entry);
                 }
 
@@ -704,11 +679,13 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
 
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
+        leftAxis.setAxisMaximum(max);
         // set data
         mLineChart.setData(data);
     }
 
     private void setLineChart_quyu(){
+        float max = 0;
         String quyu_archs_1 = "";
         String quyu_archs_2 = "";
         for (int i = 0 ; i < addressFlags.length ; i ++){
@@ -727,24 +704,12 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
             return;
         }
         mLineChart_quyu.setDrawGridBackground(false);
-
-        // no description text
         mLineChart_quyu.getDescription().setEnabled(false);
-
-        // enable touch gestures
         mLineChart_quyu.setTouchEnabled(true);
-
-        // enable scaling and dragging
         mLineChart_quyu.setDragEnabled(false);  //是否可以缩放
         mLineChart_quyu.setScaleEnabled(false);  //是否可以缩放
-        // mChart.setScaleXEnabled(true);
-        // mChart.setScaleYEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mLineChart_quyu.setPinchZoom(true);
+        mLineChart_quyu.setPinchZoom(false);
         mLineChart_quyu.setExtraOffsets(10,0,10,20);
-
-
 
         XAxis xAxis = mLineChart_quyu.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
@@ -773,17 +738,10 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
 
         YAxis leftAxis = mLineChart_quyu.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        //leftAxis.addLimitLine(ll1);
-        //leftAxis.addLimitLine(ll2);
-        //leftAxis.setAxisMaximum(200f);
-        //leftAxis.setAxisMinimum(0f);
-        //leftAxis.setYOffset(20f);
-        //leftAxis.setEnabled(false);
         leftAxis.enableGridDashedLine(10f, 0f, 0f);
         leftAxis.setDrawZeroLine(false);
-
-        // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(false);
+        leftAxis.setAxisMinimum(0f);
 
         mLineChart_quyu.getAxisRight().setEnabled(false);
 
@@ -813,14 +771,13 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
                 ArrayList<Entry> values = new ArrayList<Entry>();
                 for (int i = 0; i < beforeMonthSize; i++) {
                     String value = mMonthlyComparisonBean_1.getCurrentMonth().get(i).getAqi();
-                    Entry entry = new Entry(i, Float.parseFloat(value));
+                    float v = Float.parseFloat(value);
+                    if(v > max){
+                       max = v;
+                    }
+                    Entry entry = new Entry(i+1, v);
                     values.add(entry);
                 }
-            /*for (int i = 0; i < 30; i++) {
-                double val = (Math.random() * 88) + 3;
-                Entry entry = new Entry(i,(float) val);
-                values.add(entry);
-            }*/
 
                 LineDataSet set1 = new LineDataSet(values, "DataSet 1");
                 set1.setDrawIcons(false);
@@ -862,7 +819,11 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
 
                 for (int i = 0; i < pushtimeMonthSize; i++) {
                     String value = mMonthlyComparisonBean_2.getCurrentMonth().get(i).getAqi();
-                    Entry entry = new Entry(i, Float.parseFloat(value));
+                    float v = Float.parseFloat(value);
+                    if(v > max){
+                        max = v;
+                    }
+                    Entry entry = new Entry(i+1,v);
                     values_2.add(entry);
                 }
 
@@ -903,6 +864,7 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
         }
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
+        leftAxis.setAxisMaximum(max);
         // set data
         mLineChart_quyu.setData(data);
     }
