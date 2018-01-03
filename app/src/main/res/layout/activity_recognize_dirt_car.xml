@@ -25,15 +25,29 @@
             android:background="@drawable/shape_dircar_dialog_bg"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lab_license"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:text="鄂A00000"
-                android:textColor="#222222"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lab_license"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="鄂A00000"
+                    android:textColor="#222222"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:onClick="onClick_cannotReg"
+                    android:src="@drawable/num_error" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/lab_address"
