@@ -226,6 +226,7 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         //进入新增任务界面
         Intent intent = new Intent(PatroPlanDetailsActivity.this, AddInspectPlan.class);
         intent.putExtra("taskId",patrolTaskBean.getTaskId());
+        intent.putExtra("taskType", 1);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

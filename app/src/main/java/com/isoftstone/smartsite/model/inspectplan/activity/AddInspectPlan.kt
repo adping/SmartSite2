@@ -22,6 +22,7 @@ import com.isoftstone.smartsite.http.HttpPost
 import com.isoftstone.smartsite.http.patroltask.PatrolPositionBean
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean
 import com.isoftstone.smartsite.http.user.BaseUserBean
+import com.isoftstone.smartsite.http.util.DataUtils
 import com.isoftstone.smartsite.model.dirtcar.View.MyFlowLayout
 import com.isoftstone.smartsite.model.inspectplan.adapter.PeopleAdapter
 import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity
@@ -279,9 +280,10 @@ open class AddInspectPlan : BaseActivity() {
                         mPeopleList.clear()
                         mPeopleList.addAll(bean.users)
 
-                        lab_begin_time.setText(bean.taskTimeStart)
-                        lab_end_time.setText(bean.taskTimeEnd)
-
+                        lab_begin_time.setText(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(bean.taskTimeStart)))
+                        lab_end_time.setText(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(bean.taskTimeEnd)))
+                        labEndTimeRight?.setTextColor(resources.getColor(R.color.main_text_color))
+                        labBeginTimeRight?.setTextColor(resources.getColor(R.color.main_text_color))
                         edit_report_msg?.setText(bean.taskContent)
 
                         mAdapterPeople?.notifyDataSetChanged()
@@ -326,7 +328,15 @@ open class AddInspectPlan : BaseActivity() {
 
                     if (TextUtils.isEmpty(name) || !isOkTime(beginTime) || !isOkTime(endTime) ||
                             TextUtils.isEmpty(content) || addList.size == 0 || peopleTempList.size == 0) {
+                        Log.e(TAG, "yanlog error 1:" + name + " " + beginTime + " " + endTime + " " + content)
                         return false
+                    }
+
+                    for(bean in addList){
+                        bean.bitmap = null
+                        bean.executionTime = null
+                        bean.user = null
+                        bean.id = 0
                     }
 
                     var planBean = PatrolTaskBean()
@@ -341,10 +351,12 @@ open class AddInspectPlan : BaseActivity() {
 
                     var result = mHttpPost.patrolTaskSave(planBean)
                     if (result == null) {
+                        Log.e(TAG, "yanlog error 2")
                         return false
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    Log.e(TAG, "yanlog error 3")
                     return false
                 }
                 return true
