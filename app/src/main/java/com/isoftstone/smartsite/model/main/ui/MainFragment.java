@@ -87,14 +87,6 @@ public class MainFragment extends BaseFragment {
     public static final int HANDLER_GET_HOME_DATA_END = 2;
     private MobileHomeBean mMobileHomeBean = null;
 
-    /* 查询请求识别码 登陆成功*/
-    private static final int LOGIN_RESULTS_SUCCESSFUL_CODE = 1;
-    /* 查询请求识别码 登陆失败*/
-    private static final int LOGIN_RESULTS_FAILED_CODE = 2;
-    /* 查询请求识别码 登陆异常*/
-    private static final int LOGIN_RESULTS_EXCEPTION_CODE = 3;
-    private int mLoginResultCode = 0;
-
     ArrayList<View> mViewsList = new ArrayList<>();
 
     @Override
@@ -417,13 +409,7 @@ public class MainFragment extends BaseFragment {
 
 
     private void onItemClicked() {
-//        ThreePartyData data = new ThreePartyData();
-//        data.setType(ThreePartyData.TYPE_RECEIVE_REPORT);
-//        data.setName("张珊");
-//        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-//        intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
-//        intent.putExtra(MsgFragment.FRAGMENT_DATA, data);
-//        getActivity().startActivity(intent);
+
     }
 
     private void enterUnChekMsg() {

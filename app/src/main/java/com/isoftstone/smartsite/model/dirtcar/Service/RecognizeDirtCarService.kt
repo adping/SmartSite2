@@ -13,10 +13,12 @@ import android.os.IBinder
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
+import com.isoftstone.smartsite.common.App
 import com.isoftstone.smartsite.http.HttpPost
 import com.isoftstone.smartsite.http.muckcar.BayonetGrabInfoBean
 import com.isoftstone.smartsite.http.pageable.PageableBean
 import com.isoftstone.smartsite.model.dirtcar.activity.RecognizeDirtCarActivity
+import com.isoftstone.smartsite.utils.SharedPreferencesUtils
 import java.io.File
 import java.util.HashMap
 import kotlin.collections.ArrayList
@@ -42,13 +44,14 @@ open class RecognizeDirtCarService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "yanlog onStartCommand")
 
-
-        var sync = intent?.getBooleanExtra("sync", true)
-        Log.e(TAG, "yanlog sync:" + sync)
-        if ((if (sync == null) true else sync) && mDataList.size == 0) {
-            queryData()
-        } else {
-            popDialog()
+        if(SharedPreferencesUtils.getReceiveNotice(App.getAppContext())) {
+            var sync = intent?.getBooleanExtra("sync", true)
+            Log.e(TAG, "yanlog sync:" + sync)
+            if ((if (sync == null) true else sync) && mDataList.size == 0) {
+                queryData()
+            } else {
+                popDialog()
+            }
         }
         return super.onStartCommand(intent, flags, startId)
     }

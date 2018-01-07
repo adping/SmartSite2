@@ -12,6 +12,7 @@ public class SharedPreferencesUtils {
     private static final String SHARED_PREFERENCES_NAME = "isoftstone";
     private static final String SAVE_PASSWD = "save_passwd";
     private static final String BASE_WIDTH = "base_width";
+    private static final String RECEIVE_NOTICE = "receive_notice";
 
     public static void updateSavePasswd(Activity activity, boolean isSave) {
         SharedPreferences settings = activity.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
@@ -33,6 +34,18 @@ public class SharedPreferencesUtils {
         editor.commit();
     }
 
+    public static  void setReceiveNotice(Context context, boolean receiveNotice){
+        SharedPreferences settings = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(RECEIVE_NOTICE, receiveNotice);
+        editor.commit();
+    }
+
+    public static boolean getReceiveNotice(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+        boolean receiveNotice = settings.getBoolean(RECEIVE_NOTICE, false);
+        return receiveNotice;
+    }
 
     public static Float getBaseWidth(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);

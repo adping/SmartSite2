@@ -27,6 +27,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.utils.FileCacheUtils;
+import com.isoftstone.smartsite.utils.SharedPreferencesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.io.File;
@@ -55,15 +56,18 @@ public class SettingsActivity extends Activity implements View.OnClickListener{
     }
 
     private void initView() {
+        boolean receive = SharedPreferencesUtils.getReceiveNotice(this);
         mPushMsgSwitch = (Switch) findViewById(R.id.settings_push_msg_switch);
-        mPushMsgSwitch.setChecked(true);
+        mPushMsgSwitch.setChecked(receive);
 
         mPushMsgSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    SharedPreferencesUtils.setReceiveNotice(SettingsActivity.this,true);
                     ToastUtils.showShort("打开");
                 } else {
+                    SharedPreferencesUtils.setReceiveNotice(SettingsActivity.this,false);
                     ToastUtils.showShort("关闭");
                 }
             }

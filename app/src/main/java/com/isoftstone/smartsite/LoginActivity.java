@@ -297,13 +297,14 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	};
 	private void loggin(String mIdString,String mPwdString){
 		     mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
-		     if(mJpushId == null || mJpushId.equals("")){
+		     /*if(mJpushId == null || mJpushId.equals("")){
 				 mLoginResult = "极光注册失败，请重新登录。";
 				 isLogin_1 = false;
 				 mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 				 mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
 				 return;
 			 }
+			 */
 		     // 启动登录
 			 LoginBean loginBean = null;
 			 loginBean = mHttpPost.login(mIdString,mPwdString,mJpushId);

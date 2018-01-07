@@ -698,8 +698,8 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
         LatLng positionLatlng = new LatLng(currentPatorPositionBean.getLatitude(),currentPatorPositionBean.getLongitude());
         LatLng userLatlng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
         float distance = AMapUtils.calculateLineDistance(positionLatlng,userLatlng);
-        if(distance > 100){
-            ToastUtils.showShort("您距离任务点的距离为" +(int)distance + "米,请在100米以内执行此操作！");
+        if(distance > 300){
+            ToastUtils.showShort("您距离任务点的距离为" +(int)distance + "米,请在300米以内执行此操作！");
             return;
         } else {
             loadingDailog.show();
