@@ -12,8 +12,8 @@ android {
         applicationId "com.isoftstone.smartsite"
         minSdkVersion 23
         targetSdkVersion 22
-        versionCode 2221
-        versionName "2.2.21"
+        versionCode 2222
+        versionName "2.2.22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
