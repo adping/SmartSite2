@@ -337,6 +337,7 @@ open class AddInspectPlan : BaseActivity() {
                         bean.executionTime = null
                         bean.user = null
                         bean.id = 0
+                        bean.status = 0
                     }
 
                     var planBean = PatrolTaskBean()
