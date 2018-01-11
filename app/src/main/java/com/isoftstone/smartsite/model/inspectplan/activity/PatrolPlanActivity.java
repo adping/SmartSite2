@@ -322,7 +322,9 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             taskTimeEnd = patrolPlanBean.getEndDate();   //结束时间
             today = LocalDate.parse(taskTimeStart);
         } else {
-            today = LocalDate.now();
+            LocalDate localDate = LocalDate.now();
+            int minus = localDate.getDayOfWeek();
+            today = localDate.minusDays(minus - 1);
             taskTimeStart = today.toString(); //开始时间
             taskTimeEnd = today.plusDays(6).toString();   //结束时间
         }

@@ -108,6 +108,7 @@ public class PMHistoryInfoActivity extends BaseActivity {
                 mFlag = -1;
                 mCurPageNum = 0;
                 list.clear();
+                pmHistoryinfoAdapter.notifyDataSetChanged();
                 mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
             }
 

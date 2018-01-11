@@ -100,18 +100,29 @@
         android:layout_height="48dp"
         android:orientation="horizontal"
         android:gravity="center">
-
-        <ImageView
+        <LinearLayout
             android:id="@+id/work_status"
             android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:src="@drawable/chakanbaogao" />
-        <ImageView
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/image_work_status"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:src="@drawable/chakanbaogao" />
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/work_copy"
             android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:layout_marginLeft="32dp"
-            android:src="@drawable/fuzhirenwu" />
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:src="@drawable/fuzhirenwu" />
+        </LinearLayout>
 
     </LinearLayout>
 

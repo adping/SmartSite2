@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -256,8 +257,9 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
                 holder.reportor = (TextView) convertView.findViewById(R.id.reporterName);
                 holder.company_name = (TextView) convertView.findViewById(R.id.comparyName);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
-                holder.work_status = (ImageView) convertView.findViewById(R.id.work_status);
-                holder.work_copy = (ImageView) convertView.findViewById(R.id.work_copy);
+                holder.work_status = (LinearLayout) convertView.findViewById(R.id.work_status);
+                holder.image_work_status = (ImageView) convertView.findViewById(R.id.image_work_status);
+                holder.work_copy = (LinearLayout) convertView.findViewById(R.id.work_copy);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -268,15 +270,15 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
             if (status == 0) {
                 holder.report_status.setImageResource(R.drawable.daizhixing);
                 holder.data.setText(patrolTaskBean.getTaskTimeStart());
-                holder.work_status.setImageResource(R.drawable.kaishizhixing);
+                holder.image_work_status.setImageResource(R.drawable.kaishizhixing);
             } else if (status == 1) {
                 holder.report_status.setImageResource(R.drawable.zhixingzhong);
                 holder.data.setText(patrolTaskBean.getTaskStart());
-                holder.work_status.setImageResource(R.drawable.jinrurenwu);
+                holder.image_work_status.setImageResource(R.drawable.jinrurenwu);
             } else if (status == 2) {
                 holder.report_status.setImageResource(R.drawable.yiwancheng);
                 holder.data.setText(patrolTaskBean.getTaskEnd());
-                holder.work_status.setImageResource(R.drawable.chakanbaogao);
+                holder.image_work_status.setImageResource(R.drawable.chakanbaogao);
             }
             holder.work_status.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -326,7 +328,8 @@ public class PatroPlanDetailsActivity extends BaseActivity implements View.OnCli
         public TextView reportor;//人名
         public TextView company_name;//公司名字
         public TextView data;//时间
-        public ImageView work_status;//开始执行，查看报告
-        public ImageView work_copy; //任务复制
+        public LinearLayout work_status;//开始执行，查看报告
+        public ImageView image_work_status;
+        public LinearLayout work_copy; //任务复制
     }
 }

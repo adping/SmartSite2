@@ -509,7 +509,11 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserAccountView.setText(userBean.getLoginUser().getAccount());
         mUserPwdView.setText(userBean.getLoginUser().getPassword());
         mUserPhoneNumView.setText(userBean.getLoginUser().getTelephone());
-        mUserCompanyView.setText(mHttpPost.getCompanyNameByid(Integer.parseInt(userBean.getLoginUser().getDepartmentId())));
+        try{
+            mUserCompanyView.setText(mHttpPost.getCompanyNameByid(Integer.parseInt(userBean.getLoginUser().getDepartmentId())));
+        }catch (NumberFormatException e){
+            mUserCompanyView.setText("公司ID为空");
+        }
         mUserAutographView.setText(userBean.getLoginUser().getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
 
