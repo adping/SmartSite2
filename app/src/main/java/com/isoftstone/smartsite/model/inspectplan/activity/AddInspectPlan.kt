@@ -332,6 +332,19 @@ open class AddInspectPlan : BaseActivity() {
                         return false
                     }
 
+                    //ensure the begin time is earlier than the end time
+                    try {
+                        val beginDate = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(beginTime)
+                        val endDate = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(endTime)
+                        if (beginDate.after(endDate)) {
+                            Log.e(TAG,"yanlog the begintime mash be earlier than the end time")
+                            return false
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+
                     for(bean in addList){
                         bean.bitmap = null
                         bean.executionTime = null

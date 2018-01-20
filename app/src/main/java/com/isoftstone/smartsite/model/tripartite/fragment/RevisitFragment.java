@@ -40,6 +40,7 @@ import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import java.text.SimpleDateFormat;
@@ -296,6 +297,18 @@ public class RevisitFragment extends BaseFragment {
                         parseTime(beginTime) == null || parseTime(endTime) == null || (visit && parseTime(visitTime) == null)) {
                     Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                //ensure the begin time is earlier than the end time
+                try {
+                    Date beginDate = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(beginTime);
+                    Date endDate = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(endTime);
+                    if (beginDate.after(endDate)) {
+                        ToastUtils.showShort("巡查开始时间必须位于巡查结束时间之前");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 ReportBean reportBean = new ReportBean();
@@ -618,11 +631,6 @@ public class RevisitFragment extends BaseFragment {
                     Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                     i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
-                } else {
-//                    mFilesPath.remove(position);
-//                    mData.remove(position);
-//                    mAttachAdapter.notifyDataSetChanged();
-//                    ToastUtils.showShort("附件删除成功");
                 }
             }
         });
@@ -637,12 +645,10 @@ public class RevisitFragment extends BaseFragment {
                     Uri uri = data.getData();
                     Log.e(TAG, "yanlog uri:" + uri);
                     if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
-                        //Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
                         addAttach(uri.getPath());
                         return;
                     }
                     String path = FilesUtils.getPath(getActivity(), uri);
-                    //Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
                     addAttach(path);
                 }
             }
@@ -656,22 +662,7 @@ public class RevisitFragment extends BaseFragment {
         String formatPath = FilesUtils.getFormatString(path);
         Log.e(TAG, "yanlog remove begin size at0:" + mData.get(0));
         mData.remove(mData.size() - 1);
-        //mFilesPath.add(path);
-        //       if (TripartiteActivity.mImageList.contains(formatPath)) {
         mData.add(path);
-//        } else if (TripartiteActivity.mXlsList.contains(formatPath)) {
-//            mData.add(TripartiteActivity.mAttach.get(".xls"));
-//        } else if (TripartiteActivity.mDocList.contains(formatPath)) {
-//            mData.add(TripartiteActivity.mAttach.get(".doc"));
-//        } else if (TripartiteActivity.mPdfList.contains(formatPath)) {
-//            mData.add(TripartiteActivity.mAttach.get(".pdf"));
-//        } else if (TripartiteActivity.mPptList.contains(formatPath)) {
-//            mData.add(TripartiteActivity.mAttach.get(".ppt"));
-//        } else if (TripartiteActivity.mVideoList.contains(formatPath)) {
-//            mData.add(TripartiteActivity.mAttach.get(".video"));
-//        } else {
-//            mData.add(TripartiteActivity.mAttach.get(".doc"));
-//        }
 
         mData.add(R.drawable.attachment);
         Log.e(TAG, "yanlog remove end size:" + mData.size());
