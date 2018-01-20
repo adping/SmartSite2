@@ -118,7 +118,7 @@ public class ReplyReportAdapter extends BaseAdapter {
                 ArrayList<String> temp = gson.fromJson(data.getFiles(), ArrayList.class);
                 data.setReportFiles(temp);
             }
-
+            Log.e(TAG,"yanlog smallimage:"+data.getSmallImages());
             if (data.getSmallImagesList() == null && data.getSmallImages() != null) {
                 Gson gson = new Gson();
                 ArrayList<String> temp = gson.fromJson(data.getSmallImages(), ArrayList.class);

@@ -27,7 +27,7 @@ public class ReportBean {
     private String visitDate;
     private ArrayList<String> reportFiles;
     private ArrayList<String> smallImagesList;
-    private String smallImages;
+    private String smallFiles;
 
 
 
@@ -56,11 +56,11 @@ public class ReportBean {
     }
 
     public void setSmallImages(String smallImages){
-        this.smallImages = smallImages;
+        this.smallFiles = smallImages;
     }
 
     public String getSmallImages(){
-        return this.smallImages;
+        return this.smallFiles;
     }
 
     public int getId() {
