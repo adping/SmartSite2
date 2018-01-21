@@ -310,19 +310,19 @@ public class HttpPost {
     /*
      获取巡查报告列表  测试数据 1
      */
-    public ArrayList<PatrolBean> getPatrolReportList(String status, PageableBean pageableBean) {
+    public ArrayList<PatrolBean> getPatrolReportList(String status, String address,PageableBean pageableBean) {
         String departmentId = "";
         if (mLoginBean != null && mLoginBean.getmUserBean() != null) {
             departmentId = mLoginBean.getmUserBean().getLoginUser().getDepartmentId();
         }
-        return ReportOperation.getPatrolReportList(PATROL_LIST, mClient, status, departmentId, pageableBean);
+        return ReportOperation.getPatrolReportList(PATROL_LIST, mClient, status, address,departmentId, pageableBean);
     }
 
     /*
     获取验收报告列表
      */
-    public ArrayList<PatrolBean> getCheckReportList(String status, PageableBean pageableBean) {
-        return ReportOperation.getCheckReportList(PATROL_LIST, mClient, status, pageableBean);
+    public ArrayList<PatrolBean> getCheckReportList(String status, String address,PageableBean pageableBean) {
+        return ReportOperation.getCheckReportList(PATROL_LIST, mClient,status, address,pageableBean);
     }
 
     /*

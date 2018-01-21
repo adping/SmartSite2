@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
@@ -38,6 +39,7 @@ public class InspectReportMainFragment extends BaseFragment {
     //分页开始
     private int mCurPageNum = -1;
     public boolean isLoading = false;
+    public String mSearchText = "";
 /*    private Button mAdd = null;*/
 
     @Override
@@ -59,91 +61,158 @@ public class InspectReportMainFragment extends BaseFragment {
         PullToRefreshListView.OnRefreshListener listener = new PullToRefreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.e(TAG,"yanlog onRefresh:"+isLoading);
-                if(isLoading){
+                Log.e(TAG, "yanlog onRefresh:" + isLoading);
+                if (isLoading) {
                     //mListView.onRefreshComplete();
-                }else{
+                } else {
                     mCurPageNum = -1;
-                    new QueryMsgTask(true).execute();
+                    queryData(true, mSearchText);
                 }
             }
 
             @Override
             public void onLoadMore() {
-                Log.e(TAG,"yanlog onLoadMore:"+isLoading);
-                if(isLoading){
-                   // mListView.onLoadMoreComplete();
-                }else{
-                    new QueryMsgTask(false).execute();
+                Log.e(TAG, "yanlog onLoadMore:" + isLoading);
+                if (isLoading) {
+                    // mListView.onLoadMoreComplete();
+                } else {
+                    queryData(false, mSearchText);
                 }
             }
         };
         mListView.setOnRefreshListener(listener);
         mAdapter = new InspectReportAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
-        new QueryMsgTask(true).execute();
+        queryData(true, mSearchText);
     }
 
-    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
-        private boolean mIsReLoad = true;
-        public QueryMsgTask(boolean isreLoad){
-            mIsReLoad = isreLoad;
+    public void queryData(final boolean isreLoad, final String address) {
+        if(isreLoad){
+            mCurPageNum = -1;
         }
-
-        @Override
-        protected void onPreExecute() {
-            Log.e(TAG,"yanlog query begin:"+mCurPageNum);
-            super.onPreExecute();
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            PageableBean page = new PageableBean();
-            page.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
-            page.setPage(mCurPageNum + 1 + "");
-            ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("", page);
-            if (msgs == null) {
-                return "";
+        new AsyncTask<String, Integer, String>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                isLoading = true;
             }
-            Collections.sort(msgs, new Comparator<PatrolBean>() {
-                @Override
-                public int compare(PatrolBean o1, PatrolBean o2) {
-                    try {
-                        Date date1 = MsgData.format5.parse(o1.getDate());
-                        Date date2 = MsgData.format5.parse(o2.getDate());
-                        return date2.compareTo(date1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
+
+            @Override
+            protected String doInBackground(String... strings) {
+                PageableBean page = new PageableBean();
+                page.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
+                page.setPage(mCurPageNum + 1 + "");
+                ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("",address, page);
+                if (msgs == null) {
+                    return "";
                 }
-            });
-            if(mIsReLoad){
-                mDatas.clear();
+                Collections.sort(msgs, new Comparator<PatrolBean>() {
+                    @Override
+                    public int compare(PatrolBean o1, PatrolBean o2) {
+                        try {
+                            Date date1 = MsgData.format5.parse(o1.getDate());
+                            Date date2 = MsgData.format5.parse(o2.getDate());
+                            return date2.compareTo(date1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
+                    }
+                });
+                if (isreLoad) {
+                    mDatas.clear();
+                }
+                if (msgs != null && msgs.size() > 0) {
+                    mCurPageNum++;
+                }
+                for (PatrolBean temp : msgs) {
+                    ReportData reportData = new ReportData(temp);
+                    Log.e(TAG, "reportData:" + reportData);
+                    mDatas.add(reportData);
+                }
+                return null;
             }
-            if(msgs != null && msgs.size() > 0){
-                mCurPageNum++;
-            }
-            for (PatrolBean temp : msgs) {
-                ReportData reportData = new ReportData(temp);
-                Log.e(TAG, "reportData:" + reportData);
-                mDatas.add(reportData);
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            Log.e(TAG,"yanlog queryEnd:"+mCurPageNum);
-            isLoading = false;
-            if (mDatas == null || mDatas.size() == 0) {
-                ToastUtils.showShort("未获取到数据");
+            @Override
+            protected void onPostExecute(String s) {
+                Log.e(TAG, "yanlog queryEnd:" + mCurPageNum);
+                isLoading = false;
+                if (mDatas == null || mDatas.size() == 0) {
+//                    ToastUtils.showShort("未获取到数据");
+                }
+                TripartiteActivity activity = (TripartiteActivity)getActivity();
+                if(TextUtils.isEmpty(address)){
+                    activity.mIsDataInSearchMode = false;
+                }else {
+                    activity.mIsDataInSearchMode = true;
+                }
+                mListView.onLoadMoreComplete();
+                mListView.onRefreshComplete();
+                mAdapter.notifyDataSetChanged();
             }
-            mListView.onLoadMoreComplete();
-            mListView.onRefreshComplete();
-            mAdapter.notifyDataSetChanged();
-        }
+        }.execute();
     }
+//
+//    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+//        private boolean mIsReLoad = true;
+//        public QueryMsgTask(boolean isreLoad){
+//            mIsReLoad = isreLoad;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            Log.e(TAG,"yanlog query begin:"+mCurPageNum);
+//            super.onPreExecute();
+//            isLoading = true;
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            PageableBean page = new PageableBean();
+//            page.setSize(BaseActivity.DEFAULT_PAGE_SIZE);
+//            page.setPage(mCurPageNum + 1 + "");
+//            ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("", page);
+//            if (msgs == null) {
+//                return "";
+//            }
+//            Collections.sort(msgs, new Comparator<PatrolBean>() {
+//                @Override
+//                public int compare(PatrolBean o1, PatrolBean o2) {
+//                    try {
+//                        Date date1 = MsgData.format5.parse(o1.getDate());
+//                        Date date2 = MsgData.format5.parse(o2.getDate());
+//                        return date2.compareTo(date1);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    return 0;
+//                }
+//            });
+//            if(mIsReLoad){
+//                mDatas.clear();
+//            }
+//            if(msgs != null && msgs.size() > 0){
+//                mCurPageNum++;
+//            }
+//            for (PatrolBean temp : msgs) {
+//                ReportData reportData = new ReportData(temp);
+//                Log.e(TAG, "reportData:" + reportData);
+//                mDatas.add(reportData);
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            Log.e(TAG,"yanlog queryEnd:"+mCurPageNum);
+//            isLoading = false;
+//            if (mDatas == null || mDatas.size() == 0) {
+//                ToastUtils.showShort("未获取到数据");
+//            }
+//            mListView.onLoadMoreComplete();
+//            mListView.onRefreshComplete();
+//            mAdapter.notifyDataSetChanged();
+//        }
+//    }
     //分页代码结束
 }

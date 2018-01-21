@@ -37,7 +37,7 @@ import okhttp3.Response;
 public class ReportOperation {
     private static String TAG = "ReportOperation";
 
-    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, String status, String departmentId, PageableBean pageableBean) {
+    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, String status, String address,String departmentId, PageableBean pageableBean) {
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
@@ -45,6 +45,7 @@ public class ReportOperation {
                 .add("status", "" + status)
                 .add("size", "" + pageableBean.getSize())
                 .add("page", "" + pageableBean.getPage())
+                .add("address",""+address)
                 .add("creator.departmentId", departmentId == null ? "" : departmentId)
                 .build();
         Request request = new Request.Builder()
@@ -57,7 +58,7 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                return  getPatrolReportList(strurl,mClient,status,departmentId,pageableBean);
+                return  getPatrolReportList(strurl,mClient,status,address,departmentId,pageableBean);
             }
             if (response.isSuccessful()) {
 
@@ -76,12 +77,13 @@ public class ReportOperation {
     }
 
 
-    public static ArrayList<PatrolBean> getCheckReportList(String strurl, OkHttpClient mClient, String status, PageableBean pageableBean) {
+    public static ArrayList<PatrolBean> getCheckReportList(String strurl, OkHttpClient mClient, String status, String address,PageableBean pageableBean) {
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
                 .add("sort","date,desc")
                 .add("status", "" + status)
+                .add("address",""+address)
                 .add("size", "" + pageableBean.getSize())
                 .add("page", "" + pageableBean.getPage())
                 .build();
@@ -95,7 +97,7 @@ public class ReportOperation {
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
                 HttpPost.autoLogin();
-                return  getCheckReportList(strurl,mClient,status,pageableBean);
+                return  getCheckReportList(strurl,mClient,status,address,pageableBean);
             }
             if (response.isSuccessful()) {
 

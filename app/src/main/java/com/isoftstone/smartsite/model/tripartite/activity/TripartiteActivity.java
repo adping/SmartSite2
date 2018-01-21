@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +49,8 @@ public class TripartiteActivity extends BaseActivity {
     private View mSearchBar = null; // the search bar show if click the search button in default bar
     private HttpPost mHttpPost = null;
     private FragmentPagerAdapter mPagerAdapter = null;
+    public boolean mIsUIInSearchMode = false;
+    public boolean mIsDataInSearchMode = false;
 
 
     private ArrayList<ReportData> mDatas = new ArrayList<>();
@@ -151,8 +157,122 @@ public class TripartiteActivity extends BaseActivity {
         //init the default view state
         mDefaultBar.setVisibility(View.VISIBLE);
         mSearchBar.setVisibility(View.GONE);
+        initSearchMode();
+
+    }
+
+    private void initSearchMode() {
 
 
+        final TextView cancel_search = (TextView) findViewById(R.id.search_btn_icon_right);
+        final EditText search_edit_text = (EditText) findViewById(R.id.search_edit_text);
+        View btn_search = findViewById(R.id.btn_search);
+        final View search_btn_back = findViewById(R.id.search_btn_back);
+
+        if (mIsUIInSearchMode) {
+            enterSearchMode();
+        } else {
+            exitSearchMode();
+        }
+
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterSearchMode();
+            }
+        });
+
+        cancel_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(search_edit_text.getText().toString())) {
+                    exitSearchMode();
+                } else {
+                    for (Fragment temp : mFragList) {
+                        if (temp instanceof CheckReportMainFragment) {
+                            ((CheckReportMainFragment) temp).queryData(true, search_edit_text.getText().toString());
+                        } else if (temp instanceof InspectReportMainFragment) {
+                            ((InspectReportMainFragment) temp).queryData(true, search_edit_text.getText().toString());
+                        }
+                    }
+                }
+            }
+        });
+
+
+//        cancel_search.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View?) {
+//                if (TextUtils.isEmpty(search_edit_text.text.toString())) {
+//                    exitSearchMode()
+//                } else {
+//                    queryData(search_edit_text.text.toString(),true)
+//                }
+//            }
+//        })
+
+        search_btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitSearchMode();
+            }
+        });
+
+        search_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count == 0) {
+                    cancel_search.setText("取消");
+                } else {
+                    cancel_search.setText("搜索");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void enterSearchMode() {
+        View toolbar_search = findViewById(R.id.toolbar_search);
+        View toolbar_default = findViewById(R.id.toolbar_default);
+        TextView cancel_search = (TextView) findViewById(R.id.search_btn_icon_right);
+        EditText search_edit_text = (EditText) findViewById(R.id.search_edit_text);
+        View btn_search = findViewById(R.id.btn_search);
+        View search_btn_back = findViewById(R.id.search_btn_back);
+        toolbar_default.setVisibility(View.INVISIBLE);
+        toolbar_search.setVisibility(View.VISIBLE);
+        mIsUIInSearchMode = true;
+        search_edit_text.setText("");
+        cancel_search.setText("取消");
+    }
+
+    private void exitSearchMode() {
+        View toolbar_search = findViewById(R.id.toolbar_search);
+        View toolbar_default = findViewById(R.id.toolbar_default);
+        TextView cancel_search = (TextView) findViewById(R.id.search_btn_icon_right);
+        EditText search_edit_text = (EditText) findViewById(R.id.search_edit_text);
+        View btn_search = findViewById(R.id.btn_search);
+        View search_btn_back = findViewById(R.id.search_btn_back);
+        search_edit_text.setText("");
+        toolbar_default.setVisibility(View.VISIBLE);
+        toolbar_search.setVisibility(View.INVISIBLE);
+        mIsUIInSearchMode = false;
+        if (mIsDataInSearchMode) {
+            for (Fragment temp : mFragList) {
+                if (temp instanceof CheckReportMainFragment) {
+                    ((CheckReportMainFragment) temp).queryData(true, search_edit_text.getText().toString());
+                } else if (temp instanceof InspectReportMainFragment) {
+                    ((InspectReportMainFragment) temp).queryData(true, search_edit_text.getText().toString());
+                }
+            }
+        }
     }
 
     /**
@@ -271,48 +391,6 @@ public class TripartiteActivity extends BaseActivity {
     public ArrayList<ReportData> getDatas() {
         return mDatas;
     }
-
-//    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
-//        @Override
-//        protected String doInBackground(String... params) {
-//            ArrayList<PatrolBean> msgs = mHttpPost .getPatrolReportList("");
-//            if(msgs == null){
-//                return "";
-//            }
-//            Collections.sort(msgs, new Comparator<PatrolBean>() {
-//                @Override
-//                public int compare(PatrolBean o1, PatrolBean o2) {
-//                    try {
-//                        Date date1 = MsgData.format5.parse(o1.getDate());
-//                        Date date2 = MsgData.format5.parse(o2.getDate());
-//                        return date2.compareTo(date1);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    return 0;
-//                }
-//            });
-//            mDatas.clear();
-//            for (PatrolBean temp : msgs) {
-//                ReportData reportData = new ReportData(temp);
-//                Log.e(TAG, "reportData:" + reportData);
-//                mDatas.add(reportData);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            for (Fragment temp : mFragList) {
-//                if (temp instanceof CheckReportMainFragment) {
-//                    ((CheckReportMainFragment) temp).onDataSetChanged();
-//                } else if (temp instanceof InspectReportMainFragment) {
-//                    ((InspectReportMainFragment) temp).onDataSetChanged();
-//                }
-//            }
-//        }
-//    }
-
 
     private void chooseFrag(int position) {
         Resources res = getResources();

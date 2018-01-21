@@ -43,24 +43,23 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
-                <!--<ImageButton-->
-                    <!--android:id="@+id/btn_search"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_alignParentEnd="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:background="@drawable/btn_back_press_bg"-->
-                    <!--android:onClick="onSearchBtnClick"-->
-                    <!--android:paddingLeft="16dp"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:paddingRight="12dp"-->
-                    <!--android:src="@drawable/search" />-->
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:onClick="onSearchBtnClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/search" />
 
                 <ImageButton
                     android:id="@+id/btn_add"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
+                    android:layout_toLeftOf="@id/btn_search"
                     android:background="@drawable/btn_back_press_bg"
                     android:onClick="onAddReportBtnClick"
                     android:paddingLeft="16dp"
