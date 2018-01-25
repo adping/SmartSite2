@@ -496,11 +496,11 @@ public class MapTaskDetailActivity extends BaseActivity implements View.OnClickL
             currentClickMarker = marker;
             PatrolPositionBean bean = (PatrolPositionBean) marker.getObject();
             tv_task_name.setText(bean.getPosition());
-            if(bean.getExecutionTime().length() >=10){
-                tv_time.setText(bean.getExecutionTime().substring(0,10));
-            }else {
+            //if(bean.getExecutionTime().length() >=10){
+            //    tv_time.setText(bean.getExecutionTime().substring(0,10));
+            //}else {
                 tv_time.setText(bean.getExecutionTime());
-            }
+            //}
             tv_person.setText(bean.getUser().name);
             try{
                 String id = bean.getUser().getDepartmentId();

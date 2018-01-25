@@ -79,6 +79,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
     private static  final int  HANDLER_GETDIVICES_END = 2;
     public static  final  int HANDLER_LOAD_MORE = 3;
     private ArrayList<DevicesBean> list = new ArrayList<DevicesBean>();
+    ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
     private int mCurrentPage = 0;
     private int mFlag = -1;
     private DevicesBeanPage mDevicesBeanPage = null;
@@ -152,6 +153,19 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
         //setResourceDate();
         showDlg("正在获取设备列表");
         mHandler.sendEmptyMessage(HANDLER_GETDIVICES_START);
+
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    mData =  mHttpPost.getDevicesListPage("1","","","",null).getContent();
+                    adapter.setAllData(mData);
+                } catch (Exception e) {
+                    Log.i(TAG,"throw a exception: " + e.getMessage());
+                }
+            }
+        };
+        thread.start();
     }
 
     private void init(){

@@ -46,6 +46,15 @@ public class VideoMonitorAdapter extends BaseAdapter {
     private final String IMAGE_TYPE = "image/*";
     private Context mContext = null;
     private AdapterViewOnClickListener listener;
+    private ArrayList<DevicesBean> mAllData = new ArrayList<DevicesBean>();
+
+    public ArrayList<DevicesBean> getAllData() {
+        return mAllData;
+    }
+
+    public void setAllData(ArrayList<DevicesBean> mAllData) {
+        this.mAllData = mAllData;
+    }
 
     public VideoMonitorAdapter(Context context){
         this.mInflater = LayoutInflater.from(context);
@@ -225,7 +234,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 //跳转到地图
                 Intent intent = new Intent();
                 intent.putExtra("type",TYPE_CAMERA);
-                intent.putExtra("devices",mData);
+                intent.putExtra("devices",mAllData);
                 intent.putExtra("position",position);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

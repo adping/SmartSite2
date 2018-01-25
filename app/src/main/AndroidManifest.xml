@@ -226,10 +226,12 @@
             android:screenOrientation="portrait">
         </activity>
         <!--yanyongjun begin-->
+        <!--
         <activity
             android:name=".model.message.ui.DetailsActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
+        -->
         <activity
             android:name=".model.tripartite.activity.TripartiteActivity"
             android:screenOrientation="portrait"
@@ -242,9 +244,13 @@
         <activity android:name=".model.message.ui.MessageListActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
+
+        <!--
         <activity android:name=".model.message.ui.EnvironActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
+        -->
+
         <activity android:name=".model.tripartite.activity.AddReportActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
@@ -448,8 +454,11 @@
         <!--zhangwei end-->
 
         <activity android:name=".model.patroltask.ui.PatroPlanDetailsActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
+
        <activity android:name=".model.muckcar.ui.SlagcarInfoActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
     </application>
 
