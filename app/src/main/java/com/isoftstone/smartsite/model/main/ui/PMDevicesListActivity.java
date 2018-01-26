@@ -58,6 +58,7 @@ public class PMDevicesListActivity extends BaseActivity {
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         init();
+        showDlg("数据加载中");
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
     }
 
@@ -164,6 +165,7 @@ public class PMDevicesListActivity extends BaseActivity {
                }
             }
         }
+        closeDlg();
         adapter.notifyDataSetChanged();
     }
     View.OnClickListener listener = new View.OnClickListener(){

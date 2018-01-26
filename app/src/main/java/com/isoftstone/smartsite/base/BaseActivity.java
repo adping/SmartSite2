@@ -91,7 +91,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     .setCancelable(true)
                     .setCancelOutside(false).create();
         }
-        loadingDailog.show();
+        if (!loadingDailog.isShowing()){
+            loadingDailog.show();
+        }
     }
 
     /* 关闭正在登录对话框 */

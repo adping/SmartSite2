@@ -122,7 +122,6 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-
     public void getLiuliangduibiData(int dayormonthflag) {
         long archid = 0;
         String time = "";
@@ -207,7 +206,7 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setCarInfoList(mCarInfoList_day);
             }
-            closeDlg();
+//            closeDlg();
         }
 
         /**
@@ -263,7 +262,7 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setLiuliangduibi(liuliangduibi);
             }
-            closeDlg();
+//            closeDlg();
         }
 
         /**
