@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +67,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
     private DevicesBean mDevicesBean;
 
     private ImageButton mImageView_back = null;
-    private ImageButton mImageView_serch = null;
+    private ImageView mImageView_serch = null;
     private View oneIconLayout = null;
     private View searchLayout = null;
     private ImageButton mSearch_back = null;
@@ -112,6 +113,8 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
             }
         }
     };
+    private ImageButton imageButton;
+
     private void setListViewData(){
         if( list!=null ){
             if(mFlag == 1){
@@ -169,9 +172,8 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
     }
 
     private void init(){
-
         mImageView_back = (ImageButton)findViewById(R.id.btn_back);
-        mImageView_serch = (ImageButton)findViewById(R.id.btn_icon);
+        mImageView_serch = (ImageView)findViewById(R.id.btn_icon);
         oneIconLayout = (View)findViewById(R.id.one_icon);
         searchLayout = (View)findViewById(R.id.serch);
         mSearch_back = (ImageButton)findViewById(R.id.search_btn_back);
@@ -192,7 +194,7 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
         adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
         adapter.setData(list);
         mListView.setAdapter(adapter);
-        mImageView_serch.setVisibility(View.INVISIBLE);
+        mImageView_serch.setVisibility(View.VISIBLE);
     }
 
     PullToRefreshListView.OnRefreshListener mOnRefreshListener = new PullToRefreshListView.OnRefreshListener() {

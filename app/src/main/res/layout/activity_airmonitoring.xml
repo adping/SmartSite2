@@ -6,8 +6,11 @@
     android:fitsSystemWindows="true"
     android:background="@color/app_background">
 
-    <include layout="@layout/layout_toolbar_one_icon"/>
-
+    <include layout="@layout/layout_toolbar_one_icon"
+        android:id="@+id/one_icon"/>
+    <include layout="@layout/layout_toolbar_search"
+        android:visibility="gone"
+        android:id="@+id/serch"/>
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"

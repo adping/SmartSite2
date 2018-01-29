@@ -38,6 +38,18 @@
                 android:textSize="18sp" />
 
             <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/btn_icon"
+                android:background="@drawable/btn_back_press_bg"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:visibility="gone"
+                android:src="@drawable/search" />
+
+            <ImageButton
                 android:id="@+id/btn_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

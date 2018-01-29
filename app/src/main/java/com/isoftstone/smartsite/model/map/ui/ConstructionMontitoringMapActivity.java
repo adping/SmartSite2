@@ -118,7 +118,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     break;
                 case INIT_DATA:
                     if(isTaskCompleted){
-                        iv_status.setVisibility(View.INVISIBLE);
+                        iv_status.setVisibility(View.GONE);
                     } else {
                         iv_status.setVisibility(View.VISIBLE);
                     }
@@ -147,7 +147,7 @@ public class ConstructionMontitoringMapActivity extends BaseActivity implements 
                     break;
                 case FINISH_TASK:
                     ToastUtils.showShort("恭喜，任务已完成！");
-                    iv_status.setVisibility(View.INVISIBLE);
+                    iv_status.setVisibility(View.GONE);
                     isTaskCompleted = true;
                     break;
             }

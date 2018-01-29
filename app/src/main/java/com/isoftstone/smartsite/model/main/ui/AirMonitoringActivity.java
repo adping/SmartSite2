@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -113,6 +114,8 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
     private MonthlyComparisonBean mMonthlyComparisonBean_1;
     private MonthlyComparisonBean mMonthlyComparisonBean_2;
     private boolean[] addressFlags = new boolean[100];
+    private View oneIconLayout = null;
+    private View searchLayout = null;
     private String quyu_id_1;
     private String quyu_id_2;
     private String quyutime;
@@ -121,6 +124,10 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
     private ListView checkBoxListView;
     private MyCheckboxAdapter checkboxAdapter;
     private PopupWindow mCheckBoxPopWindow;
+    private ImageButton imageButton;
+    private TextView mSearch_cancel=null;
+    private ImageButton mSearch_back=null;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_airmonitoring;
@@ -136,6 +143,15 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
 
     private void init(){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        imageButton = (ImageButton) findViewById(R.id.btn_search);
+        imageButton.setVisibility(View.VISIBLE);
+        imageButton.setOnClickListener(this);
+        oneIconLayout = (View)findViewById(R.id.one_icon);
+        searchLayout = (View)findViewById(R.id.serch);
+        mSearch_back = (ImageButton)findViewById(R.id.search_btn_back);
+        mSearch_cancel = (TextView)findViewById(R.id.search_btn_icon_right);
+        mSearch_back.setOnClickListener(this);
+        mSearch_cancel.setOnClickListener(this);
         mRankTime = (TextView)findViewById(R.id.date);
         mRankTime.setOnClickListener(this);
         mRankTime.setText(df.format(new Date()));
@@ -927,6 +943,19 @@ public class AirMonitoringActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.btn_search:
+                oneIconLayout.setVisibility(View.GONE);
+                searchLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.search_btn_icon_right:{
+                oneIconLayout.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.GONE);
+            }
+            break;
+            case R.id.search_btn_back:{
+                finish();
+            }
+            break;
             case R.id.quyu_name:{
 //                onCreateDialog(1).show();
                 if(mCheckBoxPopWindow == null){
