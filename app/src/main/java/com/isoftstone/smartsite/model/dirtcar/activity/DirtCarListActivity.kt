@@ -192,7 +192,7 @@ class DirtCarListActivity : BaseActivity() {
                 bean.setPage((mCurPageNum + 1).toString())
                 bean.setSize(BaseActivity.DEFAULT_PAGE_SIZE)
                 var result = mHttpPost.getTrackList(licence, bean)
-                if (result.rawRecords== null || result.rawRecords.size == 0) {
+                if (result == null || result.rawRecords== null || result.rawRecords.size == 0) {
                     return false
                 }
                 if (isReload) {
