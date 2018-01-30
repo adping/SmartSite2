@@ -206,7 +206,11 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setCarInfoList(mCarInfoList_day);
             }
-//            closeDlg();
+            if (!mDaySlagcarInfoFragment.isShowDialog()){
+                closeDlg();
+            }
+
+
         }
 
         /**
@@ -262,7 +266,12 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setLiuliangduibi(liuliangduibi);
             }
-//            closeDlg();
+
+            if (!mDaySlagcarInfoFragment.isShowDialog()){
+                closeDlg();
+            }
+
+
         }
 
         /**
@@ -318,7 +327,10 @@ public class SlagcarInfoActivity extends BaseActivity implements View.OnClickLis
             } else if (flag == 0) {
                 mDaySlagcarInfoFragment.setBaojinglv(baojinglv);
             }
-            closeDlg();
+
+                closeDlg();
+            mDaySlagcarInfoFragment.setShowDialog(false);
+
         }
 
         /**

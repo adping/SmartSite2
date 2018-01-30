@@ -73,6 +73,16 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     private LineChart baojinglv_linechart;
     private TextView baojinglv_address;
     private LinearLayout list_trextviews;
+
+    public boolean isShowDialog() {
+        return showDialog;
+    }
+
+    public void setShowDialog(boolean showDialog) {
+        this.showDialog = showDialog;
+    }
+
+    private  boolean showDialog=false;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -258,6 +268,7 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     private void initDatePicker() {
+        setShowDialog(true);
         customDatePicker1 = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
@@ -297,7 +308,6 @@ public class DaySlagcarInfoFragment extends BaseFragment {
             }
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker3.setIsLoop(false); // 不允许循环滚动
-
     }
 
     public void setDayOrMonthFlag(int dayOrMonthFlag) {
