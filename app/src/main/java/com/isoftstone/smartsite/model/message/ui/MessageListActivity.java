@@ -19,7 +19,9 @@ import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.http.message.MessageBeanPage;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
+import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
+import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.message.MessageUtils;
 import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
 import com.isoftstone.smartsite.model.message.data.MsgData;
@@ -50,7 +52,7 @@ public class MessageListActivity extends BaseActivity {
     //分页开始
     private int mCurPageNum = -1;
     public boolean isLoading = false;
-
+    ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_msg_vcr;
@@ -66,7 +68,18 @@ public class MessageListActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    PageableBean pageableBean = new PageableBean();
+                    mData =  mHttpPost.getDevicesListPage("1","","","",pageableBean).getContent();
+                } catch (Exception e) {
+                    Log.i(TAG,"throw a exception: " + e.getMessage());
+                }
+            }
+        };
+        thread.start();
         initListView();
         initTitleName();
     }
@@ -103,7 +116,26 @@ public class MessageListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e(TAG, "yanlog postion:" + position);
-                MessageUtils.enterActivity(MessageListActivity.this, mDataBeans.get(position - 1));
+                MessageBean bean=mDataBeans.get(position - 1);
+                if (bean==null){
+                    return;
+                }
+                String searchCode = bean.getInfoType().getSearchCode();
+                if (searchCode==null){
+                    return;
+                }
+                if (searchCode.equals(MessageUtils.SEARCH_CODE_VEDIO_OFFLINE)||searchCode.equals(MessageUtils.SEARCH_CODE_ENVIRON_PM10_LIMIT)){
+                    Intent intent = new Intent();
+                    intent.putExtra("type", VideoMonitorMapActivity.TYPE_CAMERA);
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("position",position);
+                    intent.setClass(mActivity,VideoMonitorMapActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivity.startActivity(intent);
+                }else {
+                    MessageUtils.enterActivity(MessageListActivity.this, bean);
+                }
+
             }
         });
         new QueryMsgTask(true).execute();
@@ -169,14 +201,14 @@ public class MessageListActivity extends BaseActivity {
                         }
                     });
                     ArrayList<MsgData> temp = MsgUtils.toMsgData(msgs);
-                    if (mIsReLoad) {
+                     if (mIsReLoad) {
                         mDatas.clear();
                         mDataBeans.clear();
                     }
                     if (msgs != null && msgs.size() > 0) {
                         mCurPageNum++;
                     }
-                    mDatas.addAll(temp);
+                    mDatas. addAll(temp);
                     mDataBeans.addAll(msgs);
                 }
             } catch (Exception e) {
@@ -203,7 +235,7 @@ public class MessageListActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             for (MsgData temp : mDatas) {
-                if (temp.getStatus() == MsgData.STATUS_UNREAD) {
+                if (temp.getStatus() == MsgData.STATUS_UNREAD && temp.getId()!=null) {
                     mHttpPost.readMessage(temp.getId());
                 }
             }

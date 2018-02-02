@@ -34,6 +34,7 @@ import com.isoftstone.smartsite.http.muckcar.MapMarkersVoBean;
 import com.isoftstone.smartsite.model.dirtcar.activity.CameraDetailsActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.ParseException;
@@ -90,7 +91,7 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
     private ImageView iv_look_pic;
     private PopupWindow mPopWindow;
     private Marker roundMarker;
-    private float zoom = 14f;
+    private float zoom = 13f;
     private LoadingDailog loadingDailog;
 
     private String licence;
@@ -122,8 +123,13 @@ public class MapTrackHistoryActivity extends BaseActivity implements View.OnClic
         initMapView(savedInstanceState);
         initLocation(aotiLatLon);
         getData();
+        addRoundLine();
     }
-
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
+    }
     private void initToolBar(){
         findViewById(R.id.btn_back).setOnClickListener(this);
         TextView title = (TextView) findViewById(R.id.toolbar_title);

@@ -16,6 +16,7 @@ import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
 import com.isoftstone.smartsite.model.message.MessageUtils;
+import com.isoftstone.smartsite.model.muckcar.ui.SlagcarInfoActivity;
 
 import java.util.ArrayList;
 
@@ -105,9 +106,11 @@ public class MsgFragment extends BaseFragment {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(mActivity, MessageListActivity.class);
-                i.putExtra("type", MessageUtils.SEARCH_CODE_DIRTCAR);
-                mActivity.startActivity(i);
+//                Intent i = new Intent(mActivity, MessageListActivity.class);
+//                i.putExtra("type", MessageUtils.SEARCH_CODE_DIRTCAR);
+//                mActivity.startActivity(i);
+                Intent intent = new Intent(mActivity, SlagcarInfoActivity.class);
+                mActivity.startActivity(intent);
             }
         });
 

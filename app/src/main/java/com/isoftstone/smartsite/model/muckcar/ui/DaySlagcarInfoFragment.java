@@ -332,7 +332,8 @@ public class DaySlagcarInfoFragment extends BaseFragment {
     }
 
     public void setCarInfoList(ArrayList<CarInfoBean> carInfoList) {
-        if(carInfoList == null){
+        if(carInfoList == null||carInfoList.size()==0){
+            ((SlagcarInfoActivity) getActivity()).closeDlg();
             return;
         }
         SharedPreferencesUtils.saveBaseWidth(mContext, 0.000f);

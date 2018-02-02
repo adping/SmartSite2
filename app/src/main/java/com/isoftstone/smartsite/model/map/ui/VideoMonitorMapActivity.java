@@ -183,9 +183,12 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         } else {
             initLocation(aotiLatLon);
         }
-        addAndRemoveRoundMarker();
+        if(currentCameraDevice!=null){
+            addAndRemoveRoundMarker();
+        }
 
-        if(type == TYPE_CAMERA){
+
+        if(type == TYPE_CAMERA && currentCameraDevice!=null){
             if(currentCameraDevice.getDeviceCoding().length() >= 10){
                 tv_deviceNumber.setText(currentCameraDevice.getDeviceCoding().substring(0,10));
             } else {
@@ -231,7 +234,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
             }
             initLocation(new LatLng(Double.parseDouble(currentCameraDevice.getLatitude()),Double.parseDouble(currentCameraDevice.getLongitude())));
-        } else if(type == TYPE_ENVIRONMENT){
+        } else if(type == TYPE_ENVIRONMENT && currentEnvirDevice!=null){
             tv_deviceNumber.setText(currentEnvirDevice.getDeviceCoding());
             if(0 == currentEnvirDevice.getDeviceStatus()){
                 tv_isOnline.setText("在线");

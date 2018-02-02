@@ -161,7 +161,8 @@ public class VideoMonitoringActivity extends BaseActivity implements VideoMonito
             @Override
             public void run() {
                 try {
-                    mData =  mHttpPost.getDevicesListPage("1","","","",null).getContent();
+                    PageableBean pageableBean = new PageableBean();
+                    mData =  mHttpPost.getDevicesListPage("1","","","",pageableBean).getContent();
                     adapter.setAllData(mData);
                 } catch (Exception e) {
                     Log.i(TAG,"throw a exception: " + e.getMessage());

@@ -75,11 +75,12 @@ public class MessageUtils {
                 case SEARCH_CODE_VEDIO://视频监控
                 {
                     enterVEDIO(context);
+
                     break;
                 }
                 case SEARCH_CODE_VEDIO_OFFLINE://视频监控离线
                 {
-                    enterVEDIO_OFFLINE(context);
+//                    enterVEDIO_OFFLINE(context);
                     break;
                 }
                 case SEARCH_CODE_THREE_PARTY://第三方协同工作
