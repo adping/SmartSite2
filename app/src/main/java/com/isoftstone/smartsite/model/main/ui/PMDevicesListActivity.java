@@ -39,7 +39,6 @@ public class PMDevicesListActivity extends BaseActivity {
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_serch = null;
-    private ImageButton mBtn_serch = null;
     private View oneIconLayout = null;
     private View searchLayout = null;
     private ImageButton mSearch_back = null;
@@ -66,8 +65,8 @@ public class PMDevicesListActivity extends BaseActivity {
     private void init(){
         mImageView_back = (ImageButton)findViewById(R.id.btn_back);
         mImageView_serch = (ImageButton)findViewById(R.id.btn_icon);
-        mBtn_serch = (ImageButton)findViewById(R.id.btn_search);
-        mBtn_serch.setVisibility(View.VISIBLE);
+//        mBtn_serch = (ImageButton)findViewById(R.id.btn_search);
+//        mBtn_serch.setVisibility(View.VISIBLE);
         oneIconLayout = (View)findViewById(R.id.one_icon);
         searchLayout = (View)findViewById(R.id.serch);
         mSearch_back = (ImageButton)findViewById(R.id.search_btn_back);
@@ -78,7 +77,7 @@ public class PMDevicesListActivity extends BaseActivity {
         mtitleTextView.setText("设备列表");
         mImageView_serch.setImageResource(R.drawable.search);
         mImageView_back.setOnClickListener(listener);
-        mBtn_serch.setOnClickListener(listener);
+//        mBtn_serch.setOnClickListener(listener);
         mImageView_serch.setOnClickListener(listener);
         mSearch_back.setOnClickListener(listener);
         mSearch_cancel.setOnClickListener(listener);
@@ -91,7 +90,7 @@ public class PMDevicesListActivity extends BaseActivity {
         mListView.setAdapter(adapter);
         mListView.setOnRefreshListener(mOnRefreshListener);
 
-        mImageView_serch.setVisibility(View.INVISIBLE);
+        mImageView_serch.setVisibility(View.VISIBLE);
     }
 
     PullToRefreshListView.OnRefreshListener mOnRefreshListener = new PullToRefreshListView.OnRefreshListener() {
@@ -182,7 +181,7 @@ public class PMDevicesListActivity extends BaseActivity {
                     finish();
                 }
                 break;
-                case R.id.btn_search:{
+                case R.id.btn_icon:{
                     oneIconLayout.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.VISIBLE);
                 }
