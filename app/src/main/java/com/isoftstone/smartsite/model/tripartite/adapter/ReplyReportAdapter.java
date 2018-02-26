@@ -24,6 +24,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
 import com.isoftstone.smartsite.http.patrolreport.ReportBean;
+import com.isoftstone.smartsite.model.tripartite.activity.ReadImageActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.ReadImgActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReplyReportData;
@@ -395,7 +396,7 @@ public class ReplyReportAdapter extends BaseAdapter {
                 }.execute();
                 String formatPath = FilesUtils.getFormatString(absPath);
                 if (TripartiteActivity.mImageList.contains(formatPath)) {
-                    Intent intent = new Intent(mContext, ReadImgActivity.class);
+                    Intent intent = new Intent(mContext, ReadImageActivity.class);
                     Gson gson = new Gson();
                     String reportBean = gson.toJson(data);
                     intent.putExtra("reportBean", reportBean);

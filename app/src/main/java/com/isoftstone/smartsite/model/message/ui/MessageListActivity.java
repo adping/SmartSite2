@@ -11,29 +11,46 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.common.widget.PullToRefreshListView;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.message.BeforeNMessageBean;
 import com.isoftstone.smartsite.http.message.MessageBean;
 import com.isoftstone.smartsite.http.message.MessageBeanPage;
 import com.isoftstone.smartsite.http.pageable.PageableBean;
+import com.isoftstone.smartsite.http.patrolplan.PatrolPlanBean;
 import com.isoftstone.smartsite.http.patrolreport.PatrolBean;
+import com.isoftstone.smartsite.http.user.BaseUserBean;
 import com.isoftstone.smartsite.http.video.DevicesBean;
 import com.isoftstone.smartsite.jpush.MyReceiver;
+import com.isoftstone.smartsite.model.inspectplan.activity.PatrolPlanActivity;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.message.MessageUtils;
 import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
 import com.isoftstone.smartsite.model.message.data.MsgData;
+import com.isoftstone.smartsite.model.muckcar.ui.SlagcarInfoActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.model.tripartite.fragment.InspectReportMainFragment;
+import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.MsgUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by yanyongjun on 2017/10/15.
@@ -44,7 +61,7 @@ public class MessageListActivity extends BaseActivity {
     private PullToRefreshListView mListView = null;
     private ArrayList<MsgData> mDatas = new ArrayList<>();
     private ArrayList<MessageBean> mDataBeans = new ArrayList<>();
-
+    private String planid;
     private HttpPost mHttpPost = null;
     private BaseAdapter mAdapter = null;
 
@@ -53,6 +70,10 @@ public class MessageListActivity extends BaseActivity {
     private int mCurPageNum = -1;
     public boolean isLoading = false;
     ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
+    private OkHttpClient mClient=new OkHttpClient();
+    private PatrolPlanBean patrolPlanBean;
+    private String plan_url;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_msg_vcr;
@@ -113,6 +134,7 @@ public class MessageListActivity extends BaseActivity {
         mAdapter = new MsgListAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e(TAG, "yanlog postion:" + position);
@@ -124,7 +146,8 @@ public class MessageListActivity extends BaseActivity {
                 if (searchCode==null){
                     return;
                 }
-                if (searchCode.equals(MessageUtils.SEARCH_CODE_VEDIO_OFFLINE)||searchCode.equals(MessageUtils.SEARCH_CODE_ENVIRON_PM10_LIMIT)){
+                if (searchCode.equals(MessageUtils.SEARCH_CODE_VEDIO_OFFLINE)||searchCode.equals(MessageUtils.SEARCH_CODE_ENVIRON_PM10_LIMIT)
+                        ||searchCode.equals(MessageUtils.SEARCH_CODE_DIRTCAR_ZUIZONG)){
                     Intent intent = new Intent();
                     intent.putExtra("type", VideoMonitorMapActivity.TYPE_CAMERA);
                     intent.putExtra("devices",mData);
@@ -132,13 +155,70 @@ public class MessageListActivity extends BaseActivity {
                     intent.setClass(mActivity,VideoMonitorMapActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivity.startActivity(intent);
-                }else {
+                }
+                else if (searchCode.equals(MessageUtils.SEARCH_CODE_PLAN_REJECT) || searchCode.equals(MessageUtils.SEARCH_CODE_PLAN_APPROVAL) ||
+                        searchCode.equals(MessageUtils.SEARCH_CODE_PLAN_PASS)){
+                        String extraParam=bean.getExtraParam();
+                    try {
+                        JSONObject jsonObject=new JSONObject(extraParam);
+                        planid = (String) jsonObject.get("id");
+                        Log.i("name", planid);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //巡查消息详情
+                    plan_url = HttpPost.URL + "/patrol/plan"+"/"+planid;
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getData(plan_url,mClient);
+//                        }
+//                    }).start();
+                    new QueryPlanDetailTask().execute();
+                    Intent intent = new Intent(MessageListActivity.this, PatrolPlanActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("patrolplan",patrolPlanBean);
+                    mActivity.startActivity(intent);
+                }
+                else {
                     MessageUtils.enterActivity(MessageListActivity.this, bean);
                 }
 
             }
         });
         new QueryMsgTask(true).execute();
+    }
+
+    private void getData(String plan_url,OkHttpClient mClient) {
+        Request request = new Request.Builder()
+                .url(plan_url)
+                .get()
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            if (response.code() == HttpPost.HTTP_LOGIN_TIME_OUT) {
+                HttpPost.autoLogin();
+                getData(plan_url, mClient);
+            }
+            if (response.isSuccessful()) {
+                String responsebody = response.body().string();
+                LogUtils.i(TAG, " responsebody  " + responsebody);
+                JSONObject jsonObject = new JSONObject(responsebody);
+                patrolPlanBean = new PatrolPlanBean();
+                patrolPlanBean.setId((Long) jsonObject.get("id"));
+                patrolPlanBean.setEndDate((String) jsonObject.get("endDate"));
+                patrolPlanBean.setStart((String) jsonObject.get("startDate"));
+                patrolPlanBean.setStatus((Integer) jsonObject.get("status"));
+                BaseUserBean baseUserBean = new BaseUserBean();
+                baseUserBean.setId((Long) jsonObject.getJSONObject("creator").get("id"));
+                patrolPlanBean.setCreator(baseUserBean);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initTitleName() {
@@ -239,6 +319,15 @@ public class MessageListActivity extends BaseActivity {
                     mHttpPost.readMessage(temp.getId());
                 }
             }
+            return null;
+        }
+    }
+
+    private class QueryPlanDetailTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getData(plan_url,mClient);
             return null;
         }
     }

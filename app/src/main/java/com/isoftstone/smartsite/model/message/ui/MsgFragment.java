@@ -106,11 +106,11 @@ public class MsgFragment extends BaseFragment {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent i = new Intent(mActivity, MessageListActivity.class);
-//                i.putExtra("type", MessageUtils.SEARCH_CODE_DIRTCAR);
-//                mActivity.startActivity(i);
-                Intent intent = new Intent(mActivity, SlagcarInfoActivity.class);
-                mActivity.startActivity(intent);
+                Intent i = new Intent(mActivity, MessageListActivity.class);
+                i.putExtra("type", MessageUtils.SEARCH_CODE_DIRTCAR);
+                mActivity.startActivity(i);
+//                Intent intent = new Intent(mActivity, SlagcarInfoActivity.class);
+//                mActivity.startActivity(intent);
             }
         });
 

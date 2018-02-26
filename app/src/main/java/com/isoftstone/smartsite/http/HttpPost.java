@@ -65,6 +65,7 @@ import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -162,6 +163,8 @@ public class HttpPost {
             mCookiesManager = new CookiesManager(App.getAppContext());
             mClient = new OkHttpClient.Builder()
                     .cookieJar(mCookiesManager)
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
                     .build();
         }
     }

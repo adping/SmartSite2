@@ -60,9 +60,9 @@
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scroll_view"
         android:fadingEdge="vertical"
         android:scrollbars="vertical">
 

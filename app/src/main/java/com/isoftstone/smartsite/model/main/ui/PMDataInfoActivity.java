@@ -33,6 +33,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by gone on 2017/10/21.
@@ -317,6 +319,13 @@ public class PMDataInfoActivity extends BaseActivity {
         if(list_24 == null || list_24.size() <= 0){
             return;
         }
+        Collections.sort(list_24, new Comparator<DataQueryVoBean>() {
+            @Override
+            public int compare(DataQueryVoBean t1, DataQueryVoBean t2) {
+
+                return t1.getPushTime().compareTo(t2.getPushTime());
+            }
+        });
         int index = shujuSpinner.getSelectedItemPosition();
         mLineChart.setDrawGridBackground(false);
 
@@ -382,7 +391,8 @@ public class PMDataInfoActivity extends BaseActivity {
                 }else if(index == 2){
                     value =list_24.get(i).getCo2().toString();
                 }
-                Entry entry = new Entry(i,Float.parseFloat(value));
+                String time=list_24.get(i).getPushTime().substring(11, 13);
+                Entry entry = new Entry(Integer.parseInt(time),Float.parseFloat(value));
                 values.add(entry);
             }
 

@@ -42,12 +42,17 @@ import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
+import com.leon.lfilepickerlibrary.LFilePicker;
+import com.leon.lfilepickerlibrary.utils.Constant;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 回访下面的白嫩及矿
@@ -64,7 +69,7 @@ public class RevisitFragment extends BaseFragment {
     private Drawable mWaittingAdd = null;
     private Drawable mWattingChanged = null;
     private HttpPost mHttpPost = null;
-
+    public final static int SELECT_IMAGE_RESULT_CODE = 200;
     private TextView mName = null;
     private TextView mReportName = null;
     private TextView mReportMsg = null;
@@ -81,7 +86,7 @@ public class RevisitFragment extends BaseFragment {
     private Button mSubButton = null;
     private RadioButton mRadioYes = null;
     private RadioButton mRadioNo = null;
-
+    private RevisitFragment mFragment;
     private boolean mBeginDate = false;
     private boolean mEndDate = false;
     private ITime mRevisitDate = null;
@@ -91,7 +96,10 @@ public class RevisitFragment extends BaseFragment {
     private Calendar mCal = null;
 
     //private ArrayList<String> mFilesPath = new ArrayList<>();
-
+    public static RevisitFragment newInstance() {
+        RevisitFragment fragment = new RevisitFragment();
+        return fragment;
+    }
 
     @Override
     protected int getLayoutRes() {
@@ -104,6 +112,7 @@ public class RevisitFragment extends BaseFragment {
     }
 
     private void init() {
+        this.mFragment = this;
         mRes = getResources();
         mWaittingAdd = mRes.getDrawable(R.drawable.addcolumn);
         mWaittingAdd.setBounds(0, 0, mWaittingAdd.getIntrinsicWidth(), mWaittingAdd.getIntrinsicHeight());
@@ -631,6 +640,13 @@ public class RevisitFragment extends BaseFragment {
                     Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                     i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
+//                    new LFilePicker().withSupportFragment(mFragment)
+//                            .withRequestCode(REQUEST_ACTIVITY_ATTACH)
+//                            .withTitle(getString(R.string.select_title))
+//                            .withMutilyMode(true)
+//                            .withBackgroundColor("#4d7ef9")
+//                            .withAddText(getString(R.string.selected))
+//                            .start();
                 }
             }
         });
@@ -651,9 +667,21 @@ public class RevisitFragment extends BaseFragment {
                     String path = FilesUtils.getPath(getActivity(), uri);
                     addAttach(path);
                 }
+                break;
+
             }
         }
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == REQUEST_ACTIVITY_ATTACH) {
+//                List<String> list = data.getStringArrayListExtra("paths");
+//                Log.i("LeonFilePicker", list.size()+"...."+list);
+//                for (String path : list) {
+//                    addAttach(path);
+//                }
+//            }
+//        }
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     //add files

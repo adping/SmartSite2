@@ -22,7 +22,6 @@ import com.isoftstone.smartsite.http.HttpPost
 import com.isoftstone.smartsite.http.patroltask.PatrolPositionBean
 import com.isoftstone.smartsite.http.patroltask.PatrolTaskBean
 import com.isoftstone.smartsite.http.user.BaseUserBean
-import com.isoftstone.smartsite.http.util.DataUtils
 import com.isoftstone.smartsite.model.dirtcar.View.MyFlowLayout
 import com.isoftstone.smartsite.model.inspectplan.adapter.PeopleAdapter
 import com.isoftstone.smartsite.model.map.ui.MapSearchTaskPositionActivity
@@ -33,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_add_inspect_plan.*
 import kotlinx.android.synthetic.main.view_input_inspect_time.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.Executors
 
 /**
  * Created by yanyongjun on 2017/11/15.
@@ -44,7 +44,7 @@ open class AddInspectPlan : BaseActivity() {
     var mPeopleList = ArrayList<BaseUserBean>()
     var mAdapterPeople: PeopleAdapter? = null
     var mEditName: EditText? = null
-
+    var title: TextView? = null;
     private var mWaittingAdd: Drawable? = null
     private var mWattingChanged: Drawable? = null
 
@@ -59,7 +59,7 @@ open class AddInspectPlan : BaseActivity() {
     val FLAG_TARGET_ADDRESS = 0
     val FLAG_TARGET_PEOPLE = 1
     var mTaskType = 0
-
+    var  patrolTaskBean:PatrolTaskBean?=null
     var flow_layout_address: MyFlowLayout? = null
     var mHttpPost = HttpPost()
 
@@ -80,6 +80,7 @@ open class AddInspectPlan : BaseActivity() {
         mAdapterPeople = PeopleAdapter(this, mPeopleList)
         try {
             mTaskType = intent.getIntExtra("taskType", 0)
+            patrolTaskBean= intent.getSerializableExtra("patrolTaskBean") as PatrolTaskBean?
             taskTimeStart = intent.getStringExtra("taskTimeStart")
             taskTimeEnd = intent.getStringExtra("taskTimeEnd")
         } catch (e: Exception) {
@@ -92,9 +93,34 @@ open class AddInspectPlan : BaseActivity() {
         initMsg()
         initAddressGridView()
         initPeopleGridView()
-
+        if (patrolTaskBean!=null){
+            initData(patrolTaskBean);
+        }
         queryTask(intent.getLongExtra("taskId", -1))
     }
+
+     fun initData(patrolTaskBean: PatrolTaskBean?) {
+       title=findViewById(R.id.lab_title) as TextView
+         title!!.setText(R.string.task_title)
+         mEditName!!.setText(patrolTaskBean!!.taskName)
+         edit_report_msg!!.setText(patrolTaskBean!!.taskContent)
+         var beginTime=DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(patrolTaskBean!!.taskTimeStart))
+         var endTime=DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(patrolTaskBean!!.taskTimeEnd))
+         labBeginTimeRight!!.setText(beginTime)
+         labEndTimeRight!!.setText(endTime)
+         labBeginTimeRight?.setTextColor(resources.getColor(R.color.main_text_color))
+         labEndTimeRight?.setTextColor(resources.getColor(R.color.main_text_color))
+         mAddressList.clear();
+         mAddressList=patrolTaskBean!!.patrolPositions
+         addAddressView();
+         var peopleList = patrolTaskBean!!.users as? ArrayList<BaseUserBean>
+         if (peopleList != null) {
+             mPeopleList.clear()
+             mPeopleList.addAll(peopleList)
+             Log.e(TAG, "yanlog result:" + mPeopleList.size)
+             mAdapterPeople?.notifyDataSetChanged()
+         }
+     }
 
     fun initEditName() {
         mEditName = findViewById(R.id.edit_name) as EditText
@@ -298,7 +324,7 @@ open class AddInspectPlan : BaseActivity() {
     }
 
     fun onClick_submit(v: View) {
-        var submit = object : AsyncTask<Void, Void, Boolean>() {
+        var  submit = object :  AsyncTask<Void, Void, Boolean>() {
             override fun onPreExecute() {
                 this@AddInspectPlan.showDlg("正在提交")
                 super.onPreExecute()
@@ -344,16 +370,18 @@ open class AddInspectPlan : BaseActivity() {
                         e.printStackTrace()
                     }
 
-
-                    for(bean in addList){
-                        bean.bitmap = null
-                        bean.executionTime = null
-                        bean.user = null
-                        bean.id = 0
-                        bean.status = 0
-                    }
+                        for(bean in addList){
+                            bean.bitmap = null
+                            bean.executionTime = null
+                            bean.user = null
+                            bean.id = 0
+                            bean.status = 0
+                        }
 
                     var planBean = PatrolTaskBean()
+                    if(patrolTaskBean!=null){
+                        planBean.taskId=patrolTaskBean!!.taskId
+                    }
                     planBean.taskName = name
                     planBean.patrolPositions = addList
                     planBean.taskTimeStart = beginTime
@@ -386,7 +414,8 @@ open class AddInspectPlan : BaseActivity() {
                 }
             }
         }
-        submit.execute()
+//        submit.execute()
+        submit.executeOnExecutor(Executors.newCachedThreadPool())
     }
 
     fun showDatePickerDialog(editRight: TextView?, labLeft: TextView?, defautTime: String) {

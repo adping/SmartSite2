@@ -286,7 +286,27 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PatrolTaskBean patrolTaskBean = mListData.get(position);
-                enterPatrolTask(patrolTaskBean);
+                if (patrolTaskBean==null){
+                    return;
+                }
+                if (patrolTaskBean.getPlanStatus()==1 || patrolTaskBean.getPlanStatus()== 4){
+                    Long creatUser=patrolTaskBean.getCreator().getId();
+                    userId = HttpPost.mLoginBean.getmUserBean().getLoginUser().getId();
+                    if (creatUser.equals(userId)){
+//                        修改巡查任务
+                        Intent intent = new Intent(PatrolPlanActivity.this, AddInspectPlan.class);
+                        intent.putExtra("taskTimeStart",patrolTaskBean.getTaskTimeStart());
+                        intent.putExtra("taskTimeEnd",patrolTaskBean.getTaskTimeEnd());
+                        intent.putExtra("patrolTaskBean",patrolTaskBean);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }else {
+                        Toast.makeText(PatrolPlanActivity.this,R.string.information,Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else {
+                    enterPatrolTask(patrolTaskBean);
+                }
             }
         });
         imageview_tuihui = (ImageView) findViewById(R.id.imageview_tuihui);   //退回按钮
@@ -346,6 +366,7 @@ public class PatrolPlanActivity extends BaseActivity implements View.OnClickList
         }, "2010-01-01 00:00", "2037-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker.showYearMonth();
         customDatePicker.setIsLoop(false); // 不允许循环滚动
+
     }
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener(){
