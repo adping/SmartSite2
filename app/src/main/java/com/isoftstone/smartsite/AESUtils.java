@@ -15,6 +15,7 @@ public class AESUtils {
 		byte[] rawKey = getRawKey(seed.getBytes());
 		byte[] result = encrypt(rawKey, cleartext.getBytes());
 		return toHex(result);
+
 	}
 
 	public static String decrypt(String seed, String encrypted)
